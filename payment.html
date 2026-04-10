@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060d1a">
+<title>AutoScale — תשלום</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #060d1a;
+    --glass: rgba(12,26,56,0.55);
+    --border: rgba(80,140,255,0.13);
+    --border-soft: rgba(80,140,255,0.08);
+    --text: #e8f0ff;
+    --muted: #6a85b6;
+    --muted2: #4a6090;
+    --accent: #3a8ef6;
+    --accent2: #1dffd4;
+    --green: #25D366;
+    --warn: #ffb347;
+    --radius: 18px;
+    --radius-sm: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80vw 55vh at 10% -5%, rgba(30,90,220,0.22) 0%, transparent 65%),
+      radial-gradient(ellipse 60vw 40vh at 90% 10%, rgba(0,200,180,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 100vw 30vh at 50% 100%, rgba(10,30,80,0.5) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(58,142,246,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(58,142,246,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 28px 16px 80px;
+  }
+
+  header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .logo-mark {
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #0d2a6e, #0a4a3a);
+    border: 1px solid rgba(58,142,246,0.28);
+    box-shadow: 0 0 28px rgba(58,142,246,0.28), 0 0 0 4px rgba(58,142,246,0.07);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+
+  .logo-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .logo-fallback {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -1px;
+  }
+
+  .brand-name {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    background: linear-gradient(90deg, #c8deff, #1dffd4 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .brand-sub {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    font-family: 'Space Mono', monospace;
+    margin-top: -4px;
+  }
+
+  .section-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 6px;
+    opacity: 0.8;
+  }
+
+  .page-note {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .page-note::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--warn);
+    flex-shrink: 0;
+  }
+
+  .pay-block {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    margin-bottom: 12px;
+  }
+
+  .pay-block-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pay-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: rgba(58,142,246,0.12);
+    border: 1px solid rgba(58,142,246,0.2);
+    display: grid;
+    place-items: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .pay-block-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .kv {
+    display: grid;
+    grid-template-columns: 100px 1fr 32px;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 0;
+  }
+
+  .kv + .kv {
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .kv-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.3px;
+  }
+
+  .kv-value {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text);
+    direction: ltr;
+    text-align: right;
+  }
+
+  .copy-btn {
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--muted);
+    background: rgba(255,255,255,0.02);
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+
+  .copy-btn:hover {
+    background: rgba(58,142,246,0.12);
+    color: var(--accent);
+    border-color: rgba(58,142,246,0.4);
+    transform: translateY(-1px);
+  }
+
+  .copy-ok {
+    grid-column: 1 / -1;
+    font-size: 11px;
+    color: var(--accent2);
+    font-family: 'Space Mono', monospace;
+    display: none;
+    padding-top: 2px;
+  }
+
+  .copy-ok.show { display: block; }
+
+  .pay-block.center-block { text-align: center; }
+
+  .cta-btn {
+    display: inline-block;
+    padding: 13px 34px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: 'Sora', sans-serif;
+    letter-spacing: 0.2px;
+  }
+
+  .cta-btn:hover {
+    filter: brightness(1.12);
+    transform: translateY(-2px);
+  }
+
+  .cta-blue {
+    background: linear-gradient(135deg, #2f5bea, #1a3aab);
+    box-shadow: 0 4px 16px rgba(47,91,234,0.3);
+  }
+
+  .cta-green {
+    background: linear-gradient(135deg, #25D366, #17a34a);
+    box-shadow: 0 4px 16px rgba(37,211,102,0.25);
+  }
+
+  .last-updated {
+    text-align: center;
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted2);
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+</style>
+
+<script>
+async function copyText(text, id) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const t = document.createElement("textarea");
+    t.value = text;
+    document.body.appendChild(t);
+    t.select();
+    document.execCommand("copy");
+    document.body.removeChild(t);
+  }
+  const el = document.getElementById(id);
+  el.classList.add("show");
+  setTimeout(() => el.classList.remove("show"), 1400);
+}
+
+window.onload = () => {
+  const msg = "היי, זה ביצעתי תשלום מצרף אסמכתא";
+  document.getElementById("wa").href =
+    "https://wa.me/972545764327?text=" + encodeURIComponent(msg);
+};
+</script>
+</head>
+
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="logo-mark">
+      <img src="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" alt="AutoScale Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <span class="logo-fallback" style="display:none">AS</span>
+    </div>
+    <div class="brand-name">AutoScale</div>
+    <div class="brand-sub">אוטומציות חכמות</div>
+  </header>
+
+  <div class="section-label">פרטי תשלום</div>
+  <div class="page-note">יש להוסיף מע״מ לסכום הסופי</div>
+
+  <!-- BANK -->
+  <div class="pay-block">
+    <div class="pay-block-header">
+      <div class="pay-icon">🏦</div>
+      <div class="pay-block-title">העברה בנקאית</div>
+    </div>
+
+    <div class="kv">
+      <div class="kv-label">שם:</div>
+      <div class="kv-value">ריצארד טומסקי</div>
+      <div class="copy-btn" onclick="copyText('ריצארד טומסקי','ok1')">⧉</div>
+      <div class="copy-ok" id="ok1">✓ הועתק</div>
+    </div>
+
+    <div class="kv">
+      <div class="kv-label">בנק:</div>
+      <div class="kv-value">פועלים</div>
+      <div class="copy-btn" onclick="copyText('פועלים','ok2')">⧉</div>
+      <div class="copy-ok" id="ok2">✓ הועתק</div>
+    </div>
+
+    <div class="kv">
+      <div class="kv-label">סניף:</div>
+      <div class="kv-value">632</div>
+      <div class="copy-btn" onclick="copyText('632','ok3')">⧉</div>
+      <div class="copy-ok" id="ok3">✓ הועתק</div>
+    </div>
+
+    <div class="kv">
+      <div class="kv-label">חשבון:</div>
+      <div class="kv-value">273277</div>
+      <div class="copy-btn" onclick="copyText('273277','ok4')">⧉</div>
+      <div class="copy-ok" id="ok4">✓ הועתק</div>
+    </div>
+  </div>
+
+  <!-- BIT -->
+  <div class="pay-block">
+    <div class="pay-block-header">
+      <div class="pay-icon">📱</div>
+      <div class="pay-block-title">העברה בביט</div>
+    </div>
+
+    <div class="kv">
+      <div class="kv-label">טלפון:</div>
+      <div class="kv-value">054-576-4327</div>
+      <div class="copy-btn" onclick="copyText('0545764327','ok5')">⧉</div>
+      <div class="copy-ok" id="ok5">✓ הועתק</div>
+    </div>
+  </div>
+
+  <!-- CREDIT CARD -->
+  <div class="pay-block center-block">
+    <div class="pay-block-header" style="justify-content:center; border-bottom:none; margin-bottom:14px; padding-bottom:0;">
+      <div class="pay-icon">💳</div>
+      <div class="pay-block-title">תשלום באשראי</div>
+    </div>
+    <a href="https://pay.grow.link/b62f5369942b5598987e88bb6170fa75-MzE2MTAzNg" class="cta-btn cta-blue" target="_blank" rel="noopener noreferrer">לתשלום באשראי</a>
+  </div>
+
+  <!-- WHATSAPP -->
+  <div class="pay-block center-block">
+    <div class="pay-block-header" style="justify-content:center; border-bottom:none; margin-bottom:14px; padding-bottom:0;">
+      <div class="pay-icon">💬</div>
+      <div class="pay-block-title">שליחת אסמכתא</div>
+    </div>
+    <a id="wa" class="cta-btn cta-green">שליחת אסמכתא ב-WhatsApp</a>
+  </div>
+
+  <div class="last-updated" id="lastUpdated"></div>
+
+</div>
+
+<script>
+  const d = new Date();
+  const opts = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Jerusalem' };
+  document.getElementById('lastUpdated').textContent =
+    'עודכן לאחרונה: ' + d.toLocaleDateString('he-IL', opts);
+</script>
+</body>
+</html>
