@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060d1a">
+<meta name="description" content="autoscale — אוטומציות חכמות לעסקים">
+<title>AutoScale — אוטומציות חכמות</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060d1a;--bg2:#091222;--bg3:#0c1a30;--glass:rgba(12,26,56,.55);--glass2:rgba(12,26,56,.35);--border:rgba(80,140,255,.13);--border2:rgba(80,140,255,.28);--borders:rgba(80,140,255,.07);--text:#e8f0ff;--muted:#6a85b6;--muted2:#4a6090;--accent:#3a8ef6;--accent2:#1dffd4;--green:#25D366;--warn:#ffb347;--r:18px;--rs:12px;--mono:'Space Mono',monospace;--sans:'Sora',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;direction:rtl;font-size:15px;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80vw 55vh at 10% -5%,rgba(30,90,220,.22) 0%,transparent 65%),radial-gradient(ellipse 60vw 40vh at 90% 10%,rgba(0,200,180,.10) 0%,transparent 60%),radial-gradient(ellipse 100vw 30vh at 50% 100%,rgba(10,30,80,.5) 0%,transparent 70%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(58,142,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(58,142,246,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.z{position:relative;z-index:1}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+.section{padding:96px 0;position:relative;z-index:1}
+.grad{background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.kicker{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);opacity:.8;margin-bottom:8px;display:block}
+.h2{font-size:clamp(28px,4vw,44px);font-weight:700;line-height:1.15;letter-spacing:-.02em;margin-bottom:14px}
+.sub{font-size:15px;color:var(--muted);max-width:540px;line-height:1.75;margin-bottom:48px;font-weight:300}
+.glass{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.glass2{background:var(--glass2);border:1px solid var(--borders);border-radius:var(--r);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border-radius:999px;font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:.2px;border:none;cursor:pointer;text-decoration:none;transition:all .18s;color:#fff}
+.btn:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.btn-blue{background:linear-gradient(135deg,#2f5bea,#1a3aab);box-shadow:0 4px 18px rgba(47,91,234,.35)}
+.btn-teal{background:linear-gradient(135deg,#0db89e,#0a8a78);box-shadow:0 4px 18px rgba(13,184,158,.25)}
+.btn-out{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.btn-out:hover{background:rgba(58,142,246,.1);border-color:var(--accent)}
+.btn-wa{background:linear-gradient(135deg,#25D366,#17a34a);box-shadow:0 4px 16px rgba(37,211,102,.25)}
+.fade{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+.fade.v{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+
+/* COOKIE */
+#ck{position:fixed;bottom:0;left:0;right:0;background:rgba(9,18,34,.97);border-top:1px solid var(--border);backdrop-filter:blur(14px);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;z-index:9999}
+#ck p{font-size:13px;color:var(--muted);flex:1;min-width:200px;font-weight:300}
+#ck a{color:var(--accent2)}
+.ck-btns{display:flex;gap:8px;flex-shrink:0}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 24px;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+nav.sc{background:rgba(6,13,26,.93);border-bottom-color:var(--border);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.ni{max-width:1100px;margin:0 auto;height:68px;display:flex;align-items:center;justify-content:space-between}
+.nl{display:flex;align-items:center;gap:11px;text-decoration:none}
+.ni-img{width:36px;height:36px;border-radius:10px;overflow:hidden;border:1px solid rgba(58,142,246,.28);box-shadow:0 0 14px rgba(58,142,246,.2);display:grid;place-items:center;background:linear-gradient(135deg,#0d2a6e,#0a4a3a);flex-shrink:0}
+.ni-img img{width:100%;height:100%;object-fit:cover;display:block}
+.nb{font-size:17px;font-weight:700;letter-spacing:-.3px;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nlinks{display:flex;align-items:center;gap:2px;list-style:none}
+.nlinks a{padding:7px 14px;border-radius:8px;font-size:13.5px;font-weight:400;color:var(--muted);text-decoration:none;transition:color .15s,background .15s}
+.nlinks a:hover{color:var(--text);background:rgba(58,142,246,.08)}
+.nr{display:flex;align-items:center;gap:10px}
+.lsw{display:flex;gap:4px}
+.lb{font-family:var(--mono);font-size:15px;padding:3px 7px;border-radius:6px;border:1px solid var(--border);color:var(--muted);cursor:pointer;background:transparent;letter-spacing:.04em;transition:all .15s}
+.lb:hover{border-color:var(--accent);color:var(--accent)}
+.lb.on{border-color:var(--accent);color:var(--accent2);background:rgba(58,142,246,.1)}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none}
+.hbg span{width:20px;height:1.5px;background:var(--text);display:block;transition:all .22s}
+@media(max-width:767px){.hbg{display:flex}.nlinks{display:none;position:fixed;top:68px;right:0;left:0;background:rgba(6,13,26,.97);flex-direction:column;padding:16px 24px;gap:0;border-bottom:1px solid var(--border);backdrop-filter:blur(16px)}.nlinks.op{display:flex}.nlinks a{display:block;padding:13px 0;border-bottom:1px solid var(--borders);border-radius:0}.nlinks li:last-child a{border-bottom:none}.ncta{display:none!important}}
+
+/* HERO */
+#hero{min-height:100dvh;display:flex;align-items:center;padding:100px 0 64px;position:relative;overflow:hidden}
+.hglow{position:absolute;pointer-events:none;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(29,255,212,.07),transparent 70%);top:-100px;left:60%;animation:gd 10s ease-in-out infinite}
+@keyframes gd{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,30px) scale(1.06)}}
+.hc{position:relative;z-index:2;max-width:680px}
+.hey{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent2);letter-spacing:.12em;text-transform:uppercase;margin-bottom:22px}
+.hey::before{content:'';width:28px;height:1px;background:var(--accent2)}
+.ht{font-size:clamp(38px,6vw,72px);font-weight:700;line-height:1.1;letter-spacing:-.025em;margin-bottom:20px}
+.hs{font-size:clamp(15px,2vw,18px);color:var(--muted);line-height:1.75;font-weight:300;margin-bottom:36px;max-width:520px}
+.hbtns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:56px}
+.hstats{display:flex;gap:40px;flex-wrap:wrap}
+.sn{font-family:var(--mono);font-size:28px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sl{font-size:12px;color:var(--muted);margin-top:3px;font-weight:300}
+.sc-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;opacity:.3;animation:bob 2.2s ease-in-out infinite}
+.sc-cue span{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.1em}
+.sc-cue::after{content:'';width:1px;height:36px;background:linear-gradient(var(--accent2),transparent)}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+
+/* SERVICES */
+#services{background:rgba(9,18,34,.6)}
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.sc{padding:26px 24px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
+.sc::before{content:'';position:absolute;top:0;right:0;width:100px;height:100px;background:radial-gradient(circle at top right,rgba(58,142,246,.08),transparent);pointer-events:none}
+.sc:hover{border-color:var(--border2);transform:translateY(-4px)}
+.sc.ft{border-color:rgba(29,255,212,.3)}
+.sc.ft::after{content:'פופולרי';position:absolute;top:14px;left:14px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;background:linear-gradient(135deg,#0db89e,#0a8a78);color:#fff;padding:3px 10px;border-radius:20px}
+.si{font-size:26px;margin-bottom:14px}
+.sn2{font-size:17px;font-weight:700;margin-bottom:6px}
+.sd{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:18px;font-weight:300}
+.sp{font-family:var(--mono);font-size:22px;font-weight:700;margin-bottom:4px;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sp2{font-size:11.5px;color:var(--muted2);margin-bottom:18px;font-family:var(--mono)}
+.sf{list-style:none;display:flex;flex-direction:column;gap:8px}
+.sf li{font-size:13px;color:var(--muted);display:flex;align-items:flex-start;gap:8px;font-weight:300}
+.sf li::before{content:'✓';color:var(--accent2);font-size:11px;flex-shrink:0;margin-top:2px}
+
+/* PORTFOLIO */
+.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:36px}
+.pc{overflow:hidden;cursor:pointer;transition:border-color .2s,transform .2s}
+.pc:hover{border-color:var(--border2);transform:translateY(-4px)}
+.pt{height:170px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:rgba(12,26,56,.8)}
+.ptl{font-family:var(--mono);font-size:30px;font-weight:700;opacity:.15;background:linear-gradient(135deg,#3a8ef6,#1dffd4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ptag{position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent2);background:rgba(29,255,212,.1);border:.5px solid rgba(29,255,212,.3);padding:3px 9px;border-radius:20px}
+.pi{padding:18px 20px}
+.pn{font-size:15px;font-weight:700;margin-bottom:6px}
+.pd{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;font-weight:300}
+.cr{display:flex;gap:6px;flex-wrap:wrap}
+.ch{font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:20px;background:rgba(58,142,246,.07);color:var(--muted);border:.5px solid var(--border)}
+.sb{padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.sb h3{font-size:18px;font-weight:700;margin-bottom:5px}
+.sb p{font-size:13px;color:var(--muted);font-weight:300}
+.sbbtns{display:flex;gap:10px;flex-wrap:wrap}
+
+/* PARTNER */
+#partner{background:rgba(9,18,34,.6)}
+.ptgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.ptcard{padding:30px 26px;transition:border-color .2s,transform .2s}
+.ptcard:hover{border-color:var(--border2);transform:translateY(-4px)}
+.ptnum{font-family:var(--mono);font-size:38px;font-weight:700;opacity:.1;line-height:1;margin-bottom:-8px;background:linear-gradient(135deg,#3a8ef6,#1dffd4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.pticon{font-size:24px;margin-bottom:12px}
+.ptname{font-size:19px;font-weight:700;margin-bottom:5px}
+.pttag{font-family:var(--mono);font-size:11px;color:var(--accent2);letter-spacing:.04em;margin-bottom:12px}
+.ptdesc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:18px;font-weight:300}
+.ptpts{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.ptpts li{font-size:13px;color:var(--muted);display:flex;gap:8px;font-weight:300}
+.ptpts li::before{content:'→';color:var(--accent);flex-shrink:0}
+
+/* CLIENT */
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.cg{grid-template-columns:1fr}}
+.cc{padding:26px;transition:border-color .2s}
+.cc:hover{border-color:var(--border2)}
+.cci{font-size:26px;margin-bottom:14px}
+.cct{font-size:17px;font-weight:700;margin-bottom:6px}
+.ccd{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:20px;font-weight:300}
+.hpkgs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.hpkg{flex:1;min-width:68px;background:rgba(58,142,246,.05);border:1px solid var(--border);border-radius:12px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s}
+.hpkg:hover,.hpkg.on{border-color:rgba(29,255,212,.4);background:rgba(29,255,212,.07)}
+.hn{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--accent2)}
+.hl{font-size:10px;color:var(--muted2);font-family:var(--mono);margin-top:1px}
+.hp{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* CONTACT */
+#contact{background:rgba(9,18,34,.6)}
+.ctw{display:grid;grid-template-columns:1fr 1.2fr;gap:48px;align-items:start}
+@media(max-width:768px){.ctw{grid-template-columns:1fr}}
+.chs{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+.ch2{display:flex;align-items:center;gap:14px;padding:14px 16px;text-decoration:none;transition:border-color .15s}
+.ch2:hover{border-color:var(--border2)}
+.chicon{font-size:18px;flex-shrink:0}
+.chname{font-size:14px;font-weight:600}
+.chsub{font-size:12px;color:var(--muted);margin-top:1px;font-weight:300}
+.cf{padding:26px}
+.cf h3{font-size:17px;font-weight:700;margin-bottom:20px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg{margin-bottom:12px}
+.fl{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-bottom:5px;display:block;letter-spacing:.04em}
+.fi{width:100%;background:rgba(58,142,246,.04);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--sans);font-size:14px;padding:11px 14px;outline:none;transition:border-color .15s;direction:rtl;font-weight:300}
+.fi:focus{border-color:rgba(29,255,212,.4)}
+.fi::placeholder{color:var(--muted2)}
+.fs{display:none;text-align:center;padding:24px}
+.fsi{font-size:36px;margin-bottom:10px}
+.fst{font-size:16px;font-weight:700;margin-bottom:6px}
+.fss{font-size:13px;color:var(--muted);font-weight:300}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:48px 24px 28px}
+.fi2{max-width:1100px;margin:0 auto}
+.ft2{display:grid;grid-template-columns:1fr auto auto auto;gap:32px;margin-bottom:32px;align-items:start}
+@media(max-width:640px){.ft2{grid-template-columns:1fr 1fr}}
+.fb{font-size:16px;font-weight:700;margin-bottom:6px;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ftag{font-size:12px;color:var(--muted2);font-family:var(--mono);font-weight:400}
+.fct{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
+.flinks{list-style:none;display:flex;flex-direction:column;gap:9px}
+.flinks a{font-size:13px;color:var(--muted);text-decoration:none;font-weight:300;transition:color .15s}
+.flinks a:hover{color:var(--accent2)}
+.fbot{display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid var(--borders);flex-wrap:wrap;gap:12px}
+.fcopy{font-size:11px;color:var(--muted2);font-family:var(--mono)}
+.fleg{display:flex;gap:16px}
+.fleg a{font-size:11px;color:var(--muted2);text-decoration:none;font-family:var(--mono);transition:color .15s}
+.fleg a:hover{color:var(--accent2)}
+
+/* MODALS */
+.mo{display:none;position:fixed;inset:0;background:rgba(6,13,26,.85);z-index:2000;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px)}
+.mo.op{display:flex}
+.mb{padding:28px;max-width:480px;width:100%;max-height:90dvh;overflow-y:auto;position:relative}
+.mc{position:absolute;top:14px;left:14px;background:rgba(58,142,246,.1);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:16px;cursor:pointer;width:28px;height:28px;display:grid;place-items:center;transition:all .15s;line-height:1}
+.mc:hover{background:rgba(58,142,246,.2);color:var(--text)}
+.mk{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);opacity:.8;margin-bottom:6px;display:block}
+.mt{font-size:20px;font-weight:700;margin-bottom:5px}
+.ms{font-size:13px;color:var(--muted);margin-bottom:20px;font-weight:300;line-height:1.6}
+.pdet{background:rgba(58,142,246,.05);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;font-size:13px;color:var(--muted);line-height:1.7;font-weight:300}
+
+/* WA FLOAT */
+.wa{position:fixed;bottom:24px;left:24px;z-index:999;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#25D366,#17a34a);box-shadow:0 4px 20px rgba(37,211,102,.35);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:transform .2s}
+.wa:hover{transform:scale(1.08)}
+.wa svg{width:26px;height:26px;fill:#fff}
+
+/* MARQUEE */
+.mq-wrap{position:relative;z-index:1;padding:28px 0;overflow:hidden;background:rgba(9,18,34,.4);border-top:.5px solid var(--borders);border-bottom:.5px solid var(--borders)}
+.mq-fade-r{position:absolute;top:0;right:0;width:120px;height:100%;background:linear-gradient(270deg,var(--bg) 0%,transparent 100%);z-index:2;pointer-events:none}
+.mq-fade-l{position:absolute;top:0;left:0;width:120px;height:100%;background:linear-gradient(90deg,var(--bg) 0%,transparent 100%);z-index:2;pointer-events:none}
+.mq-row{display:flex;overflow:hidden;margin-bottom:10px}
+.mq-row:last-child{margin-bottom:0}
+.mq-track{display:flex;gap:10px;align-items:center;will-change:transform}
+.mq-fwd{animation:mq-f 35s linear infinite}
+.mq-rev{animation:mq-r 28s linear infinite}
+@keyframes mq-f{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes mq-r{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+.mq-wrap:hover .mq-track{animation-play-state:paused}
+.logo-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:20px;background:rgba(12,26,56,.7);border:.5px solid var(--border);white-space:nowrap;font-size:12px;font-weight:600;color:var(--text);flex-shrink:0;transition:border-color .2s}
+.logo-pill:hover{border-color:rgba(var(--c),1);border-color:color-mix(in srgb, white 40%, var(--c))}
+.logo-pill svg{flex-shrink:0}
+
+/* INTEGRATIONS */
+.int-cats{display:flex;flex-direction:column;gap:28px}
+.int-cat{}
+.int-cat-title{font-size:13px;font-weight:700;color:var(--muted2);margin-bottom:12px;display:flex;align-items:center;gap:8px;font-family:var(--mono);letter-spacing:.04em}
+.int-cat-icon{font-size:16px}
+.int-grid{display:flex;flex-wrap:wrap;gap:8px}
+.int-card{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--glass2);border:.5px solid var(--border);border-radius:10px;transition:border-color .15s,transform .15s;cursor:default;min-width:130px}
+.int-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.int-logo{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono);font-size:11px;font-weight:700;color:#fff}
+.int-name{font-size:13px;font-weight:600;line-height:1.2}
+.int-sub{font-size:10px;color:var(--muted2);font-family:var(--mono);margin-top:2px}
+@media(max-width:600px){.int-card{min-width:calc(50% - 4px)}}
+</style>
+</head>
+<body>
+
+<!-- COOKIE BANNER -->
+<div id="ck">
+  <p>אנחנו משתמשים בעוגיות לשיפור החוויה. <a href="cookies.html">מדיניות עוגיות</a> · <a href="privacy.html">פרטיות</a></p>
+  <div class="ck-btns">
+    <button class="btn btn-out" style="padding:8px 16px;font-size:13px;border-radius:8px" onclick="document.getElementById('ck').style.display='none'">דחה</button>
+    <button class="btn btn-teal" style="padding:8px 16px;font-size:13px;border-radius:8px" onclick="ackCk()">אשר הכל</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="ni">
+    <a href="#hero" class="nl">
+      <div class="ni-img"><img src="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" alt="AS" onerror="this.style.display='none'"></div>
+      <span class="nb">AutoScale</span>
+    </a>
+    <ul class="nlinks" id="nlinks">
+      <li><a href="#services" onclick="cm()">שירותים</a></li>
+      <li><a href="#integrations" onclick="cm()">אינטגרציות</a></li>
+      <li><a href="#portfolio" onclick="cm()">עבודות</a></li>
+      <li><a href="#partner" onclick="cm()">שיתוף פעולה</a></li>
+      <li><a href="#client" onclick="cm()">לקוחות</a></li>
+      <li><a href="#contact" onclick="cm()">צור קשר</a></li>
+    </ul>
+    <div class="nr">
+      <div class="lsw">
+        <button class="lb on">🇮🇱</button>
+        <button class="lb" onclick="la()" title="English">🇺🇸</button>
+        <button class="lb" onclick="la()" title="Русский">🇷🇺</button>
+        <button class="lb" onclick="la()" title="Español">🇪🇸</button>
+      </div>
+      <a href="#contact" class="btn btn-blue ncta" style="padding:9px 20px;font-size:13px">בואו נדבר</a>
+      <button class="hbg" id="hbg" onclick="tm()"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hglow"></div>
+  <div class="wrap">
+    <div class="hc">
+      <div class="hey fade">אוטומציות חכמות לעסקים</div>
+      <h1 class="ht fade d1">תהליכים שלוקחים שעות —<br><span class="grad">קורים לבד.</span></h1>
+      <p class="hs fade d2">אנחנו בונים מערכות אוטומציה — WhatsApp בוטים, מערכות לידים, CRM, ואינטגרציות — שחוסכות לעסקים שלכם זמן, כסף, וכאב ראש.</p>
+      <div class="hbtns fade d3">
+        <a href="#portfolio" class="btn btn-blue">ראו את העבודות שלנו</a>
+        <a href="#contact" class="btn btn-out">בואו נדבר</a>
+      </div>
+      <div class="hstats fade d3">
+        <div><div class="sn">+20</div><div class="sl">פרויקטים הושלמו</div></div>
+        <div><div class="sn">48h</div><div class="sl">זמן פריסה ממוצע</div></div>
+        <div><div class="sn">100%</div><div class="sl">עם ליווי ותמיכה</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="sc-cue"><span>scroll</span></div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="section">
+  <div class="wrap">
+    <span class="kicker fade">איך אנחנו עובדים</span>
+    <h2 class="h2 fade d1">בחרו את המסלול הנכון לכם</h2>
+    <p class="sub fade d2">שלושה מסלולי עבודה שמתאימים לסוגים שונים של פרויקטים ולקוחות.</p>
+    <div class="sg">
+      <div class="sc glass fade"><div class="si">⏱</div><div class="sn2">בנק שעות</div><div class="sd">קונים שעות מראש ומושכים לפי הצורך. אידיאלי לעסקים עם עבודה שוטפת וגמישה.</div><div class="sp">₪250–300</div><div class="sp2">לשעה · ניכוי אוטומטי מהבנק</div><ul class="sf"><li>רכישה מראש בהנחה</li><li>דשבורד לקוח בזמן אמת</li><li>דיווח על כל משימה</li><li>בקשות דרך בוט דונה</li></ul></div>
+      <div class="sc glass ft fade d1"><div class="si">🚀</div><div class="sn2">פרויקט חד-פעמי</div><div class="sd">סקופ ברור, מחיר קבוע, לוח זמנים מוסכם. מהרעיון ועד להשקה.</div><div class="sp">₪2,500+</div><div class="sp2">לפי פרויקט · הצעה ספציפית</div><ul class="sf"><li>סקופ מוגדר ומוסכם</li><li>50% מקדמה, 50% במסירה</li><li>סרטון הדרכה + מסמך טכני</li><li>14 יום אחריות</li></ul></div>
+      <div class="sc glass fade d2"><div class="si">🔧</div><div class="sn2">תחזוקה שוטפת</div><div class="sd">ריטיינר חודשי לתמיכה, עדכונים, תיקונים, ופיתוח מתמשך של המערכות שלכם.</div><div class="sp">₪390–490</div><div class="sp2">לחודש · כולל תמיכה ושדרוגים</div><ul class="sf"><li>תמיכה מועדפת</li><li>בקשות דחיפות בפריוריטי</li><li>ניטור שוטף של מערכות</li><li>גישה ישירה לדונה</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE LOGOS -->
+<div id="integrations" class="mq-wrap" aria-hidden="true">
+  <div style="position:relative;z-index:3;text-align:center;margin-bottom:16px">
+    <span class="kicker" style="opacity:1">אינטגרציות</span>
+  </div>
+  <div class="mq-fade-r"></div>
+  <div class="mq-fade-l"></div>
+  <div class="mq-row"><div class="mq-track mq-fwd">
+    <div class="logo-pill" style="--c:#7B5EA7"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#7B5EA7"/><path d="M8 14c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6z" fill="rgba(255,255,255,.25)"/><circle cx="14" cy="14" r="3" fill="#fff"/></svg>Make.com</div>
+    <div class="logo-pill" style="--c:#FF6D5A"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#FF6D5A"/><rect x="7" y="9" width="14" height="3" rx="1.5" fill="#fff"/><rect x="7" y="14" width="10" height="3" rx="1.5" fill="rgba(255,255,255,.7)"/><rect x="7" y="19" width="7" height="3" rx="1.5" fill="rgba(255,255,255,.5)"/></svg>n8n</div>
+    <div class="logo-pill" style="--c:#F62B54"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#F62B54"/><circle cx="10" cy="14" r="4" fill="#fff"/><circle cx="18" cy="14" r="4" fill="rgba(255,255,255,.6)"/></svg>Monday</div>
+    <div class="logo-pill" style="--c:#D97706"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#D97706"/><text x="6" y="20" fill="#fff" font-size="14" font-weight="700" font-family="sans-serif">C</text></svg>Claude</div>
+    <div class="logo-pill" style="--c:#10A37F"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#10A37F"/><circle cx="14" cy="14" r="6" fill="none" stroke="#fff" stroke-width="2"/><circle cx="14" cy="14" r="2" fill="#fff"/></svg>ChatGPT</div>
+    <div class="logo-pill" style="--c:#4285F4"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="none"/><path d="M14 5a9 9 0 100 18A9 9 0 0014 5z" fill="#4285F4"/><path d="M14 5a9 9 0 010 18" fill="#34A853"/><path d="M5 14a9 9 0 019-9" fill="#FBBC05"/><path d="M14 23a9 9 0 01-9-9" fill="#EA4335"/></svg>Google</div>
+    <div class="logo-pill" style="--c:#0A66C2"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="6" fill="#0A66C2"/><text x="5" y="20" fill="#fff" font-size="14" font-weight="700" font-family="sans-serif">in</text></svg>LinkedIn</div>
+    <div class="logo-pill" style="--c:#25D366"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#25D366"/><path d="M14 7a7 7 0 00-6 10.5L7 21l3.5-1A7 7 0 1014 7z" fill="#fff"/></svg>WhatsApp</div>
+    <div class="logo-pill" style="--c:#1877F2"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#1877F2"/><text x="8" y="21" fill="#fff" font-size="16" font-weight="700" font-family="sans-serif">f</text></svg>Meta</div>
+    <div class="logo-pill" style="--c:#FF4A00"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#FF4A00"/><text x="5" y="20" fill="#fff" font-size="12" font-weight="700" font-family="sans-serif">Zap</text></svg>Zapier</div>
+    <div class="logo-pill" style="--c:#4353FF"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#4353FF"/><rect x="8" y="8" width="5" height="5" rx="1" fill="#fff"/><rect x="15" y="8" width="5" height="5" rx="1" fill="rgba(255,255,255,.6)"/><rect x="8" y="15" width="5" height="5" rx="1" fill="rgba(255,255,255,.6)"/><rect x="15" y="15" width="5" height="5" rx="1" fill="rgba(255,255,255,.4)"/></svg>Notion</div>
+    <div class="logo-pill" style="--c:#0EA5E9"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#0EA5E9"/><text x="5" y="20" fill="#fff" font-size="12" font-weight="700" font-family="sans-serif">AT</text></svg>Airtable</div>
+    <div class="logo-pill" style="--c:#611f69"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#611f69"/><text x="5" y="20" fill="#fff" font-size="10" font-weight="700" font-family="sans-serif">Slk</text></svg>Slack</div>
+    <div class="logo-pill" style="--c:#26A5E4"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#26A5E4"/><path d="M18 10l-5 4-5-4" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>Telegram</div>
+    <div class="logo-pill" style="--c:#0052CC"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#0052CC"/><text x="5" y="20" fill="#fff" font-size="11" font-weight="700" font-family="sans-serif">Jira</text></svg>Jira</div>
+    <div class="logo-pill" style="--c:#F80000"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#F80000"/><text x="4" y="20" fill="#fff" font-size="10" font-weight="700" font-family="sans-serif">CRM</text></svg>Salesforce</div>
+    <!-- duplicate for seamless loop -->
+    <div class="logo-pill" style="--c:#7B5EA7"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#7B5EA7"/><circle cx="14" cy="14" r="3" fill="#fff"/></svg>Make.com</div>
+    <div class="logo-pill" style="--c:#FF6D5A"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#FF6D5A"/><rect x="7" y="9" width="14" height="3" rx="1.5" fill="#fff"/></svg>n8n</div>
+    <div class="logo-pill" style="--c:#F62B54"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#F62B54"/><circle cx="10" cy="14" r="4" fill="#fff"/><circle cx="18" cy="14" r="4" fill="rgba(255,255,255,.6)"/></svg>Monday</div>
+    <div class="logo-pill" style="--c:#D97706"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#D97706"/><text x="6" y="20" fill="#fff" font-size="14" font-weight="700" font-family="sans-serif">C</text></svg>Claude</div>
+    <div class="logo-pill" style="--c:#10A37F"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#10A37F"/><circle cx="14" cy="14" r="6" fill="none" stroke="#fff" stroke-width="2"/><circle cx="14" cy="14" r="2" fill="#fff"/></svg>ChatGPT</div>
+    <div class="logo-pill" style="--c:#4285F4"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="9" fill="#4285F4"/></svg>Google</div>
+    <div class="logo-pill" style="--c:#25D366"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#25D366"/><path d="M14 7a7 7 0 00-6 10.5L7 21l3.5-1A7 7 0 1014 7z" fill="#fff"/></svg>WhatsApp</div>
+    <div class="logo-pill" style="--c:#611f69"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#611f69"/></svg>Slack</div>
+  </div></div>
+  <div class="mq-row"><div class="mq-track mq-rev">
+    <div class="logo-pill" style="--c:#0052CC"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#0052CC"/></svg>HubSpot</div>
+    <div class="logo-pill" style="--c:#EA4335"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#EA4335"/><text x="5" y="20" fill="#fff" font-size="11" font-weight="700" font-family="sans-serif">G</text></svg>Gmail</div>
+    <div class="logo-pill" style="--c:#0F9D58"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#0F9D58"/><text x="5" y="20" fill="#fff" font-size="10" font-weight="700" font-family="sans-serif">Sht</text></svg>G. Sheets</div>
+    <div class="logo-pill" style="--c:#4285F4"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#4285F4"/><text x="5" y="20" fill="#fff" font-size="10" font-weight="700" font-family="sans-serif">Cal</text></svg>G. Calendar</div>
+    <div class="logo-pill" style="--c:#DB4437"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#DB4437"/><text x="4" y="20" fill="#fff" font-size="10" font-weight="700" font-family="sans-serif">GA4</text></svg>Analytics</div>
+    <div class="logo-pill" style="--c:#1a1a2e"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#1a1a2e" stroke="rgba(255,255,255,.2)" stroke-width="1"/><text x="5" y="20" fill="#fff" font-size="11" font-weight="700" font-family="sans-serif">GH</text></svg>GitHub</div>
+    <div class="logo-pill" style="--c:#F48120"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#F48120"/><text x="4" y="20" fill="#fff" font-size="10" font-weight="700" font-family="sans-serif">CF</text></svg>Cloudflare</div>
+    <div class="logo-pill" style="--c:#8E44AD"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#8E44AD"/><text x="4" y="20" fill="#fff" font-size="10" font-weight="700" font-family="sans-serif">Gem</text></svg>Gemini</div>
+    <div class="logo-pill" style="--c:#1877F2"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#1877F2"/><text x="3" y="20" fill="#fff" font-size="10" font-weight="700" font-family="sans-serif">Ads</text></svg>Meta Ads</div>
+    <div class="logo-pill" style="--c:#E1306C"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="12" fill="url(#ig)"/><defs><linearGradient id="ig" x1="0" y1="28" x2="28" y2="0"><stop stop-color="#F58529"/><stop offset=".5" stop-color="#E1306C"/><stop offset="1" stop-color="#833AB4"/></linearGradient></defs><circle cx="14" cy="14" r="6" fill="none" stroke="#fff" stroke-width="2"/><circle cx="21" cy="8" r="1.5" fill="#fff"/></svg>Instagram</div>
+    <div class="logo-pill" style="--c:#2B7BB9"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#2B7BB9"/><text x="3" y="20" fill="#fff" font-size="9" font-weight="700" font-family="sans-serif">Inv</text></svg>Green Inv.</div>
+    <div class="logo-pill" style="--c:#00C7B7"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#00C7B7"/><text x="3" y="20" fill="#fff" font-size="10" font-weight="700" font-family="sans-serif">Net</text></svg>Netlify</div>
+    <div class="logo-pill" style="--c:#16a34a"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#16a34a"/><text x="3" y="20" fill="#fff" font-size="9" font-weight="700" font-family="sans-serif">Grw</text></svg>Grow</div>
+    <div class="logo-pill" style="--c:#FF5A5F"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#FF5A5F"/><text x="4" y="20" fill="#fff" font-size="10" font-weight="700" font-family="sans-serif">FF</text></svg>FillFaster</div>
+    <div class="logo-pill" style="--c:#5865F2"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="10" fill="#5865F2"/><path d="M8 10.5c2-1 4.5-1.5 6-1.5s4 .5 6 1.5m-12 7c2 1 4.5 1.5 6 1.5s4-.5 6-1.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>Discord</div>
+    <div class="logo-pill" style="--c:#3ECF8E"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#1C1C1C"/><text x="3" y="20" fill="#3ECF8E" font-size="9" font-weight="700" font-family="sans-serif">Supa</text></svg>Supabase</div>
+    <!-- duplicates -->
+    <div class="logo-pill" style="--c:#0052CC"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#0052CC"/></svg>HubSpot</div>
+    <div class="logo-pill" style="--c:#0F9D58"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#0F9D58"/></svg>G. Sheets</div>
+    <div class="logo-pill" style="--c:#F48120"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#F48120"/></svg>Cloudflare</div>
+    <div class="logo-pill" style="--c:#8E44AD"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#8E44AD"/></svg>Gemini</div>
+    <div class="logo-pill" style="--c:#E1306C"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="12" fill="#E1306C"/><circle cx="14" cy="14" r="6" fill="none" stroke="#fff" stroke-width="2"/></svg>Instagram</div>
+    <div class="logo-pill" style="--c:#FF5A5F"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#FF5A5F"/></svg>FillFaster</div>
+    <div class="logo-pill" style="--c:#16a34a"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#16a34a"/></svg>Grow</div>
+    <div class="logo-pill" style="--c:#3ECF8E"><svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#1C1C1C"/></svg>Supabase</div>
+  </div></div>
+</div>
+
+<!-- PORTFOLIO -->
+<section id="portfolio" class="section">
+  <div class="wrap">
+    <span class="kicker fade">תיק עבודות</span>
+    <h2 class="h2 fade d1">מה בנינו</h2>
+    <p class="sub fade d2">פרויקטים שהשקנו בפועל — ממשפך שיווקי מלא ועד בוטים של WhatsApp.</p>
+    <div class="pg">
+      <div class="pc glass fade" onclick="om('p1')"><div class="pt"><div class="ptl">D.O</div><span class="ptag">משפך שיווקי</span></div><div class="pi"><div class="pn">Digital Online — משפך מלא</div><div class="pd">4 דפי וידאו, טופס ליד, דף תודה, GTM, Meta Pixel, WhatsApp אוטומטי.</div><div class="cr"><span class="ch">Make.com</span><span class="ch">WhatsApp API</span><span class="ch">GTM</span></div></div></div>
+      <div class="pc glass fade d1" onclick="om('p2')"><div class="pt"><div class="ptl">🛡</div><span class="ptag">לידים</span></div><div class="pi"><div class="pn">המרכז הארצי למיגון</div><div class="pd">טופס ליד מותאם, webhook ל-Make, אוטומציית WhatsApp ומיתוג.</div><div class="cr"><span class="ch">Make.com</span><span class="ch">WhatsApp</span><span class="ch">HTML</span></div></div></div>
+      <div class="pc glass fade d2" onclick="om('p3')"><div class="pt"><div class="ptl">CRM</div><span class="ptag">אוטומציה</span></div><div class="pi"><div class="pn">מערכת CRM ואוטומציית לידים</div><div class="pd">Facebook Leads → Make → Monday + WhatsApp תוך 60 שניות.</div><div class="cr"><span class="ch">Monday</span><span class="ch">Facebook Leads</span><span class="ch">Make.com</span></div></div></div>
+      <div class="pc glass fade d3" onclick="om('p4')"><div class="pt"><div class="ptl">🤖</div><span class="ptag">בוט</span></div><div class="pi"><div class="pn">בוט WhatsApp לשירות לקוחות</div><div class="pd">סינון לידים, קביעת פגישות, ניתוב לנציג אנושי — 24/7.</div><div class="cr"><span class="ch">WhatsApp Cloud API</span><span class="ch">Make.com</span><span class="ch">Calendly</span></div></div></div>
+    </div>
+    <div class="sb glass fade"><div><h3>ראיתם משהו שתפס אתכם?</h3><p>קבעו שיחת היכרות של 20 דקות — בלי התחייבות.</p></div><div class="sbbtns"><a href="https://wa.me/972545764327?text=היי%20ראיתי%20את%20העבודות%20שלכם" target="_blank" class="btn btn-wa">💬 WhatsApp</a><button class="btn btn-blue" onclick="om('sch')">📅 קביעת שיחה</button></div></div>
+  </div>
+</section>
+
+<!-- PARTNER -->
+<section id="partner" class="section">
+  <div class="wrap">
+    <span class="kicker fade">שיתוף פעולה</span>
+    <h2 class="h2 fade d1">עבדו איתנו</h2>
+    <p class="sub fade d2">שלושה מסלולים — בין אם אתם משווקים, סוכנויות, או אנשי טכנולוגיה.</p>
+    <div class="ptgrid">
+      <div class="ptcard glass fade"><div class="ptnum">01</div><div class="pticon">💸</div><div class="ptname">הפניה ועמלה</div><div class="pttag">אתם מפנים — אנחנו סוגרים ועושים</div><div class="ptdesc">יש לכם לקוח שצריך אוטומציה? שלחו אותם אלינו. אנחנו מטפלים בהכל ואתם מקבלים עמלה על כל סגירה.</div><ul class="ptpts"><li>עמלה של 10–15% על כל פרויקט</li><li>אתם לא מעורבים בעבודה</li><li>דיווח שקוף על סטטוס</li><li>פשוט, מהיר, ללא סיכון</li></ul><button class="btn btn-out" style="width:100%" onclick="om('pt1')">אני מעוניין</button></div>
+      <div class="ptcard glass fade d1"><div class="ptnum">02</div><div class="pticon">🤝</div><div class="ptname">White Label</div><div class="pttag">אתם סוגרים — אנחנו מבצעים</div><div class="ptdesc">סוכנויות שרוצות להציע אוטומציה. אתם מוכרים תחת השם שלכם, אנחנו עושים את העבודה בשקט.</div><ul class="ptpts"><li>אתם שומרים על קשר הלקוח</li><li>מחיר קמעונאי — אתם קובעים</li><li>עבודה שקטה תחת המותג שלכם</li><li>SLA ברור</li></ul><button class="btn btn-out" style="width:100%" onclick="om('pt2')">אני מעוניין</button></div>
+      <div class="ptcard glass fade d2"><div class="ptnum">03</div><div class="pticon">👨‍💻</div><div class="ptname">הצטרף לצוות</div><div class="pttag">קבלן / פרילנסר / שותף טכני</div><div class="ptdesc">מחפשים אנשי Make.com, מפתחים, ומומחי אוטומציה לפרויקטים מעניינים עם גיבוי של צוות.</div><ul class="ptpts"><li>עבודה על פרויקטים בתשלום</li><li>גמישות מלאה — קבלן עצמאי</li><li>ליווי וגיבוי של ריצ׳רד</li><li>אפשרות לצמוח לשותפות</li></ul><button class="btn btn-out" style="width:100%" onclick="om('hire')">שלח קו"ח / פורטפוליו</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENT -->
+<section id="client" class="section">
+  <div class="wrap">
+    <span class="kicker fade">אזור לקוחות</span>
+    <h2 class="h2 fade d1">לקוחות AutoScale</h2>
+    <p class="sub fade d2">ניהול מלא של השעות, המשימות, והפרויקטים שלכם — הכל במקום אחד.</p>
+    <div class="cg">
+      <div class="cc glass fade"><div class="cci">📊</div><div class="cct">דשבורד לקוח</div><div class="ccd">גישה לדשבורד אישי עם כמה שעות נשארו בבנק, משימות שבוצעו, וסטטוס פרויקט.</div><a href="#" class="btn btn-out" style="width:100%">כניסה לדשבורד →</a></div>
+      <div class="cc glass fade d1">
+        <div class="cci">⏱</div><div class="cct">רכישת בנק שעות</div><div class="ccd">ככל שקונים יותר — המחיר לשעה יורד.</div>
+        <div class="hpkgs">
+          <div class="hpkg" onclick="sp(this,'10','2,700')"><div class="hn">10</div><div class="hl">שעות</div><div class="hp">₪2,700</div></div>
+          <div class="hpkg" onclick="sp(this,'20','4,800')"><div class="hn">20</div><div class="hl">שעות</div><div class="hp">₪4,800</div></div>
+          <div class="hpkg" onclick="sp(this,'30','6,600')"><div class="hn">30</div><div class="hl">שעות</div><div class="hp">₪6,600</div></div>
+          <div class="hpkg" onclick="sp(this,'50','10,500')"><div class="hn">50</div><div class="hl">שעות</div><div class="hp">₪10,500</div></div>
+        </div>
+        <button class="btn btn-blue" style="width:100%" id="bbtn" onclick="bh()">בחרו כמות לרכישה</button>
+      </div>
+      <div class="cc glass fade d2"><div class="cci">💬</div><div class="cct">בוט משימות — דונה</div><div class="ccd">לקוחות עם תחזוקה פעילה או בנק שעות יכולים לשלוח בקשות ישירות לדונה.</div><a href="https://wa.me/972545764327?text=שלום%20דונה" target="_blank" class="btn btn-wa" style="width:100%">💬 שלח לדונה</a></div>
+      <div class="cc glass fade d3"><div class="cci">📋</div><div class="cct">תנאי בנק שעות</div><div class="ccd">שעות תקפות ל-12 חודשים. בקשות דרך דונה. כל משימה מתועדת. תגובה עד 48 שעות בימי עסקים.</div><a href="terms.html" class="btn btn-out" style="width:100%">קרא תנאים מלאים →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section">
+  <div class="wrap">
+    <span class="kicker fade">צור קשר</span>
+    <h2 class="h2 fade d1">בואו נדבר</h2>
+    <div class="ctw">
+      <div class="fade">
+        <p class="sub" style="margin-bottom:0">מוכנים להתחיל? יש שאלה? פשוט כתבו לנו.</p>
+        <div class="chs">
+          <a href="https://wa.me/972545764327" target="_blank" class="ch2 glass"><span class="chicon">💬</span><div><div class="chname">WhatsApp — דונה</div><div class="chsub">הדרך המהירה ביותר · תגובה תוך שעות</div></div></a>
+          <a href="mailto:support@digitalonline.co.il" class="ch2 glass"><span class="chicon">✉️</span><div><div class="chname">אימייל</div><div class="chsub">support@digitalonline.co.il</div></div></a>
+        </div>
+      </div>
+      <div class="cf glass fade d1">
+        <h3>השאירו פרטים</h3>
+        <div id="cfi">
+          <div class="fr"><div class="fg"><label class="fl">שם מלא *</label><input class="fi" id="cfn" placeholder="ישראל ישראלי"></div><div class="fg"><label class="fl">טלפון *</label><input class="fi" id="cfp" placeholder="05X-XXXXXXX" type="tel"></div></div>
+          <div class="fg"><label class="fl">עסק / חברה</label><input class="fi" id="cfb" placeholder="שם העסק"></div>
+          <div class="fg"><label class="fl">מה תרצו לפתור?</label><select class="fi" id="cfk" style="appearance:none"><option value="">בחרו...</option><option>אוטומציית WhatsApp / בוט</option><option>ניהול לידים / CRM</option><option>משפך שיווקי / דפי נחיתה</option><option>שיתוף פעולה / הפניה</option><option>הצטרפות לצוות</option><option>אחר</option></select></div>
+          <div class="fg"><label class="fl">הודעה</label><textarea class="fi" id="cfm" rows="3" placeholder="ספרו לנו בקצרה..."></textarea></div>
+          <button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="subCf()">שלח פנייה →</button>
+          <p style="font-size:11px;color:var(--muted2);margin-top:10px;text-align:center;font-family:var(--mono)">בלחיצה אתם מסכימים ל<a href="privacy.html" style="color:var(--accent2)">מדיניות הפרטיות</a></p>
+        </div>
+        <div class="fs" id="cfs"><div class="fsi">✅</div><div class="fst">תודה! קיבלנו את הפנייה</div><div class="fss">נחזור אליכם בהקדם — בדרך כלל תוך כמה שעות</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fi2">
+    <div class="ft2">
+      <div><div class="fb">AutoScale</div><div class="ftag">אוטומציות חכמות</div></div>
+      <div><div class="fct">ניווט</div><ul class="flinks"><li><a href="#services">שירותים</a></li><li><a href="#portfolio">עבודות</a></li><li><a href="#partner">שיתוף פעולה</a></li><li><a href="#client">לקוחות</a></li><li><a href="#contact">צור קשר</a></li></ul></div>
+      <div><div class="fct">שירותים</div><ul class="flinks"><li><a href="#client">בנק שעות</a></li><li><a href="#services">פרויקט חד-פעמי</a></li><li><a href="#services">תחזוקה</a></li><li><a href="payment.html">דף תשלום</a></li></ul></div>
+      <div><div class="fct">משפטי</div><ul class="flinks"><li><a href="terms.html">תנאי שימוש</a></li><li><a href="privacy.html">פרטיות</a></li><li><a href="cookies.html">עוגיות</a></li></ul></div>
+    </div>
+    <div class="fbot"><span class="fcopy">© 2025 AutoScale · כל הזכויות שמורות</span><div class="fleg"><a href="terms.html">תנאים</a><a href="privacy.html">פרטיות</a><a href="cookies.html">עוגיות</a></div></div>
+  </div>
+</footer>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/972545764327" target="_blank" class="wa">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+
+<!-- MODALS -->
+<div class="mo" id="m-sch"><div class="mb glass"><button class="mc" onclick="cm2('sch')">×</button><span class="mk">קביעת שיחה</span><div class="mt">שיחת היכרות — 20 דקות</div><div class="ms">ספרו לנו מי אתם ואנחנו נחזור לתאם שעה.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" id="scn" placeholder="שם מלא"></div><div class="fg"><label class="fl">טלפון</label><input class="fi" id="scp" placeholder="05X-XXXXXXX"></div></div><div class="fg"><label class="fl">מה ראיתם שתפס?</label><textarea class="fi" id="scno" rows="2" placeholder="פרויקט, נושא..."></textarea></div><div class="fg" style="margin-bottom:20px"><label class="fl">מתי עדיף?</label><select class="fi" id="sct" style="appearance:none"><option>בוקר (9–12)</option><option>צהריים (12–15)</option><option>אחרי הצהריים (15–18)</option><option>ערב (18–20)</option></select></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="subSch()">שלח בקשה לשיחה →</button></div></div>
+
+<div class="mo" id="m-pt1"><div class="mb glass"><button class="mc" onclick="cm2('pt1')">×</button><span class="mk">הפניה ועמלה</span><div class="mt">הצטרפות לתוכנית ההפניות</div><div class="ms">השאירו פרטים ונחזור עם כל המידע.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" placeholder="שם מלא"></div><div class="fg"><label class="fl">טלפון</label><input class="fi" placeholder="05X-XXXXXXX"></div></div><div class="fg"><label class="fl">תחום פעילות</label><input class="fi" placeholder="שיווק, נדל״ן..."></div><button class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:12px" onclick="subPt('pt1')">שלח →</button></div></div>
+
+<div class="mo" id="m-pt2"><div class="mb glass"><button class="mc" onclick="cm2('pt2')">×</button><span class="mk">White Label</span><div class="mt">שותפות מקצועית</div><div class="ms">לסוכנויות שרוצות להוסיף שירותי אוטומציה.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" placeholder="שם מלא"></div><div class="fg"><label class="fl">שם הסוכנות</label><input class="fi" placeholder="שם החברה"></div></div><div class="fg"><label class="fl">טלפון</label><input class="fi" placeholder="05X-XXXXXXX"></div><div class="fg"><label class="fl">תיאור קצר</label><textarea class="fi" rows="2" placeholder="מה אתם עושים..."></textarea></div><button class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:12px" onclick="subPt('pt2')">שלח →</button></div></div>
+
+<div class="mo" id="m-hire"><div class="mb glass"><button class="mc" onclick="cm2('hire')">×</button><span class="mk">הצטרף לצוות</span><div class="mt">עבדו עם AutoScale</div><div class="ms">קבלנים ומפתחי אוטומציה — רוצים לשמוע מכם.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" placeholder="שם מלא"></div><div class="fg"><label class="fl">טלפון</label><input class="fi" placeholder="05X-XXXXXXX"></div></div><div class="fg"><label class="fl">התמחות</label><select class="fi" style="appearance:none"><option>Make.com</option><option>WhatsApp API</option><option>Front-end</option><option>שיווק דיגיטלי</option><option>אחר</option></select></div><div class="fg"><label class="fl">קישור לפורטפוליו</label><input class="fi" placeholder="https://..."></div><button class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:12px" onclick="subPt('hire')">שלח →</button></div></div>
+
+<div class="mo" id="m-p1"><div class="mb glass"><button class="mc" onclick="cm2('p1')">×</button><span class="mk">תיק עבודות</span><div class="mt">Digital Online — משפך מלא</div><div class="ms">לקוח: Ben Nahum · שיווק דיגיטלי</div><div class="pdet">בנינו משפך שיווקי מלא בעברית: 4 דפי וידאו עם חסימת סרגל ו-step indicator, טופס ליד עם ולידציה inline, דף תודה עם tracking events מלאים, חיבור ל-Make.com, Google Sheets, Meta Pixel, GTM, ו-WhatsApp אוטומטי ללקוח ולצוות.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Make.com</span><span class="ch">GitHub Pages</span><span class="ch">WhatsApp API</span><span class="ch">GTM</span><span class="ch">Meta Pixel</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p1');om('sch')">📅 קבעו שיחה על פרויקט דומה</button></div></div>
+
+<div class="mo" id="m-p2"><div class="mb glass"><button class="mc" onclick="cm2('p2')">×</button><span class="mk">תיק עבודות</span><div class="mt">המרכז הארצי למיגון</div><div class="ms">תחום: מיגון ואבטחה</div><div class="pdet">טופס ליד מותאם אישית עם לוגו base64 ומיתוג. חיבור webhook ל-Make.com עם שליחת פרטי ליד אוטומטית ל-WhatsApp. עיצוב minimal עם footer מותג autoscale.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Make.com</span><span class="ch">WhatsApp</span><span class="ch">HTML/CSS</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p2');om('sch')">📅 קבעו שיחה</button></div></div>
+
+<div class="mo" id="m-p3"><div class="mb glass"><button class="mc" onclick="cm2('p3')">×</button><span class="mk">תיק עבודות</span><div class="mt">מערכת CRM ואוטומציית לידים</div><div class="ms">Facebook Leads → CRM → WhatsApp</div><div class="pdet">חיבור Facebook Lead Ads → Make.com → Google Sheets + Monday CRM. WhatsApp אוטומטי ללקוח תוך 60 שניות. מעקב סטטוס ועדכון אוטומטי בכל שלב.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Monday</span><span class="ch">Facebook Leads</span><span class="ch">Make.com</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p3');om('sch')">📅 קבעו שיחה</button></div></div>
+
+<div class="mo" id="m-p4"><div class="mb glass"><button class="mc" onclick="cm2('p4')">×</button><span class="mk">תיק עבודות</span><div class="mt">בוט WhatsApp לשירות לקוחות</div><div class="ms">WhatsApp Cloud API + Make.com</div><div class="pdet">זרימת שיחה אוטומטית מלאה: ברכה, סינון לפי כוונה, שליחת קטלוג, קביעת פגישה ב-Calendly, ניתוב לנציג אנושי. 24/7, תגובה תוך שניות.</div><div class="cr" style="margin-bottom:16px"><span class="ch">WhatsApp Cloud API</span><span class="ch">Make.com</span><span class="ch">Calendly</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p4');om('sch')">📅 קבעו שיחה</button></div></div>
+
+<script>
+// NAV
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('sc',scrollY>20));
+function tm(){document.getElementById('nlinks').classList.toggle('op')}
+function cm(){document.getElementById('nlinks').classList.remove('op')}
+
+// FADE IN
+document.querySelectorAll('.fade').forEach(el=>new IntersectionObserver(([e])=>{if(e.isIntersecting)el.classList.add('v')},{threshold:.1}).observe(el));
+
+// MODALS
+const mids=['sch','pt1','pt2','hire','p1','p2','p3','p4'];
+function om(id){document.getElementById('m-'+id).classList.add('op');document.body.style.overflow='hidden'}
+function cm2(id){document.getElementById('m-'+id).classList.remove('op');document.body.style.overflow=''}
+document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m){m.classList.remove('op');document.body.style.overflow=''}}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.mo.op').forEach(m=>{m.classList.remove('op')});document.body.style.overflow=''}});
+
+// HOURS
+let selH=null,selP=null;
+function sp(el,h,p){document.querySelectorAll('.hpkg').forEach(x=>x.classList.remove('on'));el.classList.add('on');selH=h;selP=p;document.getElementById('bbtn').textContent='רכישת '+h+' שעות — ₪'+p+' →'}
+function bh(){if(!selH){alert('אנא בחרו כמות שעות');return}window.open('https://pay.grow.link/b62f5369942b5598987e88bb6170fa75-MzE2MTAzNg','_blank')}
+
+// CONTACT
+function subCf(){
+  const n=document.getElementById('cfn').value.trim(),p=document.getElementById('cfp').value.trim();
+  if(!n||!p){alert('אנא מלאו שם וטלפון');return}
+  fetch('https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'website_lead',name:n,phone:p,business:document.getElementById('cfb').value,need:document.getElementById('cfk').value,message:document.getElementById('cfm').value})}).catch(()=>{});
+  document.getElementById('cfi').style.display='none';document.getElementById('cfs').style.display='block';
+}
+
+// SCHEDULE
+function subSch(){
+  const n=document.getElementById('scn').value.trim(),p=document.getElementById('scp').value.trim();
+  if(!n||!p){alert('אנא מלאו שם וטלפון');return}
+  fetch('https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'schedule_call',name:n,phone:p,note:document.getElementById('scno').value,time:document.getElementById('sct').value})}).catch(()=>{});
+  cm2('sch');alert('תודה '+n+'! נחזור אליך לתאום שיחה.');
+}
+
+// PARTNER
+function subPt(t){fetch('https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'partner',partner_type:t})}).catch(()=>{});cm2(t);alert('תודה! נחזור אליכם בהקדם.')}
+
+// COOKIES
+function ackCk(){localStorage.setItem('as_ck','1');document.getElementById('ck').style.display='none'}
+if(localStorage.getItem('as_ck')==='1')document.getElementById('ck').style.display='none';
+
+// LANG
+function la(){alert('גרסה זו בפיתוח — בקרוב!')}
+</script>
+</body>
+</html>
