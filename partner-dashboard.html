@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060d1a">
+<title>AutoScale — פורטל שותפים</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060d1a;--bg2:#091222;--bg3:#0c1a30;--bg4:#101f3a;
+  --glass:rgba(12,26,56,.6);--glass2:rgba(12,26,56,.35);
+  --border:rgba(80,140,255,.13);--border2:rgba(80,140,255,.28);--borders:rgba(80,140,255,.07);
+  --text:#e8f0ff;--muted:#6a85b6;--muted2:#4a6090;
+  --accent:#3a8ef6;--accent2:#1dffd4;
+  --green:#25D366;--green2:#1dffd4;
+  --warn:#ffb347;--red:#ff5f5f;
+  --mono:'Space Mono',monospace;--sans:'Sora',sans-serif;
+  --r:16px;--rs:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;direction:rtl;font-size:14px;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80vw 55vh at 10% -5%,rgba(30,90,220,.22) 0%,transparent 65%),radial-gradient(ellipse 60vw 40vh at 90% 10%,rgba(0,200,180,.10) 0%,transparent 60%),radial-gradient(ellipse 100vw 30vh at 50% 100%,rgba(10,30,80,.5) 0%,transparent 70%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(58,142,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(58,142,246,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.z{position:relative;z-index:1}
+
+/* TYPOGRAPHY */
+.grad{background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.mono{font-family:var(--mono)}
+
+/* GLASS */
+.glass{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.glass2{background:var(--glass2);border:1px solid var(--borders);border-radius:var(--r);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 22px;border-radius:999px;font-family:var(--sans);font-size:13px;font-weight:600;border:none;cursor:pointer;text-decoration:none;transition:all .18s;color:#fff}
+.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn-blue{background:linear-gradient(135deg,#2f5bea,#1a3aab);box-shadow:0 4px 16px rgba(47,91,234,.3)}
+.btn-teal{background:linear-gradient(135deg,#0db89e,#0a8a78);box-shadow:0 4px 16px rgba(13,184,158,.2)}
+.btn-out{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.btn-out:hover{background:rgba(58,142,246,.1)}
+.btn-sm{padding:7px 14px;font-size:12px}
+.btn-red{background:transparent;border:1px solid rgba(255,95,95,.3);color:var(--red)}
+.btn-red:hover{background:rgba(255,95,95,.08)}
+
+/* STATUS BADGES */
+.badge{font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:20px;border:.5px solid;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+.b-lead{color:var(--muted);border-color:var(--muted2);background:rgba(106,133,182,.08)}
+.b-active{color:var(--accent2);border-color:rgba(29,255,212,.3);background:rgba(29,255,212,.07)}
+.b-done{color:#a8e6cf;border-color:rgba(168,230,207,.3);background:rgba(168,230,207,.06)}
+.b-maint{color:var(--accent);border-color:rgba(58,142,246,.3);background:rgba(58,142,246,.07)}
+.b-paid{color:var(--accent2);border-color:rgba(29,255,212,.3);background:rgba(29,255,212,.07)}
+.b-pending{color:var(--warn);border-color:rgba(255,179,71,.3);background:rgba(255,179,71,.07)}
+.b-wait{color:var(--muted);border-color:var(--muted2);background:rgba(106,133,182,.08)}
+
+/* ════════════════════ LOGIN SCREEN ════════════════════ */
+#login-screen{
+  position:fixed;inset:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;padding:24px;
+}
+.login-box{
+  max-width:400px;width:100%;
+  padding:36px 32px;text-align:center;
+}
+.login-logo{width:60px;height:60px;border-radius:14px;background:linear-gradient(135deg,#0d2a6e,#0a4a3a);border:1px solid rgba(58,142,246,.28);box-shadow:0 0 24px rgba(58,142,246,.2);display:grid;place-items:center;margin:0 auto 18px;overflow:hidden}
+.login-logo img{width:100%;height:100%;object-fit:cover}
+.login-brand{font-size:20px;font-weight:700;margin-bottom:4px;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.login-sub{font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:28px}
+.login-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.06em;text-align:right;display:block;margin-bottom:5px}
+.login-input{width:100%;background:rgba(58,142,246,.04);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--sans);font-size:14px;padding:12px 14px;outline:none;transition:border-color .15s;direction:rtl;margin-bottom:12px}
+.login-input:focus{border-color:rgba(29,255,212,.4)}
+.login-input::placeholder{color:var(--muted2)}
+.login-err{font-size:12px;color:var(--red);margin-top:8px;font-family:var(--mono);display:none}
+.login-note{font-size:11px;color:var(--muted2);margin-top:14px;line-height:1.6}
+
+/* ════════════════════ MAIN DASHBOARD ════════════════════ */
+#dashboard{display:none;position:relative;z-index:1;min-height:100dvh}
+
+/* TOP BAR */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(6,13,26,.92);border-bottom:1px solid var(--border);
+  backdrop-filter:blur(16px);padding:0 24px;
+}
+.topbar-inner{max-width:1100px;margin:0 auto;height:62px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.topbar-logo{display:flex;align-items:center;gap:10px}
+.topbar-logoimg{width:30px;height:30px;border-radius:8px;overflow:hidden;border:1px solid rgba(58,142,246,.28);background:linear-gradient(135deg,#0d2a6e,#0a4a3a);display:grid;place-items:center;flex-shrink:0}
+.topbar-logoimg img{width:100%;height:100%;object-fit:cover}
+.topbar-brand{font-size:15px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.topbar-section{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.partner-pill{display:flex;align-items:center;gap:8px;padding:6px 12px;background:rgba(29,255,212,.07);border:1px solid rgba(29,255,212,.2);border-radius:20px}
+.partner-dot{width:6px;height:6px;border-radius:50%;background:var(--accent2);box-shadow:0 0 6px var(--accent2);flex-shrink:0}
+.partner-name{font-size:12px;font-weight:600;color:var(--accent2)}
+
+/* CONTENT */
+.content{max-width:1100px;margin:0 auto;padding:28px 24px 64px}
+
+/* KPI ROW */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.kpi{padding:20px 22px}
+.kpi-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.kpi-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.d-teal{background:var(--accent2);box-shadow:0 0 5px var(--accent2)}
+.d-blue{background:var(--accent);box-shadow:0 0 5px var(--accent)}
+.d-warn{background:var(--warn);box-shadow:0 0 5px var(--warn)}
+.d-green{background:#25D366;box-shadow:0 0 5px #25D366}
+.kpi-num{font-family:var(--mono);font-size:28px;font-weight:700;letter-spacing:-.02em;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.kpi-sub{font-size:11px;color:var(--muted2);margin-top:4px;font-weight:300}
+
+/* SECTION HEADER */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.sec-title{font-size:15px;font-weight:700}
+.sec-kicker{font-family:var(--mono);font-size:9px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:4px}
+
+/* CLIENT TABLE */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ctable{width:100%;border-collapse:collapse;min-width:580px}
+.ctable th{text-align:right;padding:10px 14px;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--border);font-weight:400;white-space:nowrap}
+.ctable td{padding:13px 14px;border-bottom:1px solid var(--borders);vertical-align:middle;font-size:13px;color:var(--text);white-space:nowrap}
+.ctable tr:last-child td{border-bottom:none}
+.ctable tr:hover td{background:rgba(58,142,246,.04)}
+.client-name{font-weight:600;font-size:13px}
+.client-biz{font-size:11px;color:var(--muted);margin-top:2px;font-weight:300}
+.progress-bar{width:100px;height:3px;background:rgba(58,142,246,.12);border-radius:2px;overflow:hidden;margin-top:4px}
+.progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#3a8ef6,#1dffd4)}
+
+/* COMMISSION ROWS */
+.comm-row{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--borders);gap:12px;flex-wrap:wrap}
+.comm-row:last-child{border-bottom:none}
+.comm-client{font-weight:600;font-size:13px}
+.comm-desc{font-size:11px;color:var(--muted);margin-top:1px;font-weight:300}
+.comm-amount{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--accent2);white-space:nowrap}
+.comm-date{font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap}
+
+/* REFERRAL LINK BOX */
+.reflink-box{padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.reflink-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.reflink-url{font-family:var(--mono);font-size:13px;color:var(--accent2);word-break:break-all}
+.copy-btn{font-family:var(--mono);font-size:10px;padding:6px 14px;border-radius:8px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.copy-btn:hover{border-color:var(--accent2);color:var(--accent2)}
+.copy-btn.copied{border-color:var(--accent2);color:var(--accent2)}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:48px 24px;color:var(--muted);font-size:13px;font-weight:300}
+.empty-icon{font-size:32px;margin-bottom:10px;opacity:.4}
+
+/* NOTIFICATION BAR */
+.notif{background:rgba(29,255,212,.07);border:1px solid rgba(29,255,212,.2);border-radius:10px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:12px;font-size:13px;font-weight:300}
+.notif-icon{font-size:16px;flex-shrink:0}
+.notif-text{flex:1;color:var(--accent2)}
+.notif-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:0}
+
+/* PAYOUT REQUEST */
+.payout-box{padding:22px 24px}
+.payout-available{font-family:var(--mono);font-size:32px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px}
+.payout-sub{font-size:12px;color:var(--muted);font-weight:300;margin-bottom:20px}
+
+/* TABS */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:20px}
+.tab{font-family:var(--mono);font-size:11px;padding:8px 16px;cursor:pointer;border:none;background:none;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;letter-spacing:.04em;transition:all .15s}
+.tab:hover{color:var(--text)}
+.tab.on{color:var(--accent2);border-bottom-color:var(--accent2)}
+.tabpanel{display:none}.tabpanel.on{display:block}
+
+/* GRID 2 */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:700px){.g2{grid-template-columns:1fr}}
+
+/* TIMELINE DOTS */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:14px;padding:10px 0;position:relative}
+.tl-item::before{content:'';position:absolute;right:5.5px;top:26px;bottom:-10px;width:1px;background:var(--border);z-index:0}
+.tl-item:last-child::before{display:none}
+.tl-dot{width:12px;height:12px;border-radius:50%;border:2px solid;flex-shrink:0;margin-top:3px;position:relative;z-index:1;background:var(--bg)}
+.tl-done .tl-dot{border-color:var(--accent2);background:rgba(29,255,212,.15)}
+.tl-now .tl-dot{border-color:var(--accent);background:rgba(58,142,246,.15)}
+.tl-next .tl-dot{border-color:var(--muted2);background:transparent}
+.tl-text{font-size:13px;font-weight:500;flex:1}
+.tl-sub{font-size:11px;color:var(--muted);margin-top:1px;font-weight:300}
+.tl-date{font-family:var(--mono);font-size:10px;color:var(--muted2);white-space:nowrap;margin-top:2px}
+
+/* MODAL */
+.mo{display:none;position:fixed;inset:0;background:rgba(6,13,26,.85);z-index:200;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
+.mo.op{display:flex}
+.mb{padding:26px;max-width:460px;width:100%;max-height:90dvh;overflow-y:auto;position:relative}
+.mc{position:absolute;top:12px;left:12px;background:rgba(58,142,246,.1);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:15px;cursor:pointer;width:26px;height:26px;display:grid;place-items:center;transition:all .15s;line-height:1}
+.mc:hover{color:var(--text)}
+.mk{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);opacity:.8;margin-bottom:5px;display:block}
+.mt{font-size:18px;font-weight:700;margin-bottom:5px}
+.ms{font-size:12px;color:var(--muted);margin-bottom:18px;font-weight:300;line-height:1.6}
+.fi{width:100%;background:rgba(58,142,246,.04);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--sans);font-size:13px;padding:10px 13px;outline:none;transition:border-color .15s;direction:rtl;margin-bottom:10px;font-weight:300}
+.fi:focus{border-color:rgba(29,255,212,.4)}
+.fi::placeholder{color:var(--muted2)}
+.fl{font-family:var(--mono);font-size:10px;color:var(--muted);display:block;margin-bottom:4px;letter-spacing:.04em}
+.fg{margin-bottom:10px}
+
+/* FILE DROP ZONE */
+.file-drop-zone{border:1.5px dashed var(--border2);border-radius:10px;padding:24px 16px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(58,142,246,.03)}
+.file-drop-zone:hover,.file-drop-zone.drag{border-color:var(--accent2);background:rgba(29,255,212,.05)}
+.file-drop-zone.has-file{border-color:var(--accent2);background:rgba(29,255,212,.06);border-style:solid}
+.file-drop-icon{font-size:24px;margin-bottom:7px}
+.file-drop-text{font-size:13px;font-weight:500;color:var(--text)}
+.file-drop-sub{font-size:11px;color:var(--muted2);margin-top:3px;font-family:var(--mono)}
+.quote-type-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px}
+.quote-opt{border:1px solid var(--border);border-radius:10px;padding:12px 10px;text-align:center;cursor:pointer;transition:all .15s;background:rgba(58,142,246,.04)}
+.quote-opt:hover{border-color:var(--border2)}
+.quote-opt.on{border-color:var(--accent2);background:rgba(29,255,212,.08)}
+.quote-opt-icon{font-size:18px;margin-bottom:5px}
+.quote-opt-title{font-size:12px;font-weight:600}
+.quote-opt-sub{font-size:10px;color:var(--muted);margin-top:2px;font-weight:300}
+.maint-opts{display:flex;flex-direction:column;gap:7px}
+.maint-opt{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all .15s}
+.maint-opt:hover{border-color:var(--border2)}
+.maint-opt input[type=radio]{accent-color:var(--accent2);width:14px;height:14px;flex-shrink:0;cursor:pointer}
+.maint-opt-title{font-size:13px;font-weight:600}
+.maint-opt-sub{font-size:11px;color:var(--muted);margin-top:1px;font-weight:300}
+.maint-opt:has(input:checked){border-color:rgba(29,255,212,.3);background:rgba(29,255,212,.05)}
+.maint-notice{margin-top:8px;padding:6px 10px;background:rgba(255,179,71,.07);border-radius:7px;border:.5px solid rgba(255,179,71,.2)}
+.spec-card{padding:16px 18px;margin-bottom:10px;transition:border-color .2s}
+.spec-card:hover{border-color:var(--border2)}
+.spec-card-name{font-size:13px;font-weight:700;margin-bottom:4px}
+.spec-card-date{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:8px}
+.spec-card-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.spec-card-body{font-size:12px;color:var(--muted);font-weight:300;line-height:1.6;margin-bottom:10px}
+.spec-status-bar{border-top:1px solid var(--borders);padding-top:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.richard-response{background:rgba(29,255,212,.06);border:1px solid rgba(29,255,212,.15);border-radius:9px;padding:10px 12px;margin-top:10px}
+.richard-response-label{font-family:var(--mono);font-size:9px;color:var(--accent2);letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px}
+.richard-response-text{font-size:12px;color:var(--text);line-height:1.6;font-weight:300}
+.rmt{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:20px;margin-top:6px;border:.5px solid}
+.rmt-req{color:var(--warn);border-color:rgba(255,179,71,.3);background:rgba(255,179,71,.08)}
+.rmt-inc{color:var(--accent2);border-color:rgba(29,255,212,.3);background:rgba(29,255,212,.06)}
+.rmt-opt{color:var(--muted);border-color:var(--muted2);background:transparent}
+
+/* DIVIDER */
+.div{height:.5px;background:var(--border);margin:20px 0}
+
+@media(max-width:600px){
+  .content{padding:20px 16px 48px}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .topbar-section{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     LOGIN SCREEN
+═══════════════════════════════════════ -->
+<div id="login-screen" class="z">
+  <div class="login-box glass">
+    <div class="login-logo">
+      <img src="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" alt="AS" onerror="this.style.display='none'">
+    </div>
+    <div class="login-brand">AutoScale</div>
+    <div class="login-sub">פורטל שותפים</div>
+
+    <div style="text-align:right;margin-bottom:20px">
+      <label class="login-label">אימייל / שם משתמש</label>
+      <input class="login-input" type="email" id="login-email" placeholder="partner@email.com" />
+      <label class="login-label">קוד גישה</label>
+      <input class="login-input" type="password" id="login-code" placeholder="הקוד שקיבלת מריצ׳רד" onkeydown="if(event.key==='Enter')doLogin()" />
+    </div>
+
+    <button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="doLogin()">כניסה לפורטל →</button>
+    <div class="login-err" id="login-err">קוד שגוי. נסה שוב או פנה לריצ׳רד.</div>
+    <div class="login-note">אין לך קוד? <a href="https://wa.me/972545764327?text=היי%20ריצ׳רד%20אני%20שותף%20וצריך%20גישה%20לפורטל" target="_blank" style="color:var(--accent2)">שלח הודעה לריצ׳רד</a></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     DASHBOARD
+═══════════════════════════════════════ -->
+<div id="dashboard">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-logo">
+        <div class="topbar-logoimg"><img src="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" alt="AS" onerror="this.style.display='none'"></div>
+        <div>
+          <div class="topbar-brand">AutoScale</div>
+          <div class="topbar-section">פורטל שותפים</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="partner-pill">
+          <div class="partner-dot"></div>
+          <span class="partner-name" id="partner-greeting">שלום</span>
+        </div>
+        <button class="btn btn-out btn-sm" onclick="logout()">יציאה</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content z">
+
+    <!-- NOTIFICATION -->
+    <div class="notif" id="notif-bar">
+      <span class="notif-icon">💰</span>
+      <span class="notif-text">יש לך <strong>₪850</strong> עמלה זמינה למשיכה.</span>
+      <button class="notif-close" onclick="this.parentElement.style.display='none'">×</button>
+    </div>
+
+    <!-- KPI ROW -->
+    <div class="kpi-grid">
+      <div class="kpi glass">
+        <div class="kpi-label"><span class="kpi-dot d-teal"></span>עמלות שהתקבלו</div>
+        <div class="kpi-num" id="kpi-earned">₪0</div>
+        <div class="kpi-sub">סה"כ מאז הצטרפות</div>
+      </div>
+      <div class="kpi glass">
+        <div class="kpi-label"><span class="kpi-dot d-warn"></span>ממתין לתשלום</div>
+        <div class="kpi-num" id="kpi-pending">₪0</div>
+        <div class="kpi-sub">לאחר השלמת פרויקטים</div>
+      </div>
+      <div class="kpi glass">
+        <div class="kpi-label"><span class="kpi-dot d-blue"></span>לקוחות פעילים</div>
+        <div class="kpi-num" id="kpi-active">0</div>
+        <div class="kpi-sub">כרגע בתהליך</div>
+      </div>
+      <div class="kpi glass">
+        <div class="kpi-label"><span class="kpi-dot d-green"></span>פרויקטים הושלמו</div>
+        <div class="kpi-num" id="kpi-done">0</div>
+        <div class="kpi-sub">מאז הצטרפות</div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab on" onclick="switchTab('clients',this)">הלקוחות שלי</button>
+      <button class="tab" onclick="switchTab('commissions',this)">עמלות</button>
+      <button class="tab" onclick="switchTab('refer',this)">הפניה חדשה</button>
+      <button class="tab" onclick="switchTab('spec',this)">📎 הגשת איפיון</button>
+      <button class="tab" onclick="switchTab('payout',this)">משיכת כסף</button>
+    </div>
+
+    <!-- ── TAB: CLIENTS ── -->
+    <div class="tabpanel on" id="tab-clients">
+      <div class="sec-head">
+        <div>
+          <span class="sec-kicker">לקוחות שהפניתי</span>
+          <div class="sec-title">סטטוס לקוחות</div>
+        </div>
+      </div>
+      <div class="glass" style="overflow:hidden">
+        <div class="table-wrap">
+          <table class="ctable" id="clients-table">
+            <thead>
+              <tr>
+                <th>שם לקוח</th>
+                <th>שירות</th>
+                <th>סטטוס</th>
+                <th>התקדמות</th>
+                <th>עמלה</th>
+                <th>פרטים</th>
+              </tr>
+            </thead>
+            <tbody id="clients-tbody">
+              <!-- populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: COMMISSIONS ── -->
+    <div class="tabpanel" id="tab-commissions">
+      <div class="g2" style="margin-bottom:16px">
+        <div>
+          <div class="sec-head"><div><span class="sec-kicker">עמלות שהתקבלו</span><div class="sec-title">שולם</div></div></div>
+          <div class="glass" id="paid-comms"><!-- JS --></div>
+        </div>
+        <div>
+          <div class="sec-head"><div><span class="sec-kicker">עמלות בדרך</span><div class="sec-title">ממתין</div></div></div>
+          <div class="glass" id="pending-comms"><!-- JS --></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: REFER ── -->
+    <div class="tabpanel" id="tab-refer">
+      <div class="g2">
+        <div>
+          <div class="sec-head"><div><span class="sec-kicker">שלח הפניה</span><div class="sec-title">הפן לקוח חדש</div></div></div>
+          <div class="glass" style="padding:22px">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:18px;font-weight:300;line-height:1.7">ספר לנו על הלקוח שרוצה להפנות. ריצ׳רד יחזור אליו תוך 24 שעות לשיחת היכרות.</p>
+            <div class="fg"><label class="fl">שם הלקוח</label><input class="fi" id="ref-name" placeholder="שם מלא"></div>
+            <div class="fg"><label class="fl">טלפון</label><input class="fi" id="ref-phone" placeholder="05X-XXXXXXX" type="tel"></div>
+            <div class="fg"><label class="fl">עסק / תחום</label><input class="fi" id="ref-biz" placeholder="שם העסק או התחום"></div>
+            <div class="fg"><label class="fl">מה הם צריכים? (בקצרה)</label><textarea class="fi" id="ref-need" rows="2" placeholder="לידים, WhatsApp בוט, CRM..."></textarea></div>
+            <div class="fg" style="margin-bottom:0"><label class="fl">גודל משוער של עסקה</label>
+              <select class="fi" id="ref-size" style="appearance:none">
+                <option value="">לא יודע</option>
+                <option value="small">קטן — עד ₪6,000</option>
+                <option value="medium">בינוני — ₪6,000–₪15,000</option>
+                <option value="large">גדול — ₪15,000+</option>
+                <option value="retainer">ריטיינר חודשי</option>
+              </select>
+            </div>
+            <div style="margin-top:16px">
+              <button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="submitReferral()">שלח הפניה →</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="sec-head"><div><span class="sec-kicker">הלינק שלי</span><div class="sec-title">הפניה ישירה</div></div></div>
+          <div class="reflink-box glass">
+            <div style="flex:1">
+              <div class="reflink-label">הלינק האישי שלך</div>
+              <div class="reflink-url" id="ref-url">autoscale.co.il?ref=XXXXX</div>
+            </div>
+            <button class="copy-btn" id="copy-ref" onclick="copyRef()">העתק</button>
+          </div>
+          <div style="margin-top:12px;padding:18px 20px" class="glass2">
+            <div style="font-size:12px;font-weight:600;margin-bottom:10px">איך מחשבים עמלה?</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.8;font-weight:300">
+              <div>• <strong style="color:var(--text)">10%</strong> על כל פרויקט חד-פעמי</div>
+              <div>• <strong style="color:var(--text)">15%</strong> על לקוחות שסגרתם בעצמכם</div>
+              <div>• <strong style="color:var(--text)">₪100/חודש</strong> על לקוחות ריטיינר — כל עוד הם פעילים</div>
+              <div style="margin-top:8px;font-size:11px;color:var(--muted2)">עמלות מחושבות אחרי תשלום מלא של הלקוח.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: SPEC ── -->
+    <div class="tabpanel" id="tab-spec">
+      <div class="g2">
+
+        <!-- LEFT: SUBMIT FORM -->
+        <div>
+          <div class="sec-head"><div><span class="sec-kicker">הגשת איפיון</span><div class="sec-title">שלח פרוייקט לבדיקה</div></div></div>
+          <div class="glass" style="padding:22px" id="spec-form-wrap">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:18px;font-weight:300;line-height:1.7">העלה מסמך איפיון, וריצ׳רד יחזור עם הערכה תוך 48 שעות.</p>
+
+            <div class="fg"><label class="fl">שם הפרויקט / הלקוח</label>
+              <input class="fi" id="spec-name" placeholder="לדוגמה: מרפאת שיניים — בוט WhatsApp"></div>
+
+            <div class="fg"><label class="fl">תיאור קצר</label>
+              <textarea class="fi" id="spec-desc" rows="3" placeholder="מה הלקוח צריך? מה הבעיה שפותרים? כמה שיותר פרטים — הערכה מדויקת יותר."></textarea></div>
+
+            <!-- FILE UPLOAD -->
+            <div class="fg">
+              <label class="fl">קובץ איפיון (PDF / Word / תמונה)</label>
+              <div class="file-drop-zone" id="file-zone" onclick="document.getElementById('spec-file').click()" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+                <div class="file-drop-icon" id="file-icon">📎</div>
+                <div class="file-drop-text" id="file-text">גרור קובץ לכאן או לחץ לבחירה</div>
+                <div class="file-drop-sub" id="file-sub">PDF, Word, PNG, JPG — עד 10MB</div>
+              </div>
+              <input type="file" id="spec-file" style="display:none" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.txt" onchange="fileSelected(this)">
+            </div>
+
+            <!-- QUOTE TYPE -->
+            <div class="fg">
+              <label class="fl">סוג הערכה מבוקשת</label>
+              <div class="quote-type-row">
+                <div class="quote-opt" id="qt-hours" onclick="selectQuoteType('hours')">
+                  <div class="quote-opt-icon">⏱</div>
+                  <div class="quote-opt-title">הערכת שעות</div>
+                  <div class="quote-opt-sub">כמה שעות מבנק</div>
+                </div>
+                <div class="quote-opt" id="qt-fixed" onclick="selectQuoteType('fixed')">
+                  <div class="quote-opt-icon">💰</div>
+                  <div class="quote-opt-title">מחיר קבוע</div>
+                  <div class="quote-opt-sub">פרויקט חד-פעמי</div>
+                </div>
+                <div class="quote-opt" id="qt-both" onclick="selectQuoteType('both')">
+                  <div class="quote-opt-icon">📊</div>
+                  <div class="quote-opt-title">שניהם</div>
+                  <div class="quote-opt-sub">לקבל השוואה</div>
+                </div>
+              </div>
+              <input type="hidden" id="spec-quote-type" value="">
+            </div>
+
+            <!-- MAINTENANCE -->
+            <div class="fg">
+              <label class="fl">תחזוקה שוטפת</label>
+              <div style="background:rgba(58,142,246,.04);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+                <div style="font-size:12px;color:var(--muted);margin-bottom:12px;font-weight:300;line-height:1.5">חלק מהפרויקטים דורשים תחזוקה שוטפת (Make, WhatsApp API וכד׳). בחר את ההעדפה שלך:</div>
+                <div class="maint-opts">
+                  <label class="maint-opt">
+                    <input type="radio" name="maint" value="richard" id="m-richard">
+                    <div class="maint-opt-inner">
+                      <div class="maint-opt-title">ריצ׳רד עושה</div>
+                      <div class="maint-opt-sub">ריטיינר חודשי — ₪390–490</div>
+                    </div>
+                  </label>
+                  <label class="maint-opt">
+                    <input type="radio" name="maint" value="partner" id="m-partner">
+                    <div class="maint-opt-inner">
+                      <div class="maint-opt-title">אני מטפל בתחזוקה</div>
+                      <div class="maint-opt-sub">אקבל הדרכה ועלות מופחתת</div>
+                    </div>
+                  </label>
+                  <label class="maint-opt">
+                    <input type="radio" name="maint" value="none" id="m-none">
+                    <div class="maint-opt-inner">
+                      <div class="maint-opt-title">לא צריך תחזוקה</div>
+                      <div class="maint-opt-sub">אם הפרויקט לא מחייב</div>
+                    </div>
+                  </label>
+                </div>
+                <div class="maint-notice" id="maint-notice" style="display:none">
+                  <span style="color:var(--warn);font-size:11px;font-family:var(--mono)">⚠ ריצ׳רד יציין אם התחזוקה חובה לפרויקט זה</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="fg"><label class="fl">הערות נוספות (אופציונלי)</label>
+              <input class="fi" id="spec-notes" placeholder="דדליין, תקציב מקסימלי, שיקולים מיוחדים..."></div>
+
+            <button class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:4px" id="spec-submit-btn" onclick="submitSpec()">שלח איפיון לבדיקה →</button>
+            <p style="font-size:11px;color:var(--muted2);margin-top:9px;text-align:center;font-family:var(--mono)">ריצ׳רד יחזור תוך 48 שעות · תקבל עדכון כאן ובהודעה</p>
+          </div>
+
+          <!-- SUCCESS STATE -->
+          <div class="glass" style="padding:32px;text-align:center;display:none" id="spec-success">
+            <div style="font-size:36px;margin-bottom:12px">📬</div>
+            <div style="font-size:16px;font-weight:700;margin-bottom:6px">האיפיון נשלח!</div>
+            <div style="font-size:13px;color:var(--muted);font-weight:300;margin-bottom:20px">ריצ׳רד יבדוק ויחזור אליך תוך 48 שעות. תוכל לעקוב אחר הסטטוס ברשימה מצד ימין.</div>
+            <button class="btn btn-out" style="border-radius:12px" onclick="resetSpecForm()">שלח איפיון נוסף</button>
+          </div>
+        </div>
+
+        <!-- RIGHT: SUBMISSION HISTORY -->
+        <div>
+          <div class="sec-head"><div><span class="sec-kicker">הגשות קודמות</span><div class="sec-title">סטטוס בדיקה</div></div></div>
+          <div id="spec-history-list">
+            <!-- JS populated -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── TAB: PAYOUT ── -->
+    <div class="tabpanel" id="tab-payout">
+      <div class="g2">
+        <div>
+          <div class="sec-head"><div><span class="sec-kicker">משיכת עמלות</span><div class="sec-title">קבל את הכסף שלך</div></div></div>
+          <div class="payout-box glass">
+            <div class="payout-available" id="payout-avail">₪0</div>
+            <div class="payout-sub">זמין למשיכה מיידית</div>
+            <div style="margin-bottom:16px">
+              <label class="fl">שיטת תשלום מועדפת</label>
+              <select class="fi" style="appearance:none">
+                <option>ביט — 054-576-4327</option>
+                <option>העברה בנקאית</option>
+                <option>חשבונית + העברה</option>
+              </select>
+            </div>
+            <div style="margin-bottom:14px">
+              <label class="fl">הערות (אופציונלי)</label>
+              <input class="fi" placeholder="לדוגמה: העברה לחשבון חדש">
+            </div>
+            <button class="btn btn-teal" style="width:100%;border-radius:12px" onclick="requestPayout()">בקש משיכה →</button>
+            <p style="font-size:11px;color:var(--muted2);margin-top:10px;line-height:1.6;font-family:var(--mono)">עיבוד תוך 3–5 ימי עסקים · מינימום משיכה ₪200</p>
+          </div>
+        </div>
+        <div>
+          <div class="sec-head"><div><span class="sec-kicker">היסטוריה</span><div class="sec-title">משיכות קודמות</div></div></div>
+          <div class="glass" id="payout-history" style="padding:18px"><!-- JS --></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /dashboard -->
+
+<!-- ═══════════════════════════════════════
+     CLIENT DETAIL MODAL
+═══════════════════════════════════════ -->
+<div class="mo" id="modal-client">
+  <div class="mb glass">
+    <button class="mc" onclick="closeModal()">×</button>
+    <span class="mk" id="modal-type-label">פרויקט</span>
+    <div class="mt" id="modal-client-name">—</div>
+    <div class="ms" id="modal-client-biz">—</div>
+    <div class="div"></div>
+    <div style="font-size:12px;font-weight:600;color:var(--muted2);margin-bottom:12px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase">ציר זמן</div>
+    <div class="timeline" id="modal-timeline"></div>
+    <div class="div"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+      <div>
+        <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:3px">עמלה צפויה</div>
+        <div style="font-family:var(--mono);font-size:20px;font-weight:700;color:var(--accent2)" id="modal-commission">₪0</div>
+      </div>
+      <div id="modal-status-wrap"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════ -->
+<script>
+// ── DEMO DATA (GF: replace with real API calls to Monday/Supabase) ──────────
+const PARTNERS = {
+  'demo': { name: 'דמו שותף', code: '1234', refCode: 'DEMO1' },
+  'partner1@test.com': { name: 'שי לוי', code: '5678', refCode: 'SHAY1' },
+};
+
+const DEMO_CLIENTS = [
+  { id:1, name:'רחל כהן',   biz:'מרפאת שיניים',    service:'WhatsApp בוט',    status:'active', pct:60, deal:4800,  commission:480,  commStatus:'pending', timeline:[{t:'done',text:'חתימה על הצעה',date:'15.1'},{t:'done',text:'קיק-אוף ואיסוף נכסים',date:'17.1'},{t:'now',text:'בנייה ובדיקות',date:'בתהליך'},{t:'next',text:'מסירה ואחריות',date:'~28.1'}] },
+  { id:2, name:'אבי גרוסמן', biz:'סוכן נדל"ן',      service:'משפך + CRM',      status:'done',   pct:100,deal:8500,  commission:850,  commStatus:'paid',    timeline:[{t:'done',text:'חתימה על הצעה',date:'3.12'},{t:'done',text:'קיק-אוף',date:'5.12'},{t:'done',text:'בנייה ובדיקות',date:'12.12'},{t:'done',text:'מסירה',date:'20.12'}] },
+  { id:3, name:'מירה שפירא', biz:'קורסים אונליין',  service:'לידים + WhatsApp', status:'lead',   pct:10, deal:3200,  commission:320,  commStatus:'wait',    timeline:[{t:'done',text:'הפניה התקבלה',date:'20.1'},{t:'now',text:'שיחת גילוי מתוכננת',date:'22.1'},{t:'next',text:'הצעת מחיר',date:'—'},{t:'next',text:'קיק-אוף',date:'—'}] },
+  { id:4, name:'יוסי ברק',   biz:'חנות אופניים',    service:'תחזוקה חודשית',   status:'maint',  pct:100,deal:490,   commission:100,  commStatus:'paid',    timeline:[{t:'done',text:'פרויקט הושלם',date:'1.11'},{t:'done',text:'ריטיינר פעיל',date:'1.12'},{t:'now',text:'חודש ינואר',date:'שוטף'},{t:'next',text:'חידוש פברואר',date:'1.2'}] },
+];
+
+const PAYOUT_HISTORY = [
+  { date:'01.01.2025', amount:850,  method:'ביט', status:'paid' },
+  { date:'01.12.2024', amount:1200, method:'ביט', status:'paid' },
+];
+
+// ── LOGIN ────────────────────────────────────────────────────────────────────
+let currentPartner = null;
+
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const code  = document.getElementById('login-code').value.trim();
+  const err   = document.getElementById('login-err');
+
+  // Check by email or by code "demo/1234" shortcut
+  let partner = null;
+  if (email === 'demo' || email === '') {
+    if (code === '1234') partner = PARTNERS['demo'];
+  } else {
+    const p = PARTNERS[email];
+    if (p && p.code === code) partner = p;
+  }
+
+  if (!partner) {
+    err.style.display = 'block';
+    return;
+  }
+
+  err.style.display = 'none';
+  currentPartner = partner;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  renderDashboard();
+}
+
+function logout() {
+  currentPartner = null;
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-code').value = '';
+}
+
+// ── RENDER DASHBOARD ─────────────────────────────────────────────────────────
+function renderDashboard() {
+  document.getElementById('partner-greeting').textContent = 'שלום, ' + currentPartner.name;
+  document.getElementById('ref-url').textContent = 'autoscale.co.il?ref=' + currentPartner.refCode;
+
+  // KPIs
+  const earned  = DEMO_CLIENTS.filter(c=>c.commStatus==='paid').reduce((s,c)=>s+c.commission,0);
+  const pending = DEMO_CLIENTS.filter(c=>c.commStatus==='pending').reduce((s,c)=>s+c.commission,0);
+  const active  = DEMO_CLIENTS.filter(c=>c.status==='active'||c.status==='lead').length;
+  const done    = DEMO_CLIENTS.filter(c=>c.status==='done'||c.status==='maint').length;
+  document.getElementById('kpi-earned').textContent  = '₪' + earned.toLocaleString();
+  document.getElementById('kpi-pending').textContent = '₪' + pending.toLocaleString();
+  document.getElementById('kpi-active').textContent  = active;
+  document.getElementById('kpi-done').textContent    = done;
+  document.getElementById('payout-avail').textContent = '₪' + earned.toLocaleString();
+
+  // Notif
+  if (earned === 0) document.getElementById('notif-bar').style.display = 'none';
+  else document.getElementById('notif-bar').querySelector('.notif-text').innerHTML =
+    'יש לך <strong>₪' + earned.toLocaleString() + '</strong> עמלה זמינה למשיכה.';
+
+  renderClients();
+  renderCommissions();
+  renderPayoutHistory();
+  renderSpecHistory();
+}
+
+// ── CLIENTS TABLE ─────────────────────────────────────────────────────────────
+const statusLabels = { lead:'ליד', active:'בתהליך', done:'הושלם', maint:'תחזוקה' };
+const statusClass  = { lead:'b-lead', active:'b-active', done:'b-done', maint:'b-maint' };
+
+function renderClients() {
+  const tbody = document.getElementById('clients-tbody');
+  if (!DEMO_CLIENTS.length) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty"><div class="empty-icon">📋</div>אין לקוחות עדיין — הפן את הראשון!</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = DEMO_CLIENTS.map(c => `
+    <tr>
+      <td><div class="client-name">${c.name}</div><div class="client-biz">${c.biz}</div></td>
+      <td style="color:var(--muted);font-size:12px">${c.service}</td>
+      <td><span class="badge ${statusClass[c.status]}">${statusLabels[c.status]}</span></td>
+      <td>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:3px">${c.pct}%</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${c.pct}%"></div></div>
+      </td>
+      <td>
+        <span style="font-family:var(--mono);font-size:13px;color:${c.commStatus==='paid'?'var(--accent2)':'var(--warn)'}">₪${c.commission.toLocaleString()}</span>
+        <span class="badge ${c.commStatus==='paid'?'b-paid':c.commStatus==='pending'?'b-pending':'b-wait'}" style="margin-right:6px">${c.commStatus==='paid'?'שולם':c.commStatus==='pending'?'ממתין':'בהמתנה'}</span>
+      </td>
+      <td><button class="btn btn-out btn-sm" onclick="openClient(${c.id})">פרטים</button></td>
+    </tr>
+  `).join('');
+}
+
+// ── COMMISSIONS ───────────────────────────────────────────────────────────────
+function renderCommissions() {
+  const paid    = DEMO_CLIENTS.filter(c=>c.commStatus==='paid');
+  const pending = DEMO_CLIENTS.filter(c=>c.commStatus==='pending'||c.commStatus==='wait');
+
+  const paidEl = document.getElementById('paid-comms');
+  paidEl.innerHTML = paid.length ? paid.map(c=>`
+    <div class="comm-row">
+      <div><div class="comm-client">${c.name}</div><div class="comm-desc">${c.service}</div></div>
+      <div style="text-align:left"><div class="comm-amount">₪${c.commission.toLocaleString()}</div><span class="badge b-paid">שולם</span></div>
+    </div>`).join('')
+    : '<div class="empty"><div class="empty-icon">✅</div>אין עמלות שולמו עדיין</div>';
+
+  const pendEl = document.getElementById('pending-comms');
+  pendEl.innerHTML = pending.length ? pending.map(c=>`
+    <div class="comm-row">
+      <div><div class="comm-client">${c.name}</div><div class="comm-desc">${c.service} · ${c.pct}% הושלם</div></div>
+      <div style="text-align:left"><div class="comm-amount" style="-webkit-text-fill-color:var(--warn);color:var(--warn)">₪${c.commission.toLocaleString()}</div><span class="badge ${c.commStatus==='pending'?'b-pending':'b-wait'}">${c.commStatus==='pending'?'ממתין לסיום':'בהמתנה לסגירה'}</span></div>
+    </div>`).join('')
+    : '<div class="empty"><div class="empty-icon">⏳</div>אין עמלות ממתינות</div>';
+}
+
+// ── PAYOUT HISTORY ────────────────────────────────────────────────────────────
+function renderPayoutHistory() {
+  const el = document.getElementById('payout-history');
+  el.innerHTML = PAYOUT_HISTORY.length ? PAYOUT_HISTORY.map(p=>`
+    <div class="comm-row" style="padding:10px 0;border-bottom:.5px solid var(--borders)">
+      <div><div style="font-size:13px;font-weight:600">₪${p.amount.toLocaleString()}</div><div style="font-size:11px;color:var(--muted)">${p.method} · ${p.date}</div></div>
+      <span class="badge b-paid">שולם</span>
+    </div>`).join('')
+    : '<div class="empty"><div class="empty-icon">💸</div>אין היסטוריית משיכות</div>';
+}
+
+// ── CLIENT MODAL ──────────────────────────────────────────────────────────────
+function openClient(id) {
+  const c = DEMO_CLIENTS.find(x=>x.id===id);
+  if (!c) return;
+  document.getElementById('modal-client-name').textContent = c.name;
+  document.getElementById('modal-client-biz').textContent = c.biz + ' · ' + c.service;
+  document.getElementById('modal-type-label').textContent = statusLabels[c.status];
+  document.getElementById('modal-commission').textContent = '₪' + c.commission.toLocaleString();
+  document.getElementById('modal-status-wrap').innerHTML =
+    '<span class="badge ' + statusClass[c.status] + '">' + statusLabels[c.status] + '</span>';
+
+  const tlEl = document.getElementById('modal-timeline');
+  tlEl.innerHTML = c.timeline.map(t=>`
+    <div class="tl-item tl-${t.t}">
+      <div class="tl-dot"></div>
+      <div style="flex:1"><div class="tl-text">${t.text}</div></div>
+      <div class="tl-date">${t.date}</div>
+    </div>`).join('');
+
+  document.getElementById('modal-client').classList.add('op');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-client').classList.remove('op');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modal-client').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-client')) closeModal();
+});
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('tab-'+id).classList.add('on');
+}
+
+// ── REFERRAL SUBMIT ───────────────────────────────────────────────────────────
+function submitReferral() {
+  const name  = document.getElementById('ref-name').value.trim();
+  const phone = document.getElementById('ref-phone').value.trim();
+  if (!name || !phone) { alert('אנא מלאו שם וטלפון'); return; }
+  fetch('https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      type: 'partner_referral',
+      partner: currentPartner.name,
+      refCode: currentPartner.refCode,
+      clientName: name,
+      clientPhone: phone,
+      clientBiz: document.getElementById('ref-biz').value,
+      need: document.getElementById('ref-need').value,
+      size: document.getElementById('ref-size').value
+    })
+  }).catch(()=>{});
+  alert('תודה! ריצ׳רד יחזור ל' + name + ' תוך 24 שעות. תראה אותם ב"הלקוחות שלי" בקרוב.');
+  document.getElementById('ref-name').value='';
+  document.getElementById('ref-phone').value='';
+  document.getElementById('ref-biz').value='';
+  document.getElementById('ref-need').value='';
+  switchTab('clients', document.querySelector('.tab'));
+}
+
+// ── PAYOUT REQUEST ────────────────────────────────────────────────────────────
+function requestPayout() {
+  const avail = parseInt(document.getElementById('payout-avail').textContent.replace(/[₪,]/g,'')) || 0;
+  if (avail < 200) { alert('מינימום משיכה ₪200. כרגע אין מספיק יתרה.'); return; }
+  fetch('https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ type:'payout_request', partner: currentPartner.name, amount: avail })
+  }).catch(()=>{});
+  alert('בקשת משיכה של ₪' + avail.toLocaleString() + ' נשלחה לריצ׳רד. תקבל את הכסף תוך 3–5 ימי עסקים.');
+}
+
+// ── COPY REF LINK ─────────────────────────────────────────────────────────────
+function copyRef() {
+  const url = document.getElementById('ref-url').textContent;
+  navigator.clipboard.writeText(url).catch(()=>{});
+  const btn = document.getElementById('copy-ref');
+  btn.textContent = '✓ הועתק'; btn.classList.add('copied');
+  setTimeout(()=>{ btn.textContent='העתק'; btn.classList.remove('copied'); }, 2000);
+}
+
+// ── SPEC SUBMISSIONS ──────────────────────────────────────────────────────────
+const DEMO_SPECS = [
+  { id:'s1', name:'בוט WhatsApp למרפאת שיניים', date:'08.01.2025', desc:'הלקוח מחפש בוט שיענה ללידים מפייסבוק תוך שנייה, יאסוף פרטים ויקבע תורים.', quoteType:'both', maintPref:'richard', status:'reviewed', richardReply:{ text:'נראה מעניין. הערכה: 15–20 שעות מהבנק, או ₪4,800 כפרויקט קבוע. ממליץ על תחזוקה בגלל WhatsApp API.', maintDecision:'required', maintNote:'WhatsApp API דורש תחזוקה חובה — ריטיינר ₪390/חודש' } },
+  { id:'s2', name:'דפי נחיתה + CRM לסוכן ביטוח', date:'15.01.2025', desc:'2 דפי נחיתה, חיבור ל-Monday, אוטומציית לידים דרך Make.', quoteType:'fixed', maintPref:'none', status:'pending', richardReply:null }
+];
+let selectedQuoteType='', selectedFile=null;
+
+function dragOver(e){e.preventDefault();document.getElementById('file-zone').classList.add('drag')}
+function dragLeave(){document.getElementById('file-zone').classList.remove('drag')}
+function dropFile(e){e.preventDefault();document.getElementById('file-zone').classList.remove('drag');if(e.dataTransfer.files[0])applyFile(e.dataTransfer.files[0])}
+function fileSelected(inp){if(inp.files[0])applyFile(inp.files[0])}
+function applyFile(file){
+  if(file.size>10*1024*1024){alert('הקובץ גדול מ-10MB');return}
+  selectedFile=file;
+  const z=document.getElementById('file-zone');z.classList.add('has-file');
+  document.getElementById('file-icon').textContent='✅';
+  document.getElementById('file-text').textContent=file.name;
+  document.getElementById('file-sub').textContent=(file.size/1024).toFixed(0)+' KB · לחץ להחלפה';
+}
+
+function selectQuoteType(t){
+  document.querySelectorAll('.quote-opt').forEach(o=>o.classList.remove('on'));
+  document.getElementById('qt-'+t).classList.add('on');
+  selectedQuoteType=t;
+}
+
+// maint "none" warning
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('input[name=maint]').forEach(r=>r.addEventListener('change',()=>{
+    document.getElementById('maint-notice').style.display=r.value==='none'?'block':'none';
+  }));
+});
+
+function submitSpec(){
+  const name=document.getElementById('spec-name').value.trim();
+  const desc=document.getElementById('spec-desc').value.trim();
+  const maint=document.querySelector('input[name=maint]:checked');
+  if(!name){alert('אנא הכנס שם פרויקט');return}
+  if(!selectedQuoteType){alert('אנא בחר סוג הערכה');return}
+  if(!maint){alert('אנא בחר העדפת תחזוקה');return}
+  const btn=document.getElementById('spec-submit-btn');
+  btn.textContent='שולח...';btn.disabled=true;
+  const payload={type:'spec_submission',partner:currentPartner.name,refCode:currentPartner.refCode,projectName:name,description:desc,quoteType:selectedQuoteType,maintPref:maint.value,notes:document.getElementById('spec-notes').value,fileName:selectedFile?selectedFile.name:'אין קובץ',timestamp:new Date().toLocaleString('he-IL')};
+  const send=(extra)=>{
+    fetch('https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,...extra})}).catch(()=>{});
+    DEMO_SPECS.unshift({id:'s'+Date.now(),name,desc,date:new Date().toLocaleDateString('he-IL'),quoteType:selectedQuoteType,maintPref:maint.value,status:'pending',richardReply:null});
+    document.getElementById('spec-form-wrap').style.display='none';
+    document.getElementById('spec-success').style.display='block';
+    renderSpecHistory();
+    btn.textContent='שלח איפיון לבדיקה →';btn.disabled=false;
+  };
+  if(selectedFile&&selectedFile.size<3*1024*1024){const r=new FileReader();r.onload=e=>send({fileBase64:e.target.result.split(',')[1]});r.readAsDataURL(selectedFile);}
+  else send({});
+}
+
+function resetSpecForm(){
+  document.getElementById('spec-form-wrap').style.display='block';
+  document.getElementById('spec-success').style.display='none';
+  ['spec-name','spec-desc','spec-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('spec-file').value='';
+  selectedFile=null;selectedQuoteType='';
+  document.querySelectorAll('.quote-opt').forEach(o=>o.classList.remove('on'));
+  document.querySelectorAll('input[name=maint]').forEach(r=>r.checked=false);
+  const z=document.getElementById('file-zone');z.classList.remove('has-file');
+  document.getElementById('file-icon').textContent='📎';
+  document.getElementById('file-text').textContent='גרור קובץ לכאן או לחץ לבחירה';
+  document.getElementById('file-sub').textContent='PDF, Word, PNG, JPG — עד 10MB';
+  document.getElementById('maint-notice').style.display='none';
+}
+
+const qtL={hours:'הערכת שעות',fixed:'מחיר קבוע',both:'שניהם'};
+const mL={richard:'ריצ׳רד מטפל',partner:'אני מטפל',none:'ללא תחזוקה'};
+const mdM={required:{cls:'rmt rmt-req',text:'⚠ תחזוקה חובה'},included:{cls:'rmt rmt-inc',text:'✓ כלול בהצעה'},optional:{cls:'rmt rmt-opt',text:'אופציונלי'}};
+
+function renderSpecHistory(){
+  const el=document.getElementById('spec-history-list');
+  if(!DEMO_SPECS.length){el.innerHTML='<div class="glass" style="padding:24px"><div class="empty"><div class="empty-icon">📎</div>לא הוגשו איפיונים עדיין</div></div>';return;}
+  el.innerHTML=DEMO_SPECS.map(s=>{
+    const sb=s.status==='reviewed'?'<span class="badge b-active">נבדק ✓</span>':'<span class="badge b-pending">ממתין לבדיקה</span>';
+    const rh=s.richardReply?`<div class="richard-response"><div class="richard-response-label">תגובת ריצ׳רד</div><div class="richard-response-text">${s.richardReply.text}</div>${s.richardReply.maintDecision?`<div class="${mdM[s.richardReply.maintDecision].cls}">${mdM[s.richardReply.maintDecision].text}${s.richardReply.maintNote?' · '+s.richardReply.maintNote:''}</div>`:''}</div>`:'';
+    return`<div class="spec-card glass"><div class="spec-card-name">${s.name}</div><div class="spec-card-date">${s.date}</div><div class="spec-card-meta"><span class="badge b-lead">${qtL[s.quoteType]||s.quoteType}</span><span class="badge b-wait">${mL[s.maintPref]||s.maintPref}</span></div><div class="spec-card-body">${s.desc}</div>${rh}<div class="spec-status-bar"><span style="font-family:var(--mono);font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:.06em">סטטוס</span>${sb}</div></div>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
