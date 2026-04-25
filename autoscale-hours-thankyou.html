@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#060d1a"/>
+  <title>AutoScale | תודה על הרכישה 🎉</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --bg:#060d1a;--glass:rgba(12,26,56,0.55);--border:rgba(80,140,255,0.13);
+      --border-hover:rgba(80,160,255,0.32);--text:#e8f0ff;--muted:#6a85b6;
+      --accent:#3a8ef6;--accent2:#1dffd4;--warn:#f6a83a;--green:#4ddb7a;
+      --radius:18px;--radius-sm:12px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;background:
+      radial-gradient(ellipse 80vw 55vh at 10% -5%,rgba(30,90,220,0.22) 0%,transparent 65%),
+      radial-gradient(ellipse 60vw 40vh at 90% 10%,rgba(0,200,180,0.10) 0%,transparent 60%),
+      radial-gradient(ellipse 100vw 30vh at 50% 100%,rgba(10,30,80,0.5) 0%,transparent 70%);
+      pointer-events:none;z-index:0;}
+    body::after{content:'';position:fixed;inset:0;
+      background-image:linear-gradient(rgba(58,142,246,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(58,142,246,0.04) 1px,transparent 1px);
+      background-size:40px 40px;pointer-events:none;z-index:0;}
+    .wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:32px 16px 80px;}
+
+    /* HEADER */
+    header{margin-bottom:28px;padding-bottom:22px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;}
+    .logo-mark{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#0d2a6e,#0a4a3a);border:1px solid rgba(58,142,246,0.28);box-shadow:0 0 28px rgba(58,142,246,0.28),0 0 0 4px rgba(58,142,246,0.07);overflow:hidden;display:grid;place-items:center;}
+    .logo-mark img{width:100%;height:100%;object-fit:cover;display:block;}
+    .brand-name{font-size:20px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .brand-sub{font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;}
+
+    /* SUCCESS HERO */
+    .hero{text-align:center;margin-bottom:32px;}
+    .suc-ring{
+      width:88px;height:88px;border-radius:50%;
+      background:rgba(29,255,212,0.07);
+      border:2px solid rgba(29,255,212,0.35);
+      display:flex;align-items:center;justify-content:center;
+      font-size:36px;margin:0 auto 18px;
+      animation:pulse 2.5s infinite;
+    }
+    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(29,255,212,0.28)}50%{box-shadow:0 0 0 16px rgba(29,255,212,0)}}
+    .hero-title{font-size:24px;font-weight:700;margin-bottom:8px;}
+    .hero-sub{font-size:13.5px;color:var(--muted);line-height:1.7;}
+
+    /* PKG STRIP */
+    .pkg-strip{
+      background:rgba(29,255,212,0.05);border:1px solid rgba(29,255,212,0.18);
+      border-radius:var(--radius);padding:13px 18px;margin-bottom:28px;
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .pkg-strip-lbl{font-size:12px;color:var(--muted);}
+    .pkg-strip-val{font-size:17px;font-weight:700;font-family:'Space Mono',monospace;color:var(--accent2);}
+
+    /* SECTION LABEL */
+    .section-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-family:'Space Mono',monospace;margin:0 0 12px;opacity:0.8;}
+
+    /* STEP CARDS */
+    .step-card{
+      display:flex;align-items:flex-start;gap:14px;
+      background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);
+      padding:16px;margin-bottom:10px;backdrop-filter:blur(12px);
+      transition:border-color 0.2s,box-shadow 0.2s;
+      text-decoration:none;color:var(--text);cursor:pointer;
+    }
+    .step-card:hover{border-color:var(--border-hover);box-shadow:0 6px 24px rgba(0,0,0,0.22);}
+    .step-card.primary{border-color:rgba(29,255,212,0.32);background:rgba(29,255,212,0.04);}
+    .step-card.secondary{border-color:rgba(58,142,246,0.22);}
+    .step-num{
+      width:32px;height:32px;border-radius:50%;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      font-size:13px;font-weight:700;font-family:'Space Mono',monospace;
+      border:1.5px solid var(--border);color:var(--muted);
+    }
+    .step-card.primary .step-num{border-color:var(--accent2);color:var(--accent2);background:rgba(29,255,212,0.08);}
+    .step-card.secondary .step-num{border-color:var(--accent);color:var(--accent);background:rgba(58,142,246,0.08);}
+    .step-body{flex:1;}
+    .step-title{font-size:15px;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:7px;}
+    .step-badge{font-size:9px;font-weight:700;font-family:'Space Mono',monospace;padding:2px 7px;border-radius:999px;background:rgba(29,255,212,0.15);color:var(--accent2);letter-spacing:0.5px;}
+    .step-badge.blue{background:rgba(58,142,246,0.15);color:var(--accent);}
+    .step-desc{font-size:12px;color:var(--muted);line-height:1.6;}
+    .step-arr{color:var(--muted);font-size:16px;opacity:0.45;align-self:center;flex-shrink:0;}
+
+    /* DIVIDER */
+    .divider{height:1px;background:var(--border);margin:20px 0;}
+
+    /* OPTIONAL CARDS */
+    .opt-row{display:flex;gap:9px;margin-bottom:9px;}
+    .opt-card{flex:1;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px;backdrop-filter:blur(8px);cursor:pointer;transition:all 0.2s;text-decoration:none;color:var(--text);display:flex;flex-direction:column;gap:6px;text-align:center;align-items:center;}
+    .opt-card:hover{border-color:var(--border-hover);transform:translateY(-2px);}
+    .opt-icon{font-size:22px;}
+    .opt-title{font-size:13px;font-weight:600;}
+    .opt-desc{font-size:11px;color:var(--muted);}
+
+    /* INFO NOTE */
+    .info-note{background:rgba(58,142,246,0.06);border:1px solid rgba(58,142,246,0.18);border-radius:var(--radius-sm);padding:12px 14px;font-size:12px;color:rgba(180,210,255,0.85);line-height:1.7;margin-bottom:20px;}
+    .info-note strong{color:var(--text);}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+    .fade-in{animation:fadeUp 0.4s ease both;}
+  </style>
+</head>
+<body>
+<div class="wrap fade-in">
+
+  <header>
+    <div class="logo-mark">
+      <img src="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" alt="AutoScale"/>
+    </div>
+    <div class="brand-name">AutoScale</div>
+    <div class="brand-sub">אוטומציות חכמות</div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="suc-ring">✓</div>
+    <div class="hero-title">תודה! התשלום התקבל 🎉</div>
+    <div class="hero-sub">בנק השעות שלך פעיל ומוכן.<br>נחזור אליך תוך 24 שעות עם אישור רשמי וחשבונית.</div>
+  </div>
+
+  <!-- PACKAGE STRIP — populated by URL params -->
+  <div class="pkg-strip" id="pkgStrip" style="display:none">
+    <div class="pkg-strip-lbl">החבילה שנרכשה</div>
+    <div class="pkg-strip-val" id="pkgVal">—</div>
+  </div>
+
+  <!-- NEXT STEPS -->
+  <div class="section-label">הצעדים הבאים — לפי הסדר</div>
+
+  <!-- STEP 1: Share Access — FIRST, most important -->
+  <a class="step-card primary" href="https://forms.monday.com/forms/cecc3e978ab695990753b0053e8bb696?r=use1" target="_blank">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">העברת גישות <span class="step-badge">חשוב — קודם כל</span></div>
+      <div class="step-desc">כדי שנוכל להתחיל לעבוד, נדרש גישה למערכות שלך (אתר, CRM, Google, Meta וכו׳). ממלאים את הטופס — מוצפן ומאובטח.</div>
+    </div>
+    <div class="step-arr">←</div>
+  </a>
+
+  <!-- STEP 2: Open Ticket -->
+  <a class="step-card secondary" href="https://forms.monday.com/forms/971d4936269e4b9c4017f5173f95cb59?r=use1" target="_blank">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">פתיחת טיקט / בקשה <span class="step-badge blue">מה לעשות</span></div>
+      <div class="step-desc">תאר/י במה להשתמש בשעות — משימה ספציפית, פרויקט, רשימת דברים. ככל שיותר פרטים, נתחיל מהר יותר.</div>
+    </div>
+    <div class="step-arr">←</div>
+  </a>
+
+  <div class="divider"></div>
+
+  <!-- OPTIONAL: Schedule -->
+  <div class="section-label">אופציונלי — רוצה לדבר קודם?</div>
+
+  <div class="opt-row">
+    <a class="opt-card" href="https://cal.com/autoscale/call" target="_blank">
+      <div class="opt-icon">📞</div>
+      <div class="opt-title">שיחה</div>
+      <div class="opt-desc">15–30 דק׳ לתכנון</div>
+    </a>
+    <a class="opt-card" href="https://cal.com/autoscale/meeting" target="_blank">
+      <div class="opt-icon">📅</div>
+      <div class="opt-title">פגישת זום</div>
+      <div class="opt-desc">מיפוי מעמיק יחד</div>
+    </a>
+    <a class="opt-card" href="https://wa.me/972552962965" target="_blank">
+      <div class="opt-icon">💬</div>
+      <div class="opt-title">WhatsApp</div>
+      <div class="opt-desc">שלח/י הודעה</div>
+    </a>
+  </div>
+
+  <div class="info-note">
+    💡 <strong>הסדר המומלץ:</strong> העברת גישות → פתיחת טיקט → (אופציונלי) תיאום שיחה/פגישה.<br>
+    אם תרצה/י לקבוע שיחה לפני — גם זה בסדר גמור.
+  </div>
+
+</div>
+
+<script>
+// Read URL params to show package details
+// Usage: thankyou.html?hours=10&price=2900
+const p = new URLSearchParams(window.location.search);
+const hours = p.get('hours');
+const price = p.get('price');
+if(hours && price){
+  const strip = document.getElementById('pkgStrip');
+  const val   = document.getElementById('pkgVal');
+  const vat   = Math.round(parseInt(price)*0.18);
+  val.textContent = hours + ' שעות | ₪' + parseInt(price).toLocaleString() + ' +מע"מ (₪' + vat.toLocaleString() + ')';
+  strip.style.display = '';
+}
+</script>
+</body>
+</html>
