@@ -71,6 +71,9 @@
     .step-card:hover{border-color:var(--border-hover);box-shadow:0 6px 24px rgba(0,0,0,0.22);}
     .step-card.primary{border-color:rgba(29,255,212,0.32);background:rgba(29,255,212,0.04);}
     .step-card.secondary{border-color:rgba(58,142,246,0.22);}
+    .step-card.portal{border-color:rgba(160,100,255,0.28);background:rgba(120,60,220,0.04);opacity:0.82;}
+    .step-card.portal .step-num{border-color:#a064ff;color:#a064ff;background:rgba(160,100,255,0.08);}
+    .step-badge.soon{background:rgba(160,100,255,0.18);color:#c89fff;border:1px solid rgba(160,100,255,0.35);}
     .step-num{
       width:32px;height:32px;border-radius:50%;flex-shrink:0;
       display:flex;align-items:center;justify-content:center;
@@ -148,6 +151,16 @@
     <div class="step-body">
       <div class="step-title">פתיחת טיקט / בקשה <span class="step-badge blue">מה לעשות</span></div>
       <div class="step-desc">תאר/י במה להשתמש בשעות — משימה ספציפית, פרויקט, רשימת דברים. ככל שיותר פרטים, נתחיל מהר יותר.</div>
+    </div>
+    <div class="step-arr">←</div>
+  </a>
+
+  <!-- STEP 3: Client Portal -->
+  <a class="step-card portal" href="https://autoscalehq.io/login" target="_blank">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">כניסה לאזור הלקוחות <span class="step-badge soon">בקרוב</span></div>
+      <div class="step-desc">מעקב אחר פרויקטים, בנק שעות, תשלומים ותקשורת ישירה — הכל במקום אחד.</div>
     </div>
     <div class="step-arr">←</div>
   </a>
