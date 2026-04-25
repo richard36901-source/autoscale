@@ -1,0 +1,925 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#060d1a" />
+  <title>AutoScale | רכישת בנק שעות</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #060d1a;
+      --glass: rgba(12,26,56,0.55);
+      --border: rgba(80,140,255,0.13);
+      --border-hover: rgba(80,160,255,0.32);
+      --text: #e8f0ff;
+      --muted: #6a85b6;
+      --accent: #3a8ef6;
+      --accent2: #1dffd4;
+      --warn: #f6a83a;
+      --radius: 18px;
+      --radius-sm: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100dvh; overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80vw 55vh at 10% -5%, rgba(30,90,220,0.22) 0%, transparent 65%),
+        radial-gradient(ellipse 60vw 40vh at 90% 10%, rgba(0,200,180,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 100vw 30vh at 50% 100%, rgba(10,30,80,0.5) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(58,142,246,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(58,142,246,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none; z-index: 0;
+    }
+    .wrap {
+      position: relative; z-index: 1;
+      max-width: 560px; margin: 0 auto;
+      padding: 28px 16px 100px;
+    }
+
+    /* HEADER */
+    header {
+      margin-bottom: 32px; padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center; gap: 10px;
+    }
+    .logo-mark {
+      width: 72px; height: 72px; border-radius: 18px;
+      background: linear-gradient(135deg,#0d2a6e,#0a4a3a);
+      border: 1px solid rgba(58,142,246,0.28);
+      box-shadow: 0 0 28px rgba(58,142,246,0.28), 0 0 0 4px rgba(58,142,246,0.07);
+      overflow: hidden; display: grid; place-items: center;
+    }
+    .logo-mark img { width:100%; height:100%; object-fit:cover; display:block; }
+    .brand-name {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.4px;
+      background: linear-gradient(90deg, #c8deff, #1dffd4 80%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .brand-sub {
+      font-size: 11.5px; color: var(--muted); font-weight: 300;
+      letter-spacing: 0.5px; font-family: 'Space Mono', monospace; margin-top: -4px;
+    }
+
+    /* NAV ROW */
+    .nav-pills {
+      display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .nav-pill {
+      font-size: 11px; font-family: 'Space Mono', monospace;
+      color: var(--muted); background: var(--glass);
+      border: 1px solid var(--border); border-radius: 999px;
+      padding: 5px 12px; cursor: pointer; text-decoration: none;
+      transition: all 0.2s; display: flex; align-items: center; gap: 5px;
+    }
+    .nav-pill:hover { border-color: var(--border-hover); color: var(--text); }
+    .nav-pill .dot { width:6px;height:6px;border-radius:50%; }
+    .dot-green { background: #4ddb7a; box-shadow: 0 0 6px #4ddb7a; }
+    .dot-orange { background: var(--warn); }
+
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 10.5px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      font-family: 'Space Mono', monospace; margin: 0 0 12px; opacity: 0.8;
+    }
+
+    /* PIPS */
+    .steps { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 28px; }
+    .pip { height: 4px; border-radius: 999px; background: var(--border); width: 28px; transition: all 0.3s; }
+    .pip.active { background: var(--accent); width: 42px; }
+    .pip.done   { background: var(--accent2); }
+
+    /* LINK CARD */
+    .link-card {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; background: var(--glass);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 14px 16px; margin-bottom: 9px;
+      backdrop-filter: blur(12px); cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      position: relative; overflow: hidden;
+    }
+    .link-card.selected {
+      border-color: rgba(29,255,212,0.45);
+      background: rgba(29,255,212,0.05);
+      box-shadow: 0 0 0 1px rgba(29,255,212,0.12), 0 0 28px rgba(29,255,212,0.06);
+    }
+    .link-card.popular { border-color: rgba(58,142,246,0.3); }
+    .link-card:active { transform: scale(0.985); }
+    @media (hover:hover) {
+      .link-card:hover { border-color: var(--border-hover); box-shadow: 0 0 0 1px rgba(58,142,246,0.08), 0 8px 28px rgba(0,0,0,0.3); }
+    }
+    .card-left { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; }
+    .card-name { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 7px; }
+    .card-badge {
+      font-size: 9px; font-weight: 700; font-family: 'Space Mono', monospace;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: #060d1a; padding: 2px 7px; border-radius: 999px; letter-spacing: 0.5px;
+    }
+    .card-sub { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
+    .price-pill { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+    .price-main { font-size: 18px; font-weight: 700; font-family: 'Space Mono', monospace; color: var(--accent2); }
+    .price-main small { font-size: 11px; color: var(--muted); font-weight: 400; }
+    .price-sub { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; }
+    .radio-dot {
+      width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+      border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .link-card.selected .radio-dot { background: var(--accent2); border-color: var(--accent2); box-shadow: 0 0 10px rgba(29,255,212,0.4); }
+    .radio-dot::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #060d1a; opacity: 0; transition: opacity 0.15s; }
+    .link-card.selected .radio-dot::after { opacity: 1; }
+
+    /* SMALL CLIENTS NOTE */
+    .small-note {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 14px; margin-bottom: 16px;
+      background: rgba(246,168,58,0.06);
+      border: 1px solid rgba(246,168,58,0.2);
+      border-radius: var(--radius-sm); cursor: pointer;
+      transition: all 0.2s;
+    }
+    .small-note:hover { border-color: rgba(246,168,58,0.38); }
+    .small-note-icon { font-size: 16px; flex-shrink: 0; }
+    .small-note-text { font-size: 12px; color: rgba(246,168,58,0.85); line-height: 1.5; flex: 1; }
+    .small-note-text strong { display: block; font-size: 12.5px; margin-bottom: 2px; }
+    .small-note-arr { color: var(--warn); opacity: 0.6; font-size: 15px; }
+
+    /* SUMMARY STRIP */
+    .summary-strip {
+      background: rgba(29,255,212,0.05); border: 1px solid rgba(29,255,212,0.18);
+      border-radius: var(--radius); padding: 13px 16px; margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      opacity: 0; transform: translateY(6px); transition: opacity 0.3s, transform 0.3s;
+    }
+    .summary-strip.vis { opacity: 1; transform: translateY(0); }
+    .summary-lbl { font-size: 13px; color: var(--muted); }
+    .summary-vat { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; margin-top: 2px; }
+    .summary-val { font-size: 20px; font-weight: 700; font-family: 'Space Mono', monospace; color: var(--accent2); }
+
+    /* FORM */
+    .fields { display: flex; flex-direction: column; gap: 11px; margin-bottom: 20px; }
+    .field-group { display: flex; flex-direction: column; gap: 5px; }
+    .field-label { font-size: 11.5px; color: var(--muted); font-weight: 500; }
+    .field-label span { color: #e05a6a; }
+    input, textarea {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 12px 14px;
+      color: var(--text); font-family: 'Sora', sans-serif; font-size: 15px;
+      direction: rtl; width: 100%; transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+      backdrop-filter: blur(8px);
+    }
+    input:focus, textarea:focus { border-color: rgba(58,142,246,0.4); box-shadow: 0 0 0 3px rgba(58,142,246,0.08); }
+    input::placeholder, textarea::placeholder { color: rgba(106,133,182,0.45); }
+    textarea { resize: none; height: 76px; }
+    .phone-row { display: flex; gap: 8px; }
+    .phone-prefix {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 12px 14px;
+      color: var(--muted); font-size: 14px; white-space: nowrap;
+      display: flex; align-items: center; gap: 6px;
+      font-family: 'Space Mono', monospace; backdrop-filter: blur(8px);
+    }
+
+    /* TERMS */
+    .terms-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      margin-bottom: 20px; font-size: 12.5px; color: var(--muted); cursor: pointer;
+    }
+    .chk-box {
+      width: 18px; height: 18px; border: 1.5px solid var(--border);
+      border-radius: 5px; flex-shrink: 0; margin-top: 1px;
+      display: flex; align-items: center; justify-content: center; transition: all 0.2s; cursor: pointer;
+    }
+    .chk-box.on { background: var(--accent2); border-color: var(--accent2); }
+
+    /* BUTTONS */
+    .btn-primary {
+      width: 100%; background: linear-gradient(135deg, var(--accent) 0%, #1a6bd4 100%);
+      color: #fff; border: none; border-radius: var(--radius);
+      padding: 15px; font-size: 15px; font-weight: 600;
+      font-family: 'Sora', sans-serif; cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 0 24px rgba(58,142,246,0.3); position: relative; overflow: hidden;
+    }
+    .btn-primary::after { content:''; position:absolute; inset:0; background: linear-gradient(135deg,rgba(255,255,255,0.1),transparent); pointer-events:none; }
+    .btn-primary:hover { box-shadow: 0 0 32px rgba(58,142,246,0.45); transform: translateY(-1px); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-secondary {
+      background: var(--glass); color: var(--muted);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 13px 20px; font-size: 13.5px; font-family: 'Sora', sans-serif;
+      cursor: pointer; transition: all 0.2s; backdrop-filter: blur(8px);
+    }
+    .btn-secondary:hover { border-color: var(--border-hover); color: var(--text); }
+
+    /* ACTION CARDS (post-payment step) */
+    .action-card {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px;
+      margin-bottom: 9px; cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s;
+      backdrop-filter: blur(8px); text-decoration: none; color: var(--text);
+    }
+    .action-card:hover { border-color: var(--border-hover); transform: translateX(-2px); }
+    .action-card:active { transform: scale(0.985); }
+    .action-card.primary-action {
+      border-color: rgba(29,255,212,0.3);
+      background: rgba(29,255,212,0.04);
+    }
+    .action-icon {
+      width: 44px; height: 44px; border-radius: 14px;
+      background: rgba(58,142,246,0.12); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .action-icon.teal { background: rgba(29,255,212,0.1); border-color: rgba(29,255,212,0.2); }
+    .action-info { flex: 1; }
+    .action-title { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+    .action-desc { font-size: 11px; color: var(--muted); }
+    .action-arr { color: var(--muted); font-size: 18px; opacity: 0.5; }
+
+    /* UTILITY LINKS ROW */
+    .util-row {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px;
+    }
+    .util-link {
+      font-size: 11.5px; color: var(--muted); background: var(--glass);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 8px 12px; cursor: pointer; text-decoration: none;
+      transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+      backdrop-filter: blur(8px);
+    }
+    .util-link:hover { border-color: var(--border-hover); color: var(--text); }
+
+    /* AVAIL BADGE */
+    .avail-strip {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 14px; margin-bottom: 16px;
+      background: rgba(77,219,122,0.06);
+      border: 1px solid rgba(77,219,122,0.18);
+      border-radius: var(--radius-sm); font-size: 12px; color: rgba(77,219,122,0.9);
+    }
+    .avail-dot { width:7px;height:7px;border-radius:50%;background:#4ddb7a;box-shadow:0 0 7px #4ddb7a;flex-shrink:0; animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    /* SUCCESS */
+    .success-wrap { text-align: center; padding: 10px 0 6px; }
+    .suc-icon {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(29,255,212,0.08); border: 1.5px solid rgba(29,255,212,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; margin: 0 auto 16px;
+      animation: pulse 2.5s infinite;
+    }
+    @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(29,255,212,0.25)} 50%{box-shadow:0 0 0 12px rgba(29,255,212,0)} }
+    .suc-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .suc-body  { color: var(--muted); font-size: 13.5px; line-height: 1.7; }
+
+    /* PAYMENT OVERLAY */
+    .overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(4,10,28,0.88); backdrop-filter: blur(12px);
+      display: flex; align-items: flex-end; justify-content: center;
+      padding: 0 16px 16px;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: linear-gradient(160deg, rgba(10,22,50,0.98), rgba(6,14,30,0.98));
+      border: 1px solid var(--border); border-radius: 24px 24px 20px 20px;
+      padding: 28px 20px 28px; width: 100%; max-width: 520px;
+      transform: translateY(28px) scale(0.97); transition: all 0.3s ease;
+      position: relative; box-shadow: 0 -8px 60px rgba(0,0,0,0.5);
+      max-height: 85dvh; overflow-y: auto;
+    }
+    .overlay.open .modal { transform: translateY(0) scale(1); }
+    .modal-handle { width: 36px; height: 4px; border-radius: 999px; background: var(--border); margin: 0 auto 24px; display: block; }
+    .modal-close {
+      position: absolute; top: 14px; left: 16px;
+      background: var(--glass); border: 1px solid var(--border);
+      color: var(--muted); width: 30px; height: 30px; border-radius: 50%;
+      cursor: pointer; font-size: 14px;
+      display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+    }
+    .modal-close:hover { color: var(--text); border-color: var(--border-hover); }
+    .modal-title { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+    .modal-sub { color: var(--muted); font-size: 12.5px; margin-bottom: 20px; font-family: 'Space Mono', monospace; }
+    .pay-opts { display: flex; flex-direction: column; gap: 9px; }
+    .pay-opt {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px 16px; cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s; backdrop-filter: blur(8px);
+    }
+    .pay-opt:hover { border-color: var(--border-hover); }
+    .pay-opt:active { transform: scale(0.985); }
+    .pay-icon { width: 40px; height: 40px; border-radius: 12px; background: rgba(58,142,246,0.12); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .pay-info { flex: 1; }
+    .pay-name { font-size: 15px; font-weight: 600; }
+    .pay-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .pay-arr { color: var(--muted); font-size: 18px; opacity: 0.5; }
+    .sub-screen { display: none; }
+    .sub-screen.active { display: block; }
+    .detail-box { background: var(--glass); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; backdrop-filter: blur(8px); }
+    .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-key { color: var(--muted); }
+    .detail-val { font-family: 'Space Mono', monospace; font-weight: 700; cursor: pointer; transition: color 0.2s; }
+    .detail-val:hover { color: var(--accent2); }
+    .info-note { background: rgba(29,255,212,0.05); border: 1px solid rgba(29,255,212,0.15); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 12px; color: rgba(29,255,212,0.8); margin-top: 14px; line-height: 1.7; }
+    .modal-footer { display: flex; gap: 9px; margin-top: 18px; }
+
+    /* TERMS MODAL */
+    .terms-content { font-size: 12.5px; color: var(--muted); line-height: 1.8; }
+    .terms-content h3 { color: var(--text); font-size: 13.5px; margin: 16px 0 6px; }
+    .terms-content p { margin-bottom: 10px; }
+
+    /* TOAST */
+    .toast {
+      position: fixed; bottom: calc(env(safe-area-inset-bottom,0px) + 22px);
+      left: 50%; transform: translateX(-50%) translateY(12px);
+      background: rgba(8,20,50,0.92); border: 1px solid rgba(29,255,212,0.25);
+      border-radius: 999px; padding: 11px 18px;
+      font-size: 13px; color: var(--accent2); font-weight: 600;
+      display: flex; align-items: center; gap: 8px;
+      z-index: 9999; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s; backdrop-filter: blur(16px);
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast-dot { width:8px;height:8px;border-radius:50%;background:var(--accent2);box-shadow:0 0 8px var(--accent2); }
+
+    .hidden { display:none!important; }
+    .divider { height:1px;background:var(--border);margin:16px 0; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+    .fade-in { animation: fadeUp 0.35s ease both; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-mark">
+      <img src="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" alt="AutoScale" />
+    </div>
+    <div class="brand-name">AutoScale</div>
+    <div class="brand-sub">אוטומציות חכמות</div>
+  </header>
+
+  <!-- NAV PILLS -->
+  <div class="nav-pills">
+    <span class="nav-pill" onclick="openTermsModal()">📄 תנאי שימוש</span>
+    <span class="nav-pill"><span class="dot dot-green"></span> זמין עכשיו</span>
+    <span class="nav-pill">🕐 א׳–ה׳ 9:00–18:00</span>
+  </div>
+
+  <!-- PIPS -->
+  <div class="steps">
+    <div class="pip active" id="p1"></div>
+    <div class="pip" id="p2"></div>
+    <div class="pip" id="p3"></div>
+  </div>
+
+  <!-- ══ STEP 1 — PACKAGES ══ -->
+  <div id="step1" class="fade-in">
+    <div class="section-label">בחר חבילת שעות</div>
+
+    <!-- Small clients note — collapsible one-liner -->
+    <div onclick="toggleSmallNote()" style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 13px;margin-bottom:10px;cursor:pointer;border-radius:var(--radius-sm);background:rgba(246,168,58,0.05);border:1px solid rgba(246,168,58,0.15);transition:border-color 0.2s;">
+      <span style="font-size:11.5px;color:rgba(246,168,58,0.75);">💬 <span style="text-decoration:underline dotted">צריך/ה פחות מ-5 שעות? לחץ/י כאן</span></span>
+      <span id="smallNoteChev" style="color:rgba(246,168,58,0.5);font-size:12px;transition:transform 0.2s;">▾</span>
+    </div>
+    <div id="smallNoteExpand" style="display:none;margin-bottom:10px;">
+      <div style="background:rgba(246,168,58,0.07);border:1px solid rgba(246,168,58,0.22);border-radius:var(--radius-sm);padding:12px 14px;font-size:12.5px;color:rgba(246,168,58,0.9);line-height:1.7;">
+        המינימום בבנק השעות הוא <strong>5 שעות</strong>.<br>לפרויקטים קטנים יותר — דבר/י איתנו ישירות בוואטסאפ.
+        <div style="margin-top:10px;"><a href="https://wa.me/972552962965" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:#4ddb7a;font-family:'Space Mono',monospace;font-size:12px;background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.2);border-radius:var(--radius-sm);padding:7px 13px;text-decoration:none;">💬 פתח/י שיחה ב-WhatsApp</a></div>
+      </div>
+    </div>
+
+    <!-- 5h -->
+    <div class="link-card" data-h="5" data-price="1500" onclick="selectPkg(this)">
+      <div class="radio-dot"></div>
+      <div class="card-left">
+        <div class="card-name">5 שעות</div>
+        <div class="card-sub">₪300 לשעה · לא כולל מע"מ</div>
+      </div>
+      <div class="price-pill">
+        <div class="price-main">₪1,500 <small>+מע"מ</small></div>
+        <div class="price-sub">לחבילה</div>
+      </div>
+    </div>
+
+    <!-- 10h -->
+    <div class="link-card" data-h="10" data-price="2900" onclick="selectPkg(this)">
+      <div class="radio-dot"></div>
+      <div class="card-left">
+        <div class="card-name">10 שעות</div>
+        <div class="card-sub">₪290 לשעה · חיסכון ₪100 · לא כולל מע"מ</div>
+      </div>
+      <div class="price-pill">
+        <div class="price-main">₪2,900 <small>+מע"מ</small></div>
+        <div class="price-sub">לחבילה</div>
+      </div>
+    </div>
+
+    <!-- 20h POPULAR -->
+    <div class="link-card popular" data-h="20" data-price="5600" onclick="selectPkg(this)">
+      <div class="radio-dot"></div>
+      <div class="card-left">
+        <div class="card-name">20 שעות <span class="card-badge">⭐ פופולרי</span></div>
+        <div class="card-sub">₪280 לשעה · חיסכון ₪400 · לא כולל מע"מ</div>
+      </div>
+      <div class="price-pill">
+        <div class="price-main">₪5,600 <small>+מע"מ</small></div>
+        <div class="price-sub">לחבילה</div>
+      </div>
+    </div>
+
+    <!-- 40h -->
+    <div class="link-card" data-h="40" data-price="10800" onclick="selectPkg(this)">
+      <div class="radio-dot"></div>
+      <div class="card-left">
+        <div class="card-name">40 שעות</div>
+        <div class="card-sub">₪270 לשעה · חיסכון ₪1,200 · לא כולל מע"מ</div>
+      </div>
+      <div class="price-pill">
+        <div class="price-main">₪10,800 <small>+מע"מ</small></div>
+        <div class="price-sub">לחבילה</div>
+      </div>
+    </div>
+
+    <!-- custom hours — min 41 -->
+    <div class="link-card" id="customCard" data-h="custom" data-price="0" onclick="selectPkg(this)">
+      <div class="radio-dot"></div>
+      <div class="card-left">
+        <div class="card-name">כמות מותאמת</div>
+        <div class="card-sub" id="customSub">מעל 40 שעות · ₪270 לשעה · לא כולל מע"מ</div>
+      </div>
+      <div class="price-pill">
+        <div class="price-main" id="customPriceDisp" style="font-size:13px;color:var(--muted)">הזן כמות</div>
+      </div>
+    </div>
+    <!-- custom hours input — shown only when custom selected -->
+    <div id="customInputRow" style="display:none;margin:-4px 0 10px;padding:12px 14px;background:rgba(12,26,56,0.6);border:1px solid rgba(80,140,255,0.18);border-radius:var(--radius-sm);backdrop-filter:blur(8px);">
+      <div style="font-size:11.5px;color:var(--muted);margin-bottom:7px;">מספר שעות (מינימום 41)</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <input type="number" id="customHoursInput" min="41" max="500" placeholder="41" oninput="updateCustomPkg()"
+          style="width:110px;background:rgba(6,13,26,0.7);border:1px solid rgba(80,140,255,0.2);border-radius:10px;padding:9px 12px;color:var(--text);font-family:'Space Mono',monospace;font-size:16px;direction:ltr;outline:none;" />
+        <div style="font-size:12px;color:var(--muted);">שעות × ₪270 = <span id="customCalc" style="color:var(--accent2);font-family:'Space Mono',monospace;font-weight:700;">—</span></div>
+      </div>
+      <div id="customMinWarn" style="display:none;font-size:11px;color:#e05a6a;margin-top:6px;">המינימום הוא 41 שעות</div>
+    </div>
+
+    <!-- VAT note -->
+    <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:6px;font-family:'Space Mono',monospace">
+      * כל המחירים אינם כוללים מע"מ (18%)
+    </div>
+
+  </div>
+
+
+
+
+
+</div><!-- /wrap -->
+
+<!-- ══ MAIN MODAL: DETAILS → PAYMENT ══ -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <span class="modal-handle"></span>
+    <button class="modal-close" onclick="closePay()">✕</button>
+
+    <!-- SCREEN A: CLIENT DETAILS -->
+    <div id="screenDetails">
+      <div class="modal-title" id="modalTitle">רכישת בנק שעות</div>
+      <div class="modal-sub" id="modalSub">מלא/י פרטים — ונעבור לתשלום</div>
+
+      <div style="background:rgba(29,255,212,0.05);border:1px solid rgba(29,255,212,0.15);border-radius:12px;padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-size:12px;color:var(--muted)">חבילה נבחרת</div>
+        <div style="font-size:15px;font-weight:700;font-family:'Space Mono',monospace;color:var(--accent2)" id="modalPkgLabel">—</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:16px;">
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="font-size:11.5px;color:var(--muted);">שם לקוח / חברה <span style="color:#e05a6a">*</span></div>
+          <input type="text" id="fName" placeholder='ישראל ישראלי / חברה בע"מ' />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="font-size:11.5px;color:var(--muted);">ח.פ / ת.ז לחשבונית <span style="color:#e05a6a">*</span></div>
+          <input type="text" id="fId" placeholder="000000000" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="font-size:11.5px;color:var(--muted);">טלפון <span style="color:#e05a6a">*</span></div>
+          <div style="display:flex;gap:8px;">
+            <div style="background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;color:var(--muted);font-size:14px;white-space:nowrap;font-family:'Space Mono',monospace;backdrop-filter:blur(8px);">🇮🇱 +972</div>
+            <input type="tel" id="fPhone" placeholder="05X-XXXXXXX" style="flex:1" />
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="font-size:11.5px;color:var(--muted);">הערות (אופציונלי)</div>
+          <textarea id="fNotes" placeholder="הוסף הערה לבקשה..." style="height:60px"></textarea>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:18px;font-size:12.5px;color:var(--muted);cursor:pointer;" onclick="toggleTerms()">
+        <div class="chk-box" id="termsBox"></div>
+        <span>קראתי ואני מאשר/ת את <span style="color:var(--accent2);cursor:pointer" onclick="event.stopPropagation();openTermsModal()">תנאי השימוש</span> של AutoScale</span>
+      </div>
+
+      <button class="btn-primary" id="toPayBtn" disabled onclick="showPayScreen()">המשך לתשלום 💳</button>
+    </div>
+
+    <!-- SCREEN B: PAYMENT METHODS -->
+    <div id="screenPay" style="display:none;">
+      <div class="modal-title">בחר אמצעי תשלום</div>
+      <div class="modal-sub" id="modalPaySub"></div>
+
+      <!-- PAYMENT BADGE ROW -->
+      <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;padding:10px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;">
+        <!-- Visa -->
+        <svg width="42" height="26" viewBox="0 0 42 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:5px;background:#1a1f71;padding:3px 5px;flex-shrink:0">
+          <text x="21" y="18" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="900" fill="#fff" letter-spacing="-0.5">VISA</text>
+        </svg>
+        <!-- Mastercard -->
+        <svg width="42" height="26" viewBox="0 0 42 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:5px;background:#252525;flex-shrink:0">
+          <circle cx="16" cy="13" r="8" fill="#EB001B"/>
+          <circle cx="26" cy="13" r="8" fill="#F79E1B"/>
+          <path d="M21 7.3a8 8 0 0 1 0 11.4A8 8 0 0 1 21 7.3z" fill="#FF5F00"/>
+        </svg>
+        <!-- Apple Pay -->
+        <svg width="52" height="26" viewBox="0 0 52 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:5px;background:#000;padding:3px 6px;flex-shrink:0">
+          <text x="26" y="17" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro',Arial,sans-serif" font-size="10" fill="#fff" letter-spacing="0">Apple Pay</text>
+        </svg>
+        <!-- Google Pay -->
+        <svg width="56" height="26" viewBox="0 0 56 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:5px;background:#fff;padding:3px 6px;flex-shrink:0">
+          <text x="28" y="17" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#3c4043" letter-spacing="0">Google Pay</text>
+        </svg>
+        <!-- Bit -->
+        <svg width="42" height="26" viewBox="0 0 42 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:5px;background:#ff3c6a;padding:3px 7px;flex-shrink:0">
+          <text x="21" y="18" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#fff">bit</text>
+        </svg>
+        <!-- Paybox -->
+        <svg width="52" height="26" viewBox="0 0 52 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:5px;background:#6c3de8;padding:3px 6px;flex-shrink:0">
+          <text x="26" y="17" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#fff">Paybox</text>
+        </svg>
+        <!-- Bank Transfer -->
+        <svg width="52" height="26" viewBox="0 0 52 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:5px;background:rgba(80,140,255,0.15);border:1px solid rgba(80,140,255,0.3);padding:2px 4px;flex-shrink:0">
+          <text x="26" y="17" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#a0c0ff">העברה</text>
+        </svg>
+      </div>
+
+      <div id="methodPicker">
+        <div class="pay-opts">
+          <div class="pay-opt" onclick="chooseCard()">
+            <div class="pay-icon">💳</div>
+            <div class="pay-info">
+              <div class="pay-name">כרטיס / Apple Pay / Google Pay</div>
+              <div class="pay-desc">Visa · Mastercard · Paybox · תשלום מאובטח דרך Grow</div>
+            </div>
+            <div class="pay-arr">←</div>
+          </div>
+          <div class="pay-opt" onclick="showBit()">
+            <div class="pay-icon">📲</div>
+            <div class="pay-info"><div class="pay-name">Bit</div><div class="pay-desc">תשלום מהיר דרך אפליקציית Bit</div></div>
+            <div class="pay-arr">←</div>
+          </div>
+          <div class="pay-opt" onclick="showBank()">
+            <div class="pay-icon">🏦</div>
+            <div class="pay-info"><div class="pay-name">העברה בנקאית</div><div class="pay-desc">פרטי חשבון + אסמכתא</div></div>
+            <div class="pay-arr">←</div>
+          </div>
+        </div>
+        <button class="btn-secondary" style="width:100%;margin-top:12px" onclick="showDetailsScreen()">← חזור לפרטים</button>
+      </div>
+
+      <!-- BIT sub -->
+      <div id="bitScreen" class="sub-screen">
+        <div class="modal-title">תשלום ב-Bit 📲</div>
+        <div class="modal-sub">שלח/י ישירות למספר הבא</div>
+        <div class="detail-box">
+          <div class="detail-row"><span class="detail-key">מספר</span><span class="detail-val" onclick="cp('0545764327')">054-576-4327</span></div>
+          <div class="detail-row"><span class="detail-key">סכום (לפני מע"מ)</span><span class="detail-val" id="bitAmt" style="color:var(--accent2)"></span></div>
+          <div class="detail-row"><span class="detail-key">סה"כ כולל מע"מ</span><span class="detail-val" id="bitAmtVat" style="color:var(--warn)"></span></div>
+        </div>
+        <div style="background:rgba(246,168,58,0.07);border:1px solid rgba(246,168,58,0.22);border-radius:var(--radius-sm);padding:12px 14px;margin-top:12px;font-size:12px;color:rgba(246,168,58,0.9);line-height:1.6;">
+          ⚠️ לאחר ביצוע התשלום — יש לצלם את אישור הביט ולהעלות אותו כאן, <strong style="color:var(--warn)">או</strong> להזין מספר אסמכתא. רק אז תוכל/י להמשיך.
+        </div>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:9px;">
+          <div style="font-size:11.5px;color:var(--muted);font-weight:500;">צילום אישור (העלאת תמונה)</div>
+          <label id="bitUploadLabel" style="display:flex;align-items:center;justify-content:center;gap:8px;background:var(--glass);border:1.5px dashed rgba(80,140,255,0.25);border-radius:var(--radius-sm);padding:16px;cursor:pointer;font-size:13px;color:var(--muted);transition:all 0.2s;">
+            <span id="bitUploadTxt">📎 לחץ/י לבחירת קובץ</span>
+            <input type="file" id="bitFile" accept="image/*,.pdf" style="display:none" onchange="onFileChange('bit')"/>
+          </label>
+          <div style="text-align:center;font-size:11px;color:var(--muted);">— או —</div>
+          <input type="text" id="bitRef" placeholder="מספר אסמכתא (לדוגמה: 1234567)" oninput="checkProof('bit')" style="text-align:center;font-family:'Space Mono',monospace;letter-spacing:1px;"/>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" onclick="backMethods()">← חזור</button>
+          <button class="btn-primary" style="flex:1" id="bitConfirmBtn" disabled onclick="confirmDone()">אישור ✓ — המשך</button>
+        </div>
+      </div>
+
+      <!-- BANK sub -->
+      <div id="bankScreen" class="sub-screen">
+        <div class="modal-title">העברה בנקאית 🏦</div>
+        <div class="modal-sub">העתק/י פרטים → בצע/י העברה → העלה/י אסמכתא</div>
+        <div class="detail-box">
+          <div class="detail-row"><span class="detail-key">בנק</span><span class="detail-val" onclick="cp('הפועלים')">הפועלים</span></div>
+          <div class="detail-row"><span class="detail-key">מספר בנק</span><span class="detail-val" onclick="cp('12')">12</span></div>
+          <div class="detail-row"><span class="detail-key">סניף</span><span class="detail-val" onclick="cp('632')">632</span></div>
+          <div class="detail-row"><span class="detail-key">חשבון</span><span class="detail-val" onclick="cp('273277')">273277</span></div>
+          <div class="detail-row"><span class="detail-key">שם</span><span class="detail-val" onclick="cp('ריצארד טומסקי')">ריצארד טומסקי</span></div>
+          <div class="detail-row"><span class="detail-key">סכום (לפני מע"מ)</span><span class="detail-val" id="bankAmt" style="color:var(--accent2)"></span></div>
+          <div class="detail-row"><span class="detail-key">סה"כ כולל מע"מ</span><span class="detail-val" id="bankAmtVat" style="color:var(--warn)"></span></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px;text-align:left">לחץ/י על כל ערך להעתקה</div>
+        <div style="background:rgba(246,168,58,0.07);border:1px solid rgba(246,168,58,0.22);border-radius:var(--radius-sm);padding:12px 14px;margin-top:10px;font-size:12px;color:rgba(246,168,58,0.9);line-height:1.6;">
+          ⚠️ לאחר ביצוע ההעברה — יש להעלות צילום אסמכתא <strong style="color:var(--warn)">או</strong> להזין מספר אסמכתא. רק אז תוכל/י להמשיך.
+        </div>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:9px;">
+          <div style="font-size:11.5px;color:var(--muted);font-weight:500;">צילום אסמכתא (העלאת תמונה)</div>
+          <label id="bankUploadLabel" style="display:flex;align-items:center;justify-content:center;gap:8px;background:var(--glass);border:1.5px dashed rgba(80,140,255,0.25);border-radius:var(--radius-sm);padding:16px;cursor:pointer;font-size:13px;color:var(--muted);transition:all 0.2s;">
+            <span id="bankUploadTxt">📎 לחץ/י לבחירת קובץ</span>
+            <input type="file" id="bankFile" accept="image/*,.pdf" style="display:none" onchange="onFileChange('bank')"/>
+          </label>
+          <div style="text-align:center;font-size:11px;color:var(--muted);">— או —</div>
+          <input type="text" id="bankRef" placeholder="מספר אסמכתא / מספר העברה" oninput="checkProof('bank')" style="text-align:center;font-family:'Space Mono',monospace;letter-spacing:1px;"/>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" onclick="backMethods()">← חזור</button>
+          <button class="btn-primary" style="flex:1" id="bankConfirmBtn" disabled onclick="confirmDone()">אישור ✓ — המשך</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ TERMS MODAL ══ -->
+<div class="overlay" id="termsOverlay">
+  <div class="modal">
+    <span class="modal-handle"></span>
+    <button class="modal-close" onclick="closeTermsModal()">✕</button>
+    <div class="modal-title">תנאי שימוש — בנק שעות</div>
+    <div style="height:16px"></div>
+    <div class="terms-content">
+      <h3>1. כללי</h3>
+      <p>בנק השעות של AutoScale מאפשר רכישה מראש של שעות עבודה בתנאים מועדפים. הרכישה מחייבת אישור תשלום לפני תחילת העבודה.</p>
+      <h3>2. תוקף</h3>
+      <p>שעות שנרכשו תקפות ל-12 חודשים ממועד הרכישה. שעות שלא נוצלו תוך התקופה לא יוחזרו ולא יועברו.</p>
+      <h3>3. תשלום ומחירים</h3>
+      <p>כל המחירים המצוינים אינם כוללים מע"מ (18%). חשבונית מס תישלח לאחר קבלת התשלום. לא ניתן להחזיר חבילות שנרכשו.</p>
+      <h3>4. לו"ז וזמינות</h3>
+      <p>זמינות בימים א׳–ה׳ בין 9:00 ל-18:00. עבודות דחופות מחוץ לשעות הפעילות כפופות לתוספת תמחור.</p>
+      <h3>5. הפסקת שירות</h3>
+      <p>AutoScale שומרת לעצמה את הזכות להפסיק שירות בהתראה של 30 יום. במקרה זה יוחזר חלק יחסי מהשעות שלא נוצלו.</p>
+      <h3>6. קניין רוחני</h3>
+      <p>כל העבודות שנוצרו במסגרת בנק השעות הן קניין הלקוח לאחר השלמת התשלום המלא.</p>
+      <h3>7. צד שלישי</h3>
+      <p>עלויות כלים, תוכנות ושירותי צד שלישי אינן כלולות ומשולמות ישירות על ידי הלקוח.</p>
+    </div>
+    <div style="margin-top:20px">
+      <button class="btn-primary" onclick="closeTermsModal()">הבנתי ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toastMsg">הועתק ✓</span>
+</div>
+
+<script>
+let selHours=null, selPrice=0, termsOk=false, toastT;
+const VAT = 0.18;
+
+function vatOf(n){ return Math.round(n*VAT); }
+function withVat(n){ return n + vatOf(n); }
+function fmt(n){ return '₪'+n.toLocaleString(); }
+
+/* ── PACKAGE SELECTION ── */
+function selectPkg(el){
+  document.querySelectorAll('.link-card').forEach(r=>r.classList.remove('selected'));
+  el.classList.add('selected');
+  selHours = el.dataset.h;
+  selPrice = parseInt(el.dataset.price,10)||0;
+  const customRow = document.getElementById('customInputRow');
+  if(customRow) customRow.style.display = (selHours==='custom') ? '' : 'none';
+  if(selHours==='custom'){
+    // Don't open popup — wait for valid hours input
+    updateCustomPkg();
+  } else {
+    // Open popup immediately
+    openPay();
+  }
+}
+
+/* ── CUSTOM HOURS — min 41, opens popup when valid ── */
+function updateCustomPkg(){
+  const inp  = document.getElementById('customHoursInput');
+  const warn = document.getElementById('customMinWarn');
+  const calc = document.getElementById('customCalc');
+  if(!inp) return;
+  const h = parseInt(inp.value,10);
+  if(!h||h<1){ warn.style.display='none'; calc.textContent='—'; selPrice=0; return; }
+  if(h<41){ warn.style.display=''; calc.textContent='—'; selPrice=0; return; }
+  warn.style.display='none';
+  const price=h*270;
+  selPrice=price; selHours=String(h);
+  calc.textContent=fmt(price);
+  // Open popup
+  openPay();
+}
+
+/* ── TOGGLE SMALL NOTE ── */
+function toggleSmallNote(){
+  const exp=document.getElementById('smallNoteExpand');
+  const chev=document.getElementById('smallNoteChev');
+  const open=exp.style.display==='none'||exp.style.display==='';
+  exp.style.display=open?'block':'none';
+  chev.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+}
+
+/* ── PIPS ── */
+function setPips(a){
+  [1,2,3].forEach(n=>{
+    const p=document.getElementById('p'+n);
+    if(!p) return;
+    p.className='pip'+(n<a?' done':n===a?' active':'');
+  });
+}
+
+/* ── MODAL OPEN ── */
+function openPay(){
+  // Set package label
+  const label = selHours==='custom'||!isNaN(parseInt(selHours))&&parseInt(selHours)>40
+    ? selHours+' שעות — '+fmt(selPrice)+' +מע"מ'
+    : selHours+' שעות — '+fmt(selPrice)+' +מע"מ';
+  document.getElementById('modalPkgLabel').textContent = selHours+' שעות | '+fmt(selPrice)+' +מע"מ';
+  document.getElementById('modalPaySub').textContent = 'לפני מע"מ: '+fmt(selPrice)+' | כולל: '+fmt(withVat(selPrice));
+  document.getElementById('bitAmt').textContent    = fmt(selPrice);
+  document.getElementById('bitAmtVat').textContent = fmt(withVat(selPrice));
+  document.getElementById('bankAmt').textContent    = fmt(selPrice);
+  document.getElementById('bankAmtVat').textContent = fmt(withVat(selPrice));
+  // Reset to details screen
+  showDetailsScreen();
+  document.getElementById('overlay').classList.add('open');
+}
+
+function closePay(){
+  document.getElementById('overlay').classList.remove('open');
+}
+
+/* ── MODAL SCREENS ── */
+function showDetailsScreen(){
+  document.getElementById('screenDetails').style.display='';
+  document.getElementById('screenPay').style.display='none';
+  checkDetails();
+}
+
+function showPayScreen(){
+  const name  = document.getElementById('fName').value.trim();
+  const id    = document.getElementById('fId').value.trim();
+  const phone = document.getElementById('fPhone').value.trim();
+  if(!name||!id||!phone){ showToast('נא למלא שם, ח.פ וטלפון'); return; }
+  if(!termsOk){ showToast('יש לאשר את תנאי השימוש'); return; }
+  document.getElementById('screenDetails').style.display='none';
+  document.getElementById('screenPay').style.display='';
+  backMethods();
+}
+
+/* ── TERMS ── */
+function toggleTerms(){
+  termsOk=!termsOk;
+  const box=document.getElementById('termsBox');
+  box.classList.toggle('on',termsOk);
+  box.innerHTML=termsOk?'<svg width="11" height="9" viewBox="0 0 12 10" fill="none"><path d="M1 5l3 3 7-7" stroke="#060d1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>':'';
+  checkDetails();
+}
+
+function checkDetails(){
+  const ok = document.getElementById('fName').value.trim()
+           && document.getElementById('fId').value.trim()
+           && document.getElementById('fPhone').value.trim()
+           && termsOk;
+  document.getElementById('toPayBtn').disabled=!ok;
+}
+document.addEventListener('input', checkDetails);
+
+/* ── PAYMENT ── */
+function chooseCard(){
+  sendWebhook('כרטיס אשראי / Grow', { status: 'הועבר לדף תשלום' });
+  // Build Grow URL — add amount param if Grow supports it
+  const growBase = 'https://richard36901-source.github.io/autoscale-pay';
+  window.open(growBase, '_blank');
+  closePay();
+}
+function showBit(){ document.getElementById('methodPicker').style.display='none'; document.getElementById('bankScreen').classList.remove('active'); document.getElementById('bitScreen').classList.add('active'); }
+function showBank(){ document.getElementById('methodPicker').style.display='none'; document.getElementById('bitScreen').classList.remove('active'); document.getElementById('bankScreen').classList.add('active'); }
+function backMethods(){ document.getElementById('methodPicker').style.display=''; document.getElementById('bitScreen').classList.remove('active'); document.getElementById('bankScreen').classList.remove('active'); }
+
+function confirmDone(){
+  // Determine method + proof
+  const bitActive  = document.getElementById('bitScreen').classList.contains('active');
+  const bankActive = document.getElementById('bankScreen').classList.contains('active');
+  const method     = bitActive ? 'Bit' : 'העברה בנקאית';
+  const refId      = bitActive
+    ? document.getElementById('bitRef').value.trim()
+    : document.getElementById('bankRef').value.trim();
+  const hasFile    = bitActive
+    ? !!document.getElementById('bitFile').files[0]
+    : !!document.getElementById('bankFile').files[0];
+
+  sendWebhook(method, {
+    reference_number: refId,
+    has_proof_image:  hasFile,
+    status: 'ממתין לאישור'
+  });
+
+  closePay();
+  setTimeout(()=>{
+    window.location.href = 'autoscale-thankyou.html?hours='+encodeURIComponent(selHours)+'&price='+encodeURIComponent(selPrice)+'&method='+encodeURIComponent(method);
+  },400);
+}
+
+/* ── TERMS MODAL ── */
+function openTermsModal(){ document.getElementById('termsOverlay').classList.add('open'); }
+function closeTermsModal(){ document.getElementById('termsOverlay').classList.remove('open'); }
+
+/* ── COPY ── */
+async function cp(txt){
+  try{ await navigator.clipboard.writeText(txt); }
+  catch{ const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+  showToast('הועתק ✓');
+}
+function showToast(msg){ const t=document.getElementById('toast'); document.getElementById('toastMsg').textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),1500); }
+
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',function(e){ if(e.target===this) this.classList.remove('open'); }));
+
+/* ── WEBHOOK ── */
+const WEBHOOK_URL = 'https://hook.eu1.make.com/agx6pltz9s5brwyxb6o37jk2tsnpsard';
+
+async function sendWebhook(paymentMethod, extra={}){
+  const payload = {
+    timestamp:     new Date().toISOString(),
+    product:       'בנק שעות',
+    hours:         selHours,
+    price_before_vat: selPrice,
+    price_with_vat:   Math.round(selPrice * 1.18),
+    payment_method: paymentMethod,
+    client_name:   document.getElementById('fName')?.value?.trim() || '',
+    client_id:     document.getElementById('fId')?.value?.trim() || '',
+    client_phone:  document.getElementById('fPhone')?.value?.trim() || '',
+    client_notes:  document.getElementById('fNotes')?.value?.trim() || '',
+    ...extra
+  };
+  try {
+    await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(e) { console.warn('Webhook failed:', e); }
+}
+
+/* ── PROOF UPLOAD / REF CHECK ── */
+function onFileChange(type){
+  const file  = document.getElementById(type+'File').files[0];
+  const label = document.getElementById(type+'UploadLabel');
+  const txt   = document.getElementById(type+'UploadTxt');
+  if(file){
+    txt.textContent = '✅ ' + file.name;
+    label.style.borderColor = 'rgba(29,255,212,0.45)';
+    label.style.color = 'var(--accent2)';
+  }
+  checkProof(type);
+}
+
+function checkProof(type){
+  const file   = document.getElementById(type+'File').files[0];
+  const ref    = document.getElementById(type+'Ref').value.trim();
+  const btn    = document.getElementById(type+'ConfirmBtn');
+  btn.disabled = !(file || ref.length >= 4);
+}
+</script>
+</body>
+</html>
