@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#060d1a" />
+  <title>AutoScale | שירותים ומוצרים</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:#060d1a; --glass:rgba(12,26,56,0.55); --border:rgba(80,140,255,0.13);
+      --border-hover:rgba(80,160,255,0.32); --text:#e8f0ff; --muted:#6a85b6;
+      --accent:#3a8ef6; --accent2:#1dffd4; --warn:#f6a83a; --green:#4ddb7a;
+      --radius:18px; --radius-sm:12px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;background:
+      radial-gradient(ellipse 80vw 55vh at 10% -5%,rgba(30,90,220,0.22) 0%,transparent 65%),
+      radial-gradient(ellipse 60vw 40vh at 90% 10%,rgba(0,200,180,0.10) 0%,transparent 60%),
+      radial-gradient(ellipse 100vw 30vh at 50% 100%,rgba(10,30,80,0.5) 0%,transparent 70%);
+      pointer-events:none;z-index:0;}
+    body::after{content:'';position:fixed;inset:0;
+      background-image:linear-gradient(rgba(58,142,246,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(58,142,246,0.04) 1px,transparent 1px);
+      background-size:40px 40px;pointer-events:none;z-index:0;}
+    .wrap{position:relative;z-index:1;max-width:600px;margin:0 auto;padding:28px 16px 100px;}
+
+    /* HEADER */
+    header{margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;}
+    .logo-mark{width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,#0d2a6e,#0a4a3a);border:1px solid rgba(58,142,246,0.28);box-shadow:0 0 28px rgba(58,142,246,0.28),0 0 0 4px rgba(58,142,246,0.07);overflow:hidden;display:grid;place-items:center;}
+    .logo-mark img{width:100%;height:100%;object-fit:cover;display:block;}
+    .brand-name{font-size:22px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .brand-sub{font-size:11.5px;color:var(--muted);font-family:'Space Mono',monospace;}
+
+    /* NAV */
+    .nav-pills{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+    .nav-pill{font-size:11px;font-family:'Space Mono',monospace;color:var(--muted);background:var(--glass);border:1px solid var(--border);border-radius:999px;padding:5px 12px;cursor:pointer;text-decoration:none;transition:all 0.2s;display:flex;align-items:center;gap:5px;backdrop-filter:blur(8px);}
+    .nav-pill:hover{border-color:var(--border-hover);color:var(--text);}
+    .avail-dot{width:7px;height:7px;border-radius:50%;background:#4ddb7a;box-shadow:0 0 7px #4ddb7a;display:inline-block;animation:blink 2s infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
+
+    /* SECTION */
+    .section-label{font-size:10.5px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-family:'Space Mono',monospace;margin:28px 0 12px;opacity:0.8;}
+
+    /* DISCLAIMER */
+    .disclaimer{background:rgba(246,168,58,0.06);border:1px solid rgba(246,168,58,0.2);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:20px;font-size:12px;color:rgba(246,168,58,0.85);line-height:1.7;display:flex;gap:10px;align-items:flex-start;}
+
+    /* PRODUCT CARD */
+    .product-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px;backdrop-filter:blur(12px);transition:border-color 0.2s,box-shadow 0.2s;position:relative;overflow:hidden;}
+    .product-card:hover{border-color:var(--border-hover);box-shadow:0 8px 32px rgba(0,0,0,0.25);}
+    .product-card.featured{border-color:rgba(58,142,246,0.3);background:rgba(12,30,70,0.65);}
+
+    .product-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;}
+    .product-icon{width:44px;height:44px;border-radius:14px;background:rgba(58,142,246,0.12);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+    .product-icon.teal{background:rgba(29,255,212,0.1);border-color:rgba(29,255,212,0.2);}
+    .product-icon.orange{background:rgba(246,168,58,0.1);border-color:rgba(246,168,58,0.2);}
+    .product-icon.green{background:rgba(77,219,122,0.1);border-color:rgba(77,219,122,0.2);}
+    .product-icon.purple{background:rgba(160,80,255,0.1);border-color:rgba(160,80,255,0.2);}
+    .product-name-row{flex:1;}
+    .product-name{font-size:16px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+    .product-badge{font-size:9px;font-weight:700;font-family:'Space Mono',monospace;padding:2px 8px;border-radius:999px;letter-spacing:0.5px;}
+    .badge-blue{background:linear-gradient(90deg,var(--accent),#5cacff);color:#060d1a;}
+    .badge-teal{background:linear-gradient(90deg,#0ab89e,var(--accent2));color:#060d1a;}
+    .badge-orange{background:rgba(246,168,58,0.2);color:var(--warn);border:1px solid rgba(246,168,58,0.3);}
+    .badge-purple{background:rgba(160,80,255,0.2);color:#c084fc;border:1px solid rgba(160,80,255,0.3);}
+    .product-tagline{font-size:12px;color:var(--muted);}
+
+    /* PRICE BLOCK */
+    .price-block{text-align:left;flex-shrink:0;}
+    .price-from{font-size:9px;color:var(--muted);font-family:'Space Mono',monospace;display:block;margin-bottom:1px;}
+    .price-main-big{font-size:22px;font-weight:700;font-family:'Space Mono',monospace;color:var(--accent2);line-height:1;}
+    .price-main-big small{font-size:11px;color:var(--muted);font-weight:400;}
+    .price-note{font-size:10px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:3px;}
+
+    /* FEATURES */
+    .features{display:flex;flex-direction:column;gap:5px;margin:12px 0;}
+    .feature{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--muted);}
+    .feat-dot{width:5px;height:5px;border-radius:50%;background:var(--accent2);flex-shrink:0;margin-top:5px;}
+    .feat-dot.warn{background:var(--warn);}
+
+    /* SUPPORT ROW */
+    .support-row{display:flex;align-items:center;justify-content:space-between;background:rgba(77,219,122,0.06);border:1px solid rgba(77,219,122,0.15);border-radius:var(--radius-sm);padding:10px 14px;margin-top:10px;}
+    .support-label{font-size:12px;color:rgba(77,219,122,0.9);display:flex;align-items:center;gap:7px;}
+    .support-price{font-size:14px;font-weight:700;font-family:'Space Mono',monospace;color:var(--green);}
+
+    /* CTA */
+    .product-cta{display:flex;gap:8px;margin-top:14px;}
+    .cta-btn{flex:1;padding:12px;border-radius:var(--radius-sm);font-size:13.5px;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;transition:all 0.2s;border:none;display:flex;align-items:center;justify-content:center;gap:6px;}
+    .cta-primary{background:linear-gradient(135deg,var(--accent),#1a6bd4);color:#fff;box-shadow:0 0 18px rgba(58,142,246,0.25);}
+    .cta-primary:hover{box-shadow:0 0 26px rgba(58,142,246,0.4);transform:translateY(-1px);}
+    .cta-secondary{background:var(--glass);color:var(--muted);border:1px solid var(--border)!important;backdrop-filter:blur(8px);}
+    .cta-secondary:hover{border-color:var(--border-hover)!important;color:var(--text);}
+
+    /* QUICK GRID */
+    .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px;}
+    @media(max-width:400px){.quick-grid{grid-template-columns:1fr;}}
+    .quick-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(8px);display:flex;flex-direction:column;gap:6px;}
+    .quick-card:hover{border-color:var(--border-hover);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.2);}
+    .quick-icon{font-size:22px;}
+    .quick-name{font-size:13px;font-weight:600;}
+    .quick-price{font-size:12px;font-family:'Space Mono',monospace;color:var(--accent2);}
+    .quick-desc{font-size:11px;color:var(--muted);line-height:1.5;}
+
+    /* BOTTOM CTA */
+    .bottom-cta{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:20px;text-align:center;backdrop-filter:blur(12px);}
+    .bottom-cta-title{font-size:16px;font-weight:700;margin-bottom:6px;}
+    .bottom-cta-sub{font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.6;}
+    .bottom-btns{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;}
+
+    /* ═══════════════════════════
+       FULL CHECKOUT FLOW OVERLAY
+       ═══════════════════════════ */
+    .overlay{position:fixed;inset:0;z-index:100;background:rgba(4,10,28,0.92);backdrop-filter:blur(14px);display:flex;align-items:flex-end;justify-content:center;padding:0 12px 12px;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+    .overlay.open{opacity:1;pointer-events:all;}
+    .modal{background:linear-gradient(160deg,rgba(10,22,50,0.99),rgba(6,14,30,0.99));border:1px solid var(--border);border-radius:24px 24px 20px 20px;padding:0;width:100%;max-width:540px;transform:translateY(32px) scale(0.97);transition:all 0.3s ease;position:relative;box-shadow:0 -8px 60px rgba(0,0,0,0.6);max-height:88dvh;display:flex;flex-direction:column;}
+    .overlay.open .modal{transform:translateY(0) scale(1);}
+    .modal-header{padding:20px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+    .modal-handle{width:36px;height:4px;border-radius:999px;background:var(--border);margin:0 auto 20px;display:block;}
+    .modal-close{position:absolute;top:14px;left:16px;background:var(--glass);border:1px solid var(--border);color:var(--muted);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+    .modal-close:hover{color:var(--text);border-color:var(--border-hover);}
+    .modal-title{font-size:18px;font-weight:700;margin-bottom:3px;}
+    .modal-sub{color:var(--muted);font-size:12px;font-family:'Space Mono',monospace;}
+    .modal-body{padding:20px;overflow-y:auto;flex:1;}
+
+    /* STEPPER */
+    .stepper{display:flex;align-items:center;gap:0;margin-bottom:20px;}
+    .step-item{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;position:relative;}
+    .step-item:not(:last-child)::after{content:'';position:absolute;top:12px;left:calc(-50% + 12px);right:calc(50% + 12px);height:1px;background:var(--border);}
+    .step-item.done:not(:last-child)::after{background:var(--accent2);}
+    .step-num{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-family:'Space Mono',monospace;color:var(--muted);background:var(--bg);position:relative;z-index:1;transition:all 0.3s;}
+    .step-item.active .step-num{border-color:var(--accent);color:var(--accent);box-shadow:0 0 10px rgba(58,142,246,0.35);}
+    .step-item.done .step-num{border-color:var(--accent2);background:var(--accent2);color:#060d1a;}
+    .step-lbl{font-size:9px;color:var(--muted);font-family:'Space Mono',monospace;text-align:center;white-space:nowrap;}
+    .step-item.active .step-lbl{color:var(--accent);}
+    .step-item.done .step-lbl{color:var(--accent2);}
+
+    /* STEP SCREENS */
+    .step-screen{display:none;}
+    .step-screen.active{display:block;}
+
+    /* FIELDS */
+    .fields{display:flex;flex-direction:column;gap:11px;}
+    .field-group{display:flex;flex-direction:column;gap:5px;}
+    .field-label{font-size:11.5px;color:var(--muted);font-weight:500;}
+    .field-label span{color:#e05a6a;}
+    input[type=text],input[type=tel],input[type=email],textarea,select{
+      background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-sm);
+      padding:11px 13px;color:var(--text);font-family:'Sora',sans-serif;font-size:14px;
+      direction:rtl;width:100%;transition:border-color 0.2s,box-shadow 0.2s;outline:none;backdrop-filter:blur(8px);}
+    input:focus,textarea:focus,select:focus{border-color:rgba(58,142,246,0.4);box-shadow:0 0 0 3px rgba(58,142,246,0.08);}
+    input::placeholder,textarea::placeholder{color:rgba(106,133,182,0.45);}
+    textarea{resize:none;height:70px;}
+    select option{background:#0d1f45;color:var(--text);}
+
+    /* CHECKBOX ROW */
+    .chk-row{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;color:var(--muted);cursor:pointer;margin-top:4px;}
+    .chk-box{width:18px;height:18px;border:1.5px solid var(--border);border-radius:5px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+    .chk-box.on{background:var(--accent2);border-color:var(--accent2);}
+
+    /* UPGRADE BLOCK */
+    .upgrade-block{background:rgba(58,142,246,0.06);border:1px solid rgba(58,142,246,0.2);border-radius:var(--radius-sm);padding:13px;margin-top:14px;}
+    .upgrade-title{font-size:13px;font-weight:600;margin-bottom:8px;color:var(--accent);}
+    .upgrade-opt{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(80,140,255,0.08);cursor:pointer;}
+    .upgrade-opt:last-child{border-bottom:none;}
+    .upgrade-opt-chk{width:16px;height:16px;border:1.5px solid var(--border);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+    .upgrade-opt-chk.on{background:var(--accent);border-color:var(--accent);}
+    .upgrade-opt-text{flex:1;font-size:12px;color:var(--muted);}
+    .upgrade-opt-price{font-size:11px;font-family:'Space Mono',monospace;color:var(--accent);white-space:nowrap;}
+
+    /* TASK CHECKLIST */
+    .task-list{display:flex;flex-direction:column;gap:7px;margin:14px 0;}
+    .task-item{display:flex;align-items:flex-start;gap:10px;background:rgba(29,255,212,0.04);border:1px solid rgba(29,255,212,0.1);border-radius:var(--radius-sm);padding:11px 13px;}
+    .task-num{width:20px;height:20px;border-radius:50%;background:rgba(58,142,246,0.2);border:1px solid rgba(58,142,246,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'Space Mono',monospace;color:var(--accent);flex-shrink:0;margin-top:1px;}
+    .task-body{flex:1;}
+    .task-title{font-size:13px;font-weight:600;margin-bottom:3px;}
+    .task-desc{font-size:11px;color:var(--muted);line-height:1.6;}
+    .task-input-wrap{margin-top:8px;}
+
+    /* INFO NOTE */
+    .info-note{background:rgba(29,255,212,0.05);border:1px solid rgba(29,255,212,0.15);border-radius:var(--radius-sm);padding:12px 14px;font-size:12px;color:rgba(29,255,212,0.8);margin-top:12px;line-height:1.7;}
+    .warn-note{background:rgba(246,168,58,0.06);border:1px solid rgba(246,168,58,0.2);border-radius:var(--radius-sm);padding:12px 14px;font-size:12px;color:rgba(246,168,58,0.85);margin-top:12px;line-height:1.7;}
+
+    /* PAYMENT OPTIONS */
+    .pay-opts{display:flex;flex-direction:column;gap:9px;}
+    .pay-opt{display:flex;align-items:center;gap:14px;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;cursor:pointer;transition:border-color 0.2s,transform 0.15s;backdrop-filter:blur(8px);}
+    .pay-opt:hover{border-color:var(--border-hover);}
+    .pay-opt:active{transform:scale(0.985);}
+    .pay-icon{width:40px;height:40px;border-radius:12px;background:rgba(58,142,246,0.12);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+    .pay-info{flex:1;}
+    .pay-name{font-size:15px;font-weight:600;}
+    .pay-desc{font-size:11px;color:var(--muted);margin-top:2px;}
+    .pay-arr{color:var(--muted);font-size:18px;opacity:0.5;}
+
+    .detail-box{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;backdrop-filter:blur(8px);}
+    .detail-row{display:flex;justify-content:space-between;align-items:center;padding:11px 15px;border-bottom:1px solid var(--border);font-size:13px;}
+    .detail-row:last-child{border-bottom:none;}
+    .detail-key{color:var(--muted);}
+    .detail-val{font-family:'Space Mono',monospace;font-weight:700;cursor:pointer;transition:color 0.2s;}
+    .detail-val:hover{color:var(--accent2);}
+
+    .sub-screen{display:none;}
+    .sub-screen.active{display:block;}
+
+    /* SUCCESS */
+    .suc-icon{width:64px;height:64px;border-radius:50%;background:rgba(29,255,212,0.08);border:1.5px solid rgba(29,255,212,0.3);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px;animation:pulse 2.5s infinite;}
+    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(29,255,212,0.25)}50%{box-shadow:0 0 0 12px rgba(29,255,212,0)}}
+
+    /* ACTION CARDS */
+    .action-card{display:flex;align-items:center;gap:14px;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:13px 15px;margin-bottom:8px;cursor:pointer;transition:border-color 0.2s,transform 0.15s;backdrop-filter:blur(8px);text-decoration:none;color:var(--text);}
+    .action-card:hover{border-color:var(--border-hover);transform:translateX(-2px);}
+    .action-card.ac-primary{border-color:rgba(29,255,212,0.3);background:rgba(29,255,212,0.04);}
+    .ac-icon{width:40px;height:40px;border-radius:12px;background:rgba(58,142,246,0.12);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+    .ac-icon.teal{background:rgba(29,255,212,0.1);border-color:rgba(29,255,212,0.2);}
+    .ac-info{flex:1;}
+    .ac-title{font-size:14px;font-weight:600;margin-bottom:2px;}
+    .ac-desc{font-size:11px;color:var(--muted);}
+
+    /* MODAL FOOTER */
+    .modal-footer{padding:16px 20px;border-top:1px solid var(--border);display:flex;gap:9px;flex-shrink:0;}
+    .btn-back{background:var(--glass);color:var(--muted);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 18px;font-size:13px;font-family:'Sora',sans-serif;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(8px);}
+    .btn-back:hover{border-color:var(--border-hover);color:var(--text);}
+    .btn-next{flex:1;background:linear-gradient(135deg,var(--accent),#1a6bd4);color:#fff;border:none;border-radius:var(--radius-sm);padding:12px;font-size:14px;font-weight:600;font-family:'Sora',sans-serif;cursor:pointer;transition:all 0.2s;box-shadow:0 0 18px rgba(58,142,246,0.25);}
+    .btn-next:hover{box-shadow:0 0 26px rgba(58,142,246,0.4);transform:translateY(-1px);}
+    .btn-next:disabled{opacity:0.35;cursor:not-allowed;transform:none;box-shadow:none;}
+
+    /* TERMS */
+    .terms-content{font-size:12.5px;color:var(--muted);line-height:1.8;}
+    .terms-content h3{color:var(--text);font-size:13.5px;margin:16px 0 6px;}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);left:50%;transform:translateX(-50%) translateY(12px);background:rgba(8,20,50,0.92);border:1px solid rgba(29,255,212,0.25);border-radius:999px;padding:11px 18px;font-size:13px;color:var(--accent2);font-weight:600;display:flex;align-items:center;gap:8px;z-index:9999;opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;backdrop-filter:blur(16px);white-space:nowrap;}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    .toast-dot{width:8px;height:8px;border-radius:50%;background:var(--accent2);box-shadow:0 0 8px var(--accent2);}
+
+    .hidden{display:none!important;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    .fade-in{animation:fadeUp 0.35s ease both;}
+
+    /* PRICE SUMMARY BAR */
+    .price-summary{background:rgba(29,255,212,0.05);border:1px solid rgba(29,255,212,0.18);border-radius:var(--radius-sm);padding:11px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+    .ps-label{font-size:12px;color:var(--muted);}
+    .ps-price{font-size:18px;font-weight:700;font-family:'Space Mono',monospace;color:var(--accent2);}
+    .ps-vat{font-size:10px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:1px;text-align:left;}
+  </style>
+</head>
+<body>
+<div class="wrap fade-in">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-mark">
+      <img src="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" alt="AutoScale" />
+    </div>
+    <div class="brand-name">AutoScale</div>
+    <div class="brand-sub">שירותים ומוצרים</div>
+  </header>
+
+  <!-- NAV -->
+  <div class="nav-pills">
+    <span class="nav-pill" onclick="openTerms()">📄 תנאי שימוש</span>
+    <a class="nav-pill" href="https://forms.monday.com/forms/cecc3e978ab695990753b0053e8bb696?r=use1" target="_blank">🔗 שיתוף גישה</a>
+    <a class="nav-pill" href="autoscale-hours-form-v2.html">⏱ בנק שעות</a>
+    <span class="nav-pill"><span class="avail-dot"></span> א׳–ה׳ 9–18</span>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    <span>ℹ️</span>
+    <div>כל המחירים אינם כוללים מע"מ (18%). עלויות כלים ושירותי צד שלישי (WhatsApp Business, ManyChat, Monday.com וכו׳) <strong>אינן כלולות</strong> — משולמות ישירות ועצמאית.</div>
+  </div>
+
+  <!-- ═══ SECTION: WHATSAPP BOT ═══ -->
+  <div class="section-label">🤖 בוט וואטסאפ</div>
+
+  <div class="product-card featured">
+    <div class="product-head">
+      <div class="product-icon teal">💬</div>
+      <div class="product-name-row">
+        <div class="product-name">בוט וואטסאפ מלא <span class="product-badge badge-teal">מומלץ</span></div>
+        <div class="product-tagline">עד 6 שלבים + CRM/Sheets + Dashboard</div>
+      </div>
+      <div class="price-block">
+        <span class="price-from">החל מ-</span>
+        <div class="price-main-big">₪2,000 <small>+מע"מ</small></div>
+        <div class="price-note">הקמה חד פעמית</div>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="feat-dot"></div>זרם שיחה עד 6 שלבים מותאמים לעסק</div>
+      <div class="feature"><div class="feat-dot"></div>חיבור ל-CRM או Google Sheets</div>
+      <div class="feature"><div class="feat-dot"></div>לוח ניהול (dashboard) — כמו WATI, אבל שלך</div>
+      <div class="feature"><div class="feat-dot"></div>הדרכה + תיעוד מסירה</div>
+      <div class="feature"><div class="feat-dot warn"></div>מספר WhatsApp Business — נדרש מראש (צד שלישי)</div>
+    </div>
+    <div class="support-row">
+      <div class="support-label"><span class="avail-dot"></span> תמיכה חודשית</div>
+      <div class="support-price">החל מ-₪350 <small style="font-size:10px;color:var(--muted)">+מע"מ/חודש</small></div>
+    </div>
+    <div class="product-cta">
+      <button class="cta-btn cta-primary" onclick="startCheckout('wa-bot')">🚀 הזמן עכשיו</button>
+      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965','_blank')">💬 שאלה</button>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION: CRM ═══ -->
+  <div class="section-label">🗂️ חיבור CRM</div>
+
+  <div class="product-card">
+    <div class="product-head">
+      <div class="product-icon">🗂️</div>
+      <div class="product-name-row">
+        <div class="product-name">חיבור CRM בסיסי לעסק <span class="product-badge badge-blue">הקמה מלאה</span></div>
+        <div class="product-tagline">לקוחות, לידים ופייפליין — הכל במקום אחד</div>
+      </div>
+      <div class="price-block">
+        <span class="price-from">החל מ-</span>
+        <div class="price-main-big">₪3,500 <small>+מע"מ</small></div>
+        <div class="price-note">הקמה חד פעמית</div>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="feat-dot"></div>CRM מותאם (Monday.com / Sheets / Notion)</div>
+      <div class="feature"><div class="feat-dot"></div>ניהול לידים, פייפליין מכירות, פרופיל לקוח</div>
+      <div class="feature"><div class="feat-dot"></div>אוטומציות בסיסיות: תזכורות, עדכונים, תיוגים</div>
+      <div class="feature"><div class="feat-dot"></div>חיבור לטפסים (אתר / WhatsApp / פייסבוק)</div>
+      <div class="feature"><div class="feat-dot"></div>הדרכה + תיעוד מסירה</div>
+    </div>
+    <div class="support-row">
+      <div class="support-label"><span class="avail-dot"></span> תמיכה חודשית</div>
+      <div class="support-price">החל מ-₪350 <small style="font-size:10px;color:var(--muted)">+מע"מ/חודש</small></div>
+    </div>
+    <div class="product-cta">
+      <button class="cta-btn cta-primary" onclick="startCheckout('crm')">🚀 הזמן עכשיו</button>
+      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965','_blank')">💬 שאלה</button>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION: MANYCHAT ═══ -->
+  <div class="section-label">📣 תגובות אוטומטיות — ManyChat</div>
+
+  <div class="product-card">
+    <div class="product-head">
+      <div class="product-icon orange">📣</div>
+      <div class="product-name-row">
+        <div class="product-name">AutoResponse — ManyChat <span class="product-badge badge-orange">ללא תחזוקה</span></div>
+        <div class="product-tagline">Instagram, Facebook, Email, SMS — עד 4 שלבים</div>
+      </div>
+      <div class="price-block">
+        <span class="price-from">החל מ-</span>
+        <div class="price-main-big">₪900 <small>+מע"מ</small></div>
+        <div class="price-note">הקמה חד פעמית</div>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="feat-dot"></div>זרם תגובה אוטומטי עד 4 שלבים</div>
+      <div class="feature"><div class="feat-dot"></div>Instagram DM, Facebook Messenger, Email, SMS</div>
+      <div class="feature"><div class="feat-dot"></div>תגובה לתגובות, סטורי, מודעות</div>
+      <div class="feature"><div class="feat-dot"></div>מסירה "תעבוד לבד" — ללא תחזוקה שוטפת</div>
+      <div class="feature"><div class="feat-dot warn"></div>רישיון ManyChat — בנפרד ועצמאית</div>
+    </div>
+    <div class="product-cta">
+      <button class="cta-btn cta-primary" onclick="startCheckout('manychat')">🚀 הזמן עכשיו</button>
+      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965','_blank')">💬 שאלה</button>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION: LANDING PAGE ═══ -->
+  <div class="section-label">🌐 דפי נחיתה</div>
+
+  <div class="product-card">
+    <div class="product-head">
+      <div class="product-icon purple">🌐</div>
+      <div class="product-name-row">
+        <div class="product-name">דף נחיתה בסיסי <span class="product-badge badge-purple">עד 5 סקשנים</span></div>
+        <div class="product-tagline">דף מקצועי ומותאם לעסק — לידים, מבצעים, שירותים</div>
+      </div>
+      <div class="price-block">
+        <span class="price-from">החל מ-</span>
+        <div class="price-main-big">₪1,200 <small>+מע"מ</small></div>
+        <div class="price-note">לדף</div>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="feat-dot"></div>עיצוב מותאם אישית לעסק</div>
+      <div class="feature"><div class="feat-dot"></div>עד 5 סקשנים (Hero, יתרונות, שירותים, המלצות, CTA)</div>
+      <div class="feature"><div class="feat-dot"></div>טופס לכידת לידים מחובר</div>
+      <div class="feature"><div class="feat-dot"></div>מותאם מובייל + RTL עברית</div>
+      <div class="feature"><div class="feat-dot"></div>דף נוסף מעבר ל-5 סקשנים — לפי תמחור</div>
+    </div>
+    <div class="product-cta">
+      <button class="cta-btn cta-primary" onclick="startCheckout('landing')">🚀 הזמן עכשיו</button>
+      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965','_blank')">💬 שאלה</button>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION: SUPPORT ═══ -->
+  <div class="section-label">🛡️ תמיכה חודשית שוטפת</div>
+
+  <div class="product-card">
+    <div class="product-head">
+      <div class="product-icon green">🛡️</div>
+      <div class="product-name-row">
+        <div class="product-name">חבילת תמיכה חודשית</div>
+        <div class="product-tagline">לפי היקף שימוש — בלי הפתעות</div>
+      </div>
+      <div class="price-block">
+        <span class="price-from">החל מ-</span>
+        <div class="price-main-big">₪350 <small>+מע"מ</small></div>
+        <div class="price-note">לחודש</div>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="feat-dot"></div>מענה לבעיות, שגיאות ועדכונים קטנים</div>
+      <div class="feature"><div class="feat-dot"></div>ניטור תקינות האוטומציות</div>
+      <div class="feature"><div class="feat-dot"></div>דו"ח חודשי + זמינות WhatsApp</div>
+      <div class="feature"><div class="feat-dot"></div>גמישות — אפשר לשנות בכל עת</div>
+    </div>
+    <div class="product-cta">
+      <button class="cta-btn cta-primary" onclick="window.open('https://wa.me/972552962965','_blank')">💬 בוא נדבר על חבילה</button>
+    </div>
+  </div>
+
+  <!-- ═══ QUICK WINS ═══ -->
+  <div class="section-label">⚡ מוצרים מהירים נוספים</div>
+  <div class="quick-grid">
+    <div class="quick-card" onclick="startCheckout('linktree')">
+      <div class="quick-icon">🔗</div>
+      <div class="quick-name">דף לינקטרי מותאם</div>
+      <div class="quick-price">החל מ-₪400 +מע"מ</div>
+      <div class="quick-desc">ביו מקצועי לעסק עם עיצוב מותאם</div>
+    </div>
+    <div class="quick-card" onclick="startCheckout('lead-bot')">
+      <div class="quick-icon">🎯</div>
+      <div class="quick-name">Lead Capture Bot</div>
+      <div class="quick-price">החל מ-₪800 +מע"מ</div>
+      <div class="quick-desc">לכידת לידים + שמירה ל-CRM אוטומטית</div>
+    </div>
+    <div class="quick-card" onclick="startCheckout('dashboard')">
+      <div class="quick-icon">📊</div>
+      <div class="quick-name">לוח BI / דשבורד</div>
+      <div class="quick-price">החל מ-₪1,200 +מע"מ</div>
+      <div class="quick-desc">לוח ניהול ויזואלי לנתוני העסק בזמן אמת</div>
+    </div>
+    <div class="quick-card" onclick="startCheckout('email-auto')">
+      <div class="quick-icon">📧</div>
+      <div class="quick-name">אוטומציית אימייל</div>
+      <div class="quick-price">החל מ-₪600 +מע"מ</div>
+      <div class="quick-desc">מיון, תגובות, העברות ועדכון CRM</div>
+    </div>
+    <div class="quick-card" onclick="startCheckout('reports')">
+      <div class="quick-icon">📑</div>
+      <div class="quick-name">דוחות אוטומטיים</div>
+      <div class="quick-price">החל מ-₪500 +מע"מ</div>
+      <div class="quick-desc">PDF / גיליון שבועי/חודשי נשלח אוטומטית</div>
+    </div>
+    <div class="quick-card" onclick="startCheckout('zapier')">
+      <div class="quick-icon">⚙️</div>
+      <div class="quick-name">חיבורי Zapier/Make</div>
+      <div class="quick-price">החל מ-₪400 +מע"מ</div>
+      <div class="quick-desc">חיבור בין כלים קיימים ללא קוד</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM CTA -->
+  <div class="bottom-cta">
+    <div class="bottom-cta-title">לא מצאת מה שחיפשת?</div>
+    <div class="bottom-cta-sub">כל אוטומציה ניתנת לבנייה מותאמת אישית. דבר/י איתנו — נמצא פתרון שמתאים בדיוק לך.</div>
+    <div class="bottom-btns">
+      <button class="cta-btn cta-primary" style="padding:12px 24px;flex:unset" onclick="startCheckout('custom')">📋 פתח בקשה</button>
+      <button class="cta-btn cta-secondary" style="padding:12px 24px;flex:unset" onclick="window.open('https://wa.me/972552962965','_blank')">💬 WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     CHECKOUT FLOW MODAL
+═══════════════════════════════════════ -->
+<div class="overlay" id="checkoutOverlay">
+  <div class="modal" id="checkoutModal">
+    <div class="modal-header">
+      <span class="modal-handle"></span>
+      <button class="modal-close" onclick="closeCheckout()">✕</button>
+      <div class="modal-title" id="ckTitle">הזמנה</div>
+      <div class="modal-sub" id="ckSub"></div>
+      <!-- STEPPER -->
+      <div class="stepper" id="stepper" style="margin-top:16px;">
+        <div class="step-item active" id="si1"><div class="step-num">1</div><div class="step-lbl">תשלום</div></div>
+        <div class="step-item" id="si2"><div class="step-num">2</div><div class="step-lbl">פרטים</div></div>
+        <div class="step-item" id="si3"><div class="step-num">3</div><div class="step-lbl">גישות</div></div>
+        <div class="step-item" id="si4"><div class="step-num">4</div><div class="step-lbl">משימות</div></div>
+        <div class="step-item" id="si5"><div class="step-num">✓</div><div class="step-lbl">סיום</div></div>
+      </div>
+    </div>
+
+    <div class="modal-body" id="modalBody">
+
+      <!-- ══ SCREEN 1: PAYMENT ══ -->
+      <div class="step-screen active" id="ck1">
+        <div class="price-summary">
+          <div><div class="ps-label">מחיר בסיס (לפני מע"מ)</div><div class="ps-vat" id="ckVatLine"></div></div>
+          <div class="ps-price" id="ckBasePrice">₪0</div>
+        </div>
+
+        <!-- UPGRADES -->
+        <div class="upgrade-block" id="upgradesBlock">
+          <div class="upgrade-title">⚡ שדרוגים אופציונליים</div>
+          <div id="upgradesList"></div>
+          <div class="warn-note" style="margin-top:10px">💡 שדרוגים מסומנים יתומחרו בנפרד לאחר מיפוי הצרכים — תקבל/י הצעת מחיר מסוימת לפני חיוב.</div>
+        </div>
+
+        <div style="height:14px"></div>
+        <div class="pay-opts" id="payOptsMain">
+          <div class="pay-opt" id="payCardBtn">
+            <div class="pay-icon">💳</div>
+            <div class="pay-info"><div class="pay-name">כרטיס אשראי</div><div class="pay-desc">תשלום מאובטח דרך Grow</div></div>
+            <div class="pay-arr">←</div>
+          </div>
+          <div class="pay-opt" onclick="showPaySub('bit')">
+            <div class="pay-icon">📲</div>
+            <div class="pay-info"><div class="pay-name">Bit</div><div class="pay-desc">תשלום מהיר</div></div>
+            <div class="pay-arr">←</div>
+          </div>
+          <div class="pay-opt" onclick="showPaySub('bank')">
+            <div class="pay-icon">🏦</div>
+            <div class="pay-info"><div class="pay-name">העברה בנקאית</div><div class="pay-desc">פרטי חשבון</div></div>
+            <div class="pay-arr">←</div>
+          </div>
+        </div>
+
+        <!-- BIT sub -->
+        <div class="sub-screen" id="payBit">
+          <div class="detail-box" style="margin-bottom:10px">
+            <div class="detail-row"><span class="detail-key">מספר Bit</span><span class="detail-val" onclick="cp('0552962965')">055-296-2965</span></div>
+            <div class="detail-row"><span class="detail-key">סכום (לפני מע"מ)</span><span class="detail-val" id="bitBase" style="color:var(--accent2)"></span></div>
+            <div class="detail-row"><span class="detail-key">כולל מע"מ (18%)</span><span class="detail-val" id="bitVat" style="color:var(--warn)"></span></div>
+          </div>
+          <div class="info-note">✅ שלח/י צילום אישור לוואטסאפ — נפעיל תוך 24 שעות.</div>
+          <div style="display:flex;gap:9px;margin-top:12px">
+            <button class="btn-back" onclick="hidePaySub()">← חזור</button>
+            <button class="btn-next" style="flex:1" onclick="payDone()">שלחתי ✓ — המשך</button>
+          </div>
+        </div>
+
+        <!-- BANK sub -->
+        <div class="sub-screen" id="payBank">
+          <div class="detail-box" style="margin-bottom:10px">
+            <div class="detail-row"><span class="detail-key">בנק הפועלים</span><span class="detail-val" onclick="cp('12')">12</span></div>
+            <div class="detail-row"><span class="detail-key">סניף</span><span class="detail-val" onclick="cp('XXX')">XXX ← עדכן</span></div>
+            <div class="detail-row"><span class="detail-key">חשבון</span><span class="detail-val" onclick="cp('XXXXXXXX')">XXXXXXXX ← עדכן</span></div>
+            <div class="detail-row"><span class="detail-key">סכום (לפני מע"מ)</span><span class="detail-val" id="bankBase" style="color:var(--accent2)"></span></div>
+            <div class="detail-row"><span class="detail-key">כולל מע"מ (18%)</span><span class="detail-val" id="bankVat" style="color:var(--warn)"></span></div>
+          </div>
+          <div class="info-note">📎 שלח/י אסמכתא לוואטסאפ — נפעיל תוך 24 שעות.</div>
+          <div style="display:flex;gap:9px;margin-top:12px">
+            <button class="btn-back" onclick="hidePaySub()">← חזור</button>
+            <button class="btn-next" style="flex:1" onclick="payDone()">העברתי ✓ — המשך</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SCREEN 2: CLIENT DETAILS ══ -->
+      <div class="step-screen" id="ck2">
+        <div class="fields">
+          <div class="field-group">
+            <div class="field-label">שם לקוח / חברה <span>*</span></div>
+            <input type="text" id="ck_name" placeholder='ישראל ישראלי / חברה בע"מ' />
+          </div>
+          <div class="field-group">
+            <div class="field-label">ח.פ / ת.ז לחשבונית <span>*</span></div>
+            <input type="text" id="ck_id" placeholder="000000000" />
+          </div>
+          <div class="field-group">
+            <div class="field-label">טלפון <span>*</span></div>
+            <input type="tel" id="ck_phone" placeholder="+972-05X-XXXXXXX" />
+          </div>
+          <div class="field-group">
+            <div class="field-label">אימייל <span>*</span></div>
+            <input type="email" id="ck_email" placeholder="you@example.com" />
+          </div>
+          <div class="field-group">
+            <div class="field-label">שם העסק</div>
+            <input type="text" id="ck_biz" placeholder="שם העסק / מותג" />
+          </div>
+          <div class="field-group">
+            <div class="field-label">הערות נוספות</div>
+            <textarea id="ck_notes" placeholder="ספר/י לנו יותר על הפרויקט..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SCREEN 3: SHARE ACCESS ══ -->
+      <div class="step-screen" id="ck3">
+        <div class="info-note" style="margin-bottom:14px">🔗 שיתוף גישה מראש חוסך זמן ומאפשר לנו להתחיל מיד. לחץ/י לפתיחת הטופס בחלון חדש.</div>
+        <a href="https://forms.monday.com/forms/cecc3e978ab695990753b0053e8bb696?r=use1" target="_blank" class="action-card ac-primary">
+          <div class="ac-icon teal">🔗</div>
+          <div class="ac-info"><div class="ac-title">שיתוף גישה — טופס</div><div class="ac-desc">גישה לחשבונות, מערכות, CRM וכו׳</div></div>
+          <div>←</div>
+        </a>
+        <div class="fields" style="margin-top:14px">
+          <div class="field-group">
+            <div class="field-label">פלטפורמות שיש לך (סמן/י)</div>
+            <div id="platformChecks" style="display:flex;flex-direction:column;gap:7px;margin-top:4px"></div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">הערות גישה</div>
+            <textarea id="ck_access_notes" placeholder="פרטים נוספים על גישות, חשבונות, סיסמאות (ניתן לשלוח בנפרד)..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SCREEN 4: TASKS / PRE-FLIGHT ══ -->
+      <div class="step-screen" id="ck4">
+        <div class="warn-note" style="margin-bottom:14px">📋 לפני שמתחילים — יש כמה דברים שצריך להכין. אנחנו נתחיל לעבוד ברגע שהכל יהיה מוכן!</div>
+        <div class="task-list" id="taskList"></div>
+      </div>
+
+      <!-- ══ SCREEN 5: SUCCESS / SCHEDULE ══ -->
+      <div class="step-screen" id="ck5">
+        <div style="text-align:center;padding:8px 0 16px">
+          <div class="suc-icon">✓</div>
+          <div style="font-size:20px;font-weight:700;margin-bottom:8px">הכל הגיע! 🎉</div>
+          <div style="font-size:13.5px;color:var(--muted);line-height:1.7">קיבלנו את הפרטים, הגישות והמשימות.<br>נחזור אליך תוך 24 שעות עם עדכון.</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:14px;font-family:'Space Mono',monospace">רוצה לתאם שיחה/פגישה לעבור על הפרויקט?</div>
+        <div class="action-card ac-primary" onclick="window.open('https://cal.com/autoscale/call','_blank')">
+          <div class="ac-icon teal">📞</div>
+          <div class="ac-info"><div class="ac-title">תזמון שיחה</div><div class="ac-desc">בחר/י זמן נוח לשיחת פתיחת פרויקט</div></div>
+          <div>←</div>
+        </div>
+        <div class="action-card" onclick="window.open('https://cal.com/autoscale/meeting','_blank')">
+          <div class="ac-icon">📅</div>
+          <div class="ac-info"><div class="ac-title">תזמון פגישת זום</div><div class="ac-desc">מיפוי מעמיק + תכנון ביחד</div></div>
+          <div>←</div>
+        </div>
+        <div class="action-card" onclick="window.open('https://wa.me/972552962965','_blank')">
+          <div class="ac-icon" style="background:rgba(37,211,102,0.1);border-color:rgba(37,211,102,0.2)">💬</div>
+          <div class="ac-info"><div class="ac-title">WhatsApp</div><div class="ac-desc">שלח/י הודעה — נחזור מיד</div></div>
+          <div>←</div>
+        </div>
+      </div>
+
+    </div><!-- /modal-body -->
+
+    <div class="modal-footer" id="ckFooter">
+      <button class="btn-back" id="ckBack" onclick="ckPrev()" style="display:none">← חזור</button>
+      <button class="btn-next" id="ckNext" onclick="ckNext()">המשך →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TERMS MODAL ══ -->
+<div class="overlay" id="termsOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-handle"></span>
+      <button class="modal-close" onclick="document.getElementById('termsOverlay').classList.remove('open')">✕</button>
+      <div class="modal-title">תנאי שימוש — AutoScale</div>
+    </div>
+    <div class="modal-body">
+      <div class="terms-content">
+        <h3>1. כללי</h3>
+        <p>שירותי AutoScale כוללים פיתוח אוטומציות, חיבור מערכות ובניית בוטים. כל עבודה מחייבת אישור לפני תחילתה.</p>
+        <h3>2. תשלום</h3>
+        <p>כל המחירים אינם כוללים מע"מ (18%). תנאים: 50% מקדמה, 50% עם מסירה — אלא אם הוסכם אחרת בכתב.</p>
+        <h3>3. צד שלישי</h3>
+        <p>עלויות רישיונות ופלטפורמות (WhatsApp Business, ManyChat, Monday.com, Make וכד׳) אינן כלולות ומשולמות ישירות ועצמאית.</p>
+        <h3>4. זמינות</h3>
+        <p>זמינות בימים א׳–ה׳ 9:00–18:00. זמן ביצוע נקבע בנפרד.</p>
+        <h3>5. קניין רוחני</h3>
+        <p>הפתרונות עוברים לרשות הלקוח לאחר תשלום מלא.</p>
+        <h3>6. ביטולים</h3>
+        <p>ביטול לאחר תחילת עבודה — חיוב יחסי. מקדמה אינה מוחזרת.</p>
+        <h3>7. שדרוגים</h3>
+        <p>שדרוגים מחוץ לחבילה הבסיסית ידרשו הצעת מחיר נפרדת ואישור לפני ביצוע.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-next" onclick="document.getElementById('termsOverlay').classList.remove('open')">הבנתי ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span class="toast-dot"></span><span id="toastMsg">הועתק ✓</span></div>
+
+<script>
+const VAT = 0.18;
+const fmt = n => '₪' + Math.round(n).toLocaleString();
+const withVat = n => Math.round(n * (1 + VAT));
+const vatAmt = n => Math.round(n * VAT);
+
+/* ══ PRODUCT CONFIGS ══ */
+const PRODUCTS = {
+  'wa-bot': {
+    name: 'בוט וואטסאפ מלא',
+    base: 2000,
+    growUrl: 'https://richard36901-source.github.io/autoscale-pay',
+    upgrades: [
+      { id: 'u1', label: 'Dashboard מורחב (לוח ניהול מלא)', price: '+ תמחור' },
+      { id: 'u2', label: 'שלבי שיחה נוספים (מעל 6)', price: '+ תמחור' },
+      { id: 'u3', label: 'חיבור לאפליקציה / API מותאמת', price: '+ תמחור' },
+      { id: 'u4', label: 'AI Responses (ChatGPT בתוך הבוט)', price: '+ תמחור' },
+    ],
+    platforms: ['WhatsApp Business', 'Google Sheets', 'Monday.com', 'Notion', 'Airtable', 'HubSpot'],
+    tasks: [
+      { title: 'הזמנת מספר WhatsApp Business', desc: 'יש להזמין מספר ייעודי דרך Meta Business Suite. אם יש לך כבר מספר — ציין/י אותו.', field: { label: 'מספר הטלפון שיחובר לבוט', placeholder: '+972-05X-XXXXXXX', id: 'task_phone' } },
+      { title: 'שם העסק ב-WhatsApp', desc: 'כיצד תרצה/י שהעסק יופיע ב-WhatsApp? שם, תמונה, תיאור קצר.', field: { label: 'שם תצוגה לבוט', placeholder: 'AutoScale — אוטומציות', id: 'task_wa_name' } },
+      { title: 'פרטי הודעות ה-Bot', desc: 'תכין/י טקסט לפחות להודעת פתיחה. את השאר נבנה ביחד.', field: { label: 'הודעת פתיחה מוצעת', placeholder: 'שלום! כאן AutoScale, במה נוכל לעזור?', id: 'task_msg' } },
+      { title: 'גישה ל-CRM / Sheets', desc: 'עדכן/י בשלב הגישות מה צריך לחבר — CRM / Sheets / Notion.', field: null },
+    ]
+  },
+  'crm': {
+    name: 'חיבור CRM בסיסי',
+    base: 3500,
+    growUrl: 'https://richard36901-source.github.io/autoscale-pay',
+    upgrades: [
+      { id: 'u1', label: 'אוטומציות מורחבות (beyond basic)', price: '+ תמחור' },
+      { id: 'u2', label: 'אינטגרציה עם אתר / חנות', price: '+ תמחור' },
+      { id: 'u3', label: 'Dashboard BI מחובר', price: '+ תמחור' },
+      { id: 'u4', label: 'הכשרת צוות (הדרכות)', price: '+ תמחור' },
+    ],
+    platforms: ['Monday.com', 'HubSpot', 'Notion', 'Google Sheets', 'Airtable', 'Salesforce'],
+    tasks: [
+      { title: 'פלטפורמת CRM מועדפת', desc: 'האם יש לך כבר מנוי ל-Monday / HubSpot / Notion? אם לא — נמליץ ביחד.', field: { label: 'פלטפורמה רצויה (אם ידוע)', placeholder: 'Monday.com / Notion / Sheets...', id: 'task_crm_platform' } },
+      { title: 'מה הצרכים העיקריים שלך', desc: 'לידים, לקוחות קיימים, מכירות, שירות, הכל?', field: { label: 'תאר/י בקצרה', placeholder: 'לנהל לידים נכנסים מאינסטגרם + מעקב עסקאות', id: 'task_crm_needs' } },
+      { title: 'מאיפה מגיעים הלידים שלך', desc: 'אתר, WhatsApp, פייסבוק, אינסטגרם, טלפון? ניחבר את הכל.', field: { label: 'מקורות לידים', placeholder: 'אינסטגרם + WhatsApp + אתר', id: 'task_crm_sources' } },
+    ]
+  },
+  'manychat': {
+    name: 'AutoResponse — ManyChat',
+    base: 900,
+    growUrl: 'https://richard36901-source.github.io/autoscale-pay',
+    upgrades: [
+      { id: 'u1', label: 'שלבי זרם נוספים (מעל 4)', price: '+ תמחור' },
+      { id: 'u2', label: 'חיבור ל-CRM / Sheets', price: '+ תמחור' },
+      { id: 'u3', label: 'פלטפורמות נוספות', price: '+ תמחור' },
+    ],
+    platforms: ['Instagram', 'Facebook', 'Email', 'SMS', 'WhatsApp'],
+    tasks: [
+      { title: 'חשבון ManyChat', desc: 'יש לך כבר חשבון ManyChat? אם לא — הירשם/י ב-manychat.com (Free / Pro).', field: { label: 'לינק לפרופיל ManyChat (אם יש)', placeholder: 'https://manychat.com/...', id: 'task_mc' } },
+      { title: 'אילו פלטפורמות לחבר', desc: 'Instagram, Facebook, Email, SMS — הכל?', field: { label: 'פלטפורמות מבוקשות', placeholder: 'Instagram + Facebook', id: 'task_mc_platforms' } },
+      { title: 'מה הטריגר לתגובה', desc: 'מילת מפתח בתגובה? לחיצה על מודעה? DM ישיר?', field: { label: 'תאר/י את הטריגר', placeholder: 'כשמישהו כותב INFO בפוסט...', id: 'task_mc_trigger' } },
+    ]
+  },
+  'landing': {
+    name: 'דף נחיתה בסיסי',
+    base: 1200,
+    growUrl: 'https://richard36901-source.github.io/autoscale-pay',
+    upgrades: [
+      { id: 'u1', label: 'סקשנים נוספים (מעל 5)', price: '+ תמחור' },
+      { id: 'u2', label: 'אנימציות ואפקטים מתקדמים', price: '+ תמחור' },
+      { id: 'u3', label: 'חיבור לאוטומציית לידים', price: '+ תמחור' },
+      { id: 'u4', label: 'גרסת אנגלית / שפה נוספת', price: '+ תמחור' },
+    ],
+    platforms: ['Google Analytics', 'Meta Pixel', 'GTM', 'Hotjar', 'Mailchimp'],
+    tasks: [
+      { title: 'מטרת הדף', desc: 'מה רוצים שהמבקר יעשה? השאיר פרטים? רכישה? הורדת מדריך?', field: { label: 'מטרת הדף', placeholder: 'השארת פרטים לקבלת הצעת מחיר', id: 'task_lp_goal' } },
+      { title: 'מיתוג וצבעים', desc: 'שלח/י לוגו וצבעים של המותג. אם אין — נמליץ ביחד.', field: { label: 'לינק לתדמית / קבצים (Dropbox/Drive)', placeholder: 'https://drive.google.com/...', id: 'task_lp_brand' } },
+      { title: 'טקסטים / copy', desc: 'יש לך כבר טקסטים? אפשר לכתוב גם ביחד.', field: { label: 'טקסט הירו (כותרת ראשית)', placeholder: 'הפוך/י כל לקוח למנוע צמיחה...', id: 'task_lp_copy' } },
+    ]
+  },
+  'linktree': { name: 'דף לינקטרי מותאם', base: 400, growUrl: 'https://richard36901-source.github.io/autoscale-pay', upgrades: [], platforms: [], tasks: [{ title: 'לינקים וקישורים', desc: 'שלח/י רשימה של הקישורים להוסיף.', field: { label: 'רשימת לינקים', placeholder: 'אתר / אינסטגרם / וואטסאפ...', id: 'task_lt_links' } }] },
+  'lead-bot': { name: 'Lead Capture Bot', base: 800, growUrl: 'https://richard36901-source.github.io/autoscale-pay', upgrades: [], platforms: ['Google Sheets','Monday.com','HubSpot'], tasks: [{ title: 'שדות הטופס', desc: 'אילו שדות רוצה לאסוף — שם, מייל, טלפון, מה עוד?', field: { label: 'שדות רצויים', placeholder: 'שם, טלפון, שאלה אחת מסנן...', id: 'task_lb_fields' } }] },
+  'dashboard': { name: 'לוח BI / דשבורד', base: 1200, growUrl: 'https://richard36901-source.github.io/autoscale-pay', upgrades: [], platforms: ['Google Sheets','Monday.com','Airtable','BigQuery'], tasks: [{ title: 'מקורות הנתונים', desc: 'מאיפה מגיעים הנתונים — Sheets? Monday? API?', field: { label: 'מקורות', placeholder: 'Google Sheets + Monday.com', id: 'task_db_sources' } }] },
+  'email-auto': { name: 'אוטומציית אימייל', base: 600, growUrl: 'https://richard36901-source.github.io/autoscale-pay', upgrades: [], platforms: ['Gmail','Outlook','Mailchimp','ActiveCampaign'], tasks: [{ title: 'ספק המייל', desc: 'Gmail / Outlook / Mailchimp?', field: { label: 'ספק', placeholder: 'Gmail + Mailchimp', id: 'task_email_provider' } }] },
+  'reports': { name: 'דוחות אוטומטיים', base: 500, growUrl: 'https://richard36901-source.github.io/autoscale-pay', upgrades: [], platforms: ['Google Sheets','Notion','Slack','Email'], tasks: [{ title: 'תדירות ותוכן', desc: 'כמה פעמים? מה להציג בדוח?', field: { label: 'תאר את הדוח', placeholder: 'שבועי, ימי שני, מכירות+לידים', id: 'task_rep_desc' } }] },
+  'zapier': { name: 'חיבורי Zapier/Make', base: 400, growUrl: 'https://richard36901-source.github.io/autoscale-pay', upgrades: [], platforms: ['Zapier','Make','n8n'], tasks: [{ title: 'מה לחבר', desc: 'אילו שני כלים (לפחות) רוצה לחבר?', field: { label: 'כלים לחיבור', placeholder: 'Google Forms → Monday.com', id: 'task_zap_tools' } }] },
+  'custom': { name: 'פרויקט מותאם אישית', base: 0, growUrl: 'https://richard36901-source.github.io/autoscale-pay', upgrades: [], platforms: [], tasks: [{ title: 'תאר את הפרויקט', desc: 'ספר/י לנו מה הצורך — נחזור עם הצעת מחיר.', field: { label: 'תיאור', placeholder: 'רוצה לאוטמט...', id: 'task_custom_desc' } }] },
+};
+
+/* ══ STATE ══ */
+let currentProduct = null;
+let currentStep = 1;
+let selectedUpgrades = {};
+let toastT;
+
+/* ══ CHECKOUT OPEN ══ */
+function startCheckout(productId) {
+  currentProduct = PRODUCTS[productId] || PRODUCTS['custom'];
+  currentStep = 1;
+  selectedUpgrades = {};
+
+  // set header
+  document.getElementById('ckTitle').textContent = currentProduct.name;
+  document.getElementById('ckSub').textContent = 'תהליך הזמנה מהיר — 5 שלבים';
+
+  // price
+  const base = currentProduct.base;
+  document.getElementById('ckBasePrice').textContent = base > 0 ? 'החל מ-' + fmt(base) : 'לפי תמחור';
+  document.getElementById('ckVatLine').textContent = base > 0 ? 'כולל מע"מ (18%): ' + fmt(withVat(base)) : '';
+  document.getElementById('bitBase').textContent = base > 0 ? fmt(base) : 'לפי תמחור';
+  document.getElementById('bitVat').textContent = base > 0 ? fmt(withVat(base)) : 'לפי תמחור';
+  document.getElementById('bankBase').textContent = base > 0 ? fmt(base) : 'לפי תמחור';
+  document.getElementById('bankVat').textContent = base > 0 ? fmt(withVat(base)) : 'לפי תמחור';
+
+  // grow link
+  document.getElementById('payCardBtn').onclick = () => { window.open(currentProduct.growUrl, '_blank'); payDone(); };
+
+  // upgrades
+  const ul = document.getElementById('upgradesList');
+  ul.innerHTML = '';
+  document.getElementById('upgradesBlock').style.display = currentProduct.upgrades.length ? '' : 'none';
+  currentProduct.upgrades.forEach(u => {
+    const div = document.createElement('div');
+    div.className = 'upgrade-opt';
+    div.innerHTML = `<div class="upgrade-opt-chk" id="uch_${u.id}"></div><div class="upgrade-opt-text">${u.label}</div><div class="upgrade-opt-price">${u.price}</div>`;
+    div.onclick = () => toggleUpgrade(u.id, div);
+    ul.appendChild(div);
+  });
+
+  // platforms
+  const pc = document.getElementById('platformChecks');
+  pc.innerHTML = '';
+  currentProduct.platforms.forEach(p => {
+    const d = document.createElement('div');
+    d.className = 'chk-row'; d.dataset.platform = p;
+    d.innerHTML = `<div class="chk-box" data-cb="${p}"></div><span>${p}</span>`;
+    d.onclick = () => {
+      const cb = d.querySelector('.chk-box');
+      cb.classList.toggle('on');
+      cb.innerHTML = cb.classList.contains('on') ? '<svg width="10" height="8" viewBox="0 0 12 10" fill="none"><path d="M1 5l3 3 7-7" stroke="#060d1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
+    };
+    pc.appendChild(d);
+  });
+
+  // tasks
+  const tl = document.getElementById('taskList');
+  tl.innerHTML = '';
+  currentProduct.tasks.forEach((t, i) => {
+    const div = document.createElement('div');
+    div.className = 'task-item';
+    let fieldHtml = '';
+    if (t.field) {
+      fieldHtml = `<div class="task-input-wrap"><input type="text" id="${t.field.id}" placeholder="${t.field.placeholder}" /></div>`;
+    }
+    div.innerHTML = `<div class="task-num">${i+1}</div><div class="task-body"><div class="task-title">${t.title}</div><div class="task-desc">${t.desc}</div>${fieldHtml}</div>`;
+    tl.appendChild(div);
+  });
+
+  // reset steps
+  goScreen(1);
+  document.getElementById('checkoutOverlay').classList.add('open');
+}
+
+function closeCheckout() { document.getElementById('checkoutOverlay').classList.remove('open'); }
+
+/* ══ UPGRADES ══ */
+function toggleUpgrade(id, el) {
+  selectedUpgrades[id] = !selectedUpgrades[id];
+  el.querySelector('.upgrade-opt-chk').classList.toggle('on', selectedUpgrades[id]);
+  el.querySelector('.upgrade-opt-chk').innerHTML = selectedUpgrades[id]
+    ? '<svg width="10" height="8" viewBox="0 0 12 10" fill="none"><path d="M1 5l3 3 7-7" stroke="#060d1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    : '';
+}
+
+/* ══ PAY SUBS ══ */
+function showPaySub(type) {
+  document.getElementById('payOptsMain').style.display = 'none';
+  document.getElementById('payBit').style.display = type === 'bit' ? 'block' : 'none';
+  document.getElementById('payBank').style.display = type === 'bank' ? 'block' : 'none';
+}
+function hidePaySub() {
+  document.getElementById('payOptsMain').style.display = '';
+  document.getElementById('payBit').style.display = 'none';
+  document.getElementById('payBank').style.display = 'none';
+}
+function payDone() { hidePaySub(); ckNextStep(); }
+
+/* ══ STEP NAV ══ */
+function goScreen(n) {
+  currentStep = n;
+  [1,2,3,4,5].forEach(i => {
+    document.getElementById('ck'+i).className = 'step-screen' + (i === n ? ' active' : '');
+    const si = document.getElementById('si'+i);
+    si.className = 'step-item' + (i < n ? ' done' : i === n ? ' active' : '');
+    si.querySelector('.step-num').textContent = i < n ? '✓' : (i === 5 ? '✓' : i);
+  });
+  const back = document.getElementById('ckBack');
+  const next = document.getElementById('ckNext');
+  back.style.display = n > 1 ? '' : 'none';
+  if (n === 5) {
+    next.style.display = 'none';
+    document.getElementById('ckFooter').style.display = 'none';
+  } else {
+    next.style.display = '';
+    document.getElementById('ckFooter').style.display = '';
+    next.textContent = n === 4 ? 'סיים ושלח ✓' : 'המשך →';
+  }
+  document.getElementById('modalBody').scrollTop = 0;
+}
+
+function ckNextStep() { if (currentStep < 5) goScreen(currentStep + 1); }
+function ckPrev() { if (currentStep > 1) goScreen(currentStep - 1); }
+
+function ckNext() {
+  if (currentStep === 1) {
+    // Must have chosen a payment — just advance (card/bit/bank all call payDone)
+    // If they haven't touched payment, prompt
+    showToast('בחר/י אמצעי תשלום כדי להמשיך');
+    return;
+  }
+  if (currentStep === 2) {
+    const name = document.getElementById('ck_name').value.trim();
+    const phone = document.getElementById('ck_phone').value.trim();
+    const email = document.getElementById('ck_email').value.trim();
+    if (!name || !phone || !email) { showToast('נא למלא שם, טלפון ואימייל'); return; }
+  }
+  ckNextStep();
+}
+
+/* ══ TERMS ══ */
+function openTerms() { document.getElementById('termsOverlay').classList.add('open'); }
+
+/* ══ COPY ══ */
+async function cp(txt) {
+  try { await navigator.clipboard.writeText(txt); }
+  catch { const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+  showToast('הועתק ✓');
+}
+
+let toastTout;
+function showToast(msg) {
+  const t = document.getElementById('toast'); document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show'); clearTimeout(toastTout); toastTout = setTimeout(() => t.classList.remove('show'), 1600);
+}
+
+document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('open');
+}));
+</script>
+</body>
+</html>
