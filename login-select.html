@@ -1,31 +1,162 @@
-מבין — לא צריך שלב ביניים של בדיקת ת.ז. רק דף בחירה פשוט עם 2 כפתורים שמובילים ישר לדשבורדים. בונה.מוכן ✅ — `login-select.html`
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060d1a">
+<title>כניסת לקוחות ושותפים — AutoScale</title>
 
-**מה יש בדף:**
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%233a8ef6'/><stop offset='1' stop-color='%231dffd4'/></linearGradient></defs><path d='M14 50 L26 18 L38 18 L50 50 L42 50 L39 42 L25 42 L22 50 Z M27 35 L37 35 L32 22 Z' fill='url(%23g)'/></svg>">
 
-🎨 **שפה גרפית זהה לאתר**
-- אותו רקע: `#060d1a` עם dual radial gradients + רשת 40px
-- אותו לוגו (SVG עם גרדיאנט) למעלה משמאל ✦ קישור "← חזרה לאתר" מימין
-- אותם פונטים: Sora + JetBrains Mono
-- אותם משתני CSS, glassmorphism, פילים מעוגלים
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-🪪 **2 כפתורים גדולים בגריד צד-לצד** (במובייל הם מתערמים אנכית):
+<style>
+:root{
+  --bg:#060d1a;--bg2:#091222;
+  --glass:rgba(12,26,56,.55);--glass2:rgba(12,26,56,.35);
+  --border:rgba(80,140,255,.13);--border2:rgba(80,140,255,.28);--borders:rgba(80,140,255,.07);
+  --text:#e8f0ff;--muted:#6a85b6;--muted2:#4a6090;
+  --accent:#3a8ef6;--accent2:#1dffd4;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --sans:'Sora',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;direction:rtl;font-size:15px;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80vw 55vh at 10% -5%,rgba(30,90,220,.22) 0%,transparent 65%),radial-gradient(ellipse 60vw 40vh at 90% 10%,rgba(0,200,180,.10) 0%,transparent 60%),radial-gradient(ellipse 100vw 30vh at 50% 100%,rgba(10,30,80,.5) 0%,transparent 70%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(58,142,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(58,142,246,.04) 1px,transparent 1px);background:linear-gradient(rgba(58,142,246,.04) 1px,transparent 1px) center/40px 40px,linear-gradient(90deg,rgba(58,142,246,.04) 1px,transparent 1px) center/40px 40px;pointer-events:none;z-index:0}
 
-**כרטיס 1 — כניסת לקוחות** (גוון כחול, accent ראשי)
-- אייקון 👤
-- תיאור: דשבורד אישי לניהול בנק שעות, פתיחת בקשות, והיסטוריית עבודה
-- 4 bullet points: בנק שעות / בקשות / היסטוריה / חיבור לדונה
-- כפתור "היכנס כלקוח ←" → `https://autoscalehq.io/client-portal.html`
+/* Top bar */
+.tb{position:relative;z-index:2;padding:24px 28px;display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto}
+.brand{display:inline-flex;align-items:center;gap:11px;text-decoration:none}
+.brand-icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,#0d2a6e,#0a4a3a);border:1px solid rgba(58,142,246,.28);box-shadow:0 0 16px rgba(58,142,246,.22);overflow:hidden}
+.brand-icon svg{width:24px;height:24px}
+.brand-name{font-size:18px;font-weight:700;letter-spacing:-.3px;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.back-top{font-family:var(--mono);font-size:12px;color:var(--muted);text-decoration:none;padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:rgba(58,142,246,.04);transition:all .15s;letter-spacing:.04em}
+.back-top:hover{color:var(--text);border-color:var(--border2);background:rgba(58,142,246,.1)}
 
-**כרטיס 2 — כניסת שותפים** (גוון טורקיז, accent משני)
-- אייקון 🤝
-- תיאור: דשבורד שותפים למעקב הפניות, ניהול לקוחות, ונתוני עמלות
-- 4 bullet points: הפניות / עמלות / סטטוס / חומרי שיווק
-- כפתור "היכנס כשותף ←" → `https://autoscalehq.io/partner-dashboard.html`
+/* Main wrap */
+.wrap{position:relative;z-index:1;min-height:calc(100dvh - 88px);display:flex;align-items:center;justify-content:center;padding:32px 24px 64px}
+.center{max-width:980px;width:100%;text-align:center}
+.kicker{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:16px;display:inline-flex;align-items:center;gap:14px}
+.kicker::before,.kicker::after{content:'';width:36px;height:1px;background:currentColor;opacity:.5}
+.h1{font-size:clamp(36px,5.5vw,60px);font-weight:700;line-height:1.1;letter-spacing:-.025em;margin-bottom:16px}
+.grad{background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{font-size:16px;color:var(--muted);max-width:520px;margin:0 auto 56px;line-height:1.7;font-weight:300}
 
-✨ **אפקטי hover** — הכרטיסים מתרוממים ב-6px עם shadow מתאים לצבע (כחול ללקוחות, טורקיז לשותפים).
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:880px;margin:0 auto}
+@media(max-width:720px){.cards{grid-template-columns:1fr}}
+.card{position:relative;padding:36px 32px 32px;border-radius:22px;text-decoration:none;color:var(--text);transition:transform .25s,border-color .25s,box-shadow .25s;text-align:right;display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:var(--glass);border:1px solid var(--border)}
+.card:hover{transform:translateY(-6px);border-color:var(--border2)}
+.card::before{content:'';position:absolute;top:0;right:0;width:160px;height:160px;border-radius:50%;filter:blur(50px);opacity:.4;pointer-events:none}
+.card-client::before{background:radial-gradient(circle,rgba(58,142,246,.7),transparent 70%)}
+.card-partner::before{background:radial-gradient(circle,rgba(29,255,212,.55),transparent 70%)}
+.card-client:hover{box-shadow:0 18px 50px rgba(58,142,246,.18)}
+.card-partner:hover{box-shadow:0 18px 50px rgba(29,255,212,.16)}
+.icon-wrap{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;margin-bottom:24px;font-size:28px;position:relative;z-index:1;flex-shrink:0}
+.card-client .icon-wrap{background:linear-gradient(135deg,#2f5bea,#1a3aab);box-shadow:0 8px 24px rgba(47,91,234,.35)}
+.card-partner .icon-wrap{background:linear-gradient(135deg,#0db89e,#0a8a78);box-shadow:0 8px 24px rgba(13,184,158,.3)}
+.card-tag{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px;position:relative;z-index:1}
+.card-client .card-tag{color:var(--accent)}
+.card-partner .card-tag{color:var(--accent2)}
+.card-title{font-size:26px;font-weight:700;letter-spacing:-.02em;margin-bottom:10px;position:relative;z-index:1}
+.card-desc{font-size:14px;color:var(--muted);line-height:1.7;font-weight:300;margin-bottom:28px;position:relative;z-index:1;flex:1}
+.card-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 22px;border-radius:999px;font-size:14px;font-weight:600;color:#fff;letter-spacing:.2px;position:relative;z-index:1;transition:filter .18s;align-self:stretch}
+.card-client .card-cta{background:linear-gradient(135deg,#2f5bea,#1a3aab);box-shadow:0 6px 22px rgba(47,91,234,.32)}
+.card-partner .card-cta{background:linear-gradient(135deg,#0db89e,#0a8a78);box-shadow:0 6px 22px rgba(13,184,158,.28)}
+.card:hover .card-cta{filter:brightness(1.12)}
+.card-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px;position:relative;z-index:1}
+.card-list li{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px;font-weight:300}
+.card-list li::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.card-client .card-list li::before{background:var(--accent)}
+.card-partner .card-list li::before{background:var(--accent2)}
 
-🔗 **שורת hint למטה** — "עוד לא לקוח? דברו איתנו" + "רוצה להצטרף כשותף? לפרטים" עם קישורים לסקציות הרלוונטיות באתר.
+/* Bottom hint */
+.foot-hint{margin-top:48px;text-align:center;font-size:13px;color:var(--muted);font-weight:300}
+.foot-hint a{color:var(--accent2);text-decoration:none;font-weight:500}
+.foot-hint a:hover{text-decoration:underline}
+.dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--muted2);margin:0 10px;vertical-align:middle}
 
-🦶 **Footer מינימלי** — AutoScale + תגית, זהה לאתר הראשי.
+/* Tiny footer */
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:28px 24px;text-align:center}
+.fb{font-size:18px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.3px}
+.ftag{font-size:12px;color:var(--muted2);font-family:var(--mono);font-weight:400;margin-top:4px;letter-spacing:.04em}
 
-הקובץ צריך לחיות בשורש האתר ליד `index.html`. הכפתור בנוויגציה כבר מצביע ל-`login-select.html`.
+/* Fade in */
+.fade{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+.fade.v{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+</style>
+</head>
+<body>
+
+<header class="tb">
+  <a href="index.html" class="brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 64 64"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a8ef6"/><stop offset="1" stop-color="#1dffd4"/></linearGradient></defs><path d="M14 50 L26 18 L38 18 L50 50 L42 50 L39 42 L25 42 L22 50 Z M27 35 L37 35 L32 22 Z" fill="url(#lg)"/></svg>
+    </div>
+    <span class="brand-name">AutoScale</span>
+  </a>
+  <a href="index.html" class="back-top">← חזרה לאתר</a>
+</header>
+
+<main class="wrap">
+  <div class="center">
+
+    <span class="kicker fade">אזור אישי</span>
+    <h1 class="h1 fade d1">בחרו את אזור <span class="grad">הכניסה</span></h1>
+    <p class="sub fade d2">לקוחות ושותפים — לכל אחד מסך משלו עם הכלים המתאימים.</p>
+
+    <div class="cards">
+
+      <a href="https://autoscalehq.io/client-portal.html" class="card card-client fade d2">
+        <div class="icon-wrap">👤</div>
+        <span class="card-tag">לקוחות AutoScale</span>
+        <div class="card-title">כניסת לקוחות</div>
+        <p class="card-desc">דשבורד אישי לניהול בנק שעות, פתיחת בקשות, והיסטוריית עבודה במקום אחד.</p>
+        <ul class="card-list">
+          <li>צפייה בבנק שעות פעיל</li>
+          <li>פתיחת בקשות חדשות</li>
+          <li>היסטוריית פרויקטים</li>
+          <li>חיבור ישיר לדונה</li>
+        </ul>
+        <span class="card-cta">היכנס כלקוח ←</span>
+      </a>
+
+      <a href="https://autoscalehq.io/partner-dashboard.html" class="card card-partner fade d3">
+        <div class="icon-wrap">🤝</div>
+        <span class="card-tag">שותפים ועמלות</span>
+        <div class="card-title">כניסת שותפים</div>
+        <p class="card-desc">דשבורד שותפים למעקב הפניות, ניהול לקוחות, ונתוני עמלות בזמן אמת.</p>
+        <ul class="card-list">
+          <li>מעקב הפניות פעילות</li>
+          <li>נתוני עמלות מצטברים</li>
+          <li>סטטוס פרויקטים</li>
+          <li>חומרי שיווק וקישורים</li>
+        </ul>
+        <span class="card-cta">היכנס כשותף ←</span>
+      </a>
+
+    </div>
+
+    <p class="foot-hint fade d3">
+      עוד לא לקוח? <a href="index.html#contact">דברו איתנו</a>
+      <span class="dot"></span>
+      רוצה להצטרף כשותף? <a href="index.html#partner">לפרטים</a>
+    </p>
+
+  </div>
+</main>
+
+<footer>
+  <div class="fb">AutoScale</div>
+  <div class="ftag">אוטומציות חכמות לעסקים</div>
+</footer>
+
+<script>
+document.querySelectorAll('.fade').forEach(el=>new IntersectionObserver(([e])=>{if(e.isIntersecting)el.classList.add('v')},{threshold:.1}).observe(el));
+</script>
+</body>
+</html>
