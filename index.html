@@ -7,9 +7,14 @@
 <meta name="description" content="autoscale — אוטומציות חכמות לעסקים">
 <title>AutoScale — אוטומציות חכמות</title>
 
-<!-- Favicons (transparent SVG, large + sharp) -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%233a8ef6'/><stop offset='1' stop-color='%231dffd4'/></linearGradient></defs><path d='M14 50 L26 18 L38 18 L50 50 L42 50 L39 42 L25 42 L22 50 Z M27 35 L37 35 L32 22 Z' fill='url(%23g)'/></svg>">
-<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%233a8ef6'/><stop offset='1' stop-color='%231dffd4'/></linearGradient></defs><path d='M14 50 L26 18 L38 18 L50 50 L42 50 L39 42 L25 42 L22 50 Z M27 35 L37 35 L32 22 Z' fill='url(%23g)'/></svg>">
+<!-- Favicons — actual brand logo, transparent background -->
+<link rel="icon" type="image/png" sizes="16x16" href="portfolio-images/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="portfolio-images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="portfolio-images/favicon-48.png">
+<link rel="icon" type="image/png" sizes="64x64" href="portfolio-images/favicon-64.png">
+<link rel="icon" type="image/png" sizes="192x192" href="portfolio-images/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="portfolio-images/favicon-192.png">
+<link rel="shortcut icon" href="portfolio-images/favicon-32.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -95,7 +100,7 @@ nav.sc{background:rgba(6,13,26,.93);border-bottom-color:var(--border);backdrop-f
 .hey{display:inline-flex;align-items:center;gap:14px;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accent2);letter-spacing:.22em;margin-bottom:18px}
 .hey::after{content:'';width:64px;height:1px;background:currentColor;opacity:.55;flex-shrink:0}
 @keyframes pls{0%,100%{opacity:1}50%{opacity:.4}}
-.ht{font-size:clamp(40px,6.5vw,80px);font-weight:700;line-height:1.05;letter-spacing:-.03em;margin-bottom:22px}
+.ht{font-size:clamp(50px,8.5vw,104px);font-weight:700;line-height:1.05;letter-spacing:-.03em;margin-bottom:22px}
 .hs{font-size:clamp(15px,2vw,18px);color:var(--muted);line-height:1.75;font-weight:300;margin-bottom:38px;max-width:540px}
 .hbtns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:60px}
 .hstats{display:flex;gap:48px;flex-wrap:wrap}
@@ -323,7 +328,7 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
 <nav id="nav">
   <div class="ni">
     <a href="#hero" class="nl">
-      <div class="ni-img"><img src="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" alt="AS" onerror="this.style.display='none'"></div>
+      <div class="ni-img"><img src="portfolio-images/logo.png" alt="AutoScale" onerror="this.style.display='none'"></div>
       <span class="nb">AutoScale</span>
     </a>
     <ul class="nlinks" id="nlinks">
@@ -352,7 +357,7 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
   <div class="wrap">
     <div class="hc">
       <div class="hey fade">אוטומציות חכמות לעסקים</div>
-      <h1 class="ht fade d1">תהליכים שלוקחים שעות —<br><span class="grad">קורים לבד.</span></h1>
+      <h1 class="ht fade d1">תהליכים שלוקחים שעות<br>—<br><span class="grad">קורים לבד.</span></h1>
       <p class="hs fade d2">אנחנו בונים מערכות אוטומציה — WhatsApp בוטים, מערכות לידים, CRM, ואינטגרציות — שחוסכות לעסקים שלכם זמן, כסף, וכאב ראש.</p>
       <div class="hbtns fade d3">
         <a href="#portfolio" class="btn btn-blue">ראו את העבודות שלנו</a>
@@ -466,12 +471,16 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
     <p class="sub fade d2">פרויקטים שהשקנו בפועל — מדפי נחיתה ועד בוטים, חוזים ומערכות CRM.</p>
     <div class="pg">
 
-      <!-- 1. דפי נחיתה (placeholder) -->
+      <!-- 1. דפי נחיתה -->
       <div class="pc glass fade" onclick="om('p1')">
         <div class="pt">
-          <div class="pt-mock">
-            <div class="pt-mock-icon">🎯</div>
-            <div class="pt-mock-label">Landing Pages</div>
+          <img class="pt-media car-img" data-cid="landing" data-idx="0" src="portfolio-images/landing-1.jpg" alt="דף נחיתה - Studio I" loading="lazy">
+          <div class="pt-media-overlay"></div>
+          <button class="car-nav car-prev" onclick="event.stopPropagation();carNav('landing',-1,2)" aria-label="הקודם">‹</button>
+          <button class="car-nav car-next" onclick="event.stopPropagation();carNav('landing',1,2)" aria-label="הבא">›</button>
+          <div class="car-dots">
+            <button class="car-dot on" data-cid="landing" data-i="0" onclick="event.stopPropagation();carGo('landing',0,2)" aria-label="תמונה 1"></button>
+            <button class="car-dot" data-cid="landing" data-i="1" onclick="event.stopPropagation();carGo('landing',1,2)" aria-label="תמונה 2"></button>
           </div>
           <span class="ptag">דפי נחיתה</span>
         </div>
@@ -552,7 +561,7 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
           <span class="ptag">בוט WhatsApp</span>
         </div>
         <div class="pi">
-          <div class="pn">WhatsApp בוט לניהול נוח יותר של העסק</div>
+          <div class="pn">בוט WhatsApp לניהול נוח יותר של העסק</div>
           <div class="pd">שיחה לדוגמה עם שאלות סינון ותיעוד — סינון לידים, פתיחת קריאות, מעקב סטטוסים, קביעת פגישות וניתוב לנציג, 24/7.</div>
           <div class="cr"><span class="ch">WhatsApp Cloud API</span><span class="ch">Make.com</span><span class="ch">CRM</span></div>
         </div>
@@ -807,7 +816,7 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
 
 <div class="mo" id="m-p4"><div class="mb glass"><button class="mc" onclick="cm2('p4')">×</button><span class="mk">תיק עבודות</span><div class="mt">תיאום פגישות אוטומטי ועדכון</div><div class="ms">קביעה, תזכורות ותיעוד — בלי התעסקות ידנית</div><div class="pdet">קביעת פגישה, תזכורות אוטומטיות ותיעוד במערכת. דף קביעת פגישה עם זמינות בזמן אמת. יצירת פגישה ושליחת תזכורות ב-WhatsApp ובמייל לפני המועד. עדכון סטטוס בורד עם כל שינוי.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Calendly</span><span class="ch">Make.com</span><span class="ch">Google Calendar</span><span class="ch">WhatsApp</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p4');om('sch')">📅 קבעו שיחה</button></div></div>
 
-<div class="mo" id="m-p5"><div class="mb glass"><button class="mc" onclick="cm2('p5')">×</button><span class="mk">תיק עבודות</span><div class="mt">WhatsApp בוט לניהול נוח יותר של העסק</div><div class="ms">שיחה לדוגמה עם שאלות סינון ותיעוד</div><div class="pdet">בוט וואטסאפ עם שיחה זורמת בעברית: בחירת שפה, זיהוי איש קשר, סינון לפי סוג פנייה (תקלה / בקשה / חשבונית), פתיחת קריאות עם תיעוד, מעקב סטטוסים, קביעת פגישות, וניתוב לנציג אנושי. עובד 24/7 ומתעד הכל ב-CRM.</div><div class="cr" style="margin-bottom:16px"><span class="ch">WhatsApp Cloud API</span><span class="ch">Make.com</span><span class="ch">CRM</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p5');om('sch')">📅 קבעו שיחה</button></div></div>
+<div class="mo" id="m-p5"><div class="mb glass"><button class="mc" onclick="cm2('p5')">×</button><span class="mk">תיק עבודות</span><div class="mt">בוט WhatsApp לניהול נוח יותר של העסק</div><div class="ms">שיחה לדוגמה עם שאלות סינון ותיעוד</div><div class="pdet">בוט וואטסאפ עם שיחה זורמת בעברית: בחירת שפה, זיהוי איש קשר, סינון לפי סוג פנייה (תקלה / בקשה / חשבונית), פתיחת קריאות עם תיעוד, מעקב סטטוסים, קביעת פגישות, וניתוב לנציג אנושי. עובד 24/7 ומתעד הכל ב-CRM.</div><div class="cr" style="margin-bottom:16px"><span class="ch">WhatsApp Cloud API</span><span class="ch">Make.com</span><span class="ch">CRM</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p5');om('sch')">📅 קבעו שיחה</button></div></div>
 
 <div class="mo" id="m-p6"><div class="mb glass"><button class="mc" onclick="cm2('p6')">×</button><span class="mk">תיק עבודות</span><div class="mt">מערך וובינר</div><div class="ms">דף הרשמה, סדרת מיילים, תזכורות וזום — מחובר אוטומטית</div><div class="pdet">דף הרשמה לוובינר, סדרת מיילים אוטומטית למשתתפים, תזכורות לפני השידור, חיבור ל-Zoom או לסטרימינג חי, ומעקב נרשמים ומשתתפים. אחרי הוובינר — שליחת הקלטה אוטומטית למי שלא הגיע ולוגיקת follow-up מותאמת.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Make.com</span><span class="ch">Zoom</span><span class="ch">Email</span><span class="ch">Landing Page</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p6');om('sch')">📅 קבעו שיחה</button></div></div>
 
@@ -956,6 +965,7 @@ if(ckState==='accepted'||ckState==='declined'){
 
 // PORTFOLIO CAROUSEL
 const carouselSrcs={
+  landing:['portfolio-images/landing-1.jpg','portfolio-images/landing-2.jpg'],
   contract:['portfolio-images/contract-1.jpg','portfolio-images/contract-2.jpg'],
   crm:['portfolio-images/crm-1.jpg','portfolio-images/crm-2.jpg'],
   wa:['portfolio-images/whatsapp-1.jpg','portfolio-images/whatsapp-2.jpg']
@@ -980,7 +990,7 @@ function carNav(cid,dir,total){
   carGo(cid,(+img.dataset.idx)+dir,total);
 }
 // Auto-advance carousels every 5s when not hovered
-['contract','crm','wa'].forEach(cid=>{
+['landing','contract','crm','wa'].forEach(cid=>{
   setInterval(()=>{
     const card=document.querySelector('.pc[onclick*="\'p"]:has(.car-img[data-cid="'+cid+'"])');
     if(card&&card.matches(':hover'))return;
