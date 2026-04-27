@@ -137,26 +137,49 @@ nav.sc{background:rgba(6,13,26,.93);border-bottom-color:var(--border);backdrop-f
 
 /* PORTFOLIO */
 .pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:36px}
-.pc{overflow:hidden;cursor:pointer;transition:border-color .2s,transform .2s}
+.pc{overflow:hidden;cursor:pointer;transition:border-color .2s,transform .2s;display:flex;flex-direction:column}
 .pc:hover{border-color:var(--border2);transform:translateY(-4px)}
-.pt{height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:rgba(12,26,56,.8)}
-.pt-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.pt-media-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,13,26,.1) 0%,rgba(6,13,26,.6) 100%);z-index:1}
-.pt-mock{position:absolute;inset:0;background:linear-gradient(135deg,rgba(58,142,246,.15),rgba(29,255,212,.08));display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px}
-.pt-mock-icon{font-size:48px;opacity:.6}
-.pt-mock-label{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase}
-.ptag{position:absolute;top:14px;right:14px;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent2);background:rgba(6,13,26,.7);border:.5px solid rgba(29,255,212,.3);padding:4px 10px;border-radius:20px;z-index:2;backdrop-filter:blur(6px)}
+.pt{height:220px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:rgba(12,26,56,.8)}
+.pt-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:opacity .35s}
+.pt-media.fade-out{opacity:0}
+.pt-media-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,13,26,.05) 0%,rgba(6,13,26,.55) 100%);z-index:1;pointer-events:none}
+.pt-mock{position:absolute;inset:0;background:linear-gradient(135deg,rgba(58,142,246,.18),rgba(29,255,212,.10));display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;z-index:0}
+.pt-mock-icon{font-size:54px;opacity:.7;filter:drop-shadow(0 4px 12px rgba(29,255,212,.3))}
+.pt-mock-label{font-family:var(--mono);font-size:11px;color:var(--accent2);letter-spacing:.18em;text-transform:uppercase;opacity:.85}
+.ptag{position:absolute;top:14px;right:14px;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent2);background:rgba(6,13,26,.78);border:.5px solid rgba(29,255,212,.3);padding:4px 10px;border-radius:20px;z-index:3;backdrop-filter:blur(6px)}
 .pplay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:50%;background:rgba(29,255,212,.9);display:flex;align-items:center;justify-content:center;z-index:2;color:#0a1424;box-shadow:0 8px 24px rgba(29,255,212,.4);transition:transform .2s}
 .pc:hover .pplay{transform:translate(-50%,-50%) scale(1.1)}
-.pi{padding:20px 22px}
+
+/* Carousel arrows */
+.car-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:34px;height:34px;border-radius:50%;background:rgba(6,13,26,.78);border:1px solid var(--border);color:var(--text);display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(8px);transition:all .15s;opacity:0;font-size:16px;line-height:1}
+.pc:hover .car-nav{opacity:1}
+.car-nav:hover{background:rgba(58,142,246,.4);border-color:var(--accent2)}
+.car-prev{right:10px}
+.car-next{left:10px}
+.car-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:3}
+.car-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);transition:all .2s;cursor:pointer;border:none;padding:0}
+.car-dot.on{background:var(--accent2);width:18px;border-radius:3px;box-shadow:0 0 8px rgba(29,255,212,.5)}
+
+.pi{padding:20px 22px;flex:1;display:flex;flex-direction:column}
 .pn{font-size:16px;font-weight:700;margin-bottom:7px}
-.pd{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:16px;font-weight:300}
+.pd{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:16px;font-weight:300;flex:1}
 .cr{display:flex;gap:6px;flex-wrap:wrap}
 .ch{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:20px;background:rgba(58,142,246,.07);color:var(--muted);border:.5px solid var(--border)}
 .sb{padding:30px 34px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .sb h3{font-size:19px;font-weight:700;margin-bottom:5px}
 .sb p{font-size:13.5px;color:var(--muted);font-weight:300}
 .sbbtns{display:flex;gap:10px;flex-wrap:wrap}
+
+/* TESTIMONIALS */
+#testimonials{background:rgba(9,18,34,.4)}
+.tg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;max-width:900px;margin:0 auto}
+.tcard{padding:0;overflow:hidden;display:flex;flex-direction:column;transition:border-color .25s,transform .25s}
+.tcard:hover{border-color:var(--border2);transform:translateY(-4px)}
+.tcard-img{width:100%;aspect-ratio:800/1004;object-fit:cover;display:block;background:#000}
+.tcard-foot{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid var(--borders)}
+.tcard-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--accent2);text-transform:uppercase}
+.tcard-quote{font-size:12.5px;color:var(--muted);font-style:italic;font-weight:300}
+.tnote{text-align:center;margin-top:32px;font-size:12.5px;color:var(--muted2);font-family:var(--mono);font-weight:400;letter-spacing:.04em}
 
 /* PARTNER */
 #partner{background:rgba(9,18,34,.6)}
@@ -195,7 +218,8 @@ nav.sc{background:rgba(6,13,26,.93);border-bottom-color:var(--border);backdrop-f
 
 .cc-small{padding:30px;display:flex;flex-direction:column;justify-content:space-between;transition:border-color .2s;background:linear-gradient(160deg,rgba(58,142,246,.08),rgba(29,255,212,.04))}
 .cc-small:hover{border-color:var(--border2)}
-.cc-small-icon{width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,#2f5bea,#1a3aab);display:grid;place-items:center;font-size:26px;margin-bottom:18px;box-shadow:0 6px 20px rgba(47,91,234,.3)}
+.cc-small-icon{width:64px;height:64px;border-radius:16px;display:grid;place-items:center;margin-bottom:18px;overflow:hidden;background:radial-gradient(circle at 30% 30%,rgba(58,142,246,.18),rgba(29,255,212,.06));border:1px solid rgba(58,142,246,.2);box-shadow:0 6px 20px rgba(47,91,234,.18),inset 0 0 24px rgba(29,255,212,.05)}
+.cc-small-icon svg{width:42px;height:42px;filter:drop-shadow(0 2px 8px rgba(29,255,212,.35))}
 .cc-small h3{font-size:20px;font-weight:700;margin-bottom:8px}
 .cc-small p{font-size:13.5px;color:var(--muted);line-height:1.65;font-weight:300;margin-bottom:22px}
 .cc-list{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:22px}
@@ -231,6 +255,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:36
 .fi2{max-width:1100px;margin:0 auto}
 .fb{font-size:18px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.3px}
 .ftag{font-size:12px;color:var(--muted2);font-family:var(--mono);font-weight:400;margin-top:4px;letter-spacing:.04em}
+.fcopy{font-size:11px;color:var(--muted2);font-family:var(--mono);font-weight:400;margin-top:14px;letter-spacing:.04em}
 
 /* MODALS */
 .mo{display:none;position:fixed;inset:0;background:rgba(6,13,26,.85);z-index:2000;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px)}
@@ -438,53 +463,145 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
   <div class="wrap">
     <span class="kicker fade">תיק עבודות</span>
     <h2 class="h2 fade d1">מה בנינו</h2>
-    <p class="sub fade d2">פרויקטים שהשקנו בפועל — ממשפך שיווקי מלא ועד בוטים של WhatsApp.</p>
+    <p class="sub fade d2">פרויקטים שהשקנו בפועל — מדפי נחיתה ועד בוטים, חוזים ומערכות CRM.</p>
     <div class="pg">
 
+      <!-- 1. דפי נחיתה (placeholder) -->
       <div class="pc glass fade" onclick="om('p1')">
         <div class="pt">
-          <img class="pt-media" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" alt="Digital Online Funnel" loading="lazy">
-          <div class="pt-media-overlay"></div>
-          <span class="ptag">משפך שיווקי</span>
+          <div class="pt-mock">
+            <div class="pt-mock-icon">🎯</div>
+            <div class="pt-mock-label">Landing Pages</div>
+          </div>
+          <span class="ptag">דפי נחיתה</span>
         </div>
-        <div class="pi"><div class="pn">Digital Online — משפך מלא</div><div class="pd">4 דפי וידאו, טופס ליד, דף תודה, GTM, Meta Pixel, WhatsApp אוטומטי.</div><div class="cr"><span class="ch">Make.com</span><span class="ch">WhatsApp API</span><span class="ch">GTM</span></div></div>
+        <div class="pi">
+          <div class="pn">דפי נחיתה</div>
+          <div class="pd">בניית דפי נחיתה בעלי המרה גבוהה — דף וידאו, טופס ליד, דף תודה, חיבור לפיקסלים, GTM ו-WhatsApp.</div>
+          <div class="cr"><span class="ch">HTML / CSS</span><span class="ch">GTM</span><span class="ch">Meta Pixel</span><span class="ch">WhatsApp API</span></div>
+        </div>
       </div>
 
+      <!-- 2. חוזה אוטומטי -->
       <div class="pc glass fade d1" onclick="om('p2')">
         <div class="pt">
-          <img class="pt-media" src="https://images.unsplash.com/photo-1568667256549-094345857637?w=800&q=80" alt="Security Lead Form" loading="lazy">
+          <img class="pt-media car-img" data-cid="contract" data-idx="0" src="portfolio-images/contract-1.jpg" alt="חוזה אוטומטי - תבנית" loading="lazy">
           <div class="pt-media-overlay"></div>
-          <span class="ptag">לידים</span>
+          <button class="car-nav car-prev" onclick="event.stopPropagation();carNav('contract',-1,2)" aria-label="הקודם">‹</button>
+          <button class="car-nav car-next" onclick="event.stopPropagation();carNav('contract',1,2)" aria-label="הבא">›</button>
+          <div class="car-dots">
+            <button class="car-dot on" data-cid="contract" data-i="0" onclick="event.stopPropagation();carGo('contract',0,2)" aria-label="תמונה 1"></button>
+            <button class="car-dot" data-cid="contract" data-i="1" onclick="event.stopPropagation();carGo('contract',1,2)" aria-label="תמונה 2"></button>
+          </div>
+          <span class="ptag">חוזים אוטומטיים</span>
         </div>
-        <div class="pi"><div class="pn">המרכז הארצי למיגון</div><div class="pd">טופס ליד מותאם, webhook ל-Make, אוטומציית WhatsApp ומיתוג.</div><div class="cr"><span class="ch">Make.com</span><span class="ch">WhatsApp</span><span class="ch">HTML</span></div></div>
+        <div class="pi">
+          <div class="pn">חוזה אוטומטי ושליחת חתימה</div>
+          <div class="pd">יצירת חוזה מתוך נתוני CRM, שליחה לחתימה, סטטוסים ותזכורות. תבנית חוזה עם משתנים וסעיפים דינמיים. סטטוס חתימה וקליטה אוטומטית למערכת.</div>
+          <div class="cr"><span class="ch">Make.com</span><span class="ch">CRM</span><span class="ch">e-Signature</span><span class="ch">Word Templates</span></div>
+        </div>
       </div>
 
+      <!-- 3. CRM -->
       <div class="pc glass fade d2" onclick="om('p3')">
         <div class="pt">
-          <img class="pt-media" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80&sat=-50" alt="CRM Automation" loading="lazy">
+          <img class="pt-media car-img" data-cid="crm" data-idx="0" src="portfolio-images/crm-1.jpg" alt="מערכת CRM - בורד ראשי" loading="lazy">
           <div class="pt-media-overlay"></div>
-          <div class="pplay">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <button class="car-nav car-prev" onclick="event.stopPropagation();carNav('crm',-1,2)" aria-label="הקודם">‹</button>
+          <button class="car-nav car-next" onclick="event.stopPropagation();carNav('crm',1,2)" aria-label="הבא">›</button>
+          <div class="car-dots">
+            <button class="car-dot on" data-cid="crm" data-i="0" onclick="event.stopPropagation();carGo('crm',0,2)" aria-label="תמונה 1"></button>
+            <button class="car-dot" data-cid="crm" data-i="1" onclick="event.stopPropagation();carGo('crm',1,2)" aria-label="תמונה 2"></button>
           </div>
-          <span class="ptag">אוטומציה</span>
+          <span class="ptag">CRM ולידים</span>
         </div>
-        <div class="pi"><div class="pn">מערכת CRM ואוטומציית לידים</div><div class="pd">Facebook Leads → Make → Monday + WhatsApp תוך 60 שניות.</div><div class="cr"><span class="ch">Monday</span><span class="ch">Facebook Leads</span><span class="ch">Make.com</span></div></div>
+        <div class="pi">
+          <div class="pn">מערכת CRM ואוטומציית לידים</div>
+          <div class="pd">Facebook Leads → Make → Monday + WhatsApp תוך 60 שניות. מעקב סטטוסים, דוחות נוכחות, ושעות עבודה — הכל במקום אחד.</div>
+          <div class="cr"><span class="ch">Monday</span><span class="ch">Facebook Leads</span><span class="ch">Make.com</span><span class="ch">WhatsApp</span></div>
+        </div>
       </div>
 
-      <div class="pc glass fade d3" onclick="om('p4')">
+      <!-- 4. תיאום פגישות (placeholder) -->
+      <div class="pc glass fade" onclick="om('p4')">
         <div class="pt">
-          <img class="pt-media" src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&q=80" alt="WhatsApp Bot" loading="lazy">
-          <div class="pt-media-overlay"></div>
-          <div class="pplay">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <div class="pt-mock">
+            <div class="pt-mock-icon">📅</div>
+            <div class="pt-mock-label">Meeting Booking</div>
           </div>
-          <span class="ptag">בוט</span>
+          <span class="ptag">תיאום פגישות</span>
         </div>
-        <div class="pi"><div class="pn">בוט WhatsApp לשירות לקוחות</div><div class="pd">סינון לידים, קביעת פגישות, ניתוב לנציג אנושי — 24/7.</div><div class="cr"><span class="ch">WhatsApp Cloud API</span><span class="ch">Make.com</span><span class="ch">Calendly</span></div></div>
+        <div class="pi">
+          <div class="pn">תיאום פגישות אוטומטי ועדכון</div>
+          <div class="pd">קביעת פגישה, תזכורות אוטומטיות ותיעוד במערכת. דף קביעת פגישה עם זמינות. יצירת פגישה ושליחת תזכורות.</div>
+          <div class="cr"><span class="ch">Calendly</span><span class="ch">Make.com</span><span class="ch">Google Calendar</span><span class="ch">WhatsApp</span></div>
+        </div>
+      </div>
+
+      <!-- 5. בוט WhatsApp -->
+      <div class="pc glass fade d1" onclick="om('p5')">
+        <div class="pt">
+          <img class="pt-media car-img" data-cid="wa" data-idx="0" src="portfolio-images/whatsapp-1.jpg" alt="בוט WhatsApp - בחירת שפה" loading="lazy">
+          <div class="pt-media-overlay"></div>
+          <button class="car-nav car-prev" onclick="event.stopPropagation();carNav('wa',-1,2)" aria-label="הקודם">‹</button>
+          <button class="car-nav car-next" onclick="event.stopPropagation();carNav('wa',1,2)" aria-label="הבא">›</button>
+          <div class="car-dots">
+            <button class="car-dot on" data-cid="wa" data-i="0" onclick="event.stopPropagation();carGo('wa',0,2)" aria-label="תמונה 1"></button>
+            <button class="car-dot" data-cid="wa" data-i="1" onclick="event.stopPropagation();carGo('wa',1,2)" aria-label="תמונה 2"></button>
+          </div>
+          <span class="ptag">בוט WhatsApp</span>
+        </div>
+        <div class="pi">
+          <div class="pn">WhatsApp בוט לניהול נוח יותר של העסק</div>
+          <div class="pd">שיחה לדוגמה עם שאלות סינון ותיעוד — סינון לידים, פתיחת קריאות, מעקב סטטוסים, קביעת פגישות וניתוב לנציג, 24/7.</div>
+          <div class="cr"><span class="ch">WhatsApp Cloud API</span><span class="ch">Make.com</span><span class="ch">CRM</span></div>
+        </div>
+      </div>
+
+      <!-- 6. וובינר (placeholder) -->
+      <div class="pc glass fade d2" onclick="om('p6')">
+        <div class="pt">
+          <div class="pt-mock">
+            <div class="pt-mock-icon">🎥</div>
+            <div class="pt-mock-label">Webinar System</div>
+          </div>
+          <span class="ptag">וובינר</span>
+        </div>
+        <div class="pi">
+          <div class="pn">מערך וובינר</div>
+          <div class="pd">דף הרשמה, סדרת מיילים אוטומטית, תזכורות לפני השידור, חיבור לזום או לסטרים, ומעקב נרשמים — הכל מחובר ב-Make.</div>
+          <div class="cr"><span class="ch">Make.com</span><span class="ch">Zoom</span><span class="ch">Email</span><span class="ch">Landing Page</span></div>
+        </div>
       </div>
 
     </div>
     <div class="sb glass fade"><div><h3>ראיתם משהו שתפס אתכם?</h3><p>קבעו שיחת היכרות של 20 דקות — בלי התחייבות.</p></div><div class="sbbtns"><a href="https://wa.me/972545764327?text=היי%20ראיתי%20את%20העבודות%20שלכם" target="_blank" class="btn btn-wa">💬 WhatsApp</a><button class="btn btn-blue" onclick="om('sch')">📅 קביעת שיחה</button></div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="section">
+  <div class="wrap">
+    <span class="kicker fade">לקוחות ממליצים</span>
+    <h2 class="h2 fade d1">מה הלקוחות אומרים</h2>
+    <p class="sub fade d2">כמה דוגמאות קצרות להודעות שקיבלנו אחרי הטמעה.</p>
+    <div class="tg">
+      <div class="tcard glass fade">
+        <img class="tcard-img" src="portfolio-images/testimonial-1.jpg" alt="המלצה — אוטומציית עובדים" loading="lazy">
+        <div class="tcard-foot">
+          <span class="tcard-tag">אוטומציה ארגונית</span>
+          <span class="tcard-quote">"אחלה שירות ואחלה יחס"</span>
+        </div>
+      </div>
+      <div class="tcard glass fade d1">
+        <img class="tcard-img" src="portfolio-images/testimonial-2.jpg" alt="המלצה — חוזים אוטומטיים" loading="lazy">
+        <div class="tcard-foot">
+          <span class="tcard-tag">חוזה אוטומטי</span>
+          <span class="tcard-quote">"פשוט תותח. תמשיך ככה 💪"</span>
+        </div>
+      </div>
+    </div>
+    <p class="tnote fade d2">* שמות ותמונות פרופיל טושטשו לשמירה על פרטיות הלקוחות</p>
   </div>
 </section>
 
@@ -529,7 +646,17 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
 
       <div class="cc-small glass fade d1">
         <div>
-          <div class="cc-small-icon">⚡</div>
+          <div class="cc-small-icon">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="qsg" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#3a8ef6"/>
+                  <stop offset="1" stop-color="#1dffd4"/>
+                </linearGradient>
+              </defs>
+              <path d="M14 50 L26 18 L38 18 L50 50 L42 50 L39 42 L25 42 L22 50 Z M27 35 L37 35 L32 22 Z" fill="url(#qsg)"/>
+            </svg>
+          </div>
           <h3>שירותים מהירים</h3>
           <p>מוצרים מוכנים לרכישה מיידית — בלי הצעת מחיר, בלי המתנה.</p>
           <ul class="cc-list">
@@ -575,11 +702,12 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
   </div>
 </section>
 
-<!-- FOOTER — minimal: logo + name only -->
+<!-- FOOTER — minimal: logo + name + copyright -->
 <footer>
   <div class="fi2" style="text-align:center;padding:8px 0">
     <div class="fb">AutoScale</div>
     <div class="ftag">אוטומציות חכמות לעסקים</div>
+    <div class="fcopy">© 2025 כל הזכויות שמורות ל-AutoScale</div>
   </div>
 </footer>
 
@@ -670,13 +798,18 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
 
 <div class="mo" id="m-hire"><div class="mb glass"><button class="mc" onclick="cm2('hire')">×</button><span class="mk">הצטרף לצוות</span><div class="mt">עבדו עם AutoScale</div><div class="ms">קבלנים ומפתחי אוטומציה — רוצים לשמוע מכם.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" data-name="full_name" placeholder="שם מלא"></div><div class="fg"><label class="fl">טלפון</label><input class="fi" data-name="phone" placeholder="05X-XXXXXXX"></div></div><div class="fg"><label class="fl">התמחות</label><select class="fi" data-name="expertise" style="appearance:none"><option>Make.com</option><option>WhatsApp API</option><option>Front-end</option><option>שיווק דיגיטלי</option><option>אחר</option></select></div><div class="fg"><label class="fl">קישור לפורטפוליו</label><input class="fi" data-name="portfolio" placeholder="https://..."></div><button class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:12px" onclick="subPt('hire')">שלח →</button></div></div>
 
-<div class="mo" id="m-p1"><div class="mb glass"><button class="mc" onclick="cm2('p1')">×</button><span class="mk">תיק עבודות</span><div class="mt">Digital Online — משפך מלא</div><div class="ms">לקוח: Ben Nahum · שיווק דיגיטלי</div><div class="pdet">בנינו משפך שיווקי מלא בעברית: 4 דפי וידאו עם חסימת סרגל ו-step indicator, טופס ליד עם ולידציה inline, דף תודה עם tracking events מלאים, חיבור ל-Make.com, Google Sheets, Meta Pixel, GTM, ו-WhatsApp אוטומטי ללקוח ולצוות.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Make.com</span><span class="ch">GitHub Pages</span><span class="ch">WhatsApp API</span><span class="ch">GTM</span><span class="ch">Meta Pixel</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p1');om('sch')">📅 קבעו שיחה על פרויקט דומה</button></div></div>
+<!-- Portfolio project detail popups -->
+<div class="mo" id="m-p1"><div class="mb glass"><button class="mc" onclick="cm2('p1')">×</button><span class="mk">תיק עבודות</span><div class="mt">דפי נחיתה</div><div class="ms">דפי וידאו, טפסי לידים, וחיבור מלא לפיקסלים</div><div class="pdet">בנייה והשקה של דפי נחיתה ממירים בעברית: דף וידאו עם step indicator, טופס ליד עם ולידציה inline, דף תודה עם tracking events, וחיבור ל-Make.com, Google Sheets, Meta Pixel, GTM, ו-WhatsApp אוטומטי ללקוח ולצוות.</div><div class="cr" style="margin-bottom:16px"><span class="ch">HTML / CSS</span><span class="ch">GTM</span><span class="ch">Meta Pixel</span><span class="ch">WhatsApp API</span><span class="ch">Make.com</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p1');om('sch')">📅 קבעו שיחה על פרויקט דומה</button></div></div>
 
-<div class="mo" id="m-p2"><div class="mb glass"><button class="mc" onclick="cm2('p2')">×</button><span class="mk">תיק עבודות</span><div class="mt">המרכז הארצי למיגון</div><div class="ms">תחום: מיגון ואבטחה</div><div class="pdet">טופס ליד מותאם אישית עם לוגו base64 ומיתוג. חיבור webhook ל-Make.com עם שליחת פרטי ליד אוטומטית ל-WhatsApp. עיצוב minimal עם footer מותג autoscale.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Make.com</span><span class="ch">WhatsApp</span><span class="ch">HTML/CSS</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p2');om('sch')">📅 קבעו שיחה</button></div></div>
+<div class="mo" id="m-p2"><div class="mb glass"><button class="mc" onclick="cm2('p2')">×</button><span class="mk">תיק עבודות</span><div class="mt">חוזה אוטומטי ושליחת חתימה</div><div class="ms">יצירה, שליחה, חתימה וקליטה — אוטומטית מקצה לקצה</div><div class="pdet">יצירת חוזה מתוך נתוני CRM, שליחה לחתימה, סטטוסים ותזכורות. תבנית חוזה עם משתנים וסעיפים דינמיים. סטטוס חתימה וקליטה אוטומטית למערכת. חוסך שעות עבודה ידנית ומונע טעויות.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Make.com</span><span class="ch">CRM</span><span class="ch">e-Signature</span><span class="ch">Word Templates</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p2');om('sch')">📅 קבעו שיחה</button></div></div>
 
-<div class="mo" id="m-p3"><div class="mb glass"><button class="mc" onclick="cm2('p3')">×</button><span class="mk">תיק עבודות</span><div class="mt">מערכת CRM ואוטומציית לידים</div><div class="ms">Facebook Leads → CRM → WhatsApp</div><div class="pdet">חיבור Facebook Lead Ads → Make.com → Google Sheets + Monday CRM. WhatsApp אוטומטי ללקוח תוך 60 שניות. מעקב סטטוס ועדכון אוטומטי בכל שלב.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Monday</span><span class="ch">Facebook Leads</span><span class="ch">Make.com</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p3');om('sch')">📅 קבעו שיחה</button></div></div>
+<div class="mo" id="m-p3"><div class="mb glass"><button class="mc" onclick="cm2('p3')">×</button><span class="mk">תיק עבודות</span><div class="mt">מערכת CRM ואוטומציית לידים</div><div class="ms">Facebook Leads → CRM → WhatsApp</div><div class="pdet">חיבור Facebook Lead Ads → Make.com → Google Sheets + Monday CRM. WhatsApp אוטומטי ללקוח תוך 60 שניות. מעקב סטטוס ועדכון אוטומטי בכל שלב, כולל דוחות נוכחות, שעות עבודה, ומעקב משימות עובדים.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Monday</span><span class="ch">Facebook Leads</span><span class="ch">Make.com</span><span class="ch">WhatsApp</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p3');om('sch')">📅 קבעו שיחה</button></div></div>
 
-<div class="mo" id="m-p4"><div class="mb glass"><button class="mc" onclick="cm2('p4')">×</button><span class="mk">תיק עבודות</span><div class="mt">בוט WhatsApp לשירות לקוחות</div><div class="ms">WhatsApp Cloud API + Make.com</div><div class="pdet">זרימת שיחה אוטומטית מלאה: ברכה, סינון לפי כוונה, שליחת קטלוג, קביעת פגישה ב-Calendly, ניתוב לנציג אנושי. 24/7, תגובה תוך שניות.</div><div class="cr" style="margin-bottom:16px"><span class="ch">WhatsApp Cloud API</span><span class="ch">Make.com</span><span class="ch">Calendly</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p4');om('sch')">📅 קבעו שיחה</button></div></div>
+<div class="mo" id="m-p4"><div class="mb glass"><button class="mc" onclick="cm2('p4')">×</button><span class="mk">תיק עבודות</span><div class="mt">תיאום פגישות אוטומטי ועדכון</div><div class="ms">קביעה, תזכורות ותיעוד — בלי התעסקות ידנית</div><div class="pdet">קביעת פגישה, תזכורות אוטומטיות ותיעוד במערכת. דף קביעת פגישה עם זמינות בזמן אמת. יצירת פגישה ושליחת תזכורות ב-WhatsApp ובמייל לפני המועד. עדכון סטטוס בורד עם כל שינוי.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Calendly</span><span class="ch">Make.com</span><span class="ch">Google Calendar</span><span class="ch">WhatsApp</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p4');om('sch')">📅 קבעו שיחה</button></div></div>
+
+<div class="mo" id="m-p5"><div class="mb glass"><button class="mc" onclick="cm2('p5')">×</button><span class="mk">תיק עבודות</span><div class="mt">WhatsApp בוט לניהול נוח יותר של העסק</div><div class="ms">שיחה לדוגמה עם שאלות סינון ותיעוד</div><div class="pdet">בוט וואטסאפ עם שיחה זורמת בעברית: בחירת שפה, זיהוי איש קשר, סינון לפי סוג פנייה (תקלה / בקשה / חשבונית), פתיחת קריאות עם תיעוד, מעקב סטטוסים, קביעת פגישות, וניתוב לנציג אנושי. עובד 24/7 ומתעד הכל ב-CRM.</div><div class="cr" style="margin-bottom:16px"><span class="ch">WhatsApp Cloud API</span><span class="ch">Make.com</span><span class="ch">CRM</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p5');om('sch')">📅 קבעו שיחה</button></div></div>
+
+<div class="mo" id="m-p6"><div class="mb glass"><button class="mc" onclick="cm2('p6')">×</button><span class="mk">תיק עבודות</span><div class="mt">מערך וובינר</div><div class="ms">דף הרשמה, סדרת מיילים, תזכורות וזום — מחובר אוטומטית</div><div class="pdet">דף הרשמה לוובינר, סדרת מיילים אוטומטית למשתתפים, תזכורות לפני השידור, חיבור ל-Zoom או לסטרימינג חי, ומעקב נרשמים ומשתתפים. אחרי הוובינר — שליחת הקלטה אוטומטית למי שלא הגיע ולוגיקת follow-up מותאמת.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Make.com</span><span class="ch">Zoom</span><span class="ch">Email</span><span class="ch">Landing Page</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p6');om('sch')">📅 קבעו שיחה</button></div></div>
 
 <script>
 // CONSTANTS
@@ -820,6 +953,43 @@ if(ckState==='accepted'||ckState==='declined'){
   if(ckState==='declined')blockTracking();
   else loadAnalytics();
 }
+
+// PORTFOLIO CAROUSEL
+const carouselSrcs={
+  contract:['portfolio-images/contract-1.jpg','portfolio-images/contract-2.jpg'],
+  crm:['portfolio-images/crm-1.jpg','portfolio-images/crm-2.jpg'],
+  wa:['portfolio-images/whatsapp-1.jpg','portfolio-images/whatsapp-2.jpg']
+};
+function carGo(cid,idx,total){
+  idx=((idx%total)+total)%total;
+  const img=document.querySelector('.car-img[data-cid="'+cid+'"]');
+  if(!img)return;
+  img.classList.add('fade-out');
+  setTimeout(()=>{
+    img.src=carouselSrcs[cid][idx];
+    img.dataset.idx=idx;
+    img.classList.remove('fade-out');
+  },180);
+  document.querySelectorAll('.car-dot[data-cid="'+cid+'"]').forEach(d=>{
+    d.classList.toggle('on',+d.dataset.i===idx);
+  });
+}
+function carNav(cid,dir,total){
+  const img=document.querySelector('.car-img[data-cid="'+cid+'"]');
+  if(!img)return;
+  carGo(cid,(+img.dataset.idx)+dir,total);
+}
+// Auto-advance carousels every 5s when not hovered
+['contract','crm','wa'].forEach(cid=>{
+  setInterval(()=>{
+    const card=document.querySelector('.pc[onclick*="\'p"]:has(.car-img[data-cid="'+cid+'"])');
+    if(card&&card.matches(':hover'))return;
+    const img=document.querySelector('.car-img[data-cid="'+cid+'"]');
+    if(img&&document.visibilityState==='visible'){
+      carGo(cid,(+img.dataset.idx+1)%2,2);
+    }
+  },5500);
+});
 
 // LANG (placeholder — UI for upcoming i18n)
 function setLang(code,btn){
