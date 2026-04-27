@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060d1a">
+<meta name="description" content="autoscale — אוטומציות חכמות לעסקים">
+<title>AutoScale — אוטומציות חכמות</title>
+
+<!-- Favicons (transparent SVG, large + sharp) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%233a8ef6'/><stop offset='1' stop-color='%231dffd4'/></linearGradient></defs><path d='M14 50 L26 18 L38 18 L50 50 L42 50 L39 42 L25 42 L22 50 Z M27 35 L37 35 L32 22 Z' fill='url(%23g)'/></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%233a8ef6'/><stop offset='1' stop-color='%231dffd4'/></linearGradient></defs><path d='M14 50 L26 18 L38 18 L50 50 L42 50 L39 42 L25 42 L22 50 Z M27 35 L37 35 L32 22 Z' fill='url(%23g)'/></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#060d1a;--bg2:#091222;--bg3:#0c1a30;
+  --glass:rgba(12,26,56,.55);--glass2:rgba(12,26,56,.35);
+  --border:rgba(80,140,255,.13);--border2:rgba(80,140,255,.28);--borders:rgba(80,140,255,.07);
+  --text:#e8f0ff;--muted:#6a85b6;--muted2:#4a6090;
+  --accent:#3a8ef6;--accent2:#1dffd4;--green:#25D366;--warn:#ffb347;--danger:#ef4444;
+  --r:18px;--rs:12px;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --num:'JetBrains Mono',ui-monospace,monospace;
+  --sans:'Sora',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;direction:rtl;font-size:15px;line-height:1.6;font-feature-settings:"tnum" 1}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80vw 55vh at 10% -5%,rgba(30,90,220,.22) 0%,transparent 65%),radial-gradient(ellipse 60vw 40vh at 90% 10%,rgba(0,200,180,.10) 0%,transparent 60%),radial-gradient(ellipse 100vw 30vh at 50% 100%,rgba(10,30,80,.5) 0%,transparent 70%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(58,142,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(58,142,246,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.z{position:relative;z-index:1}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+.section{padding:104px 0;position:relative;z-index:1}
+.grad{background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* Kickers — original size */
+.kicker{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);opacity:.85;margin-bottom:8px;display:block}
+
+/* H2 — original size */
+.h2{font-size:clamp(28px,4vw,44px);font-weight:700;line-height:1.15;letter-spacing:-.02em;margin-bottom:14px}
+.sub{font-size:16px;color:var(--muted);max-width:560px;line-height:1.75;margin-bottom:52px;font-weight:300}
+
+.glass{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.glass2{background:var(--glass2);border:1px solid var(--borders);border-radius:var(--r);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;border-radius:999px;font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:.2px;border:none;cursor:pointer;text-decoration:none;transition:all .18s;color:#fff}
+.btn:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.btn-blue{background:linear-gradient(135deg,#2f5bea,#1a3aab);box-shadow:0 4px 18px rgba(47,91,234,.35)}
+.btn-teal{background:linear-gradient(135deg,#0db89e,#0a8a78);box-shadow:0 4px 18px rgba(13,184,158,.25)}
+.btn-out{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.btn-out:hover{background:rgba(58,142,246,.1);border-color:var(--accent)}
+.btn-wa{background:linear-gradient(135deg,#25D366,#17a34a);box-shadow:0 4px 16px rgba(37,211,102,.25)}
+.fade{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+.fade.v{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+
+/* COOKIE */
+#ck{position:fixed;bottom:0;left:0;right:0;background:rgba(9,18,34,.97);border-top:1px solid var(--border);backdrop-filter:blur(14px);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;z-index:9999}
+#ck p{font-size:13px;color:var(--muted);flex:1;min-width:200px;font-weight:300}
+#ck a{color:var(--accent2)}
+.ck-btns{display:flex;gap:8px;flex-shrink:0}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 24px;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+nav.sc{background:rgba(6,13,26,.93);border-bottom-color:var(--border);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.ni{max-width:1180px;margin:0 auto;height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.nl{display:flex;align-items:center;gap:11px;text-decoration:none;flex-shrink:0}
+.ni-img{width:40px;height:40px;border-radius:11px;overflow:hidden;border:1px solid rgba(58,142,246,.28);box-shadow:0 0 16px rgba(58,142,246,.22);display:grid;place-items:center;background:linear-gradient(135deg,#0d2a6e,#0a4a3a);flex-shrink:0}
+.ni-img img{width:100%;height:100%;object-fit:cover;display:block}
+.nb{font-size:18px;font-weight:700;letter-spacing:-.3px;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nlinks{display:flex;align-items:center;gap:2px;list-style:none}
+.nlinks a{padding:7px 13px;border-radius:8px;font-size:13.5px;font-weight:400;color:var(--muted);text-decoration:none;transition:color .15s,background .15s}
+.nlinks a:hover{color:var(--text);background:rgba(58,142,246,.08)}
+.nr{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nbtn-portal{padding:9px 18px;font-size:12.5px;border-radius:999px;background:rgba(58,142,246,.08);border:1px solid var(--border2);color:var(--text);text-decoration:none;font-weight:600;letter-spacing:.2px;display:inline-flex;align-items:center;transition:all .15s;white-space:nowrap}
+.nbtn-portal:hover{background:rgba(58,142,246,.16);border-color:var(--accent)}
+.lsw{display:flex;gap:6px;align-items:center}
+.lb{font-size:18px;width:36px;height:36px;display:grid;place-items:center;border-radius:10px;border:1px solid var(--border);color:var(--muted);cursor:pointer;background:rgba(58,142,246,.04);padding:0;transition:all .15s;line-height:1}
+.lb:hover{border-color:var(--accent);background:rgba(58,142,246,.1)}
+.lb.on{border-color:var(--accent);background:rgba(58,142,246,.14);box-shadow:0 0 0 1px var(--accent),0 0 14px rgba(58,142,246,.25)}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none}
+.hbg span{width:20px;height:1.5px;background:var(--text);display:block;transition:all .22s}
+@media(max-width:1024px){.nlinks a{padding:7px 10px;font-size:12.5px}}
+@media(max-width:880px){.hbg{display:flex}.nlinks{display:none;position:fixed;top:72px;right:0;left:0;background:rgba(6,13,26,.97);flex-direction:column;padding:16px 24px;gap:0;border-bottom:1px solid var(--border);backdrop-filter:blur(16px)}.nlinks.op{display:flex}.nlinks a{display:block;padding:13px 0;border-bottom:1px solid var(--borders);border-radius:0}.nlinks li:last-child a{border-bottom:none}.ncta{display:none!important}.nbtn-portal span{display:none}.nbtn-portal::after{content:'כניסה'}}
+@media(max-width:560px){.lsw{display:none}}
+
+/* HERO */
+#hero{min-height:100dvh;display:flex;align-items:center;padding:108px 0 72px;position:relative;overflow:hidden}
+.hglow{position:absolute;pointer-events:none;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(29,255,212,.07),transparent 70%);top:-100px;left:60%;animation:gd 10s ease-in-out infinite}
+@keyframes gd{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,30px) scale(1.06)}}
+.hc{position:relative;z-index:2;max-width:720px}
+.hey{display:inline-flex;align-items:center;gap:14px;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accent2);letter-spacing:.22em;margin-bottom:18px}
+.hey::after{content:'';width:64px;height:1px;background:currentColor;opacity:.55;flex-shrink:0}
+@keyframes pls{0%,100%{opacity:1}50%{opacity:.4}}
+.ht{font-size:clamp(40px,6.5vw,80px);font-weight:700;line-height:1.05;letter-spacing:-.03em;margin-bottom:22px}
+.hs{font-size:clamp(15px,2vw,18px);color:var(--muted);line-height:1.75;font-weight:300;margin-bottom:38px;max-width:540px}
+.hbtns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:60px}
+.hstats{display:flex;gap:48px;flex-wrap:wrap}
+.sn{font-family:var(--num);font-size:32px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.02em}
+.sl{font-size:12px;color:var(--muted);margin-top:4px;font-weight:300}
+.sc-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;opacity:.3;animation:bob 2.2s ease-in-out infinite}
+.sc-cue span{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.1em}
+.sc-cue::after{content:'';width:1px;height:36px;background:linear-gradient(var(--accent2),transparent)}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+
+/* SERVICES */
+#services{background:rgba(9,18,34,.6)}
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.sc{padding:28px 26px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
+.sc::before{content:'';position:absolute;top:0;right:0;width:100px;height:100px;background:radial-gradient(circle at top right,rgba(58,142,246,.08),transparent);pointer-events:none}
+.sc:hover{border-color:var(--border2);transform:translateY(-4px)}
+.sc.ft{border-color:rgba(29,255,212,.3)}
+.sc.ft::after{content:'פופולרי';position:absolute;top:14px;left:14px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;background:linear-gradient(135deg,#0db89e,#0a8a78);color:#fff;padding:3px 10px;border-radius:20px}
+.si{font-size:28px;margin-bottom:14px}
+.sn2{font-size:18px;font-weight:700;margin-bottom:6px}
+.sd{font-size:13.5px;color:var(--muted);line-height:1.65;margin-bottom:20px;font-weight:300}
+.sp{font-family:var(--num);font-size:26px;font-weight:700;margin-bottom:4px;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.02em}
+.sp2{font-size:11.5px;color:var(--muted2);margin-bottom:18px;font-family:var(--mono)}
+.sf{list-style:none;display:flex;flex-direction:column;gap:8px}
+.sf li{font-size:13px;color:var(--muted);display:flex;align-items:flex-start;gap:8px;font-weight:300}
+.sf li::before{content:'✓';color:var(--accent2);font-size:11px;flex-shrink:0;margin-top:2px}
+
+/* INTEGRATIONS — single row, seamless loop */
+.mq-wrap{position:relative;z-index:1;padding:36px 0;overflow:hidden;background:rgba(9,18,34,.4);border-top:.5px solid var(--borders);border-bottom:.5px solid var(--borders)}
+.mq-fade-r{position:absolute;top:0;right:0;width:140px;height:100%;background:linear-gradient(270deg,var(--bg) 0%,transparent 100%);z-index:2;pointer-events:none}
+.mq-fade-l{position:absolute;top:0;left:0;width:140px;height:100%;background:linear-gradient(90deg,var(--bg) 0%,transparent 100%);z-index:2;pointer-events:none}
+.mq-row{display:block;overflow:hidden;direction:ltr;position:relative;z-index:1}
+.mq-track{display:flex;align-items:center;width:max-content;will-change:transform;animation:mq-f 65s linear infinite;direction:ltr}
+@keyframes mq-f{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.mq-wrap:hover .mq-track{animation-play-state:paused}
+.logo-pill{display:inline-flex;align-items:center;gap:9px;padding:9px 16px;border-radius:999px;background:rgba(12,26,56,.7);border:1px solid var(--border);white-space:nowrap;font-size:13px;font-weight:600;color:var(--text);flex-shrink:0;transition:border-color .2s,transform .2s;direction:ltr;margin-right:12px}
+.logo-pill:hover{border-color:var(--border2);transform:translateY(-2px)}
+.logo-pill svg{flex-shrink:0;width:20px;height:20px}
+
+/* PORTFOLIO */
+.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:36px}
+.pc{overflow:hidden;cursor:pointer;transition:border-color .2s,transform .2s;display:flex;flex-direction:column}
+.pc:hover{border-color:var(--border2);transform:translateY(-4px)}
+.pt{height:220px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:rgba(12,26,56,.8)}
+.pt-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:opacity .35s}
+.pt-media.fade-out{opacity:0}
+.pt-media-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,13,26,.05) 0%,rgba(6,13,26,.55) 100%);z-index:1;pointer-events:none}
+.pt-mock{position:absolute;inset:0;background:linear-gradient(135deg,rgba(58,142,246,.18),rgba(29,255,212,.10));display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;z-index:0}
+.pt-mock-icon{font-size:54px;opacity:.7;filter:drop-shadow(0 4px 12px rgba(29,255,212,.3))}
+.pt-mock-label{font-family:var(--mono);font-size:11px;color:var(--accent2);letter-spacing:.18em;text-transform:uppercase;opacity:.85}
+.ptag{position:absolute;top:14px;right:14px;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent2);background:rgba(6,13,26,.78);border:.5px solid rgba(29,255,212,.3);padding:4px 10px;border-radius:20px;z-index:3;backdrop-filter:blur(6px)}
+.pplay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:50%;background:rgba(29,255,212,.9);display:flex;align-items:center;justify-content:center;z-index:2;color:#0a1424;box-shadow:0 8px 24px rgba(29,255,212,.4);transition:transform .2s}
+.pc:hover .pplay{transform:translate(-50%,-50%) scale(1.1)}
+
+/* Carousel arrows */
+.car-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:34px;height:34px;border-radius:50%;background:rgba(6,13,26,.78);border:1px solid var(--border);color:var(--text);display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(8px);transition:all .15s;opacity:0;font-size:16px;line-height:1}
+.pc:hover .car-nav{opacity:1}
+.car-nav:hover{background:rgba(58,142,246,.4);border-color:var(--accent2)}
+.car-prev{right:10px}
+.car-next{left:10px}
+.car-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:3}
+.car-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);transition:all .2s;cursor:pointer;border:none;padding:0}
+.car-dot.on{background:var(--accent2);width:18px;border-radius:3px;box-shadow:0 0 8px rgba(29,255,212,.5)}
+
+.pi{padding:20px 22px;flex:1;display:flex;flex-direction:column}
+.pn{font-size:16px;font-weight:700;margin-bottom:7px}
+.pd{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:16px;font-weight:300;flex:1}
+.cr{display:flex;gap:6px;flex-wrap:wrap}
+.ch{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:20px;background:rgba(58,142,246,.07);color:var(--muted);border:.5px solid var(--border)}
+.sb{padding:30px 34px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.sb h3{font-size:19px;font-weight:700;margin-bottom:5px}
+.sb p{font-size:13.5px;color:var(--muted);font-weight:300}
+.sbbtns{display:flex;gap:10px;flex-wrap:wrap}
+
+/* TESTIMONIALS */
+#testimonials{background:rgba(9,18,34,.4)}
+.tg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;max-width:900px;margin:0 auto}
+.tcard{padding:0;overflow:hidden;display:flex;flex-direction:column;transition:border-color .25s,transform .25s}
+.tcard:hover{border-color:var(--border2);transform:translateY(-4px)}
+.tcard-img{width:100%;aspect-ratio:800/1004;object-fit:cover;display:block;background:#000}
+.tcard-foot{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid var(--borders)}
+.tcard-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--accent2);text-transform:uppercase}
+.tcard-quote{font-size:12.5px;color:var(--muted);font-style:italic;font-weight:300}
+.tnote{text-align:center;margin-top:32px;font-size:12.5px;color:var(--muted2);font-family:var(--mono);font-weight:400;letter-spacing:.04em}
+
+/* PARTNER */
+#partner{background:rgba(9,18,34,.6)}
+.ptgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
+.ptcard{padding:32px 28px;transition:border-color .2s,transform .2s;position:relative}
+.ptcard:hover{border-color:var(--border2);transform:translateY(-4px)}
+.ptnum{font-family:var(--num);font-size:52px;font-weight:700;line-height:1;margin-bottom:-4px;background:linear-gradient(135deg,#3a8ef6,#1dffd4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:.55;letter-spacing:-.04em}
+.pticon{font-size:26px;margin-bottom:14px;margin-top:8px}
+.ptname{font-size:20px;font-weight:700;margin-bottom:6px}
+.pttag{font-family:var(--mono);font-size:11px;color:var(--accent2);letter-spacing:.04em;margin-bottom:14px}
+.ptdesc{font-size:13.5px;color:var(--muted);line-height:1.7;margin-bottom:20px;font-weight:300}
+.ptpts{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:26px}
+.ptpts li{font-size:13px;color:var(--muted);display:flex;gap:8px;font-weight:300}
+.ptpts li::before{content:'→';color:var(--accent);flex-shrink:0}
+
+/* CLIENT — redesigned: 2 cards */
+.cg2{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
+@media(max-width:768px){.cg2{grid-template-columns:1fr}}
+.cc-big{padding:30px;position:relative;transition:border-color .2s}
+.cc-big:hover{border-color:var(--border2)}
+.cc-big-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:12px}
+.cc-big-title{font-size:20px;font-weight:700}
+.cc-big-sub{font-size:13.5px;color:var(--muted);font-weight:300;margin-bottom:22px;line-height:1.65}
+.terms-btn{padding:7px 14px;font-size:11.5px;border-radius:999px;background:rgba(58,142,246,.08);border:1px solid var(--border);color:var(--muted);font-family:var(--mono);font-weight:500;cursor:pointer;flex-shrink:0;transition:all .15s;white-space:nowrap;letter-spacing:.04em}
+.terms-btn:hover{background:rgba(58,142,246,.15);color:var(--text);border-color:var(--border2)}
+.hpkgs2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:8px}
+@media(min-width:520px){.hpkgs2{grid-template-columns:repeat(4,1fr)}}
+.hpkg2{background:rgba(58,142,246,.05);border:1.5px solid var(--border);border-radius:14px;padding:18px 10px;text-align:center;cursor:pointer;transition:all .18s;position:relative;overflow:hidden}
+.hpkg2:hover{border-color:rgba(29,255,212,.5);background:rgba(29,255,212,.06);transform:translateY(-3px);box-shadow:0 8px 24px rgba(29,255,212,.08)}
+.hpkg2.feat{border-color:rgba(29,255,212,.35);background:rgba(29,255,212,.05)}
+.hpkg2.feat::after{content:'מומלץ';position:absolute;top:6px;left:6px;font-family:var(--mono);font-size:8px;letter-spacing:.06em;background:linear-gradient(135deg,#0db89e,#0a8a78);color:#fff;padding:2px 7px;border-radius:20px}
+.hn2{font-family:var(--num);font-size:30px;font-weight:700;color:var(--accent2);letter-spacing:-.03em;line-height:1}
+.hl2{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:4px;letter-spacing:.04em}
+.hp2{font-family:var(--num);font-size:14px;color:var(--text);margin-top:8px;font-weight:600;letter-spacing:-.01em}
+.hp2-vat{font-size:9px;color:var(--muted2);font-family:var(--mono);margin-top:1px}
+
+.cc-small{padding:30px;display:flex;flex-direction:column;justify-content:space-between;transition:border-color .2s;background:linear-gradient(160deg,rgba(58,142,246,.08),rgba(29,255,212,.04))}
+.cc-small:hover{border-color:var(--border2)}
+.cc-small-icon{width:64px;height:64px;border-radius:16px;display:grid;place-items:center;margin-bottom:18px;overflow:hidden;background:radial-gradient(circle at 30% 30%,rgba(58,142,246,.18),rgba(29,255,212,.06));border:1px solid rgba(58,142,246,.2);box-shadow:0 6px 20px rgba(47,91,234,.18),inset 0 0 24px rgba(29,255,212,.05)}
+.cc-small-icon svg{width:42px;height:42px;filter:drop-shadow(0 2px 8px rgba(29,255,212,.35))}
+.cc-small h3{font-size:20px;font-weight:700;margin-bottom:8px}
+.cc-small p{font-size:13.5px;color:var(--muted);line-height:1.65;font-weight:300;margin-bottom:22px}
+.cc-list{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:22px}
+.cc-list li{font-size:12.5px;color:var(--muted);display:flex;gap:8px;font-weight:300}
+.cc-list li::before{content:'›';color:var(--accent2);font-weight:700}
+
+/* CONTACT */
+#contact{background:rgba(9,18,34,.6)}
+.ctw{display:grid;grid-template-columns:1fr 1.2fr;gap:48px;align-items:start}
+@media(max-width:768px){.ctw{grid-template-columns:1fr}}
+.chs{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+.ch2{display:flex;align-items:center;gap:14px;padding:16px 18px;text-decoration:none;transition:border-color .15s}
+.ch2:hover{border-color:var(--border2)}
+.chicon{font-size:20px;flex-shrink:0}
+.chname{font-size:14.5px;font-weight:600}
+.chsub{font-size:12px;color:var(--muted);margin-top:2px;font-weight:300;font-family:var(--mono)}
+.cf{padding:28px}
+.cf h3{font-size:18px;font-weight:700;margin-bottom:20px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg{margin-bottom:12px}
+.fl{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:6px;display:block;letter-spacing:.04em}
+.req{color:var(--danger);margin-right:3px}
+.fi{width:100%;background:rgba(58,142,246,.04);border:1px solid var(--border);border-radius:11px;color:var(--text);font-family:var(--sans);font-size:14px;padding:12px 14px;outline:none;transition:border-color .15s,background .15s;direction:rtl;font-weight:300}
+.fi:focus{border-color:rgba(29,255,212,.4);background:rgba(58,142,246,.07)}
+.fi::placeholder{color:var(--muted2)}
+.fs{display:none;text-align:center;padding:24px}
+.fsi{font-size:42px;margin-bottom:12px}
+.fst{font-size:17px;font-weight:700;margin-bottom:6px}
+.fss{font-size:13px;color:var(--muted);font-weight:300}
+
+/* FOOTER — minimal */
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:36px 24px}
+.fi2{max-width:1100px;margin:0 auto}
+.fb{font-size:18px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.3px}
+.ftag{font-size:12px;color:var(--muted2);font-family:var(--mono);font-weight:400;margin-top:4px;letter-spacing:.04em}
+.fcopy{font-size:11px;color:var(--muted2);font-family:var(--mono);font-weight:400;margin-top:14px;letter-spacing:.04em}
+
+/* MODALS */
+.mo{display:none;position:fixed;inset:0;background:rgba(6,13,26,.85);z-index:2000;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px)}
+.mo.op{display:flex}
+.mb{padding:28px;max-width:480px;width:100%;max-height:90dvh;overflow-y:auto;position:relative}
+.mc{position:absolute;top:14px;left:14px;background:rgba(58,142,246,.1);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:16px;cursor:pointer;width:30px;height:30px;display:grid;place-items:center;transition:all .15s;line-height:1}
+.mc:hover{background:rgba(58,142,246,.2);color:var(--text)}
+.mk{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);opacity:.8;margin-bottom:6px;display:block}
+.mt{font-size:21px;font-weight:700;margin-bottom:5px}
+.ms{font-size:13.5px;color:var(--muted);margin-bottom:20px;font-weight:300;line-height:1.6}
+.pdet{background:rgba(58,142,246,.05);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;font-size:13.5px;color:var(--muted);line-height:1.7;font-weight:300}
+
+/* HOURS PURCHASE POPUP — matched to design refs */
+.mb-hours{padding:30px 28px 24px;max-width:500px;width:100%;max-height:94dvh;overflow-y:auto;position:relative;background:linear-gradient(180deg,rgba(9,18,34,.96),rgba(6,13,26,.99));border:1px solid var(--border);border-radius:24px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.mh-handle{width:38px;height:4px;background:rgba(255,255,255,.18);border-radius:2px;margin:-10px auto 22px}
+.mh-close{position:absolute;top:18px;left:18px;width:34px;height:34px;border-radius:11px;background:rgba(58,142,246,.08);border:1px solid var(--border);color:var(--muted);font-size:18px;cursor:pointer;display:grid;place-items:center;transition:all .15s;line-height:1}
+.mh-close:hover{background:rgba(58,142,246,.18);color:var(--text)}
+.mh-title{font-size:28px;font-weight:700;text-align:right;letter-spacing:-.025em;line-height:1.15}
+.mh-sub{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.18em;text-align:right;margin-top:8px;margin-bottom:24px;font-weight:400}
+.mh-pkg{display:flex;align-items:center;justify-content:space-between;background:rgba(29,255,212,.05);border:1.5px solid rgba(29,255,212,.42);border-radius:16px;padding:18px 22px;margin-bottom:24px;box-shadow:0 0 32px rgba(29,255,212,.06),inset 0 0 20px rgba(29,255,212,.03)}
+.mh-pkg-label{font-size:14px;color:var(--muted);font-weight:500}
+.mh-pkg-info{font-family:var(--num);font-size:16px;font-weight:700;color:var(--accent2);letter-spacing:.02em}
+.mh-field{margin-bottom:14px}
+.mh-label{font-size:14px;font-weight:500;color:var(--text);margin-bottom:8px;display:block}
+.mh-input{width:100%;background:rgba(58,142,246,.04);border:1px solid var(--border);border-radius:14px;color:var(--text);font-family:var(--num);font-size:14px;padding:15px 18px;outline:none;transition:border-color .15s,background .15s;direction:rtl}
+.mh-input:focus{border-color:rgba(29,255,212,.4);background:rgba(58,142,246,.07)}
+.mh-input::placeholder{color:var(--muted2);font-family:var(--num)}
+textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-height:64px}
+.mh-phone-row{display:flex;gap:8px}
+.mh-phone-row .mh-input{flex:1}
+.mh-cc{flex-shrink:0;display:flex;align-items:center;gap:7px;background:rgba(58,142,246,.04);border:1px solid var(--border);border-radius:14px;padding:0 16px;font-family:var(--num);font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;direction:ltr}
+.mh-terms{display:flex;align-items:flex-start;gap:11px;margin:20px 0;cursor:pointer;font-size:13px;color:var(--text);font-weight:400;line-height:1.5}
+.mh-terms input{width:18px;height:18px;margin-top:1px;accent-color:var(--accent2);cursor:pointer;flex-shrink:0;border-radius:4px}
+.mh-terms a{color:var(--accent2);text-decoration:none;font-weight:500}
+.mh-terms a:hover{text-decoration:underline}
+.mh-btn{width:100%;padding:17px;background:linear-gradient(135deg,#2f5bea,#1a3aab);border:none;border-radius:16px;color:#fff;font-family:var(--sans);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 28px rgba(47,91,234,.32);transition:all .18s;letter-spacing:.2px}
+.mh-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.mh-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* TERMS POPUP */
+.mb-terms{padding:32px 30px;max-width:560px;width:100%;max-height:90dvh;overflow-y:auto;position:relative}
+.mb-terms h3{font-size:16px;font-weight:700;margin:18px 0 8px;color:var(--accent2)}
+.mb-terms h3:first-of-type{margin-top:0}
+.mb-terms p,.mb-terms li{font-size:13.5px;color:var(--muted);line-height:1.7;font-weight:300;margin-bottom:8px}
+.mb-terms ul{padding-right:18px;margin-bottom:12px}
+
+/* WA FLOAT */
+.wa{position:fixed;bottom:24px;left:24px;z-index:999;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#25D366,#17a34a);box-shadow:0 4px 22px rgba(37,211,102,.4);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:transform .2s}
+.wa:hover{transform:scale(1.08)}
+.wa svg{width:28px;height:28px;fill:#fff}
+</style>
+</head>
+<body>
+
+<!-- COOKIE BANNER -->
+<div id="ck">
+  <p>אנחנו משתמשים בעוגיות לשיפור החוויה. <a href="cookies.html">מדיניות עוגיות</a> · <a href="privacy.html">פרטיות</a></p>
+  <div class="ck-btns">
+    <button class="btn btn-out" style="padding:8px 16px;font-size:13px;border-radius:8px" onclick="declineCk()">דחה</button>
+    <button class="btn btn-teal" style="padding:8px 16px;font-size:13px;border-radius:8px" onclick="ackCk()">אשר הכל</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="ni">
+    <a href="#hero" class="nl">
+      <div class="ni-img"><img src="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" alt="AS" onerror="this.style.display='none'"></div>
+      <span class="nb">AutoScale</span>
+    </a>
+    <ul class="nlinks" id="nlinks">
+      <li><a href="#services" onclick="cm()">שירותים</a></li>
+      <li><a href="#integrations" onclick="cm()">אינטגרציות</a></li>
+      <li><a href="#portfolio" onclick="cm()">עבודות</a></li>
+      <li><a href="#partner" onclick="cm()">שיתוף פעולה</a></li>
+      <li><a href="#client" onclick="cm()">לקוחות</a></li>
+      <li><a href="#contact" onclick="cm()">צור קשר</a></li>
+    </ul>
+    <div class="nr">
+      <a href="login-select.html" class="nbtn-portal"><span>כניסת לקוחות ושותפים</span></a>
+      <a href="#contact" class="btn btn-blue ncta" style="padding:9px 20px;font-size:13px">בואו נדבר</a>
+      <div class="lsw">
+        <button class="lb on" onclick="setLang('he',this)" aria-label="עברית">🇮🇱</button>
+        <button class="lb" onclick="setLang('en',this)" aria-label="English">🇺🇸</button>
+      </div>
+      <button class="hbg" id="hbg" onclick="tm()" aria-label="תפריט"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hglow"></div>
+  <div class="wrap">
+    <div class="hc">
+      <div class="hey fade">אוטומציות חכמות לעסקים</div>
+      <h1 class="ht fade d1">תהליכים שלוקחים שעות —<br><span class="grad">קורים לבד.</span></h1>
+      <p class="hs fade d2">אנחנו בונים מערכות אוטומציה — WhatsApp בוטים, מערכות לידים, CRM, ואינטגרציות — שחוסכות לעסקים שלכם זמן, כסף, וכאב ראש.</p>
+      <div class="hbtns fade d3">
+        <a href="#portfolio" class="btn btn-blue">ראו את העבודות שלנו</a>
+        <a href="#contact" class="btn btn-out">בואו נדבר</a>
+      </div>
+      <div class="hstats fade d3">
+        <div><div class="sn">+20</div><div class="sl">פרויקטים הושלמו</div></div>
+        <div><div class="sn">48h</div><div class="sl">זמן פריסה ממוצע</div></div>
+        <div><div class="sn">100%</div><div class="sl">עם ליווי ותמיכה</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="sc-cue"><span>scroll</span></div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="section">
+  <div class="wrap">
+    <span class="kicker fade">איך אנחנו עובדים</span>
+    <h2 class="h2 fade d1">בחרו את המסלול הנכון לכם</h2>
+    <p class="sub fade d2">שלושה מסלולי עבודה שמתאימים לסוגים שונים של פרויקטים ולקוחות.</p>
+    <div class="sg">
+      <div class="sc glass fade"><div class="si">⏱</div><div class="sn2">בנק שעות</div><div class="sd">קונים שעות מראש ומושכים לפי הצורך. אידיאלי לעסקים עם עבודה שוטפת וגמישה.</div><div class="sp">₪250–300</div><div class="sp2">לשעה · ניכוי אוטומטי מהבנק</div><ul class="sf"><li>רכישה מראש בהנחה</li><li>דשבורד לקוח בזמן אמת</li><li>דיווח על כל משימה</li><li>בקשות דרך בוט דונה</li></ul></div>
+      <div class="sc glass ft fade d1"><div class="si">🚀</div><div class="sn2">פרויקט חד-פעמי</div><div class="sd">סקופ ברור, מחיר קבוע, לוח זמנים מוסכם. מהרעיון ועד להשקה.</div><div class="sp">₪2,500+</div><div class="sp2">לפי פרויקט · הצעה ספציפית</div><ul class="sf"><li>סקופ מוגדר ומוסכם</li><li>50% מקדמה, 50% במסירה</li><li>סרטון הדרכה + מסמך טכני</li><li>14 יום אחריות</li></ul></div>
+      <div class="sc glass fade d2"><div class="si">🔧</div><div class="sn2">תחזוקה שוטפת</div><div class="sd">ריטיינר חודשי לתמיכה, עדכונים, תיקונים, ופיתוח מתמשך של המערכות שלכם.</div><div class="sp">₪390–490</div><div class="sp2">לחודש · כולל תמיכה ושדרוגים</div><ul class="sf"><li>תמיכה מועדפת</li><li>בקשות דחיפות בפריוריטי</li><li>ניטור שוטף של מערכות</li><li>גישה ישירה לדונה</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- INTEGRATIONS — single row, more logos -->
+<div id="integrations" class="mq-wrap" aria-hidden="true">
+  <div style="position:relative;z-index:3;text-align:center;margin-bottom:22px">
+    <span class="kicker">אינטגרציות</span>
+  </div>
+  <div class="mq-fade-r"></div>
+  <div class="mq-fade-l"></div>
+  <div class="mq-row"><div class="mq-track">
+    <!-- Set 1 -->
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#7B5EA7"/><path d="M14 6l-6 6 6 6 6-6z" fill="rgba(255,255,255,.4)"/><circle cx="14" cy="14" r="3" fill="#fff"/></svg>Make.com</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#FF6D5A"/><circle cx="9" cy="9" r="2.5" fill="#fff"/><circle cx="19" cy="9" r="2.5" fill="#fff"/><circle cx="9" cy="19" r="2.5" fill="#fff"/><circle cx="19" cy="19" r="2.5" fill="#fff"/><path d="M9 9 L19 19 M19 9 L9 19" stroke="#fff" stroke-width="1.5" opacity=".5"/></svg>n8n</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#F62B54"/><rect x="6" y="11" width="4" height="6" rx="1" fill="#fff"/><rect x="12" y="11" width="4" height="6" rx="1" fill="rgba(255,255,255,.85)"/><rect x="18" y="11" width="4" height="6" rx="1" fill="rgba(255,255,255,.7)"/></svg>Monday</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#D97706"/><path d="M9 8 L19 8 L19 20 L9 20 Z M11 11 L17 11 M11 14 L17 14 M11 17 L15 17" stroke="#fff" stroke-width="1.5" fill="none"/></svg>Claude</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#10A37F"/><path d="M14 7 L19 10 L19 16 L14 19 L9 16 L9 10 Z" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="14" cy="13" r="1.5" fill="#fff"/></svg>ChatGPT</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#fff"/><path d="M14 7 A7 7 0 0 1 21 14 L14 14 Z" fill="#4285F4"/><path d="M14 14 L21 14 A7 7 0 0 1 17 20.5 Z" fill="#34A853"/><path d="M14 14 L17 20.5 A7 7 0 0 1 11 20.5 Z" fill="#FBBC05"/><path d="M14 14 L11 20.5 A7 7 0 0 1 7 14 Z" fill="#EA4335"/><path d="M14 14 L7 14 A7 7 0 0 1 14 7 Z" fill="#4285F4" opacity=".7"/></svg>Google</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#0A66C2"/><rect x="6" y="11" width="3" height="11" fill="#fff"/><circle cx="7.5" cy="8" r="1.8" fill="#fff"/><path d="M12 11 H15 V13 C16 11 18 10.5 19.5 11.5 C21 12.5 21 14.5 21 16 V22 H18 V17 C18 15.5 17.5 14.5 16.5 14.5 C15.5 14.5 15 15.5 15 17 V22 H12 Z" fill="#fff"/></svg>LinkedIn</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#25D366"/><path d="M14 7a7 7 0 00-6 10.5L7 21l3.5-1A7 7 0 1014 7z" fill="#fff"/><path d="M11 11.5c-.3 0-.5.1-.7.4-.3.4-.7.9-.7 1.7s.5 1.7.7 1.9c1 1.4 2.4 2.6 4.1 3.2.6.2 1 .2 1.4.1.4-.1 1.2-.5 1.4-1 .2-.5.2-1 .1-1.1-.1-.1-.3-.2-.6-.3-.4-.2-1.2-.6-1.4-.7-.2-.1-.4-.1-.5.1-.2.2-.5.7-.7.8-.1.1-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.4-1.6-.1-.2 0-.3.1-.5.1-.1.2-.3.4-.4.1-.1.2-.2.2-.4.1-.2 0-.3 0-.4-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.5-.4z" fill="#25D366"/></svg>WhatsApp</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#1877F2"/><path d="M16.5 14 H19 L19.5 11 H16.5 V9 C16.5 8.2 16.8 7.5 18 7.5 H19.5 V5 C19.5 5 18.2 4.8 17 4.8 C14.5 4.8 13 6.3 13 8.7 V11 H10.5 V14 H13 V22 H16.5 Z" fill="#fff"/></svg>Meta</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#FF4A00"/><path d="M14 6 L18 10 L14 10 L14 14 L10 10 Z M14 22 L10 18 L14 18 L14 14 L18 18 Z" fill="#fff"/></svg>Zapier</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#000"/><path d="M8 6 L14 6 C18 6 21 9 21 13 C21 16 19 18 16 19 L18 22 L15 22 L13 19 L11 19 L11 22 L8 22 Z M11 9 L11 16 L14 16 C16 16 18 15 18 13 C18 11 16 9 14 9 Z" fill="#fff"/></svg>Notion</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#0EA5E9"/><path d="M6 10 L14 6 L22 10 L14 14 Z" fill="#fff"/><path d="M6 14 L14 18 L22 14 L22 18 L14 22 L6 18 Z" fill="rgba(255,255,255,.6)"/></svg>Airtable</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#4A154B"/><rect x="11" y="6" width="2" height="6" rx="1" fill="#36C5F0"/><rect x="11" y="16" width="2" height="6" rx="1" fill="#2EB67D"/><rect x="6" y="11" width="6" height="2" rx="1" fill="#ECB22E"/><rect x="16" y="11" width="6" height="2" rx="1" fill="#E01E5A"/><rect x="11" y="11" width="2" height="2" fill="#fff" opacity=".3"/></svg>Slack</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#26A5E4"/><path d="M21 9 L19 20 C18.8 20.8 18.3 21 17.7 20.6 L13.5 17.5 L11.5 19.4 C11.3 19.6 11.1 19.8 10.7 19.8 L11 16 L19 8.5 C19.3 8.2 18.9 8 18.4 8.3 L8.5 14.5 L4 13 C3 12.7 3 12 4.2 11.5 L19.7 5.5 C20.5 5.2 21.3 5.7 21 9 Z" fill="#fff"/></svg>Telegram</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#0052CC"/><path d="M6 14 L14 6 L22 14 L14 22 Z" fill="#fff"/><path d="M14 10 L18 14 L14 18 L10 14 Z" fill="#0052CC"/></svg>Jira</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#00A1E0"/><path d="M11 9 C9 9 8 10.5 8 12 C8 13.5 9 14.5 10.5 14.8 C10.2 15.5 10 16.2 10 17 C10 19 11.5 20.5 13.5 20.5 C14.5 20.5 15.3 20 16 19.5 C16.5 20.3 17.5 21 19 21 C20.5 21 22 19.7 22 17.8 C22 16.5 21.2 15.5 20 15 C20.5 14.5 21 13.7 21 12.5 C21 10.5 19.5 9 17.5 9 C16.5 9 15.7 9.5 15 10 C14.5 9.4 13.5 9 12.5 9 Z" fill="#fff"/></svg>Salesforce</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#FF7A59"/><circle cx="14" cy="14" r="4" fill="none" stroke="#fff" stroke-width="2"/><circle cx="20" cy="8" r="2" fill="#fff"/><line x1="17" y1="11" x2="14" y2="14" stroke="#fff" stroke-width="2"/></svg>HubSpot</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#fff"/><path d="M5 10 L14 16 L23 10 L23 19 C23 20 22 21 21 21 L7 21 C6 21 5 20 5 19 Z" fill="#EA4335"/><path d="M5 10 L5 19 C5 20 6 21 7 21 L14 16 Z" fill="#C5221F"/><path d="M14 16 L23 10 L23 19 C23 20 22 21 21 21 Z" fill="#4285F4"/></svg>Gmail</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#0F9D58"/><rect x="7" y="7" width="14" height="14" rx="1" fill="#fff"/><line x1="11" y1="10" x2="11" y2="18" stroke="#0F9D58" stroke-width="1"/><line x1="15" y1="10" x2="15" y2="18" stroke="#0F9D58" stroke-width="1"/><line x1="8" y1="13" x2="20" y2="13" stroke="#0F9D58" stroke-width="1"/><line x1="8" y1="16" x2="20" y2="16" stroke="#0F9D58" stroke-width="1"/></svg>Sheets</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#4285F4"/><rect x="7" y="9" width="14" height="13" rx="1" fill="#fff"/><line x1="10" y1="6" x2="10" y2="11" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><line x1="18" y1="6" x2="18" y2="11" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="16" r="2" fill="#4285F4"/></svg>Calendar</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#F9AB00"/><path d="M11 6 L17 6 L17 22 L11 22 Z M5 14 L11 14 L11 22 L5 22 Z M17 10 L23 10 L23 22 L17 22 Z" fill="#fff"/></svg>GA4</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#1a1a2e" stroke="#30363d" stroke-width="1"/><path d="M14 5 C9 5 5 9 5 14 C5 18 7.5 21.4 11 22.5 C11.5 22.6 11.7 22.3 11.7 22 L11.7 20.4 C9.2 20.9 8.7 19.5 8.7 19.5 C8.4 18.7 7.9 18.4 7.9 18.4 C7 17.8 8 17.8 8 17.8 C9 17.9 9.5 18.8 9.5 18.8 C10.4 20.3 11.8 19.9 12.4 19.6 C12.5 19 12.7 18.6 13 18.4 C11 18.2 8.9 17.4 8.9 14 C8.9 13 9.3 12.2 9.9 11.6 C9.8 11.4 9.5 10.5 10 9.3 C10 9.3 10.8 9 12.5 10.2 C13.3 10 14.2 9.9 15 9.9 C15.8 9.9 16.7 10 17.5 10.2 C19.2 9 20 9.3 20 9.3 C20.5 10.5 20.2 11.4 20.1 11.6 C20.7 12.2 21.1 13 21.1 14 C21.1 17.4 19 18.2 17 18.4 C17.4 18.7 17.7 19.3 17.7 20.2 L17.7 22 C17.7 22.3 17.9 22.6 18.4 22.5 C21.9 21.4 24.4 18 24.4 14 C24.4 9 20 5 14 5 Z" fill="#fff"/></svg>GitHub</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#F38020"/><path d="M21 15 C20.5 13 18.5 11 16 11 C13.5 11 11.7 12.7 11.2 15 L8 15 C6 15 5 16.5 5 18 C5 19.5 6 21 8 21 L21 21 C22.5 21 24 19.5 24 18 C24 16.5 22.5 15 21 15 Z" fill="#fff"/></svg>Cloudflare</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#8E44AD"/><path d="M14 6 L20 18 L14 16 L8 18 Z" fill="#fff"/></svg>Gemini</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#1877F2"/><circle cx="9" cy="14" r="1.5" fill="#fff"/><circle cx="14" cy="14" r="1.5" fill="#fff"/><circle cx="19" cy="14" r="1.5" fill="#fff"/></svg>Meta Ads</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><defs><linearGradient id="ig2" x1="0" y1="28" x2="28" y2="0"><stop stop-color="#F58529"/><stop offset=".5" stop-color="#E1306C"/><stop offset="1" stop-color="#833AB4"/></linearGradient></defs><rect width="28" height="28" rx="8" fill="url(#ig2)"/><rect x="7" y="7" width="14" height="14" rx="4" fill="none" stroke="#fff" stroke-width="2"/><circle cx="14" cy="14" r="3.5" fill="none" stroke="#fff" stroke-width="2"/><circle cx="19.5" cy="8.5" r="1" fill="#fff"/></svg>Instagram</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#000"/><path d="M9 20 L9 8 L11.5 8 L11.5 16 L19 8 L19 11 L14 16 L20 20 L17 20 L13 17 L11.5 18.5 L11.5 20 Z" fill="#fff"/></svg>X / Twitter</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#000"/><path d="M16 5 C16 8 18 10 21 10 L21 13 C19 13 17 12.5 16 11.5 L16 18 C16 21 13.5 23 11 23 C8.5 23 6 21 6 18 C6 15.5 8.5 13.5 11 13.5 L11 16 C10 16 9 17 9 18 C9 19 10 20 11 20 C12 20 13 19 13 18 L13 5 Z" fill="#fff"/></svg>TikTok</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#5865F2"/><path d="M9 9 C11 8 13 7.5 14 7.5 C15 7.5 17 8 19 9 C21 12 22 15 21 19 C20 19.5 19 20 18 20.3 L17 19 C18 18.5 18.5 18 18.5 18 C16 19.5 12 19.5 9.5 18 C9.5 18 10 18.5 11 19 L10 20.3 C9 20 8 19.5 7 19 C6 15 7 12 9 9 Z M11.5 14.5 C11.5 15.5 12 16.3 13 16.3 C14 16.3 14.5 15.5 14.5 14.5 C14.5 13.5 14 12.7 13 12.7 C12 12.7 11.5 13.5 11.5 14.5 Z M16.5 14.5 C16.5 15.5 17 16.3 18 16.3 C19 16.3 19.5 15.5 19.5 14.5 C19.5 13.5 19 12.7 18 12.7 C17 12.7 16.5 13.5 16.5 14.5 Z" fill="#fff"/></svg>Discord</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#1C1C1C"/><path d="M9 14 C9 11 11 9 14 9 C15 9 16 9.3 16.7 9.8 L15 11.5 C14.7 11.3 14.4 11.2 14 11.2 C12.5 11.2 11.3 12.5 11.3 14 C11.3 15.5 12.5 16.7 14 16.7 C14.4 16.7 14.7 16.6 15 16.5 L16.7 18.2 C16 18.7 15 19 14 19 C11 19 9 17 9 14 Z" fill="#3ECF8E"/><path d="M19 14 L17 12 L17 16 Z" fill="#3ECF8E"/></svg>Supabase</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#000"/><path d="M14 6 L23 22 L5 22 Z" fill="#fff"/></svg>Vercel</div>
+
+    <!-- Set 2: Duplicate for seamless loop -->
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#7B5EA7"/><path d="M14 6l-6 6 6 6 6-6z" fill="rgba(255,255,255,.4)"/><circle cx="14" cy="14" r="3" fill="#fff"/></svg>Make.com</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#FF6D5A"/><circle cx="9" cy="9" r="2.5" fill="#fff"/><circle cx="19" cy="9" r="2.5" fill="#fff"/><circle cx="9" cy="19" r="2.5" fill="#fff"/><circle cx="19" cy="19" r="2.5" fill="#fff"/><path d="M9 9 L19 19 M19 9 L9 19" stroke="#fff" stroke-width="1.5" opacity=".5"/></svg>n8n</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#F62B54"/><rect x="6" y="11" width="4" height="6" rx="1" fill="#fff"/><rect x="12" y="11" width="4" height="6" rx="1" fill="rgba(255,255,255,.85)"/><rect x="18" y="11" width="4" height="6" rx="1" fill="rgba(255,255,255,.7)"/></svg>Monday</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#D97706"/><path d="M9 8 L19 8 L19 20 L9 20 Z M11 11 L17 11 M11 14 L17 14 M11 17 L15 17" stroke="#fff" stroke-width="1.5" fill="none"/></svg>Claude</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#10A37F"/><path d="M14 7 L19 10 L19 16 L14 19 L9 16 L9 10 Z" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="14" cy="13" r="1.5" fill="#fff"/></svg>ChatGPT</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#fff"/><path d="M14 7 A7 7 0 0 1 21 14 L14 14 Z" fill="#4285F4"/><path d="M14 14 L21 14 A7 7 0 0 1 17 20.5 Z" fill="#34A853"/><path d="M14 14 L17 20.5 A7 7 0 0 1 11 20.5 Z" fill="#FBBC05"/><path d="M14 14 L11 20.5 A7 7 0 0 1 7 14 Z" fill="#EA4335"/><path d="M14 14 L7 14 A7 7 0 0 1 14 7 Z" fill="#4285F4" opacity=".7"/></svg>Google</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#0A66C2"/><rect x="6" y="11" width="3" height="11" fill="#fff"/><circle cx="7.5" cy="8" r="1.8" fill="#fff"/><path d="M12 11 H15 V13 C16 11 18 10.5 19.5 11.5 C21 12.5 21 14.5 21 16 V22 H18 V17 C18 15.5 17.5 14.5 16.5 14.5 C15.5 14.5 15 15.5 15 17 V22 H12 Z" fill="#fff"/></svg>LinkedIn</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#25D366"/><path d="M14 7a7 7 0 00-6 10.5L7 21l3.5-1A7 7 0 1014 7z" fill="#fff"/></svg>WhatsApp</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#1877F2"/><path d="M16.5 14 H19 L19.5 11 H16.5 V9 C16.5 8.2 16.8 7.5 18 7.5 H19.5 V5 C19.5 5 18.2 4.8 17 4.8 C14.5 4.8 13 6.3 13 8.7 V11 H10.5 V14 H13 V22 H16.5 Z" fill="#fff"/></svg>Meta</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#FF4A00"/><path d="M14 6 L18 10 L14 10 L14 14 L10 10 Z M14 22 L10 18 L14 18 L14 14 L18 18 Z" fill="#fff"/></svg>Zapier</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#000"/><path d="M8 6 L14 6 C18 6 21 9 21 13 C21 16 19 18 16 19 L18 22 L15 22 L13 19 L11 19 L11 22 L8 22 Z M11 9 L11 16 L14 16 C16 16 18 15 18 13 C18 11 16 9 14 9 Z" fill="#fff"/></svg>Notion</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#0EA5E9"/><path d="M6 10 L14 6 L22 10 L14 14 Z" fill="#fff"/><path d="M6 14 L14 18 L22 14 L22 18 L14 22 L6 18 Z" fill="rgba(255,255,255,.6)"/></svg>Airtable</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#4A154B"/><rect x="11" y="6" width="2" height="6" rx="1" fill="#36C5F0"/><rect x="11" y="16" width="2" height="6" rx="1" fill="#2EB67D"/><rect x="6" y="11" width="6" height="2" rx="1" fill="#ECB22E"/><rect x="16" y="11" width="6" height="2" rx="1" fill="#E01E5A"/></svg>Slack</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#26A5E4"/><path d="M21 9 L19 20 C18.8 20.8 18.3 21 17.7 20.6 L13.5 17.5 L11.5 19.4 C11.3 19.6 11.1 19.8 10.7 19.8 L11 16 L19 8.5 C19.3 8.2 18.9 8 18.4 8.3 L8.5 14.5 L4 13 C3 12.7 3 12 4.2 11.5 L19.7 5.5 C20.5 5.2 21.3 5.7 21 9 Z" fill="#fff"/></svg>Telegram</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#0052CC"/><path d="M6 14 L14 6 L22 14 L14 22 Z" fill="#fff"/><path d="M14 10 L18 14 L14 18 L10 14 Z" fill="#0052CC"/></svg>Jira</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#00A1E0"/><path d="M11 9 C9 9 8 10.5 8 12 C8 13.5 9 14.5 10.5 14.8 C10.2 15.5 10 16.2 10 17 C10 19 11.5 20.5 13.5 20.5 C14.5 20.5 15.3 20 16 19.5 C16.5 20.3 17.5 21 19 21 C20.5 21 22 19.7 22 17.8 C22 16.5 21.2 15.5 20 15 C20.5 14.5 21 13.7 21 12.5 C21 10.5 19.5 9 17.5 9 C16.5 9 15.7 9.5 15 10 C14.5 9.4 13.5 9 12.5 9 Z" fill="#fff"/></svg>Salesforce</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#FF7A59"/><circle cx="14" cy="14" r="4" fill="none" stroke="#fff" stroke-width="2"/><circle cx="20" cy="8" r="2" fill="#fff"/><line x1="17" y1="11" x2="14" y2="14" stroke="#fff" stroke-width="2"/></svg>HubSpot</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#fff"/><path d="M5 10 L14 16 L23 10 L23 19 C23 20 22 21 21 21 L7 21 C6 21 5 20 5 19 Z" fill="#EA4335"/></svg>Gmail</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#0F9D58"/><rect x="7" y="7" width="14" height="14" rx="1" fill="#fff"/></svg>Sheets</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#4285F4"/><rect x="7" y="9" width="14" height="13" rx="1" fill="#fff"/></svg>Calendar</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#F9AB00"/><path d="M11 6 L17 6 L17 22 L11 22 Z M5 14 L11 14 L11 22 L5 22 Z M17 10 L23 10 L23 22 L17 22 Z" fill="#fff"/></svg>GA4</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#1a1a2e"/><path d="M14 5 C9 5 5 9 5 14 C5 18 7.5 21.4 11 22.5 L11 20.4 C9.2 20.9 8.7 19.5 8.7 19.5 C8 18 7 18 7 18 C8 17.8 8.5 18.8 8.5 18.8 C9.5 20.3 11 19.9 11.5 19.6 L11.5 22 C8 21 5 17.5 5 14 C5 9 9 5 14 5 Z" fill="#fff"/></svg>GitHub</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#F38020"/><path d="M21 15 C20.5 13 18.5 11 16 11 C13.5 11 11.7 12.7 11.2 15 L8 15 C6 15 5 16.5 5 18 C5 19.5 6 21 8 21 L21 21 C22.5 21 24 19.5 24 18 C24 16.5 22.5 15 21 15 Z" fill="#fff"/></svg>Cloudflare</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#8E44AD"/><path d="M14 6 L20 18 L14 16 L8 18 Z" fill="#fff"/></svg>Gemini</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#1877F2"/><circle cx="9" cy="14" r="1.5" fill="#fff"/><circle cx="14" cy="14" r="1.5" fill="#fff"/><circle cx="19" cy="14" r="1.5" fill="#fff"/></svg>Meta Ads</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><defs><linearGradient id="ig3" x1="0" y1="28" x2="28" y2="0"><stop stop-color="#F58529"/><stop offset=".5" stop-color="#E1306C"/><stop offset="1" stop-color="#833AB4"/></linearGradient></defs><rect width="28" height="28" rx="8" fill="url(#ig3)"/><rect x="7" y="7" width="14" height="14" rx="4" fill="none" stroke="#fff" stroke-width="2"/><circle cx="14" cy="14" r="3.5" fill="none" stroke="#fff" stroke-width="2"/></svg>Instagram</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#000"/><path d="M9 20 L9 8 L11.5 8 L11.5 16 L19 8 L19 11 L14 16 L20 20 L17 20 L13 17 L11.5 18.5 L11.5 20 Z" fill="#fff"/></svg>X / Twitter</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#000"/><path d="M16 5 C16 8 18 10 21 10 L21 13 C19 13 17 12.5 16 11.5 L16 18 C16 21 13.5 23 11 23 C8.5 23 6 21 6 18 C6 15.5 8.5 13.5 11 13.5 L11 16 C10 16 9 17 9 18 C9 19 10 20 11 20 C12 20 13 19 13 18 L13 5 Z" fill="#fff"/></svg>TikTok</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#5865F2"/><path d="M9 9 C11 8 13 7.5 14 7.5 C15 7.5 17 8 19 9 C21 12 22 15 21 19 C20 19.5 19 20 18 20.3 L17 19 C18 18.5 18.5 18 18.5 18 C16 19.5 12 19.5 9.5 18 C9.5 18 10 18.5 11 19 L10 20.3 C9 20 8 19.5 7 19 C6 15 7 12 9 9 Z" fill="#fff"/></svg>Discord</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#1C1C1C"/><path d="M9 14 C9 11 11 9 14 9 C15 9 16 9.3 16.7 9.8 L15 11.5 C14.7 11.3 14.4 11.2 14 11.2 C12.5 11.2 11.3 12.5 11.3 14 C11.3 15.5 12.5 16.7 14 16.7 C14.4 16.7 14.7 16.6 15 16.5 L16.7 18.2 C16 18.7 15 19 14 19 C11 19 9 17 9 14 Z" fill="#3ECF8E"/></svg>Supabase</div>
+    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#000"/><path d="M14 6 L23 22 L5 22 Z" fill="#fff"/></svg>Vercel</div>
+  </div></div>
+</div>
+
+<!-- PORTFOLIO -->
+<section id="portfolio" class="section">
+  <div class="wrap">
+    <span class="kicker fade">תיק עבודות</span>
+    <h2 class="h2 fade d1">מה בנינו</h2>
+    <p class="sub fade d2">פרויקטים שהשקנו בפועל — מדפי נחיתה ועד בוטים, חוזים ומערכות CRM.</p>
+    <div class="pg">
+
+      <!-- 1. דפי נחיתה (placeholder) -->
+      <div class="pc glass fade" onclick="om('p1')">
+        <div class="pt">
+          <div class="pt-mock">
+            <div class="pt-mock-icon">🎯</div>
+            <div class="pt-mock-label">Landing Pages</div>
+          </div>
+          <span class="ptag">דפי נחיתה</span>
+        </div>
+        <div class="pi">
+          <div class="pn">דפי נחיתה</div>
+          <div class="pd">בניית דפי נחיתה בעלי המרה גבוהה — דף וידאו, טופס ליד, דף תודה, חיבור לפיקסלים, GTM ו-WhatsApp.</div>
+          <div class="cr"><span class="ch">HTML / CSS</span><span class="ch">GTM</span><span class="ch">Meta Pixel</span><span class="ch">WhatsApp API</span></div>
+        </div>
+      </div>
+
+      <!-- 2. חוזה אוטומטי -->
+      <div class="pc glass fade d1" onclick="om('p2')">
+        <div class="pt">
+          <img class="pt-media car-img" data-cid="contract" data-idx="0" src="portfolio-images/contract-1.jpg" alt="חוזה אוטומטי - תבנית" loading="lazy">
+          <div class="pt-media-overlay"></div>
+          <button class="car-nav car-prev" onclick="event.stopPropagation();carNav('contract',-1,2)" aria-label="הקודם">‹</button>
+          <button class="car-nav car-next" onclick="event.stopPropagation();carNav('contract',1,2)" aria-label="הבא">›</button>
+          <div class="car-dots">
+            <button class="car-dot on" data-cid="contract" data-i="0" onclick="event.stopPropagation();carGo('contract',0,2)" aria-label="תמונה 1"></button>
+            <button class="car-dot" data-cid="contract" data-i="1" onclick="event.stopPropagation();carGo('contract',1,2)" aria-label="תמונה 2"></button>
+          </div>
+          <span class="ptag">חוזים אוטומטיים</span>
+        </div>
+        <div class="pi">
+          <div class="pn">חוזה אוטומטי ושליחת חתימה</div>
+          <div class="pd">יצירת חוזה מתוך נתוני CRM, שליחה לחתימה, סטטוסים ותזכורות. תבנית חוזה עם משתנים וסעיפים דינמיים. סטטוס חתימה וקליטה אוטומטית למערכת.</div>
+          <div class="cr"><span class="ch">Make.com</span><span class="ch">CRM</span><span class="ch">e-Signature</span><span class="ch">Word Templates</span></div>
+        </div>
+      </div>
+
+      <!-- 3. CRM -->
+      <div class="pc glass fade d2" onclick="om('p3')">
+        <div class="pt">
+          <img class="pt-media car-img" data-cid="crm" data-idx="0" src="portfolio-images/crm-1.jpg" alt="מערכת CRM - בורד ראשי" loading="lazy">
+          <div class="pt-media-overlay"></div>
+          <button class="car-nav car-prev" onclick="event.stopPropagation();carNav('crm',-1,2)" aria-label="הקודם">‹</button>
+          <button class="car-nav car-next" onclick="event.stopPropagation();carNav('crm',1,2)" aria-label="הבא">›</button>
+          <div class="car-dots">
+            <button class="car-dot on" data-cid="crm" data-i="0" onclick="event.stopPropagation();carGo('crm',0,2)" aria-label="תמונה 1"></button>
+            <button class="car-dot" data-cid="crm" data-i="1" onclick="event.stopPropagation();carGo('crm',1,2)" aria-label="תמונה 2"></button>
+          </div>
+          <span class="ptag">CRM ולידים</span>
+        </div>
+        <div class="pi">
+          <div class="pn">מערכת CRM ואוטומציית לידים</div>
+          <div class="pd">Facebook Leads → Make → Monday + WhatsApp תוך 60 שניות. מעקב סטטוסים, דוחות נוכחות, ושעות עבודה — הכל במקום אחד.</div>
+          <div class="cr"><span class="ch">Monday</span><span class="ch">Facebook Leads</span><span class="ch">Make.com</span><span class="ch">WhatsApp</span></div>
+        </div>
+      </div>
+
+      <!-- 4. תיאום פגישות (placeholder) -->
+      <div class="pc glass fade" onclick="om('p4')">
+        <div class="pt">
+          <div class="pt-mock">
+            <div class="pt-mock-icon">📅</div>
+            <div class="pt-mock-label">Meeting Booking</div>
+          </div>
+          <span class="ptag">תיאום פגישות</span>
+        </div>
+        <div class="pi">
+          <div class="pn">תיאום פגישות אוטומטי ועדכון</div>
+          <div class="pd">קביעת פגישה, תזכורות אוטומטיות ותיעוד במערכת. דף קביעת פגישה עם זמינות. יצירת פגישה ושליחת תזכורות.</div>
+          <div class="cr"><span class="ch">Calendly</span><span class="ch">Make.com</span><span class="ch">Google Calendar</span><span class="ch">WhatsApp</span></div>
+        </div>
+      </div>
+
+      <!-- 5. בוט WhatsApp -->
+      <div class="pc glass fade d1" onclick="om('p5')">
+        <div class="pt">
+          <img class="pt-media car-img" data-cid="wa" data-idx="0" src="portfolio-images/whatsapp-1.jpg" alt="בוט WhatsApp - בחירת שפה" loading="lazy">
+          <div class="pt-media-overlay"></div>
+          <button class="car-nav car-prev" onclick="event.stopPropagation();carNav('wa',-1,2)" aria-label="הקודם">‹</button>
+          <button class="car-nav car-next" onclick="event.stopPropagation();carNav('wa',1,2)" aria-label="הבא">›</button>
+          <div class="car-dots">
+            <button class="car-dot on" data-cid="wa" data-i="0" onclick="event.stopPropagation();carGo('wa',0,2)" aria-label="תמונה 1"></button>
+            <button class="car-dot" data-cid="wa" data-i="1" onclick="event.stopPropagation();carGo('wa',1,2)" aria-label="תמונה 2"></button>
+          </div>
+          <span class="ptag">בוט WhatsApp</span>
+        </div>
+        <div class="pi">
+          <div class="pn">WhatsApp בוט לניהול נוח יותר של העסק</div>
+          <div class="pd">שיחה לדוגמה עם שאלות סינון ותיעוד — סינון לידים, פתיחת קריאות, מעקב סטטוסים, קביעת פגישות וניתוב לנציג, 24/7.</div>
+          <div class="cr"><span class="ch">WhatsApp Cloud API</span><span class="ch">Make.com</span><span class="ch">CRM</span></div>
+        </div>
+      </div>
+
+      <!-- 6. וובינר (placeholder) -->
+      <div class="pc glass fade d2" onclick="om('p6')">
+        <div class="pt">
+          <div class="pt-mock">
+            <div class="pt-mock-icon">🎥</div>
+            <div class="pt-mock-label">Webinar System</div>
+          </div>
+          <span class="ptag">וובינר</span>
+        </div>
+        <div class="pi">
+          <div class="pn">מערך וובינר</div>
+          <div class="pd">דף הרשמה, סדרת מיילים אוטומטית, תזכורות לפני השידור, חיבור לזום או לסטרים, ומעקב נרשמים — הכל מחובר ב-Make.</div>
+          <div class="cr"><span class="ch">Make.com</span><span class="ch">Zoom</span><span class="ch">Email</span><span class="ch">Landing Page</span></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="sb glass fade"><div><h3>ראיתם משהו שתפס אתכם?</h3><p>קבעו שיחת היכרות של 20 דקות — בלי התחייבות.</p></div><div class="sbbtns"><a href="https://wa.me/972545764327?text=היי%20ראיתי%20את%20העבודות%20שלכם" target="_blank" class="btn btn-wa">💬 WhatsApp</a><button class="btn btn-blue" onclick="om('sch')">📅 קביעת שיחה</button></div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="section">
+  <div class="wrap">
+    <span class="kicker fade">לקוחות ממליצים</span>
+    <h2 class="h2 fade d1">מה הלקוחות אומרים</h2>
+    <p class="sub fade d2">כמה דוגמאות קצרות להודעות שקיבלנו אחרי הטמעה.</p>
+    <div class="tg">
+      <div class="tcard glass fade">
+        <img class="tcard-img" src="portfolio-images/testimonial-1.jpg" alt="המלצה — אוטומציית עובדים" loading="lazy">
+        <div class="tcard-foot">
+          <span class="tcard-tag">אוטומציה ארגונית</span>
+          <span class="tcard-quote">"אחלה שירות ואחלה יחס"</span>
+        </div>
+      </div>
+      <div class="tcard glass fade d1">
+        <img class="tcard-img" src="portfolio-images/testimonial-2.jpg" alt="המלצה — חוזים אוטומטיים" loading="lazy">
+        <div class="tcard-foot">
+          <span class="tcard-tag">חוזה אוטומטי</span>
+          <span class="tcard-quote">"פשוט תותח. תמשיך ככה 💪"</span>
+        </div>
+      </div>
+    </div>
+    <p class="tnote fade d2">* שמות ותמונות פרופיל טושטשו לשמירה על פרטיות הלקוחות</p>
+  </div>
+</section>
+
+<!-- PARTNER -->
+<section id="partner" class="section">
+  <div class="wrap">
+    <span class="kicker fade">שיתוף פעולה</span>
+    <h2 class="h2 fade d1">עבדו איתנו</h2>
+    <p class="sub fade d2">שלושה מסלולים — בין אם אתם משווקים, סוכנויות, או אנשי טכנולוגיה.</p>
+    <div class="ptgrid">
+      <div class="ptcard glass fade"><div class="ptnum">01</div><div class="pticon">💸</div><div class="ptname">הפניה ועמלה</div><div class="pttag">אתם מפנים — אנחנו סוגרים ועושים</div><div class="ptdesc">יש לכם לקוח שצריך אוטומציה? שלחו אותם אלינו. אנחנו מטפלים בהכל ואתם מקבלים עמלה על כל סגירה.</div><ul class="ptpts"><li>עמלה של 10–15% על כל פרויקט</li><li>אתם לא מעורבים בעבודה</li><li>דיווח שקוף על סטטוס</li><li>פשוט, מהיר, ללא סיכון</li></ul><button class="btn btn-out" style="width:100%" onclick="om('pt1')">אני מעוניין</button></div>
+      <div class="ptcard glass fade d1"><div class="ptnum">02</div><div class="pticon">🤝</div><div class="ptname">White Label</div><div class="pttag">אתם סוגרים — אנחנו מבצעים</div><div class="ptdesc">סוכנויות שרוצות להציע אוטומציה. אתם מוכרים תחת השם שלכם, אנחנו עושים את העבודה בשקט.</div><ul class="ptpts"><li>אתם שומרים על קשר הלקוח</li><li>מחיר קמעונאי — אתם קובעים</li><li>עבודה שקטה תחת המותג שלכם</li><li>SLA ברור</li></ul><button class="btn btn-out" style="width:100%" onclick="om('pt2')">אני מעוניין</button></div>
+      <div class="ptcard glass fade d2"><div class="ptnum">03</div><div class="pticon">👨‍💻</div><div class="ptname">הצטרף לצוות</div><div class="pttag">קבלן / פרילנסר / שותף טכני</div><div class="ptdesc">מחפשים אנשי Make.com, מפתחים, ומומחי אוטומציה לפרויקטים מעניינים עם גיבוי של צוות.</div><ul class="ptpts"><li>עבודה על פרויקטים בתשלום</li><li>גמישות מלאה — קבלן עצמאי</li><li>ליווי וגיבוי של ריצ׳רד</li><li>אפשרות לצמוח לשותפות</li></ul><button class="btn btn-out" style="width:100%" onclick="om('hire')">שלח קו"ח / פורטפוליו</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENT — redesigned -->
+<section id="client" class="section">
+  <div class="wrap">
+    <span class="kicker fade">אזור לקוחות</span>
+    <h2 class="h2 fade d1">לקוחות AutoScale</h2>
+    <p class="sub fade d2">רכישת בנק שעות, גישה לדשבורד אישי, ושירותים מהירים — הכל במקום אחד.</p>
+    <div class="cg2">
+
+      <div class="cc-big glass fade">
+        <div class="cc-big-head">
+          <div>
+            <div class="cc-big-title">רכישת בנק שעות</div>
+            <div class="cc-big-sub" style="margin-bottom:0">ככל שקונים יותר — המחיר לשעה יורד. בחרו חבילה ועברו לתשלום מאובטח.</div>
+          </div>
+          <button class="terms-btn" onclick="om('hterms')">תנאים</button>
+        </div>
+        <div style="height:8px"></div>
+        <div class="hpkgs2">
+          <div class="hpkg2" onclick="openHrs(5,'1,500')"><div class="hn2">5</div><div class="hl2">שעות</div><div class="hp2">₪1,500</div><div class="hp2-vat">+מע״מ</div></div>
+          <div class="hpkg2" onclick="openHrs(10,'2,900')"><div class="hn2">10</div><div class="hl2">שעות</div><div class="hp2">₪2,900</div><div class="hp2-vat">+מע״מ</div></div>
+          <div class="hpkg2 feat" onclick="openHrs(20,'5,600')"><div class="hn2">20</div><div class="hl2">שעות</div><div class="hp2">₪5,600</div><div class="hp2-vat">+מע״מ</div></div>
+          <div class="hpkg2" onclick="openHrs(40,'10,800')"><div class="hn2">40</div><div class="hl2">שעות</div><div class="hp2">₪10,800</div><div class="hp2-vat">+מע״מ</div></div>
+        </div>
+      </div>
+
+      <div class="cc-small glass fade d1">
+        <div>
+          <div class="cc-small-icon">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="qsg" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#3a8ef6"/>
+                  <stop offset="1" stop-color="#1dffd4"/>
+                </linearGradient>
+              </defs>
+              <path d="M14 50 L26 18 L38 18 L50 50 L42 50 L39 42 L25 42 L22 50 Z M27 35 L37 35 L32 22 Z" fill="url(#qsg)"/>
+            </svg>
+          </div>
+          <h3>שירותים מהירים</h3>
+          <p>מוצרים מוכנים לרכישה מיידית — בלי הצעת מחיר, בלי המתנה.</p>
+          <ul class="cc-list">
+            <li>בניית דף נחיתה / טופס ליד</li>
+            <li>קמפיין ממומן (Meta / Google)</li>
+            <li>גרפיקות לרשתות חברתיות</li>
+            <li>בוט WhatsApp בסיסי</li>
+          </ul>
+        </div>
+        <a href="quick-buy.html" class="btn btn-blue" style="width:100%">לחנות המוצרים →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section">
+  <div class="wrap">
+    <span class="kicker fade">צור קשר</span>
+    <h2 class="h2 fade d1">בואו נדבר</h2>
+    <div class="ctw">
+      <div class="fade">
+        <p class="sub" style="margin-bottom:0">מוכנים להתחיל? יש שאלה? פשוט כתבו לנו.</p>
+        <div class="chs">
+          <a href="https://wa.me/972545764327" target="_blank" class="ch2 glass"><span class="chicon">💬</span><div><div class="chname">WhatsApp — דונה</div><div class="chsub">הדרך המהירה ביותר · תגובה תוך שעות</div></div></a>
+          <a href="mailto:Donna@autoscalehq.io" class="ch2 glass"><span class="chicon">✉️</span><div><div class="chname">אימייל</div><div class="chsub">Donna@autoscalehq.io</div></div></a>
+        </div>
+      </div>
+      <div class="cf glass fade d1">
+        <h3>השאירו פרטים</h3>
+        <div id="cfi">
+          <div class="fr"><div class="fg"><label class="fl">שם מלא <span class="req">*</span></label><input class="fi" id="cfn" placeholder="ישראל ישראלי"></div><div class="fg"><label class="fl">טלפון <span class="req">*</span></label><input class="fi" id="cfp" placeholder="05X-XXXXXXX" type="tel"></div></div>
+          <div class="fg"><label class="fl">עסק / חברה</label><input class="fi" id="cfb" placeholder="שם העסק"></div>
+          <div class="fg"><label class="fl">מה תרצו לפתור?</label><select class="fi" id="cfk" style="appearance:none"><option value="">בחרו...</option><option>אוטומציית WhatsApp / בוט</option><option>ניהול לידים / CRM</option><option>משפך שיווקי / דפי נחיתה</option><option>שיתוף פעולה / הפניה</option><option>הצטרפות לצוות</option><option>אחר</option></select></div>
+          <div class="fg"><label class="fl">הודעה</label><textarea class="fi" id="cfm" rows="3" placeholder="ספרו לנו בקצרה..."></textarea></div>
+          <button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="subCf()">שלח פנייה →</button>
+          <p style="font-size:11px;color:var(--muted2);margin-top:10px;text-align:center;font-family:var(--mono)">בלחיצה אתם מסכימים ל<a href="privacy.html" style="color:var(--accent2)">מדיניות הפרטיות</a></p>
+        </div>
+        <div class="fs" id="cfs"><div class="fsi">✅</div><div class="fst">תודה! קיבלנו את הפנייה</div><div class="fss">נחזור אליכם בהקדם — בדרך כלל תוך כמה שעות</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER — minimal: logo + name + copyright -->
+<footer>
+  <div class="fi2" style="text-align:center;padding:8px 0">
+    <div class="fb">AutoScale</div>
+    <div class="ftag">אוטומציות חכמות לעסקים</div>
+    <div class="fcopy">© 2025 כל הזכויות שמורות ל-AutoScale</div>
+  </div>
+</footer>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/972545764327" target="_blank" class="wa" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+
+<!-- HOURS PURCHASE POPUP -->
+<div class="mo" id="m-hours">
+  <div class="mb-hours">
+    <div class="mh-handle"></div>
+    <button class="mh-close" onclick="cm2('hours')" aria-label="סגור">×</button>
+    <h2 class="mh-title">רכישת בנק שעות</h2>
+    <p class="mh-sub">מלא/י פרטים — ונעבור לתשלום</p>
+    <div class="mh-pkg">
+      <span class="mh-pkg-label">חבילה נבחרת</span>
+      <span class="mh-pkg-info" id="hpInfo">10 שעות | ₪2,900 +מע״מ</span>
+    </div>
+    <div class="mh-field">
+      <label class="mh-label">שם לקוח / חברה <span class="req">*</span></label>
+      <input class="mh-input" id="hpName" placeholder="ישראל ישראלי / חברה בע״מ" required>
+    </div>
+    <div class="mh-field">
+      <label class="mh-label">ח.פ / ת.ז לחשבונית <span class="req">*</span></label>
+      <input class="mh-input" id="hpId" placeholder="000000000" type="text" inputmode="numeric" required>
+    </div>
+    <div class="mh-field">
+      <label class="mh-label">טלפון <span class="req">*</span></label>
+      <div class="mh-phone-row">
+        <input class="mh-input" id="hpPhone" placeholder="05X-XXXXXXX" type="tel" required>
+        <div class="mh-cc">🇮🇱 +972</div>
+      </div>
+    </div>
+    <div class="mh-field">
+      <label class="mh-label">הערות (אופציונלי)</label>
+      <textarea class="mh-input" id="hpNote" rows="2" placeholder="הוסף הערה לבקשה..."></textarea>
+    </div>
+    <label class="mh-terms">
+      <input type="checkbox" id="hpTerms">
+      <span>קראתי ואני מאשר/ת את <a href="terms.html" target="_blank">תנאי השימוש</a> של AutoScale</span>
+    </label>
+    <button class="mh-btn" id="hpBtn" onclick="subHours()">המשך לתשלום 💳</button>
+  </div>
+</div>
+
+<!-- HOURS BANK TERMS POPUP -->
+<div class="mo" id="m-hterms">
+  <div class="mb mb-terms glass">
+    <button class="mc" onclick="cm2('hterms')" aria-label="סגור">×</button>
+    <span class="mk">מסמך משפטי</span>
+    <div class="mt" style="margin-bottom:18px">תנאי בנק שעות</div>
+
+    <h3>1. תוקף השעות</h3>
+    <p>השעות הנרכשות תקפות לתקופה של 12 חודשים מיום הרכישה. שעות שלא נוצלו במהלך תקופה זו יפקעו ללא החזר כספי, אלא אם הוסכם אחרת בכתב.</p>
+
+    <h3>2. אופן הגשת הבקשות</h3>
+    <p>בקשות לעבודה יש להגיש דרך הערוצים הרשמיים: WhatsApp דונה, אימייל, או דשבורד הלקוח. כל בקשה תתועד עם תיאור המשימה, השעות שניצרכו, וסטטוס הביצוע.</p>
+
+    <h3>3. ניכוי מהבנק</h3>
+    <p>השעות מנוכות בפועל לפי זמן עבודה ממשי, מעוגל ל-15 דקות הקרובות. עבודה הכוללת מחקר, פגישות, ותקשורת נחשבת לחלק מהשעות הנמשכות. אנו נשלח דיווח חודשי על השימוש.</p>
+
+    <h3>4. זמני תגובה</h3>
+    <p>תגובה ראשונית לבקשה תינתן תוך 48 שעות בימי עסקים (א׳-ה׳, 9:00-18:00). זמן הביצוע בפועל תלוי בהיקף המשימה ובעומס העבודה הקיים. בקשות דחופות יכולות להיות מטופלות בעדיפות תמורת תוספת תשלום.</p>
+
+    <h3>5. החזרים וביטולים</h3>
+    <p>ניתן לבטל רכישה תוך 14 ימים ממועד הרכישה ולקבל החזר כספי מלא, בתנאי שלא נוצלו שעות מהבנק. לאחר השימוש הראשון, הסכום אינו ניתן להחזר אך השעות שלא נוצלו יישמרו עד תום תוקפן.</p>
+
+    <h3>6. הגדרת "שעה"</h3>
+    <p>שעת עבודה מוגדרת כ-60 דקות של זמן צוותי פעיל בפרויקט. זה כולל פיתוח, בדיקות, פגישות ייעוץ, ותקשורת ישירה. עבודה אחרי שעות העבודה הרגילות (אחרי 18:00 או בסופי שבוע) עלולה להיות מנוכה ביחס של 1.5:1.</p>
+
+    <h3>7. תיקונים ועדכונים</h3>
+    <p>תיקון של עבודה שבוצעה במסגרת בנק השעות במהלך 7 ימים מהמסירה אינו נחשב לשעות נוספות, בתנאי שמדובר בתיקון של ליקוי בעבודה ולא בבקשה לשינוי דרישות.</p>
+
+    <h3>8. מחירון</h3>
+    <p>5 שעות — ₪1,500 (₪300/שעה) · 10 שעות — ₪2,900 (₪290/שעה) · 20 שעות — ₪5,600 (₪280/שעה) · 40 שעות — ₪10,800 (₪270/שעה). כל המחירים אינם כוללים מע״מ.</p>
+
+    <p style="margin-top:20px;font-size:12px;color:var(--muted2);font-family:var(--mono)">תנאים אלו עשויים להתעדכן. תקפים החל מ-1.1.2025.</p>
+  </div>
+</div>
+
+<!-- EXISTING MODALS -->
+<div class="mo" id="m-sch"><div class="mb glass"><button class="mc" onclick="cm2('sch')">×</button><span class="mk">קביעת שיחה</span><div class="mt">שיחת היכרות — 20 דקות</div><div class="ms">ספרו לנו מי אתם ואנחנו נחזור לתאם שעה.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" id="scn" placeholder="שם מלא"></div><div class="fg"><label class="fl">טלפון</label><input class="fi" id="scp" placeholder="05X-XXXXXXX"></div></div><div class="fg"><label class="fl">מה ראיתם שתפס?</label><textarea class="fi" id="scno" rows="2" placeholder="פרויקט, נושא..."></textarea></div><div class="fg" style="margin-bottom:20px"><label class="fl">מתי עדיף?</label><select class="fi" id="sct" style="appearance:none"><option>בוקר (9–12)</option><option>צהריים (12–15)</option><option>אחרי הצהריים (15–18)</option><option>ערב (18–20)</option></select></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="subSch()">שלח בקשה לשיחה →</button></div></div>
+
+<div class="mo" id="m-pt1"><div class="mb glass"><button class="mc" onclick="cm2('pt1')">×</button><span class="mk">הפניה ועמלה</span><div class="mt">הצטרפות לתוכנית ההפניות</div><div class="ms">השאירו פרטים ונחזור עם כל המידע.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" data-name="full_name" placeholder="שם מלא"></div><div class="fg"><label class="fl">טלפון</label><input class="fi" data-name="phone" placeholder="05X-XXXXXXX"></div></div><div class="fg"><label class="fl">תחום פעילות</label><input class="fi" data-name="industry" placeholder="שיווק, נדל״ן..."></div><button class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:12px" onclick="subPt('pt1')">שלח →</button></div></div>
+
+<div class="mo" id="m-pt2"><div class="mb glass"><button class="mc" onclick="cm2('pt2')">×</button><span class="mk">White Label</span><div class="mt">שותפות מקצועית</div><div class="ms">לסוכנויות שרוצות להוסיף שירותי אוטומציה.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" data-name="full_name" placeholder="שם מלא"></div><div class="fg"><label class="fl">שם הסוכנות</label><input class="fi" data-name="agency_name" placeholder="שם החברה"></div></div><div class="fg"><label class="fl">טלפון</label><input class="fi" data-name="phone" placeholder="05X-XXXXXXX"></div><div class="fg"><label class="fl">תיאור קצר</label><textarea class="fi" data-name="description" rows="2" placeholder="מה אתם עושים..."></textarea></div><button class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:12px" onclick="subPt('pt2')">שלח →</button></div></div>
+
+<div class="mo" id="m-hire"><div class="mb glass"><button class="mc" onclick="cm2('hire')">×</button><span class="mk">הצטרף לצוות</span><div class="mt">עבדו עם AutoScale</div><div class="ms">קבלנים ומפתחי אוטומציה — רוצים לשמוע מכם.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" data-name="full_name" placeholder="שם מלא"></div><div class="fg"><label class="fl">טלפון</label><input class="fi" data-name="phone" placeholder="05X-XXXXXXX"></div></div><div class="fg"><label class="fl">התמחות</label><select class="fi" data-name="expertise" style="appearance:none"><option>Make.com</option><option>WhatsApp API</option><option>Front-end</option><option>שיווק דיגיטלי</option><option>אחר</option></select></div><div class="fg"><label class="fl">קישור לפורטפוליו</label><input class="fi" data-name="portfolio" placeholder="https://..."></div><button class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:12px" onclick="subPt('hire')">שלח →</button></div></div>
+
+<!-- Portfolio project detail popups -->
+<div class="mo" id="m-p1"><div class="mb glass"><button class="mc" onclick="cm2('p1')">×</button><span class="mk">תיק עבודות</span><div class="mt">דפי נחיתה</div><div class="ms">דפי וידאו, טפסי לידים, וחיבור מלא לפיקסלים</div><div class="pdet">בנייה והשקה של דפי נחיתה ממירים בעברית: דף וידאו עם step indicator, טופס ליד עם ולידציה inline, דף תודה עם tracking events, וחיבור ל-Make.com, Google Sheets, Meta Pixel, GTM, ו-WhatsApp אוטומטי ללקוח ולצוות.</div><div class="cr" style="margin-bottom:16px"><span class="ch">HTML / CSS</span><span class="ch">GTM</span><span class="ch">Meta Pixel</span><span class="ch">WhatsApp API</span><span class="ch">Make.com</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p1');om('sch')">📅 קבעו שיחה על פרויקט דומה</button></div></div>
+
+<div class="mo" id="m-p2"><div class="mb glass"><button class="mc" onclick="cm2('p2')">×</button><span class="mk">תיק עבודות</span><div class="mt">חוזה אוטומטי ושליחת חתימה</div><div class="ms">יצירה, שליחה, חתימה וקליטה — אוטומטית מקצה לקצה</div><div class="pdet">יצירת חוזה מתוך נתוני CRM, שליחה לחתימה, סטטוסים ותזכורות. תבנית חוזה עם משתנים וסעיפים דינמיים. סטטוס חתימה וקליטה אוטומטית למערכת. חוסך שעות עבודה ידנית ומונע טעויות.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Make.com</span><span class="ch">CRM</span><span class="ch">e-Signature</span><span class="ch">Word Templates</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p2');om('sch')">📅 קבעו שיחה</button></div></div>
+
+<div class="mo" id="m-p3"><div class="mb glass"><button class="mc" onclick="cm2('p3')">×</button><span class="mk">תיק עבודות</span><div class="mt">מערכת CRM ואוטומציית לידים</div><div class="ms">Facebook Leads → CRM → WhatsApp</div><div class="pdet">חיבור Facebook Lead Ads → Make.com → Google Sheets + Monday CRM. WhatsApp אוטומטי ללקוח תוך 60 שניות. מעקב סטטוס ועדכון אוטומטי בכל שלב, כולל דוחות נוכחות, שעות עבודה, ומעקב משימות עובדים.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Monday</span><span class="ch">Facebook Leads</span><span class="ch">Make.com</span><span class="ch">WhatsApp</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p3');om('sch')">📅 קבעו שיחה</button></div></div>
+
+<div class="mo" id="m-p4"><div class="mb glass"><button class="mc" onclick="cm2('p4')">×</button><span class="mk">תיק עבודות</span><div class="mt">תיאום פגישות אוטומטי ועדכון</div><div class="ms">קביעה, תזכורות ותיעוד — בלי התעסקות ידנית</div><div class="pdet">קביעת פגישה, תזכורות אוטומטיות ותיעוד במערכת. דף קביעת פגישה עם זמינות בזמן אמת. יצירת פגישה ושליחת תזכורות ב-WhatsApp ובמייל לפני המועד. עדכון סטטוס בורד עם כל שינוי.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Calendly</span><span class="ch">Make.com</span><span class="ch">Google Calendar</span><span class="ch">WhatsApp</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p4');om('sch')">📅 קבעו שיחה</button></div></div>
+
+<div class="mo" id="m-p5"><div class="mb glass"><button class="mc" onclick="cm2('p5')">×</button><span class="mk">תיק עבודות</span><div class="mt">WhatsApp בוט לניהול נוח יותר של העסק</div><div class="ms">שיחה לדוגמה עם שאלות סינון ותיעוד</div><div class="pdet">בוט וואטסאפ עם שיחה זורמת בעברית: בחירת שפה, זיהוי איש קשר, סינון לפי סוג פנייה (תקלה / בקשה / חשבונית), פתיחת קריאות עם תיעוד, מעקב סטטוסים, קביעת פגישות, וניתוב לנציג אנושי. עובד 24/7 ומתעד הכל ב-CRM.</div><div class="cr" style="margin-bottom:16px"><span class="ch">WhatsApp Cloud API</span><span class="ch">Make.com</span><span class="ch">CRM</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p5');om('sch')">📅 קבעו שיחה</button></div></div>
+
+<div class="mo" id="m-p6"><div class="mb glass"><button class="mc" onclick="cm2('p6')">×</button><span class="mk">תיק עבודות</span><div class="mt">מערך וובינר</div><div class="ms">דף הרשמה, סדרת מיילים, תזכורות וזום — מחובר אוטומטית</div><div class="pdet">דף הרשמה לוובינר, סדרת מיילים אוטומטית למשתתפים, תזכורות לפני השידור, חיבור ל-Zoom או לסטרימינג חי, ומעקב נרשמים ומשתתפים. אחרי הוובינר — שליחת הקלטה אוטומטית למי שלא הגיע ולוגיקת follow-up מותאמת.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Make.com</span><span class="ch">Zoom</span><span class="ch">Email</span><span class="ch">Landing Page</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p6');om('sch')">📅 קבעו שיחה</button></div></div>
+
+<script>
+// CONSTANTS
+const WEBHOOK_URL='https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q';
+const PAYMENT_URL='https://pay.grow.link/b62f5369942b5598987e88bb6170fa75-MzE2MTAzNg';
+
+// NAV
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('sc',scrollY>20));
+function tm(){document.getElementById('nlinks').classList.toggle('op')}
+function cm(){document.getElementById('nlinks').classList.remove('op')}
+
+// FADE IN
+document.querySelectorAll('.fade').forEach(el=>new IntersectionObserver(([e])=>{if(e.isIntersecting)el.classList.add('v')},{threshold:.1}).observe(el));
+
+// MODALS
+function om(id){const m=document.getElementById('m-'+id);if(m){m.classList.add('op');document.body.style.overflow='hidden'}}
+function cm2(id){const m=document.getElementById('m-'+id);if(m){m.classList.remove('op');document.body.style.overflow=''}}
+document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m){m.classList.remove('op');document.body.style.overflow=''}}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.mo.op').forEach(m=>m.classList.remove('op'));document.body.style.overflow=''}});
+
+// HOURS PURCHASE — direct flow
+let curHrs=null,curPrc=null;
+function openHrs(hours,price){
+  curHrs=hours;curPrc=price;
+  document.getElementById('hpInfo').textContent=hours+' שעות | ₪'+price+' +מע״מ';
+  // Reset form
+  ['hpName','hpId','hpPhone','hpNote'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('hpTerms').checked=false;
+  om('hours');
+}
+
+function subHours(){
+  const name=document.getElementById('hpName').value.trim();
+  const idnum=document.getElementById('hpId').value.trim();
+  const phone=document.getElementById('hpPhone').value.trim();
+  const note=document.getElementById('hpNote').value.trim();
+  const terms=document.getElementById('hpTerms').checked;
+  if(!name){alert('אנא הזינו שם לקוח / חברה');return}
+  if(!idnum){alert('אנא הזינו ח.פ או ת.ז לחשבונית');return}
+  if(!/^[0-9]{5,15}$/.test(idnum.replace(/[\s-]/g,''))){alert('ח.פ / ת.ז לא תקין');return}
+  if(!phone){alert('אנא הזינו מספר טלפון');return}
+  if(!terms){alert('אנא אשרו את תנאי השימוש כדי להמשיך');return}
+  const btn=document.getElementById('hpBtn');
+  btn.disabled=true;btn.textContent='שולח... ⏳';
+  fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    type:'hours_purchase',hours:curHrs,price:curPrc,
+    customer_name:name,id_number:idnum,phone:'+972 '+phone,note:note,
+    timestamp:new Date().toISOString()
+  })}).catch(()=>{}).finally(()=>{
+    btn.disabled=false;btn.textContent='המשך לתשלום 💳';
+    cm2('hours');
+    window.open(PAYMENT_URL,'_blank');
+  });
+}
+
+// CONTACT FORM
+function subCf(){
+  const n=document.getElementById('cfn').value.trim(),p=document.getElementById('cfp').value.trim();
+  if(!n||!p){alert('אנא מלאו שם וטלפון');return}
+  fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    type:'website_lead',name:n,phone:p,
+    business:document.getElementById('cfb').value,
+    need:document.getElementById('cfk').value,
+    message:document.getElementById('cfm').value,
+    timestamp:new Date().toISOString()
+  })}).catch(()=>{});
+  document.getElementById('cfi').style.display='none';
+  document.getElementById('cfs').style.display='block';
+}
+
+// SCHEDULE
+function subSch(){
+  const n=document.getElementById('scn').value.trim(),p=document.getElementById('scp').value.trim();
+  if(!n||!p){alert('אנא מלאו שם וטלפון');return}
+  fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    type:'schedule_call',name:n,phone:p,
+    note:document.getElementById('scno').value,
+    time:document.getElementById('sct').value,
+    timestamp:new Date().toISOString()
+  })}).catch(()=>{});
+  cm2('sch');alert('תודה '+n+'! נחזור אליך לתאום שיחה.');
+}
+
+// PARTNER — clearly tagged webhook with form fields
+const ptLabels={pt1:'referral',pt2:'whitelabel',hire:'team_join'};
+const ptHebrew={pt1:'הפניה ועמלה',pt2:'White Label',hire:'הצטרפות לצוות'};
+function subPt(t){
+  const modal=document.getElementById('m-'+t);
+  const inputs=modal.querySelectorAll('input[data-name],textarea[data-name],select[data-name]');
+  const fields={};
+  inputs.forEach(inp=>{if(inp.dataset.name)fields[inp.dataset.name]=inp.value});
+  fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    type:'partner',
+    partner_type:ptLabels[t]||t,
+    partner_label_he:ptHebrew[t]||t,
+    is_referral:t==='pt1',
+    is_whitelabel:t==='pt2',
+    is_team_join:t==='hire',
+    fields:fields,
+    timestamp:new Date().toISOString()
+  })}).catch(()=>{});
+  cm2(t);
+  alert('תודה! קיבלנו את הפנייה — נחזור אליכם בהקדם.');
+}
+
+// COOKIE CONSENT — functional decline
+function ackCk(){
+  localStorage.setItem('as_ck','accepted');
+  localStorage.setItem('as_ck_date',new Date().toISOString());
+  document.getElementById('ck').style.display='none';
+  loadAnalytics();
+}
+function declineCk(){
+  localStorage.setItem('as_ck','declined');
+  localStorage.setItem('as_ck_date',new Date().toISOString());
+  document.getElementById('ck').style.display='none';
+  blockTracking();
+}
+function loadAnalytics(){
+  // Future: load GTM/GA4/Meta Pixel here only after consent
+  window.gtag_consent_granted=true;
+}
+function blockTracking(){
+  // Disable any future GA/GTM/Pixel
+  window['ga-disable-G-XXXXXXX']=true;
+  window.gtag_consent_granted=false;
+  // Delete existing tracking cookies if any
+  const trackingCookies=['_ga','_gid','_gat','_fbp','_fbc','_gcl_au','_hjSession','_hjSessionUser','_clck','_clsk'];
+  const domain=location.hostname;
+  trackingCookies.forEach(name=>{
+    document.cookie=name+'=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    document.cookie=name+'=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain='+domain;
+    document.cookie=name+'=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.'+domain;
+  });
+}
+// Apply existing consent on load
+const ckState=localStorage.getItem('as_ck');
+if(ckState==='accepted'||ckState==='declined'){
+  document.getElementById('ck').style.display='none';
+  if(ckState==='declined')blockTracking();
+  else loadAnalytics();
+}
+
+// PORTFOLIO CAROUSEL
+const carouselSrcs={
+  contract:['portfolio-images/contract-1.jpg','portfolio-images/contract-2.jpg'],
+  crm:['portfolio-images/crm-1.jpg','portfolio-images/crm-2.jpg'],
+  wa:['portfolio-images/whatsapp-1.jpg','portfolio-images/whatsapp-2.jpg']
+};
+function carGo(cid,idx,total){
+  idx=((idx%total)+total)%total;
+  const img=document.querySelector('.car-img[data-cid="'+cid+'"]');
+  if(!img)return;
+  img.classList.add('fade-out');
+  setTimeout(()=>{
+    img.src=carouselSrcs[cid][idx];
+    img.dataset.idx=idx;
+    img.classList.remove('fade-out');
+  },180);
+  document.querySelectorAll('.car-dot[data-cid="'+cid+'"]').forEach(d=>{
+    d.classList.toggle('on',+d.dataset.i===idx);
+  });
+}
+function carNav(cid,dir,total){
+  const img=document.querySelector('.car-img[data-cid="'+cid+'"]');
+  if(!img)return;
+  carGo(cid,(+img.dataset.idx)+dir,total);
+}
+// Auto-advance carousels every 5s when not hovered
+['contract','crm','wa'].forEach(cid=>{
+  setInterval(()=>{
+    const card=document.querySelector('.pc[onclick*="\'p"]:has(.car-img[data-cid="'+cid+'"])');
+    if(card&&card.matches(':hover'))return;
+    const img=document.querySelector('.car-img[data-cid="'+cid+'"]');
+    if(img&&document.visibilityState==='visible'){
+      carGo(cid,(+img.dataset.idx+1)%2,2);
+    }
+  },5500);
+});
+
+// LANG (placeholder — UI for upcoming i18n)
+function setLang(code,btn){
+  document.querySelectorAll('.lb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  if(code!=='he')alert('גרסה זו בפיתוח — בקרוב!');
+}
+</script>
+</body>
+</html>
