@@ -104,6 +104,7 @@ nav.sc{background:rgba(6,13,26,.93);border-bottom-color:var(--border);backdrop-f
 .hs{font-size:clamp(15px,2vw,18px);color:var(--muted);line-height:1.75;font-weight:300;margin-bottom:38px;max-width:540px}
 .hbtns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:60px}
 .hstats{display:flex;gap:48px;flex-wrap:wrap}
+.hstats>div{text-align:center}
 .sn{font-family:var(--num);font-size:32px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.02em}
 .sl{font-size:12px;color:var(--muted);margin-top:4px;font-weight:300}
 .sc-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;opacity:.3;animation:bob 2.2s ease-in-out infinite}
@@ -277,7 +278,10 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:36
 .mp-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;border:none;padding:0;transition:all .2s}
 .mp-dot.on{background:var(--accent2);width:22px;border-radius:4px;box-shadow:0 0 8px rgba(29,255,212,.5)}
 .mb-portfolio>*:not(.mp-img-wrap){padding-left:28px;padding-right:28px}
-.mc{position:fixed;top:20px;left:20px;z-index:2010;background:rgba(6,13,26,.9);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-size:22px;cursor:pointer;width:40px;height:40px;display:grid;place-items:center;transition:all .15s;line-height:1;backdrop-filter:blur(8px)}
+.mc{position:fixed;top:20px;left:20px;z-index:2010;background:rgba(6,13,26,.9);border:1px solid var(--border2);border-radius:10px;color:transparent;font-size:0;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;transition:all .15s;backdrop-filter:blur(8px)}
+.mc::before,.mc::after{content:'';position:absolute;width:16px;height:2px;background:#e8f0ff;border-radius:1px;transition:background .15s}
+.mc::before{transform:rotate(45deg)}
+.mc::after{transform:rotate(-45deg)}
 .mc:hover{background:rgba(58,142,246,.25);border-color:var(--accent);transform:scale(1.05)}
 .mc:active{transform:scale(.95)}
 .mk{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);opacity:.8;margin-bottom:6px;display:block}
@@ -376,7 +380,7 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
         <a href="#contact" class="btn btn-out">בואו נדבר</a>
       </div>
       <div class="hstats fade d3">
-        <div><div class="sn">+20</div><div class="sl">פרויקטים הושלמו</div></div>
+        <div><div class="sn">+80</div><div class="sl">פרויקטים הושלמו</div></div>
         <div><div class="sn">48h</div><div class="sl">זמן פריסה ממוצע</div></div>
         <div><div class="sn">100%</div><div class="sl">עם ליווי ותמיכה</div></div>
       </div>
