@@ -133,12 +133,12 @@ nav.sc{background:rgba(6,13,26,.93);border-bottom-color:var(--border);backdrop-f
 .mq-wrap{position:relative;z-index:1;padding:36px 0;overflow:hidden;background:rgba(9,18,34,.4);border-top:.5px solid var(--borders);border-bottom:.5px solid var(--borders)}
 .mq-fade-r{position:absolute;top:0;right:0;width:140px;height:100%;background:linear-gradient(270deg,var(--bg) 0%,transparent 100%);z-index:2;pointer-events:none}
 .mq-fade-l{position:absolute;top:0;left:0;width:140px;height:100%;background:linear-gradient(90deg,var(--bg) 0%,transparent 100%);z-index:2;pointer-events:none}
-.mq-row{display:block;overflow:hidden;direction:ltr;position:relative;z-index:1}
+.mq-row{display:block;overflow:hidden;direction:ltr;position:relative;z-index:1;cursor:grab;user-select:none}
+.mq-row.dragging{cursor:grabbing}
+.mq-row.dragging .mq-track{animation-play-state:paused}
 .mq-track{display:flex;align-items:center;width:max-content;will-change:transform;animation:mq-f 65s linear infinite;direction:ltr}
 @keyframes mq-f{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.mq-wrap:hover .mq-track{animation-play-state:paused}
-.logo-pill{display:inline-flex;align-items:center;gap:9px;padding:9px 16px;border-radius:999px;background:rgba(12,26,56,.7);border:1px solid var(--border);white-space:nowrap;font-size:13px;font-weight:600;color:var(--text);flex-shrink:0;transition:border-color .2s,transform .2s;direction:ltr;margin-right:12px}
-.logo-pill:hover{border-color:var(--border2);transform:translateY(-2px)}
+.logo-pill{display:inline-flex;align-items:center;gap:9px;padding:9px 16px;border-radius:999px;background:rgba(12,26,56,.7);border:1px solid var(--border);white-space:nowrap;font-size:13px;font-weight:600;color:var(--text);flex-shrink:0;transition:border-color .2s,transform .2s;direction:ltr;margin-right:12px;pointer-events:none}
 .logo-pill svg{flex-shrink:0;width:20px;height:20px}
 
 /* PORTFOLIO */
@@ -263,6 +263,18 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:36
 .ftag{font-size:12px;color:var(--muted2);font-family:var(--mono);font-weight:400;margin-top:4px;letter-spacing:.04em}
 .fcopy{font-size:11px;color:var(--muted2);font-family:var(--mono);font-weight:400;margin-top:14px;letter-spacing:.04em}
 
+/* HOW IT WORKS — 8-step vertical timeline */
+.how-timeline{position:relative;padding:8px 26px 32px 8px;display:flex;flex-direction:column;gap:14px}
+.how-timeline::before{content:'';position:absolute;top:14px;bottom:24px;right:18px;width:2px;background:linear-gradient(180deg,rgba(58,142,246,.55),rgba(29,255,212,.25));border-radius:2px}
+.how-step{position:relative;padding-right:22px}
+.how-dot{position:absolute;right:-9px;top:24px;width:14px;height:14px;border-radius:50%;background:#0a1424;border:2px solid var(--accent);box-shadow:0 0 0 4px rgba(6,13,26,.95),0 0 14px rgba(58,142,246,.4);z-index:2}
+.how-card{background:rgba(58,142,246,.05);border:1px solid var(--border);border-radius:14px;padding:18px 22px;transition:border-color .2s,background .2s}
+.how-card:hover{border-color:var(--border2);background:rgba(58,142,246,.08)}
+.how-title{font-size:15.5px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.how-desc{font-size:13.5px;color:var(--muted);line-height:1.65;font-weight:300}
+.how-cta{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:11px 20px;background:rgba(58,142,246,.1);border:1px solid rgba(29,255,212,.35);border-radius:10px;color:var(--accent2);font-family:var(--sans);font-size:13.5px;font-weight:600;text-decoration:none;transition:all .15s}
+.how-cta:hover{background:rgba(29,255,212,.15);border-color:var(--accent2);transform:translateY(-1px);box-shadow:0 6px 18px rgba(29,255,212,.18)}
+
 /* MODALS */
 .mo{display:none;position:fixed;inset:0;background:rgba(6,13,26,.85);z-index:2000;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px)}
 .mo.op{display:flex}
@@ -357,7 +369,7 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
     </ul>
     <div class="nr">
       <a href="login-select.html" class="nbtn-portal"><span>כניסת לקוחות ושותפים</span></a>
-      <a href="#contact" class="btn btn-blue ncta" style="padding:9px 20px;font-size:13px">בואו נדבר</a>
+      <button class="btn btn-blue ncta" style="padding:9px 20px;font-size:13px;border:none;cursor:pointer" onclick="om('talk')">בואו נדבר</button>
       <div class="lsw">
         <button class="lb on" onclick="setLang('he',this)" aria-label="עברית">🇮🇱</button>
         <button class="lb" onclick="setLang('en',this)" aria-label="English">🇺🇸</button>
@@ -377,11 +389,11 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
       <p class="hs fade d2">אנחנו בונים מערכות אוטומציה — WhatsApp בוטים, מערכות לידים, CRM, ואינטגרציות — שחוסכות לעסקים שלכם זמן, כסף, וכאב ראש.</p>
       <div class="hbtns fade d3">
         <a href="#portfolio" class="btn btn-blue">ראו את העבודות שלנו</a>
-        <a href="#contact" class="btn btn-out">בואו נדבר</a>
+        <button class="btn btn-out" onclick="om('talk')" style="border:1px solid var(--border2);cursor:pointer">בואו נדבר</button>
       </div>
       <div class="hstats fade d3">
         <div><div class="sn">+80</div><div class="sl">פרויקטים הושלמו</div></div>
-        <div><div class="sn">48h</div><div class="sl">זמן פריסה ממוצע</div></div>
+        <div><div class="sn">24h</div><div class="sl">מענה זמין</div></div>
         <div><div class="sn">100%</div><div class="sl">עם ליווי ותמיכה</div></div>
       </div>
     </div>
@@ -396,9 +408,9 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
     <h2 class="h2 fade d1">בחרו את המסלול הנכון לכם</h2>
     <p class="sub fade d2">שלושה מסלולי עבודה שמתאימים לסוגים שונים של פרויקטים ולקוחות.</p>
     <div class="sg">
-      <div class="sc glass fade"><div class="si">⏱</div><div class="sn2">בנק שעות</div><div class="sd">קונים שעות מראש ומושכים לפי הצורך. אידיאלי לעסקים עם עבודה שוטפת וגמישה.</div><div class="sp">₪250–300</div><div class="sp2">לשעה · ניכוי אוטומטי מהבנק</div><ul class="sf"><li>רכישה מראש בהנחה</li><li>דשבורד לקוח בזמן אמת</li><li>דיווח על כל משימה</li><li>בקשות דרך בוט דונה</li></ul></div>
-      <div class="sc glass ft fade d1"><div class="si">🚀</div><div class="sn2">פרויקט חד-פעמי</div><div class="sd">סקופ ברור, מחיר קבוע, לוח זמנים מוסכם. מהרעיון ועד להשקה.</div><div class="sp">₪2,500+</div><div class="sp2">לפי פרויקט · הצעה ספציפית</div><ul class="sf"><li>סקופ מוגדר ומוסכם</li><li>50% מקדמה, 50% במסירה</li><li>סרטון הדרכה + מסמך טכני</li><li>14 יום אחריות</li></ul></div>
-      <div class="sc glass fade d2"><div class="si">🔧</div><div class="sn2">תחזוקה שוטפת</div><div class="sd">ריטיינר חודשי לתמיכה, עדכונים, תיקונים, ופיתוח מתמשך של המערכות שלכם.</div><div class="sp">₪390–490</div><div class="sp2">לחודש · כולל תמיכה ושדרוגים</div><ul class="sf"><li>תמיכה מועדפת</li><li>בקשות דחיפות בפריוריטי</li><li>ניטור שוטף של מערכות</li><li>גישה ישירה לדונה</li></ul></div>
+      <div class="sc glass fade"><div class="si">⏱</div><div class="sn2">בנק שעות</div><div class="sd">קונים שעות מראש ומושכים לפי הצורך. אידיאלי לעסקים עם עבודה שוטפת וגמישה.</div><div class="sp">₪270–300</div><div class="sp2">לשעה · ניכוי אוטומטי מהבנק</div><ul class="sf"><li>רכישה מראש בהנחה</li><li>דשבורד לקוח בזמן אמת</li><li>דיווח על כל משימה</li></ul></div>
+      <div class="sc glass ft fade d1"><div class="si">🚀</div><div class="sn2">פרויקט חד-פעמי</div><div class="sd">סקופ ברור, מחיר קבוע, לוח זמנים מוסכם. מהרעיון ועד להשקה.</div><div class="sp">₪2,500+</div><div class="sp2">לפי פרויקט · הצעה ספציפית</div><ul class="sf"><li>סקופ מוגדר ומוסכם</li><li>סרטוני הדרכה לפי צורך + מדריכים</li></ul></div>
+      <div class="sc glass fade d2"><div class="si">🔧</div><div class="sn2">תחזוקה שוטפת</div><div class="sd">ריטיינר חודשי לתמיכה, עדכונים, תיקונים, ופיתוח מתמשך של המערכות שלכם.</div><div class="sp"><span style="font-size:11px;font-weight:400;color:var(--muted2);margin-left:5px;background:none;-webkit-text-fill-color:var(--muted2);letter-spacing:.04em;font-family:var(--mono)">החל מ-</span>₪400–490</div><div class="sp2">לחודש · כולל תמיכה ושדרוגים</div><ul class="sf"><li>תמיכה מועדפת</li><li>בקשות דחיפות בפריוריטי</li><li>ניטור שוטף של מערכות</li></ul></div>
     </div>
   </div>
 </section>
@@ -412,70 +424,59 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
   <div class="mq-fade-l"></div>
   <div class="mq-row"><div class="mq-track">
     <!-- Set 1 -->
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#7B5EA7"/><path d="M14 6l-6 6 6 6 6-6z" fill="rgba(255,255,255,.4)"/><circle cx="14" cy="14" r="3" fill="#fff"/></svg>Make.com</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#FF6D5A"/><circle cx="9" cy="9" r="2.5" fill="#fff"/><circle cx="19" cy="9" r="2.5" fill="#fff"/><circle cx="9" cy="19" r="2.5" fill="#fff"/><circle cx="19" cy="19" r="2.5" fill="#fff"/><path d="M9 9 L19 19 M19 9 L9 19" stroke="#fff" stroke-width="1.5" opacity=".5"/></svg>n8n</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#F62B54"/><rect x="6" y="11" width="4" height="6" rx="1" fill="#fff"/><rect x="12" y="11" width="4" height="6" rx="1" fill="rgba(255,255,255,.85)"/><rect x="18" y="11" width="4" height="6" rx="1" fill="rgba(255,255,255,.7)"/></svg>Monday</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#D97706"/><path d="M9 8 L19 8 L19 20 L9 20 Z M11 11 L17 11 M11 14 L17 14 M11 17 L15 17" stroke="#fff" stroke-width="1.5" fill="none"/></svg>Claude</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#10A37F"/><path d="M14 7 L19 10 L19 16 L14 19 L9 16 L9 10 Z" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="14" cy="13" r="1.5" fill="#fff"/></svg>ChatGPT</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#fff"/><path d="M14 7 A7 7 0 0 1 21 14 L14 14 Z" fill="#4285F4"/><path d="M14 14 L21 14 A7 7 0 0 1 17 20.5 Z" fill="#34A853"/><path d="M14 14 L17 20.5 A7 7 0 0 1 11 20.5 Z" fill="#FBBC05"/><path d="M14 14 L11 20.5 A7 7 0 0 1 7 14 Z" fill="#EA4335"/><path d="M14 14 L7 14 A7 7 0 0 1 14 7 Z" fill="#4285F4" opacity=".7"/></svg>Google</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#0A66C2"/><rect x="6" y="11" width="3" height="11" fill="#fff"/><circle cx="7.5" cy="8" r="1.8" fill="#fff"/><path d="M12 11 H15 V13 C16 11 18 10.5 19.5 11.5 C21 12.5 21 14.5 21 16 V22 H18 V17 C18 15.5 17.5 14.5 16.5 14.5 C15.5 14.5 15 15.5 15 17 V22 H12 Z" fill="#fff"/></svg>LinkedIn</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#25D366"/><path d="M14 7a7 7 0 00-6 10.5L7 21l3.5-1A7 7 0 1014 7z" fill="#fff"/><path d="M11 11.5c-.3 0-.5.1-.7.4-.3.4-.7.9-.7 1.7s.5 1.7.7 1.9c1 1.4 2.4 2.6 4.1 3.2.6.2 1 .2 1.4.1.4-.1 1.2-.5 1.4-1 .2-.5.2-1 .1-1.1-.1-.1-.3-.2-.6-.3-.4-.2-1.2-.6-1.4-.7-.2-.1-.4-.1-.5.1-.2.2-.5.7-.7.8-.1.1-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.4-1.6-.1-.2 0-.3.1-.5.1-.1.2-.3.4-.4.1-.1.2-.2.2-.4.1-.2 0-.3 0-.4-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.5-.4z" fill="#25D366"/></svg>WhatsApp</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#1877F2"/><path d="M16.5 14 H19 L19.5 11 H16.5 V9 C16.5 8.2 16.8 7.5 18 7.5 H19.5 V5 C19.5 5 18.2 4.8 17 4.8 C14.5 4.8 13 6.3 13 8.7 V11 H10.5 V14 H13 V22 H16.5 Z" fill="#fff"/></svg>Meta</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#FF4A00"/><path d="M14 6 L18 10 L14 10 L14 14 L10 10 Z M14 22 L10 18 L14 18 L14 14 L18 18 Z" fill="#fff"/></svg>Zapier</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#000"/><path d="M8 6 L14 6 C18 6 21 9 21 13 C21 16 19 18 16 19 L18 22 L15 22 L13 19 L11 19 L11 22 L8 22 Z M11 9 L11 16 L14 16 C16 16 18 15 18 13 C18 11 16 9 14 9 Z" fill="#fff"/></svg>Notion</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#0EA5E9"/><path d="M6 10 L14 6 L22 10 L14 14 Z" fill="#fff"/><path d="M6 14 L14 18 L22 14 L22 18 L14 22 L6 18 Z" fill="rgba(255,255,255,.6)"/></svg>Airtable</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#4A154B"/><rect x="11" y="6" width="2" height="6" rx="1" fill="#36C5F0"/><rect x="11" y="16" width="2" height="6" rx="1" fill="#2EB67D"/><rect x="6" y="11" width="6" height="2" rx="1" fill="#ECB22E"/><rect x="16" y="11" width="6" height="2" rx="1" fill="#E01E5A"/><rect x="11" y="11" width="2" height="2" fill="#fff" opacity=".3"/></svg>Slack</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#26A5E4"/><path d="M21 9 L19 20 C18.8 20.8 18.3 21 17.7 20.6 L13.5 17.5 L11.5 19.4 C11.3 19.6 11.1 19.8 10.7 19.8 L11 16 L19 8.5 C19.3 8.2 18.9 8 18.4 8.3 L8.5 14.5 L4 13 C3 12.7 3 12 4.2 11.5 L19.7 5.5 C20.5 5.2 21.3 5.7 21 9 Z" fill="#fff"/></svg>Telegram</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#0052CC"/><path d="M6 14 L14 6 L22 14 L14 22 Z" fill="#fff"/><path d="M14 10 L18 14 L14 18 L10 14 Z" fill="#0052CC"/></svg>Jira</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#00A1E0"/><path d="M11 9 C9 9 8 10.5 8 12 C8 13.5 9 14.5 10.5 14.8 C10.2 15.5 10 16.2 10 17 C10 19 11.5 20.5 13.5 20.5 C14.5 20.5 15.3 20 16 19.5 C16.5 20.3 17.5 21 19 21 C20.5 21 22 19.7 22 17.8 C22 16.5 21.2 15.5 20 15 C20.5 14.5 21 13.7 21 12.5 C21 10.5 19.5 9 17.5 9 C16.5 9 15.7 9.5 15 10 C14.5 9.4 13.5 9 12.5 9 Z" fill="#fff"/></svg>Salesforce</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#FF7A59"/><circle cx="14" cy="14" r="4" fill="none" stroke="#fff" stroke-width="2"/><circle cx="20" cy="8" r="2" fill="#fff"/><line x1="17" y1="11" x2="14" y2="14" stroke="#fff" stroke-width="2"/></svg>HubSpot</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#fff"/><path d="M5 10 L14 16 L23 10 L23 19 C23 20 22 21 21 21 L7 21 C6 21 5 20 5 19 Z" fill="#EA4335"/><path d="M5 10 L5 19 C5 20 6 21 7 21 L14 16 Z" fill="#C5221F"/><path d="M14 16 L23 10 L23 19 C23 20 22 21 21 21 Z" fill="#4285F4"/></svg>Gmail</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#0F9D58"/><rect x="7" y="7" width="14" height="14" rx="1" fill="#fff"/><line x1="11" y1="10" x2="11" y2="18" stroke="#0F9D58" stroke-width="1"/><line x1="15" y1="10" x2="15" y2="18" stroke="#0F9D58" stroke-width="1"/><line x1="8" y1="13" x2="20" y2="13" stroke="#0F9D58" stroke-width="1"/><line x1="8" y1="16" x2="20" y2="16" stroke="#0F9D58" stroke-width="1"/></svg>Sheets</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#4285F4"/><rect x="7" y="9" width="14" height="13" rx="1" fill="#fff"/><line x1="10" y1="6" x2="10" y2="11" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><line x1="18" y1="6" x2="18" y2="11" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="16" r="2" fill="#4285F4"/></svg>Calendar</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#F9AB00"/><path d="M11 6 L17 6 L17 22 L11 22 Z M5 14 L11 14 L11 22 L5 22 Z M17 10 L23 10 L23 22 L17 22 Z" fill="#fff"/></svg>GA4</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#1a1a2e" stroke="#30363d" stroke-width="1"/><path d="M14 5 C9 5 5 9 5 14 C5 18 7.5 21.4 11 22.5 C11.5 22.6 11.7 22.3 11.7 22 L11.7 20.4 C9.2 20.9 8.7 19.5 8.7 19.5 C8.4 18.7 7.9 18.4 7.9 18.4 C7 17.8 8 17.8 8 17.8 C9 17.9 9.5 18.8 9.5 18.8 C10.4 20.3 11.8 19.9 12.4 19.6 C12.5 19 12.7 18.6 13 18.4 C11 18.2 8.9 17.4 8.9 14 C8.9 13 9.3 12.2 9.9 11.6 C9.8 11.4 9.5 10.5 10 9.3 C10 9.3 10.8 9 12.5 10.2 C13.3 10 14.2 9.9 15 9.9 C15.8 9.9 16.7 10 17.5 10.2 C19.2 9 20 9.3 20 9.3 C20.5 10.5 20.2 11.4 20.1 11.6 C20.7 12.2 21.1 13 21.1 14 C21.1 17.4 19 18.2 17 18.4 C17.4 18.7 17.7 19.3 17.7 20.2 L17.7 22 C17.7 22.3 17.9 22.6 18.4 22.5 C21.9 21.4 24.4 18 24.4 14 C24.4 9 20 5 14 5 Z" fill="#fff"/></svg>GitHub</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#F38020"/><path d="M21 15 C20.5 13 18.5 11 16 11 C13.5 11 11.7 12.7 11.2 15 L8 15 C6 15 5 16.5 5 18 C5 19.5 6 21 8 21 L21 21 C22.5 21 24 19.5 24 18 C24 16.5 22.5 15 21 15 Z" fill="#fff"/></svg>Cloudflare</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#8E44AD"/><path d="M14 6 L20 18 L14 16 L8 18 Z" fill="#fff"/></svg>Gemini</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#1877F2"/><circle cx="9" cy="14" r="1.5" fill="#fff"/><circle cx="14" cy="14" r="1.5" fill="#fff"/><circle cx="19" cy="14" r="1.5" fill="#fff"/></svg>Meta Ads</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><defs><linearGradient id="ig2" x1="0" y1="28" x2="28" y2="0"><stop stop-color="#F58529"/><stop offset=".5" stop-color="#E1306C"/><stop offset="1" stop-color="#833AB4"/></linearGradient></defs><rect width="28" height="28" rx="8" fill="url(#ig2)"/><rect x="7" y="7" width="14" height="14" rx="4" fill="none" stroke="#fff" stroke-width="2"/><circle cx="14" cy="14" r="3.5" fill="none" stroke="#fff" stroke-width="2"/><circle cx="19.5" cy="8.5" r="1" fill="#fff"/></svg>Instagram</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#000"/><path d="M9 20 L9 8 L11.5 8 L11.5 16 L19 8 L19 11 L14 16 L20 20 L17 20 L13 17 L11.5 18.5 L11.5 20 Z" fill="#fff"/></svg>X / Twitter</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#000"/><path d="M16 5 C16 8 18 10 21 10 L21 13 C19 13 17 12.5 16 11.5 L16 18 C16 21 13.5 23 11 23 C8.5 23 6 21 6 18 C6 15.5 8.5 13.5 11 13.5 L11 16 C10 16 9 17 9 18 C9 19 10 20 11 20 C12 20 13 19 13 18 L13 5 Z" fill="#fff"/></svg>TikTok</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#5865F2"/><path d="M9 9 C11 8 13 7.5 14 7.5 C15 7.5 17 8 19 9 C21 12 22 15 21 19 C20 19.5 19 20 18 20.3 L17 19 C18 18.5 18.5 18 18.5 18 C16 19.5 12 19.5 9.5 18 C9.5 18 10 18.5 11 19 L10 20.3 C9 20 8 19.5 7 19 C6 15 7 12 9 9 Z M11.5 14.5 C11.5 15.5 12 16.3 13 16.3 C14 16.3 14.5 15.5 14.5 14.5 C14.5 13.5 14 12.7 13 12.7 C12 12.7 11.5 13.5 11.5 14.5 Z M16.5 14.5 C16.5 15.5 17 16.3 18 16.3 C19 16.3 19.5 15.5 19.5 14.5 C19.5 13.5 19 12.7 18 12.7 C17 12.7 16.5 13.5 16.5 14.5 Z" fill="#fff"/></svg>Discord</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#1C1C1C"/><path d="M9 14 C9 11 11 9 14 9 C15 9 16 9.3 16.7 9.8 L15 11.5 C14.7 11.3 14.4 11.2 14 11.2 C12.5 11.2 11.3 12.5 11.3 14 C11.3 15.5 12.5 16.7 14 16.7 C14.4 16.7 14.7 16.6 15 16.5 L16.7 18.2 C16 18.7 15 19 14 19 C11 19 9 17 9 14 Z" fill="#3ECF8E"/><path d="M19 14 L17 12 L17 16 Z" fill="#3ECF8E"/></svg>Supabase</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#000"/><path d="M14 6 L23 22 L5 22 Z" fill="#fff"/></svg>Vercel</div>
-
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#7B5EA7"><path d="M12 0L3 9v6l9-9 9 9V9zm0 13.5l-9 9V18l9-9 9 9v4.5z"/></svg>Make</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#EA4B71"><path d="M21 12a3 3 0 1 1-5.83-1H13.7a3.001 3.001 0 0 1-2.83 2H8.83a3.001 3.001 0 0 1-5.66 0H1v-2h2.17a3.001 3.001 0 0 1 5.66 0h2.04a3.001 3.001 0 0 1 2.83-2h1.47A3 3 0 1 1 21 12z"/></svg>n8n</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#FF3D57"><path d="M2 6.5C2 4.6 3.6 3 5.5 3S9 4.6 9 6.5 7.4 10 5.5 10 2 8.4 2 6.5zm9 0C11 4.6 12.6 3 14.5 3S18 4.6 18 6.5 16.4 10 14.5 10 11 8.4 11 6.5zM18.5 21c-1.4 0-2.6-1-2.9-2.4-.3-1.4.4-2.8 1.7-3.4l3-1.4c1.5-.7 3.3 0 4 1.5.7 1.5 0 3.3-1.5 4l-3 1.4c-.4.2-.8.3-1.3.3z"/></svg>Monday</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#D97757"><path d="M4.7 5.5h2.4l4.4 13.4h-2.5l-1-3.3H4l-1 3.3H.5L4.7 5.5zm-.4 8.4h3.4L6 8.4 4.3 13.9zm12.7-8.4h2.4v13.4h-2.4V5.5zm5.5 0h2.4l-4.6 13.4H18l4.5-13.4z"/></svg>Claude</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#0FA47F"><path d="M22.3 9.8a5.6 5.6 0 0 0-.5-4.6 5.7 5.7 0 0 0-6-2.7A5.6 5.6 0 0 0 11.4 1a5.7 5.7 0 0 0-5.4 4 5.6 5.6 0 0 0-3.7 2.7 5.7 5.7 0 0 0 .7 6.6 5.6 5.6 0 0 0 .5 4.6 5.7 5.7 0 0 0 6 2.7 5.5 5.5 0 0 0 4.2 1.9 5.7 5.7 0 0 0 5.4-4 5.6 5.6 0 0 0 3.7-2.7 5.7 5.7 0 0 0-.7-6.6zM13.1 21.7a4.2 4.2 0 0 1-2.7-1l.1-.1 4.5-2.6c.2-.1.4-.4.4-.6v-6.3l1.9 1.1v5.3a4.2 4.2 0 0 1-4.2 4.2zM4.1 17.8a4.2 4.2 0 0 1-.5-2.8l.2.1 4.5 2.6c.2.1.5.1.7 0l5.5-3.2v2.2c0 .1 0 .2-.1.2l-4.6 2.6a4.2 4.2 0 0 1-5.7-1.7zM2.9 8a4.2 4.2 0 0 1 2.2-1.8v5.4c0 .2.1.5.4.6l5.4 3.1-1.9 1.1c-.1 0-.2 0-.2 0L4.2 13.7A4.2 4.2 0 0 1 2.9 8zm15.7 3.6L13.1 8.5 15 7.4c.1 0 .2 0 .2 0l4.6 2.6a4.2 4.2 0 0 1-.6 7.5v-5.4c-.1-.2-.2-.4-.6-.5zm1.9-2.8l-.2-.1-4.4-2.6c-.2-.2-.5-.2-.7 0L9.7 9.3V7.1c0-.1 0-.2.1-.2L14.4 4.3a4.2 4.2 0 0 1 6.1 4.5zM8.6 12.7l-1.9-1.1V6.3a4.2 4.2 0 0 1 6.9-3.2l-.1.1-4.5 2.6c-.2.1-.4.4-.4.6v6.3zm1-2.2l2.5-1.4 2.5 1.4v2.9L12.1 14.8 9.6 13.4z"/></svg>OpenAI</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#4285F4"><path d="M22.5 12.2c0-.8 0-1.5-.2-2.2H12v4.3h6c-.3 1.4-1 2.6-2.2 3.4v2.8h3.6c2.1-1.9 3.3-4.7 3.3-8.3zM12 23c2.9 0 5.4-1 7.2-2.6l-3.6-2.8c-1 .6-2.2 1-3.6 1-2.8 0-5.2-1.9-6-4.4H2.3v2.9C4.1 20.6 7.8 23 12 23z"/></svg>Google</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>LinkedIn</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#25D366"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-1 1.2-.2.2-.3.2-.6.1-1.5-.7-2.5-1.3-3.5-3-.3-.5.3-.4.7-1.4.1-.2 0-.3 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5 1.9.8 2.6.9 3.6.7.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.4M12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.1 1.6 5.9L0 24l6.3-1.6c1.7.9 3.7 1.4 5.7 1.4 6.6 0 12-5.4 12-12S18.6 0 12 0z"/></svg>WhatsApp</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#0866FF"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12c.5 0 1 0 1.4-.1V14.7H10.5V12H13.4V9.5c0-2.9 1.7-4.5 4.4-4.5 1.3 0 2.5.2 2.5.2v2.8h-1.4c-1.4 0-1.8.9-1.8 1.8V12h3.1l-.5 2.7h-2.6V23.6c4.6-.6 8.1-3.1 9.7-7.5h-1.5C24 20.4 18.6 24 12 24z"/></svg>Meta</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#FF4F00"><path d="M14.5 12h6c0 .8-.1 1.7-.3 2.5l-5.4-2.5h-.3zm-3 0H6c0-.8.1-1.7.3-2.5l5.4 2.5h-.2zm5.5-.5l4.6-3.7c-.5-.7-1.1-1.4-1.8-2l-3.7 4.6c.4.3.7.7.9 1.1zm-7-.5L5.4 7.3c-.5.7-1 1.4-1.4 2.2L9 12.2c.3-.4.6-.8 1-1.2zm5.5 4.5l3.7 4.6c.7-.6 1.3-1.3 1.8-2L17.5 14c-.5.4-.9.8-1.5 1zm-7-1.5l-4.6 3.7c.5.7 1.1 1.4 1.8 2L9 16.1c-.4-.5-.7-.9-1-1.6zm5.5-9.5V0c-1.7 0-3.4.4-4.9 1l3.6 4.7c.4-.3.8-.5 1.3-.6V5zM12 19v-1.4c-.5-.1-.9-.3-1.3-.6L7.1 22c1.5.6 3.2 1 4.9 1v-4z"/></svg>Zapier</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#000000"><path d="M4.5 4.4l13.4-1c1.6-.1 2 .8 2 1.7v13c0 .8-.2 1.4-1.7 1.5l-12.9 1c-.7.1-1.7-.2-1.7-1.7V4.5l.9-.1zm12.7 1.3v12L7 18.5V6.5l10.2-.8zM10 9.5v6l1.5-.1V8l-1.5.1zm-2.5.2L5 12.5l4 .2-1.5-3z"/></svg>Notion</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#FCB400"><path d="M11.3 2.4L1.6 6.5C.9 6.8.9 7.8 1.6 8.1L11.3 12c.4.2.9.2 1.4 0l9.7-3.9c.7-.3.7-1.3 0-1.6L12.7 2.4c-.4-.2-.9-.2-1.4 0zM23 9.6c0-.6-.6-1-1.2-.8L12.6 13c-.6.2-1 .9-1 1.5v9.2c0 .6.6 1 1.2.8l9.2-3.7c.6-.2 1-.9 1-1.5V9.6zM10.2 14.1L1 18c-.6.3-1 .9-1 1.6v.9c0 .5.5.9 1 .8l8.4-3.1c.4-.2.8-.6.8-1.1z"/></svg>Airtable</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#4A154B"><path d="M5 15a2 2 0 1 1-2-2h2v2zm1 0a2 2 0 0 1 4 0v5a2 2 0 1 1-4 0v-5zm2-8a2 2 0 1 1 2-2v2H8zm0 1a2 2 0 0 1 0 4H3a2 2 0 1 1 0-4h5zm8 2a2 2 0 1 1 2 2h-2v-2zm-1 0a2 2 0 0 1-4 0V4a2 2 0 1 1 4 0v6zm-2 8a2 2 0 1 1-2 2v-2h2zm0-1a2 2 0 0 1 0-4h5a2 2 0 1 1 0 4h-5z"/></svg>Slack</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#26A5E4"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.6 8.2l-1.9 8.9c-.1.6-.5.8-1 .5l-2.8-2.1-1.4 1.3c-.1.1-.3.3-.6.3l.2-3 5.4-4.9c.2-.2-.1-.3-.3-.1L8.5 13l-2.9-.9c-.6-.2-.6-.6.1-.9l11.4-4.4c.5-.2.9.1.5.4z"/></svg>Telegram</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#FF7A59"><path d="M18.5 7.5V5.6a1.5 1.5 0 1 0-1 0v1.9a4.4 4.4 0 0 0-2 .9L10.4 4l.1-.5a2.3 2.3 0 1 0-2.3 2.3l.5-.1 5.5 4.3a4.5 4.5 0 0 0-.7 2.5 4.5 4.5 0 1 0 5-4.4zm-.5 6.7a2.2 2.2 0 1 1 2.3-2.2 2.2 2.2 0 0 1-2.3 2.2z"/></svg>HubSpot</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#EA4335"><path d="M22 6.5l-10 7L2 6.5V18a2 2 0 002 2h16a2 2 0 002-2V6.5zM21 4H3a1 1 0 00-1 1l10 7 10-7a1 1 0 00-1-1z"/></svg>Gmail</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#0F9D58"><path d="M19 1H5a2 2 0 00-2 2v18a2 2 0 002 2h14a2 2 0 002-2V5l-2-4zM8 19V11h2v8H8zm4 0V11h2v8h-2zm4 0V11h2v8h-2zm0-10H8V7h12v2z"/></svg>Sheets</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#4285F4"><path d="M19 4H17V2H15V4H9V2H7V4H5C3.9 4 3 4.9 3 6V20C3 21.1 3.9 22 5 22H19C20.1 22 21 21.1 21 20V6C21 4.9 20.1 4 19 4ZM19 20H5V10H19V20Z"/></svg>Calendar</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#181717"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.2.8-.5v-2c-3.2.7-3.8-1.4-3.8-1.4-.5-1.3-1.3-1.6-1.3-1.6-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.7.4-1.3.7-1.6-2.6-.3-5.2-1.3-5.2-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2.9-.3 1.9-.4 2.9-.4s2 .1 2.9.4c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.7.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.2 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.5A11.5 11.5 0 0 0 12 .5z"/></svg>GitHub</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#F38020"><path d="M16.7 13.4c0-.4-.1-.8-.3-1.2l-3.1-7.7c-.1-.3-.4-.5-.7-.6-.4-.1-.8.1-1 .5l-3 7.5c-.2.5-.3 1-.3 1.5 0 .8.4 1.5 1 1.9.5.4 1.2.6 1.9.6h4.7c.5 0 .9-.4.9-.9 0-.4-.1-.7-.3-1zm6.3.5c-.6-.1-1.2 0-1.7.1-.4.1-.8.4-1 .8H17l-.4-.5h.4c.4 0 .8-.3.9-.7.1-.5-.2-1-.7-1.1l-1-.2-2.7-6.7c-.1-.4-.4-.7-.8-.8-.4-.1-.8.1-1.1.4l-3 7c-.2.5-.4 1-.4 1.5 0 .8.4 1.5 1 1.9-.4.4-.7.9-.9 1.4H7.5c-1.3 0-2.5-.5-3.4-1.4-.9-.9-1.4-2.1-1.4-3.4 0-2.6 2.1-4.7 4.7-4.7h.5c.5-1.6 2-2.7 3.7-2.7 2 0 3.7 1.5 3.9 3.4.5-.1 1.1-.1 1.6.1.5.1.9.4 1.2.7h6.7c.5 0 .9.3 1 .7v.1c0 .5-.4.9-.9.9z"/></svg>Cloudflare</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#000000"><path d="M12 1.5L23 21H1L12 1.5z"/></svg>Vercel</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#3FCF8E"><path d="M11.7 22.7c-.5.6-1.4.3-1.4-.4l-.4-9.5h6.4c1.2 0 1.8 1.4 1.1 2.3l-5.7 7.6zM12.3 1.3c.5-.6 1.4-.3 1.4.4l.4 9.5H7.7c-1.2 0-1.8-1.4-1.1-2.3l5.7-7.6z"/></svg>Supabase</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#5865F2"><path d="M20.3 4.4A19.4 19.4 0 0015.7 3l-.2.4a18 18 0 00-7.1 0L8.3 3a19.4 19.4 0 00-4.6 1.4C.7 8.5-.1 12.5.3 16.5a19.7 19.7 0 005.9 3l.5-.7a13 13 0 01-2-.9.2.2 0 010-.3l.4-.3a14 14 0 0014 0l.4.3a.2.2 0 010 .3l-2 1 .5.7a19.6 19.6 0 005.9-3c.4-4.6-.6-8.6-3.4-12zM8 14a2.3 2.3 0 01-2.2-2.4A2.3 2.3 0 018 9.2c1.3 0 2.3 1 2.3 2.4S9.3 14 8 14zm8 0a2.3 2.3 0 01-2.2-2.4 2.3 2.3 0 012.2-2.4c1.3 0 2.3 1 2.3 2.4S17.3 14 16 14z"/></svg>Discord</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#E4405F"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2 0 1.8.2 2.2.4.5.2 1 .5 1.4 1 .4.4.7.9.9 1.4.2.4.4 1 .4 2.2.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c0 1.2-.2 1.8-.4 2.2-.2.5-.5 1-1 1.4-.4.4-.9.7-1.4.9-.4.2-1 .4-2.2.4-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2 0-1.8-.2-2.2-.4-.5-.2-1-.5-1.4-1-.4-.4-.7-.9-.9-1.4-.2-.4-.4-1-.4-2.2-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c0-1.2.2-1.8.4-2.2.2-.5.5-1 1-1.4.4-.4.9-.7 1.4-.9.4-.2 1-.4 2.2-.4 1.2-.1 1.6-.1 4.8-.1zm0-2.2c-3.3 0-3.7 0-5 .1-1.3 0-2.2.3-3 .6-.8.3-1.5.7-2.2 1.4S.7 3.6.4 4.4c-.3.8-.5 1.7-.6 3 0 1.3-.1 1.7-.1 5s0 3.7.1 5c0 1.3.3 2.2.6 3 .3.8.7 1.5 1.4 2.2.7.7 1.4 1.1 2.2 1.4.8.3 1.7.5 3 .6 1.3 0 1.7.1 5 .1s3.7 0 5-.1c1.3 0 2.2-.3 3-.6.8-.3 1.5-.7 2.2-1.4s1.1-1.4 1.4-2.2c.3-.8.5-1.7.6-3 0-1.3.1-1.7.1-5s0-3.7-.1-5c0-1.3-.3-2.2-.6-3-.3-.8-.7-1.5-1.4-2.2-.7-.7-1.4-1.1-2.2-1.4-.8-.3-1.7-.5-3-.6-1.3 0-1.7-.1-5-.1zm0 5.8a6.2 6.2 0 100 12.4 6.2 6.2 0 000-12.4zm0 10.2a4 4 0 110-8 4 4 0 010 8zm6.4-10.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/></svg>Instagram</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#000000"><path d="M18.9 2H22l-7.5 8.6L23 22h-7.4l-5.8-7.5L3.4 22H.3l8.1-9.3L0 2h7.5l5.2 6.9L18.9 2zm-1.1 18.4H19L6.4 3.5H4.7l13.1 16.9z"/></svg>X</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#000000"><path d="M19.6 6.3a4.8 4.8 0 0 1-2.8-1 5 5 0 0 1-2-3.5h-3.4v9.4c0 .8 0 1.7-.5 2.4a3.1 3.1 0 0 1-2.6 1.5 3.2 3.2 0 0 1-3-1.7 3.2 3.2 0 0 1 .8-3.7 3.1 3.1 0 0 1 2.5-.7v-3.5A6.5 6.5 0 0 0 4 7.6c-1.3 1.4-2 3.3-1.7 5.2.3 1.9 1.5 3.5 3.2 4.4a6.5 6.5 0 0 0 5.4 0 6.4 6.4 0 0 0 3.6-4.2c.2-1 .2-2 .2-3V7.4a8 8 0 0 0 4.7 1.5V5.5h.2v.8z"/></svg>TikTok</div>
     <!-- Set 2: Duplicate for seamless loop -->
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#7B5EA7"/><path d="M14 6l-6 6 6 6 6-6z" fill="rgba(255,255,255,.4)"/><circle cx="14" cy="14" r="3" fill="#fff"/></svg>Make.com</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#FF6D5A"/><circle cx="9" cy="9" r="2.5" fill="#fff"/><circle cx="19" cy="9" r="2.5" fill="#fff"/><circle cx="9" cy="19" r="2.5" fill="#fff"/><circle cx="19" cy="19" r="2.5" fill="#fff"/><path d="M9 9 L19 19 M19 9 L9 19" stroke="#fff" stroke-width="1.5" opacity=".5"/></svg>n8n</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#F62B54"/><rect x="6" y="11" width="4" height="6" rx="1" fill="#fff"/><rect x="12" y="11" width="4" height="6" rx="1" fill="rgba(255,255,255,.85)"/><rect x="18" y="11" width="4" height="6" rx="1" fill="rgba(255,255,255,.7)"/></svg>Monday</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#D97706"/><path d="M9 8 L19 8 L19 20 L9 20 Z M11 11 L17 11 M11 14 L17 14 M11 17 L15 17" stroke="#fff" stroke-width="1.5" fill="none"/></svg>Claude</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#10A37F"/><path d="M14 7 L19 10 L19 16 L14 19 L9 16 L9 10 Z" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="14" cy="13" r="1.5" fill="#fff"/></svg>ChatGPT</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#fff"/><path d="M14 7 A7 7 0 0 1 21 14 L14 14 Z" fill="#4285F4"/><path d="M14 14 L21 14 A7 7 0 0 1 17 20.5 Z" fill="#34A853"/><path d="M14 14 L17 20.5 A7 7 0 0 1 11 20.5 Z" fill="#FBBC05"/><path d="M14 14 L11 20.5 A7 7 0 0 1 7 14 Z" fill="#EA4335"/><path d="M14 14 L7 14 A7 7 0 0 1 14 7 Z" fill="#4285F4" opacity=".7"/></svg>Google</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#0A66C2"/><rect x="6" y="11" width="3" height="11" fill="#fff"/><circle cx="7.5" cy="8" r="1.8" fill="#fff"/><path d="M12 11 H15 V13 C16 11 18 10.5 19.5 11.5 C21 12.5 21 14.5 21 16 V22 H18 V17 C18 15.5 17.5 14.5 16.5 14.5 C15.5 14.5 15 15.5 15 17 V22 H12 Z" fill="#fff"/></svg>LinkedIn</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#25D366"/><path d="M14 7a7 7 0 00-6 10.5L7 21l3.5-1A7 7 0 1014 7z" fill="#fff"/></svg>WhatsApp</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#1877F2"/><path d="M16.5 14 H19 L19.5 11 H16.5 V9 C16.5 8.2 16.8 7.5 18 7.5 H19.5 V5 C19.5 5 18.2 4.8 17 4.8 C14.5 4.8 13 6.3 13 8.7 V11 H10.5 V14 H13 V22 H16.5 Z" fill="#fff"/></svg>Meta</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#FF4A00"/><path d="M14 6 L18 10 L14 10 L14 14 L10 10 Z M14 22 L10 18 L14 18 L14 14 L18 18 Z" fill="#fff"/></svg>Zapier</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#000"/><path d="M8 6 L14 6 C18 6 21 9 21 13 C21 16 19 18 16 19 L18 22 L15 22 L13 19 L11 19 L11 22 L8 22 Z M11 9 L11 16 L14 16 C16 16 18 15 18 13 C18 11 16 9 14 9 Z" fill="#fff"/></svg>Notion</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#0EA5E9"/><path d="M6 10 L14 6 L22 10 L14 14 Z" fill="#fff"/><path d="M6 14 L14 18 L22 14 L22 18 L14 22 L6 18 Z" fill="rgba(255,255,255,.6)"/></svg>Airtable</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#4A154B"/><rect x="11" y="6" width="2" height="6" rx="1" fill="#36C5F0"/><rect x="11" y="16" width="2" height="6" rx="1" fill="#2EB67D"/><rect x="6" y="11" width="6" height="2" rx="1" fill="#ECB22E"/><rect x="16" y="11" width="6" height="2" rx="1" fill="#E01E5A"/></svg>Slack</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#26A5E4"/><path d="M21 9 L19 20 C18.8 20.8 18.3 21 17.7 20.6 L13.5 17.5 L11.5 19.4 C11.3 19.6 11.1 19.8 10.7 19.8 L11 16 L19 8.5 C19.3 8.2 18.9 8 18.4 8.3 L8.5 14.5 L4 13 C3 12.7 3 12 4.2 11.5 L19.7 5.5 C20.5 5.2 21.3 5.7 21 9 Z" fill="#fff"/></svg>Telegram</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#0052CC"/><path d="M6 14 L14 6 L22 14 L14 22 Z" fill="#fff"/><path d="M14 10 L18 14 L14 18 L10 14 Z" fill="#0052CC"/></svg>Jira</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#00A1E0"/><path d="M11 9 C9 9 8 10.5 8 12 C8 13.5 9 14.5 10.5 14.8 C10.2 15.5 10 16.2 10 17 C10 19 11.5 20.5 13.5 20.5 C14.5 20.5 15.3 20 16 19.5 C16.5 20.3 17.5 21 19 21 C20.5 21 22 19.7 22 17.8 C22 16.5 21.2 15.5 20 15 C20.5 14.5 21 13.7 21 12.5 C21 10.5 19.5 9 17.5 9 C16.5 9 15.7 9.5 15 10 C14.5 9.4 13.5 9 12.5 9 Z" fill="#fff"/></svg>Salesforce</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#FF7A59"/><circle cx="14" cy="14" r="4" fill="none" stroke="#fff" stroke-width="2"/><circle cx="20" cy="8" r="2" fill="#fff"/><line x1="17" y1="11" x2="14" y2="14" stroke="#fff" stroke-width="2"/></svg>HubSpot</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#fff"/><path d="M5 10 L14 16 L23 10 L23 19 C23 20 22 21 21 21 L7 21 C6 21 5 20 5 19 Z" fill="#EA4335"/></svg>Gmail</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#0F9D58"/><rect x="7" y="7" width="14" height="14" rx="1" fill="#fff"/></svg>Sheets</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#4285F4"/><rect x="7" y="9" width="14" height="13" rx="1" fill="#fff"/></svg>Calendar</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#F9AB00"/><path d="M11 6 L17 6 L17 22 L11 22 Z M5 14 L11 14 L11 22 L5 22 Z M17 10 L23 10 L23 22 L17 22 Z" fill="#fff"/></svg>GA4</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#1a1a2e"/><path d="M14 5 C9 5 5 9 5 14 C5 18 7.5 21.4 11 22.5 L11 20.4 C9.2 20.9 8.7 19.5 8.7 19.5 C8 18 7 18 7 18 C8 17.8 8.5 18.8 8.5 18.8 C9.5 20.3 11 19.9 11.5 19.6 L11.5 22 C8 21 5 17.5 5 14 C5 9 9 5 14 5 Z" fill="#fff"/></svg>GitHub</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#F38020"/><path d="M21 15 C20.5 13 18.5 11 16 11 C13.5 11 11.7 12.7 11.2 15 L8 15 C6 15 5 16.5 5 18 C5 19.5 6 21 8 21 L21 21 C22.5 21 24 19.5 24 18 C24 16.5 22.5 15 21 15 Z" fill="#fff"/></svg>Cloudflare</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#8E44AD"/><path d="M14 6 L20 18 L14 16 L8 18 Z" fill="#fff"/></svg>Gemini</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#1877F2"/><circle cx="9" cy="14" r="1.5" fill="#fff"/><circle cx="14" cy="14" r="1.5" fill="#fff"/><circle cx="19" cy="14" r="1.5" fill="#fff"/></svg>Meta Ads</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><defs><linearGradient id="ig3" x1="0" y1="28" x2="28" y2="0"><stop stop-color="#F58529"/><stop offset=".5" stop-color="#E1306C"/><stop offset="1" stop-color="#833AB4"/></linearGradient></defs><rect width="28" height="28" rx="8" fill="url(#ig3)"/><rect x="7" y="7" width="14" height="14" rx="4" fill="none" stroke="#fff" stroke-width="2"/><circle cx="14" cy="14" r="3.5" fill="none" stroke="#fff" stroke-width="2"/></svg>Instagram</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#000"/><path d="M9 20 L9 8 L11.5 8 L11.5 16 L19 8 L19 11 L14 16 L20 20 L17 20 L13 17 L11.5 18.5 L11.5 20 Z" fill="#fff"/></svg>X / Twitter</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#000"/><path d="M16 5 C16 8 18 10 21 10 L21 13 C19 13 17 12.5 16 11.5 L16 18 C16 21 13.5 23 11 23 C8.5 23 6 21 6 18 C6 15.5 8.5 13.5 11 13.5 L11 16 C10 16 9 17 9 18 C9 19 10 20 11 20 C12 20 13 19 13 18 L13 5 Z" fill="#fff"/></svg>TikTok</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="8" fill="#5865F2"/><path d="M9 9 C11 8 13 7.5 14 7.5 C15 7.5 17 8 19 9 C21 12 22 15 21 19 C20 19.5 19 20 18 20.3 L17 19 C18 18.5 18.5 18 18.5 18 C16 19.5 12 19.5 9.5 18 C9.5 18 10 18.5 11 19 L10 20.3 C9 20 8 19.5 7 19 C6 15 7 12 9 9 Z" fill="#fff"/></svg>Discord</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#1C1C1C"/><path d="M9 14 C9 11 11 9 14 9 C15 9 16 9.3 16.7 9.8 L15 11.5 C14.7 11.3 14.4 11.2 14 11.2 C12.5 11.2 11.3 12.5 11.3 14 C11.3 15.5 12.5 16.7 14 16.7 C14.4 16.7 14.7 16.6 15 16.5 L16.7 18.2 C16 18.7 15 19 14 19 C11 19 9 17 9 14 Z" fill="#3ECF8E"/></svg>Supabase</div>
-    <div class="logo-pill"><svg viewBox="0 0 28 28"><rect width="28" height="28" rx="6" fill="#000"/><path d="M14 6 L23 22 L5 22 Z" fill="#fff"/></svg>Vercel</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#7B5EA7"><path d="M12 0L3 9v6l9-9 9 9V9zm0 13.5l-9 9V18l9-9 9 9v4.5z"/></svg>Make</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#EA4B71"><path d="M21 12a3 3 0 1 1-5.83-1H13.7a3.001 3.001 0 0 1-2.83 2H8.83a3.001 3.001 0 0 1-5.66 0H1v-2h2.17a3.001 3.001 0 0 1 5.66 0h2.04a3.001 3.001 0 0 1 2.83-2h1.47A3 3 0 1 1 21 12z"/></svg>n8n</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#FF3D57"><path d="M2 6.5C2 4.6 3.6 3 5.5 3S9 4.6 9 6.5 7.4 10 5.5 10 2 8.4 2 6.5zm9 0C11 4.6 12.6 3 14.5 3S18 4.6 18 6.5 16.4 10 14.5 10 11 8.4 11 6.5zM18.5 21c-1.4 0-2.6-1-2.9-2.4-.3-1.4.4-2.8 1.7-3.4l3-1.4c1.5-.7 3.3 0 4 1.5.7 1.5 0 3.3-1.5 4l-3 1.4c-.4.2-.8.3-1.3.3z"/></svg>Monday</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#D97757"><path d="M4.7 5.5h2.4l4.4 13.4h-2.5l-1-3.3H4l-1 3.3H.5L4.7 5.5zm-.4 8.4h3.4L6 8.4 4.3 13.9zm12.7-8.4h2.4v13.4h-2.4V5.5zm5.5 0h2.4l-4.6 13.4H18l4.5-13.4z"/></svg>Claude</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#0FA47F"><path d="M22.3 9.8a5.6 5.6 0 0 0-.5-4.6 5.7 5.7 0 0 0-6-2.7A5.6 5.6 0 0 0 11.4 1a5.7 5.7 0 0 0-5.4 4 5.6 5.6 0 0 0-3.7 2.7 5.7 5.7 0 0 0 .7 6.6 5.6 5.6 0 0 0 .5 4.6 5.7 5.7 0 0 0 6 2.7 5.5 5.5 0 0 0 4.2 1.9 5.7 5.7 0 0 0 5.4-4 5.6 5.6 0 0 0 3.7-2.7 5.7 5.7 0 0 0-.7-6.6zM13.1 21.7a4.2 4.2 0 0 1-2.7-1l.1-.1 4.5-2.6c.2-.1.4-.4.4-.6v-6.3l1.9 1.1v5.3a4.2 4.2 0 0 1-4.2 4.2zM4.1 17.8a4.2 4.2 0 0 1-.5-2.8l.2.1 4.5 2.6c.2.1.5.1.7 0l5.5-3.2v2.2c0 .1 0 .2-.1.2l-4.6 2.6a4.2 4.2 0 0 1-5.7-1.7zM2.9 8a4.2 4.2 0 0 1 2.2-1.8v5.4c0 .2.1.5.4.6l5.4 3.1-1.9 1.1c-.1 0-.2 0-.2 0L4.2 13.7A4.2 4.2 0 0 1 2.9 8zm15.7 3.6L13.1 8.5 15 7.4c.1 0 .2 0 .2 0l4.6 2.6a4.2 4.2 0 0 1-.6 7.5v-5.4c-.1-.2-.2-.4-.6-.5zm1.9-2.8l-.2-.1-4.4-2.6c-.2-.2-.5-.2-.7 0L9.7 9.3V7.1c0-.1 0-.2.1-.2L14.4 4.3a4.2 4.2 0 0 1 6.1 4.5zM8.6 12.7l-1.9-1.1V6.3a4.2 4.2 0 0 1 6.9-3.2l-.1.1-4.5 2.6c-.2.1-.4.4-.4.6v6.3zm1-2.2l2.5-1.4 2.5 1.4v2.9L12.1 14.8 9.6 13.4z"/></svg>OpenAI</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#4285F4"><path d="M22.5 12.2c0-.8 0-1.5-.2-2.2H12v4.3h6c-.3 1.4-1 2.6-2.2 3.4v2.8h3.6c2.1-1.9 3.3-4.7 3.3-8.3zM12 23c2.9 0 5.4-1 7.2-2.6l-3.6-2.8c-1 .6-2.2 1-3.6 1-2.8 0-5.2-1.9-6-4.4H2.3v2.9C4.1 20.6 7.8 23 12 23z"/></svg>Google</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>LinkedIn</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#25D366"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-1 1.2-.2.2-.3.2-.6.1-1.5-.7-2.5-1.3-3.5-3-.3-.5.3-.4.7-1.4.1-.2 0-.3 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5 1.9.8 2.6.9 3.6.7.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.4M12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.1 1.6 5.9L0 24l6.3-1.6c1.7.9 3.7 1.4 5.7 1.4 6.6 0 12-5.4 12-12S18.6 0 12 0z"/></svg>WhatsApp</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#0866FF"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12c.5 0 1 0 1.4-.1V14.7H10.5V12H13.4V9.5c0-2.9 1.7-4.5 4.4-4.5 1.3 0 2.5.2 2.5.2v2.8h-1.4c-1.4 0-1.8.9-1.8 1.8V12h3.1l-.5 2.7h-2.6V23.6c4.6-.6 8.1-3.1 9.7-7.5h-1.5C24 20.4 18.6 24 12 24z"/></svg>Meta</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#FF4F00"><path d="M14.5 12h6c0 .8-.1 1.7-.3 2.5l-5.4-2.5h-.3zm-3 0H6c0-.8.1-1.7.3-2.5l5.4 2.5h-.2zm5.5-.5l4.6-3.7c-.5-.7-1.1-1.4-1.8-2l-3.7 4.6c.4.3.7.7.9 1.1zm-7-.5L5.4 7.3c-.5.7-1 1.4-1.4 2.2L9 12.2c.3-.4.6-.8 1-1.2zm5.5 4.5l3.7 4.6c.7-.6 1.3-1.3 1.8-2L17.5 14c-.5.4-.9.8-1.5 1zm-7-1.5l-4.6 3.7c.5.7 1.1 1.4 1.8 2L9 16.1c-.4-.5-.7-.9-1-1.6zm5.5-9.5V0c-1.7 0-3.4.4-4.9 1l3.6 4.7c.4-.3.8-.5 1.3-.6V5zM12 19v-1.4c-.5-.1-.9-.3-1.3-.6L7.1 22c1.5.6 3.2 1 4.9 1v-4z"/></svg>Zapier</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#000000"><path d="M4.5 4.4l13.4-1c1.6-.1 2 .8 2 1.7v13c0 .8-.2 1.4-1.7 1.5l-12.9 1c-.7.1-1.7-.2-1.7-1.7V4.5l.9-.1zm12.7 1.3v12L7 18.5V6.5l10.2-.8zM10 9.5v6l1.5-.1V8l-1.5.1zm-2.5.2L5 12.5l4 .2-1.5-3z"/></svg>Notion</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#FCB400"><path d="M11.3 2.4L1.6 6.5C.9 6.8.9 7.8 1.6 8.1L11.3 12c.4.2.9.2 1.4 0l9.7-3.9c.7-.3.7-1.3 0-1.6L12.7 2.4c-.4-.2-.9-.2-1.4 0zM23 9.6c0-.6-.6-1-1.2-.8L12.6 13c-.6.2-1 .9-1 1.5v9.2c0 .6.6 1 1.2.8l9.2-3.7c.6-.2 1-.9 1-1.5V9.6zM10.2 14.1L1 18c-.6.3-1 .9-1 1.6v.9c0 .5.5.9 1 .8l8.4-3.1c.4-.2.8-.6.8-1.1z"/></svg>Airtable</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#4A154B"><path d="M5 15a2 2 0 1 1-2-2h2v2zm1 0a2 2 0 0 1 4 0v5a2 2 0 1 1-4 0v-5zm2-8a2 2 0 1 1 2-2v2H8zm0 1a2 2 0 0 1 0 4H3a2 2 0 1 1 0-4h5zm8 2a2 2 0 1 1 2 2h-2v-2zm-1 0a2 2 0 0 1-4 0V4a2 2 0 1 1 4 0v6zm-2 8a2 2 0 1 1-2 2v-2h2zm0-1a2 2 0 0 1 0-4h5a2 2 0 1 1 0 4h-5z"/></svg>Slack</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#26A5E4"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.6 8.2l-1.9 8.9c-.1.6-.5.8-1 .5l-2.8-2.1-1.4 1.3c-.1.1-.3.3-.6.3l.2-3 5.4-4.9c.2-.2-.1-.3-.3-.1L8.5 13l-2.9-.9c-.6-.2-.6-.6.1-.9l11.4-4.4c.5-.2.9.1.5.4z"/></svg>Telegram</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#FF7A59"><path d="M18.5 7.5V5.6a1.5 1.5 0 1 0-1 0v1.9a4.4 4.4 0 0 0-2 .9L10.4 4l.1-.5a2.3 2.3 0 1 0-2.3 2.3l.5-.1 5.5 4.3a4.5 4.5 0 0 0-.7 2.5 4.5 4.5 0 1 0 5-4.4zm-.5 6.7a2.2 2.2 0 1 1 2.3-2.2 2.2 2.2 0 0 1-2.3 2.2z"/></svg>HubSpot</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#EA4335"><path d="M22 6.5l-10 7L2 6.5V18a2 2 0 002 2h16a2 2 0 002-2V6.5zM21 4H3a1 1 0 00-1 1l10 7 10-7a1 1 0 00-1-1z"/></svg>Gmail</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#0F9D58"><path d="M19 1H5a2 2 0 00-2 2v18a2 2 0 002 2h14a2 2 0 002-2V5l-2-4zM8 19V11h2v8H8zm4 0V11h2v8h-2zm4 0V11h2v8h-2zm0-10H8V7h12v2z"/></svg>Sheets</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#4285F4"><path d="M19 4H17V2H15V4H9V2H7V4H5C3.9 4 3 4.9 3 6V20C3 21.1 3.9 22 5 22H19C20.1 22 21 21.1 21 20V6C21 4.9 20.1 4 19 4ZM19 20H5V10H19V20Z"/></svg>Calendar</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#181717"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.2.8-.5v-2c-3.2.7-3.8-1.4-3.8-1.4-.5-1.3-1.3-1.6-1.3-1.6-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.7.4-1.3.7-1.6-2.6-.3-5.2-1.3-5.2-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2.9-.3 1.9-.4 2.9-.4s2 .1 2.9.4c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.7.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.2 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.5A11.5 11.5 0 0 0 12 .5z"/></svg>GitHub</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#F38020"><path d="M16.7 13.4c0-.4-.1-.8-.3-1.2l-3.1-7.7c-.1-.3-.4-.5-.7-.6-.4-.1-.8.1-1 .5l-3 7.5c-.2.5-.3 1-.3 1.5 0 .8.4 1.5 1 1.9.5.4 1.2.6 1.9.6h4.7c.5 0 .9-.4.9-.9 0-.4-.1-.7-.3-1zm6.3.5c-.6-.1-1.2 0-1.7.1-.4.1-.8.4-1 .8H17l-.4-.5h.4c.4 0 .8-.3.9-.7.1-.5-.2-1-.7-1.1l-1-.2-2.7-6.7c-.1-.4-.4-.7-.8-.8-.4-.1-.8.1-1.1.4l-3 7c-.2.5-.4 1-.4 1.5 0 .8.4 1.5 1 1.9-.4.4-.7.9-.9 1.4H7.5c-1.3 0-2.5-.5-3.4-1.4-.9-.9-1.4-2.1-1.4-3.4 0-2.6 2.1-4.7 4.7-4.7h.5c.5-1.6 2-2.7 3.7-2.7 2 0 3.7 1.5 3.9 3.4.5-.1 1.1-.1 1.6.1.5.1.9.4 1.2.7h6.7c.5 0 .9.3 1 .7v.1c0 .5-.4.9-.9.9z"/></svg>Cloudflare</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#000000"><path d="M12 1.5L23 21H1L12 1.5z"/></svg>Vercel</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#3FCF8E"><path d="M11.7 22.7c-.5.6-1.4.3-1.4-.4l-.4-9.5h6.4c1.2 0 1.8 1.4 1.1 2.3l-5.7 7.6zM12.3 1.3c.5-.6 1.4-.3 1.4.4l.4 9.5H7.7c-1.2 0-1.8-1.4-1.1-2.3l5.7-7.6z"/></svg>Supabase</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#5865F2"><path d="M20.3 4.4A19.4 19.4 0 0015.7 3l-.2.4a18 18 0 00-7.1 0L8.3 3a19.4 19.4 0 00-4.6 1.4C.7 8.5-.1 12.5.3 16.5a19.7 19.7 0 005.9 3l.5-.7a13 13 0 01-2-.9.2.2 0 010-.3l.4-.3a14 14 0 0014 0l.4.3a.2.2 0 010 .3l-2 1 .5.7a19.6 19.6 0 005.9-3c.4-4.6-.6-8.6-3.4-12zM8 14a2.3 2.3 0 01-2.2-2.4A2.3 2.3 0 018 9.2c1.3 0 2.3 1 2.3 2.4S9.3 14 8 14zm8 0a2.3 2.3 0 01-2.2-2.4 2.3 2.3 0 012.2-2.4c1.3 0 2.3 1 2.3 2.4S17.3 14 16 14z"/></svg>Discord</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#E4405F"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2 0 1.8.2 2.2.4.5.2 1 .5 1.4 1 .4.4.7.9.9 1.4.2.4.4 1 .4 2.2.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c0 1.2-.2 1.8-.4 2.2-.2.5-.5 1-1 1.4-.4.4-.9.7-1.4.9-.4.2-1 .4-2.2.4-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2 0-1.8-.2-2.2-.4-.5-.2-1-.5-1.4-1-.4-.4-.7-.9-.9-1.4-.2-.4-.4-1-.4-2.2-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c0-1.2.2-1.8.4-2.2.2-.5.5-1 1-1.4.4-.4.9-.7 1.4-.9.4-.2 1-.4 2.2-.4 1.2-.1 1.6-.1 4.8-.1zm0-2.2c-3.3 0-3.7 0-5 .1-1.3 0-2.2.3-3 .6-.8.3-1.5.7-2.2 1.4S.7 3.6.4 4.4c-.3.8-.5 1.7-.6 3 0 1.3-.1 1.7-.1 5s0 3.7.1 5c0 1.3.3 2.2.6 3 .3.8.7 1.5 1.4 2.2.7.7 1.4 1.1 2.2 1.4.8.3 1.7.5 3 .6 1.3 0 1.7.1 5 .1s3.7 0 5-.1c1.3 0 2.2-.3 3-.6.8-.3 1.5-.7 2.2-1.4s1.1-1.4 1.4-2.2c.3-.8.5-1.7.6-3 0-1.3.1-1.7.1-5s0-3.7-.1-5c0-1.3-.3-2.2-.6-3-.3-.8-.7-1.5-1.4-2.2-.7-.7-1.4-1.1-2.2-1.4-.8-.3-1.7-.5-3-.6-1.3 0-1.7-.1-5-.1zm0 5.8a6.2 6.2 0 100 12.4 6.2 6.2 0 000-12.4zm0 10.2a4 4 0 110-8 4 4 0 010 8zm6.4-10.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/></svg>Instagram</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#000000"><path d="M18.9 2H22l-7.5 8.6L23 22h-7.4l-5.8-7.5L3.4 22H.3l8.1-9.3L0 2h7.5l5.2 6.9L18.9 2zm-1.1 18.4H19L6.4 3.5H4.7l13.1 16.9z"/></svg>X</div>
+    <div class="logo-pill"><svg viewBox="0 0 24 24" fill="#000000"><path d="M19.6 6.3a4.8 4.8 0 0 1-2.8-1 5 5 0 0 1-2-3.5h-3.4v9.4c0 .8 0 1.7-.5 2.4a3.1 3.1 0 0 1-2.6 1.5 3.2 3.2 0 0 1-3-1.7 3.2 3.2 0 0 1 .8-3.7 3.1 3.1 0 0 1 2.5-.7v-3.5A6.5 6.5 0 0 0 4 7.6c-1.3 1.4-2 3.3-1.7 5.2.3 1.9 1.5 3.5 3.2 4.4a6.5 6.5 0 0 0 5.4 0 6.4 6.4 0 0 0 3.6-4.2c.2-1 .2-2 .2-3V7.4a8 8 0 0 0 4.7 1.5V5.5h.2v.8z"/></svg>TikTok</div>
   </div></div>
 </div>
 
@@ -542,7 +543,7 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
         </div>
         <div class="pi">
           <div class="pn">מערכת CRM ואוטומציית לידים</div>
-          <div class="pd">Facebook Leads → Make → Monday + WhatsApp תוך 60 שניות. מעקב סטטוסים, דוחות נוכחות, ושעות עבודה — הכל במקום אחד.</div>
+          <div class="pd">Facebook Leads → Make → Monday + WhatsApp. מעקב סטטוסים, דוחות נוכחות, ושעות עבודה — הכל במקום אחד.</div>
           <div class="cr"><span class="ch">Monday</span><span class="ch">Facebook Leads</span><span class="ch">Make.com</span><span class="ch">WhatsApp</span></div>
         </div>
       </div>
@@ -600,7 +601,19 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
       </div>
 
     </div>
-    <div class="sb glass fade"><div><h3>ראיתם משהו שתפס אתכם?</h3><p>קבעו שיחת היכרות של 20 דקות — בלי התחייבות.</p></div><div class="sbbtns"><a href="https://wa.me/972545764327?text=היי%20ראיתי%20את%20העבודות%20שלכם" target="_blank" class="btn btn-wa">💬 WhatsApp</a><button class="btn btn-blue" onclick="om('sch')">📅 קביעת שיחה</button></div></div>
+    <div class="cats-box glass fade" style="padding:24px 28px;margin-bottom:14px">
+      <div style="font-size:13px;color:var(--accent2);font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;font-weight:700">בנוסף, אנחנו מספקים</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <span class="ch" style="font-size:12.5px;padding:7px 14px">🔒 אבטחת מידע</span>
+        <span class="ch" style="font-size:12.5px;padding:7px 14px">💾 מערכות מידע</span>
+        <span class="ch" style="font-size:12.5px;padding:7px 14px">🌐 בניית אתר</span>
+        <span class="ch" style="font-size:12.5px;padding:7px 14px">📈 קמפיין ממומן</span>
+        <span class="ch" style="font-size:12.5px;padding:7px 14px">📱 ניהול סושיאל</span>
+        <span class="ch" style="font-size:12.5px;padding:7px 14px">📝 חבילת פוסטים לעסק</span>
+        <span class="ch" style="font-size:12.5px;padding:7px 14px">✅ אישורי הגעה לאירועים</span>
+      </div>
+    </div>
+    <div class="sb glass fade"><div><h3>ראיתם משהו שתפס אתכם?</h3><p>קבעו שיחת היכרות של 10 דקות — בלי התחייבות.</p></div><div class="sbbtns"><a href="https://wa.me/972545764327?text=היי%20ראיתי%20את%20העבודות%20שלכם" target="_blank" class="btn btn-wa">💬 WhatsApp</a><button class="btn btn-blue" onclick="om('sch')">📅 קביעת שיחה</button></div></div>
   </div>
 </section>
 
@@ -627,6 +640,105 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
       </div>
     </div>
     <p class="tnote fade d2">* שמות ותמונות פרופיל טושטשו לשמירה על פרטיות הלקוחות</p>
+
+    <!-- COMMON DOMAINS -->
+    <div class="glass fade" style="padding:28px 32px;margin-top:42px;max-width:900px;margin-left:auto;margin-right:auto">
+      <div style="font-size:13px;color:var(--accent2);font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;font-weight:700">תחומים נפוצים</div>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
+        <li style="font-size:14px;color:var(--text);line-height:1.6;display:flex;gap:10px;font-weight:300"><span style="color:var(--accent2);flex-shrink:0">›</span><span>נדל״ן, עורכי דין, פיננסים, שירותים מקצועיים</span></li>
+        <li style="font-size:14px;color:var(--text);line-height:1.6;display:flex;gap:10px;font-weight:300"><span style="color:var(--accent2);flex-shrink:0">›</span><span>קליניקות, מכוני טיפולים, נותני שירות, סוכנויות</span></li>
+        <li style="font-size:14px;color:var(--text);line-height:1.6;display:flex;gap:10px;font-weight:300"><span style="color:var(--accent2);flex-shrink:0">›</span><span>עסקים עם צוות מכירות או שירות לקוחות ב-WhatsApp</span></li>
+      </ul>
+    </div>
+
+    <!-- HOW IT WORKS ACCORDION — 8 steps timeline -->
+    <div class="glass fade" style="padding:0;margin-top:18px;max-width:900px;margin-left:auto;margin-right:auto;overflow:hidden">
+      <button onclick="toggleHow()" id="howBtn" style="width:100%;background:none;border:none;padding:24px 32px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;color:var(--text);font-family:var(--sans);text-align:right;direction:rtl">
+        <div style="display:flex;align-items:center;gap:14px">
+          <span style="font-size:22px">🧭</span>
+          <span style="font-size:18px;font-weight:700">איך מתחילים</span>
+        </div>
+        <span id="howArrow" style="font-size:22px;color:var(--accent2);transition:transform .25s">▼</span>
+      </button>
+      <div id="howContent" style="max-height:0;overflow:hidden;transition:max-height .45s ease;padding:0 28px">
+        <div class="how-timeline">
+
+          <!-- Step 1 -->
+          <div class="how-step">
+            <div class="how-dot"></div>
+            <div class="how-card">
+              <div class="how-title">קביעת שיחת אפיון</div>
+              <div class="how-desc">קובעים שיחה קצרה כדי להבין מטרה, מצב קיים ומה התוצאה שאתה רוצה.</div>
+              <button onclick="om('sch')" class="how-cta" style="border:1px solid rgba(29,255,212,.35);cursor:pointer;font-family:var(--sans)">📅 לקביעת שיחת איפיון</button>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="how-step">
+            <div class="how-dot"></div>
+            <div class="how-card">
+              <div class="how-title">שיחת אפיון</div>
+              <div class="how-desc">ממפים תהליך, מערכות קיימות, נקודות כשל, ומה חייב להיות אוטומטי.</div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="how-step">
+            <div class="how-dot"></div>
+            <div class="how-card">
+              <div class="how-title">הצעת מחיר</div>
+              <div class="how-desc">הצעה ברורה שמגדירה מה נכנס, מה לא נכנס, ולוחות זמנים.</div>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="how-step">
+            <div class="how-dot"></div>
+            <div class="how-card">
+              <div class="how-title">תוצר ראשוני</div>
+              <div class="how-desc">מוציאים תוצר ראשוני מהר כדי לוודא כיוון ותוצאה.</div>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="how-step">
+            <div class="how-dot"></div>
+            <div class="how-card">
+              <div class="how-title">שיפור ושדרוג בהתאמה ללקוח</div>
+              <div class="how-desc">שיפורים לפי שימוש אמיתי, טיפול בקצוות, יציבות ולוגים.</div>
+            </div>
+          </div>
+
+          <!-- Step 6 -->
+          <div class="how-step">
+            <div class="how-dot"></div>
+            <div class="how-card">
+              <div class="how-title">מסירת תוצר מוכן</div>
+              <div class="how-desc">מסירה מסודרת של מערכת מוכנה לעבודה, כולל בדיקות.</div>
+            </div>
+          </div>
+
+          <!-- Step 7 -->
+          <div class="how-step">
+            <div class="how-dot"></div>
+            <div class="how-card">
+              <div class="how-title">הדרכה לעבודה נכונה</div>
+              <div class="how-desc">הדרכה לצוות כדי להטמיע תהליך נכון ולהוציא תוצאה.</div>
+            </div>
+          </div>
+
+          <!-- Step 8 -->
+          <div class="how-step">
+            <div class="how-dot"></div>
+            <div class="how-card">
+              <div class="how-title">תמיכה לכל אורך הדרך ואחריה</div>
+              <div class="how-desc">תמיכה חודשית לפי צורך.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -639,7 +751,7 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
     <div class="ptgrid">
       <div class="ptcard glass fade"><div class="ptnum">01</div><div class="pticon">💸</div><div class="ptname">הפניה ועמלה</div><div class="pttag">אתם מפנים — אנחנו סוגרים ועושים</div><div class="ptdesc">יש לכם לקוח שצריך אוטומציה? שלחו אותם אלינו. אנחנו מטפלים בהכל ואתם מקבלים עמלה על כל סגירה.</div><ul class="ptpts"><li>עמלה של 10–15% על כל פרויקט</li><li>אתם לא מעורבים בעבודה</li><li>דיווח שקוף על סטטוס</li><li>פשוט, מהיר, ללא סיכון</li></ul><button class="btn btn-out" style="width:100%" onclick="om('pt1')">אני מעוניין</button></div>
       <div class="ptcard glass fade d1"><div class="ptnum">02</div><div class="pticon">🤝</div><div class="ptname">White Label</div><div class="pttag">אתם סוגרים — אנחנו מבצעים</div><div class="ptdesc">סוכנויות שרוצות להציע אוטומציה. אתם מוכרים תחת השם שלכם, אנחנו עושים את העבודה בשקט.</div><ul class="ptpts"><li>אתם שומרים על קשר הלקוח</li><li>מחיר קמעונאי — אתם קובעים</li><li>עבודה שקטה תחת המותג שלכם</li><li>SLA ברור</li></ul><button class="btn btn-out" style="width:100%" onclick="om('pt2')">אני מעוניין</button></div>
-      <div class="ptcard glass fade d2"><div class="ptnum">03</div><div class="pticon">👨‍💻</div><div class="ptname">הצטרף לצוות</div><div class="pttag">קבלן / פרילנסר / שותף טכני</div><div class="ptdesc">מחפשים אנשי Make.com, מפתחים, ומומחי אוטומציה לפרויקטים מעניינים עם גיבוי של צוות.</div><ul class="ptpts"><li>עבודה על פרויקטים בתשלום</li><li>גמישות מלאה — קבלן עצמאי</li><li>ליווי וגיבוי של ריצ׳רד</li><li>אפשרות לצמוח לשותפות</li></ul><button class="btn btn-out" style="width:100%" onclick="om('hire')">שלח קו"ח / פורטפוליו</button></div>
+      <div class="ptcard glass fade d2"><div class="ptnum">03</div><div class="pticon">👨‍💻</div><div class="ptname">הצטרף לצוות</div><div class="pttag">קבלן / פרילנסר / שותף טכני</div><div class="ptdesc">מחפשים אנשי Make.n8n, מערכות מידע, אבטחת מידע, מפתחים, ומומחי אוטומציה לפרויקטים מעניינים עם גיבוי של צוות.</div><ul class="ptpts"><li>עבודה על פרויקטים בתשלום</li><li>גמישות מלאה — קבלן עצמאי</li><li>ליווי וגיבוי של ריצ׳ארד</li><li>אפשרות לצמוח לשותפות</li></ul><button class="btn btn-out" style="width:100%" onclick="om('hire')">שלח קו"ח / פורטפוליו</button></div>
     </div>
   </div>
 </section>
@@ -733,6 +845,34 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
   <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
 </a>
 
+<!-- TALK / CONTACT POPUP — 3 ways to reach us -->
+<div class="mo" id="m-talk">
+  <div class="mb glass" style="max-width:440px;text-align:center">
+    <button class="mc" onclick="cm2('talk')">×</button>
+    <span class="mk">בואו נדבר</span>
+    <div class="mt" style="margin-bottom:10px">איך תרצו ליצור קשר?</div>
+    <div class="ms" style="margin-bottom:24px">בחרו את הדרך שהכי נוחה לכם</div>
+    <div style="display:flex;flex-direction:column;gap:11px">
+      <a href="tel:+972545764327" class="btn btn-blue" style="width:100%;padding:16px;border-radius:14px;font-size:14.5px">📞 לחייג עכשיו</a>
+      <a href="https://wa.me/972545764327?text=היי%20דונה" target="_blank" class="btn btn-wa" style="width:100%;padding:16px;border-radius:14px;font-size:14.5px">💬 WhatsApp עם דונה</a>
+      <button class="btn btn-out" style="width:100%;padding:16px;border-radius:14px;font-size:14.5px" onclick="cm2('talk');om('lead')">✏️ השארת פרטים</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEAD FORM POPUP — name + phone -->
+<div class="mo" id="m-lead">
+  <div class="mb glass" style="max-width:440px">
+    <button class="mc" onclick="cm2('lead')">×</button>
+    <span class="mk">השארת פרטים</span>
+    <div class="mt">נחזור אליכם בהקדם</div>
+    <div class="ms">השאירו שם וטלפון — נחזור אליכם תוך כמה שעות</div>
+    <div class="fg"><label class="fl">שם מלא <span class="req">*</span></label><input class="fi" id="ldName" placeholder="ישראל ישראלי"></div>
+    <div class="fg" style="margin-bottom:20px"><label class="fl">טלפון <span class="req">*</span></label><input class="fi" id="ldPhone" placeholder="05X-XXXXXXX" type="tel"></div>
+    <button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="subLead()">שלח →</button>
+  </div>
+</div>
+
 <!-- HOURS PURCHASE POPUP -->
 <div class="mo" id="m-hours">
   <div class="mb-hours">
@@ -807,20 +947,20 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
 </div>
 
 <!-- EXISTING MODALS -->
-<div class="mo" id="m-sch"><div class="mb glass"><button class="mc" onclick="cm2('sch')">×</button><span class="mk">קביעת שיחה</span><div class="mt">שיחת היכרות — 20 דקות</div><div class="ms">ספרו לנו מי אתם ואנחנו נחזור לתאם שעה.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" id="scn" placeholder="שם מלא"></div><div class="fg"><label class="fl">טלפון</label><input class="fi" id="scp" placeholder="05X-XXXXXXX"></div></div><div class="fg"><label class="fl">מה ראיתם שתפס?</label><textarea class="fi" id="scno" rows="2" placeholder="פרויקט, נושא..."></textarea></div><div class="fg" style="margin-bottom:20px"><label class="fl">מתי עדיף?</label><select class="fi" id="sct" style="appearance:none"><option>בוקר (9–12)</option><option>צהריים (12–15)</option><option>אחרי הצהריים (15–18)</option><option>ערב (18–20)</option></select></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="subSch()">שלח בקשה לשיחה →</button></div></div>
+<div class="mo" id="m-sch"><div class="mb glass" style="max-width:920px;width:96vw;padding:20px;height:88vh;display:flex;flex-direction:column"><button class="mc" onclick="cm2('sch')">×</button><span class="mk" style="margin-bottom:8px">קביעת שיחה</span><div class="mt" style="margin-bottom:12px;font-size:18px">בחרו שעה שנוחה לכם</div><div style="flex:1;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:#fff;position:relative"><iframe id="calIframe" src="about:blank" style="width:100%;height:100%;border:0;display:block" title="קביעת שיחה - AutoScale"></iframe></div></div></div>
 
 <div class="mo" id="m-pt1"><div class="mb glass"><button class="mc" onclick="cm2('pt1')">×</button><span class="mk">הפניה ועמלה</span><div class="mt">הצטרפות לתוכנית ההפניות</div><div class="ms">השאירו פרטים ונחזור עם כל המידע.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" data-name="full_name" placeholder="שם מלא"></div><div class="fg"><label class="fl">טלפון</label><input class="fi" data-name="phone" placeholder="05X-XXXXXXX"></div></div><div class="fg"><label class="fl">תחום פעילות</label><input class="fi" data-name="industry" placeholder="שיווק, נדל״ן..."></div><button class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:12px" onclick="subPt('pt1')">שלח →</button></div></div>
 
 <div class="mo" id="m-pt2"><div class="mb glass"><button class="mc" onclick="cm2('pt2')">×</button><span class="mk">White Label</span><div class="mt">שותפות מקצועית</div><div class="ms">לסוכנויות שרוצות להוסיף שירותי אוטומציה.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" data-name="full_name" placeholder="שם מלא"></div><div class="fg"><label class="fl">שם הסוכנות</label><input class="fi" data-name="agency_name" placeholder="שם החברה"></div></div><div class="fg"><label class="fl">טלפון</label><input class="fi" data-name="phone" placeholder="05X-XXXXXXX"></div><div class="fg"><label class="fl">תיאור קצר</label><textarea class="fi" data-name="description" rows="2" placeholder="מה אתם עושים..."></textarea></div><button class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:12px" onclick="subPt('pt2')">שלח →</button></div></div>
 
-<div class="mo" id="m-hire"><div class="mb glass"><button class="mc" onclick="cm2('hire')">×</button><span class="mk">הצטרף לצוות</span><div class="mt">עבדו עם AutoScale</div><div class="ms">קבלנים ומפתחי אוטומציה — רוצים לשמוע מכם.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" data-name="full_name" placeholder="שם מלא"></div><div class="fg"><label class="fl">טלפון</label><input class="fi" data-name="phone" placeholder="05X-XXXXXXX"></div></div><div class="fg"><label class="fl">התמחות</label><select class="fi" data-name="expertise" style="appearance:none"><option>Make.com</option><option>WhatsApp API</option><option>Front-end</option><option>שיווק דיגיטלי</option><option>אחר</option></select></div><div class="fg"><label class="fl">קישור לפורטפוליו</label><input class="fi" data-name="portfolio" placeholder="https://..."></div><button class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:12px" onclick="subPt('hire')">שלח →</button></div></div>
+<div class="mo" id="m-hire"><div class="mb glass"><button class="mc" onclick="cm2('hire')">×</button><span class="mk">הצטרף לצוות</span><div class="mt">עבדו עם AutoScale</div><div class="ms">קבלנים ומפתחי אוטומציה — רוצים לשמוע מכם.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" data-name="full_name" placeholder="שם מלא"></div><div class="fg"><label class="fl">טלפון</label><input class="fi" data-name="phone" placeholder="05X-XXXXXXX"></div></div><div class="fg"><label class="fl">התמחות</label><input class="fi" data-name="expertise" placeholder="למשל: Make.n8n, מערכות מידע, פיתוח..."></div><div class="fg"><label class="fl">קישור לפורטפוליו</label><input class="fi" data-name="portfolio" placeholder="https://..."></div><button class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:12px" onclick="subPt('hire')">שלח →</button></div></div>
 
 <!-- Portfolio project detail popups -->
 <div class="mo" id="m-p1"><div class="mb mb-portfolio glass"><button class="mc" onclick="cm2('p1')">×</button><div class="mp-img-wrap"><img class="mp-img mp-current" data-mid="mp1" data-idx="0" src="portfolio-images/landing-1.jpg" alt="דף נחיתה 1"><button class="mp-nav prev" onclick="mpNav('mp1',-1,2)" aria-label="הקודם">‹</button><button class="mp-nav next" onclick="mpNav('mp1',1,2)" aria-label="הבא">›</button><div class="mp-dots"><button class="mp-dot on" data-mid="mp1" data-i="0" onclick="mpGo('mp1',0,2)" aria-label="תמונה 1"></button><button class="mp-dot" data-mid="mp1" data-i="1" onclick="mpGo('mp1',1,2)" aria-label="תמונה 2"></button></div></div><span class="mk">תיק עבודות</span><div class="mt">דפי נחיתה</div><div class="ms">דפי וידאו, טפסי לידים, וחיבור מלא לפיקסלים</div><div class="pdet">בנייה והשקה של דפי נחיתה ממירים בעברית: דף וידאו עם step indicator, טופס ליד עם ולידציה inline, דף תודה עם tracking events, וחיבור ל-Make.com, Google Sheets, Meta Pixel, GTM, ו-WhatsApp אוטומטי ללקוח ולצוות.</div><div class="cr" style="margin-bottom:16px"><span class="ch">HTML / CSS</span><span class="ch">GTM</span><span class="ch">Meta Pixel</span><span class="ch">WhatsApp API</span><span class="ch">Make.com</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p1');om('sch')">📅 קבעו שיחה על פרויקט דומה</button></div></div>
 
 <div class="mo" id="m-p2"><div class="mb mb-portfolio glass"><button class="mc" onclick="cm2('p2')">×</button><div class="mp-img-wrap"><img class="mp-img mp-current" data-mid="mp2" data-idx="0" src="portfolio-images/contract-1.jpg" alt="חוזה אוטומטי 1"><button class="mp-nav prev" onclick="mpNav('mp2',-1,2)" aria-label="הקודם">‹</button><button class="mp-nav next" onclick="mpNav('mp2',1,2)" aria-label="הבא">›</button><div class="mp-dots"><button class="mp-dot on" data-mid="mp2" data-i="0" onclick="mpGo('mp2',0,2)" aria-label="תמונה 1"></button><button class="mp-dot" data-mid="mp2" data-i="1" onclick="mpGo('mp2',1,2)" aria-label="תמונה 2"></button></div></div><span class="mk">תיק עבודות</span><div class="mt">חוזה אוטומטי ושליחת חתימה</div><div class="ms">יצירה, שליחה, חתימה וקליטה — אוטומטית מקצה לקצה</div><div class="pdet">יצירת חוזה מתוך נתוני CRM, שליחה לחתימה, סטטוסים ותזכורות. תבנית חוזה עם משתנים וסעיפים דינמיים. סטטוס חתימה וקליטה אוטומטית למערכת. חוסך שעות עבודה ידנית ומונע טעויות.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Make.com</span><span class="ch">CRM</span><span class="ch">e-Signature</span><span class="ch">Word Templates</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p2');om('sch')">📅 קבעו שיחה</button></div></div>
 
-<div class="mo" id="m-p3"><div class="mb mb-portfolio glass"><button class="mc" onclick="cm2('p3')">×</button><div class="mp-img-wrap"><img class="mp-img mp-current" data-mid="mp3" data-idx="0" src="portfolio-images/crm-1.jpg" alt="CRM 1"><button class="mp-nav prev" onclick="mpNav('mp3',-1,2)" aria-label="הקודם">‹</button><button class="mp-nav next" onclick="mpNav('mp3',1,2)" aria-label="הבא">›</button><div class="mp-dots"><button class="mp-dot on" data-mid="mp3" data-i="0" onclick="mpGo('mp3',0,2)" aria-label="תמונה 1"></button><button class="mp-dot" data-mid="mp3" data-i="1" onclick="mpGo('mp3',1,2)" aria-label="תמונה 2"></button></div></div><span class="mk">תיק עבודות</span><div class="mt">מערכת CRM ואוטומציית לידים</div><div class="ms">Facebook Leads → CRM → WhatsApp</div><div class="pdet">חיבור Facebook Lead Ads → Make.com → Google Sheets + Monday CRM. WhatsApp אוטומטי ללקוח תוך 60 שניות. מעקב סטטוס ועדכון אוטומטי בכל שלב, כולל דוחות נוכחות, שעות עבודה, ומעקב משימות עובדים.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Monday</span><span class="ch">Facebook Leads</span><span class="ch">Make.com</span><span class="ch">WhatsApp</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p3');om('sch')">📅 קבעו שיחה</button></div></div>
+<div class="mo" id="m-p3"><div class="mb mb-portfolio glass"><button class="mc" onclick="cm2('p3')">×</button><div class="mp-img-wrap"><img class="mp-img mp-current" data-mid="mp3" data-idx="0" src="portfolio-images/crm-1.jpg" alt="CRM 1"><button class="mp-nav prev" onclick="mpNav('mp3',-1,2)" aria-label="הקודם">‹</button><button class="mp-nav next" onclick="mpNav('mp3',1,2)" aria-label="הבא">›</button><div class="mp-dots"><button class="mp-dot on" data-mid="mp3" data-i="0" onclick="mpGo('mp3',0,2)" aria-label="תמונה 1"></button><button class="mp-dot" data-mid="mp3" data-i="1" onclick="mpGo('mp3',1,2)" aria-label="תמונה 2"></button></div></div><span class="mk">תיק עבודות</span><div class="mt">מערכת CRM ואוטומציית לידים</div><div class="ms">Facebook Leads → CRM → WhatsApp</div><div class="pdet">חיבור Facebook Lead Ads → Make.com → Google Sheets + Monday CRM. WhatsApp אוטומטי ללקוח. מעקב סטטוס ועדכון אוטומטי בכל שלב, כולל דוחות נוכחות, שעות עבודה, ומעקב משימות עובדים.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Monday</span><span class="ch">Facebook Leads</span><span class="ch">Make.com</span><span class="ch">WhatsApp</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p3');om('sch')">📅 קבעו שיחה</button></div></div>
 
 <div class="mo" id="m-p4"><div class="mb glass"><button class="mc" onclick="cm2('p4')">×</button><span class="mk">תיק עבודות</span><div class="mt">תיאום פגישות אוטומטי ועדכון</div><div class="ms">קביעה, תזכורות ותיעוד — בלי התעסקות ידנית</div><div class="pdet">קביעת פגישה, תזכורות אוטומטיות ותיעוד במערכת. דף קביעת פגישה עם זמינות בזמן אמת. יצירת פגישה ושליחת תזכורות ב-WhatsApp ובמייל לפני המועד. עדכון סטטוס בורד עם כל שינוי.</div><div class="cr" style="margin-bottom:16px"><span class="ch">Calendly</span><span class="ch">Make.com</span><span class="ch">Google Calendar</span><span class="ch">WhatsApp</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p4');om('sch')">📅 קבעו שיחה</button></div></div>
 
@@ -843,8 +983,27 @@ function cm(){document.getElementById('nlinks').classList.remove('op')}
 document.querySelectorAll('.fade').forEach(el=>new IntersectionObserver(([e])=>{if(e.isIntersecting)el.classList.add('v')},{threshold:.1}).observe(el));
 
 // MODALS
-function om(id){const m=document.getElementById('m-'+id);if(m){m.classList.add('op');document.body.style.overflow='hidden'}}
-function cm2(id){const m=document.getElementById('m-'+id);if(m){m.classList.remove('op');document.body.style.overflow=''}}
+function om(id){
+  const m=document.getElementById('m-'+id);
+  if(m){
+    m.classList.add('op');
+    document.body.style.overflow='hidden';
+    // Lazy-load Cal.com iframe only when schedule modal opens
+    if(id==='sch'){
+      const iframe=document.getElementById('calIframe');
+      if(iframe&&iframe.src==='about:blank'){
+        iframe.src='https://cal.com/richard-tomskiy/phone-call?embed=true&layout=week_view';
+      }
+    }
+  }
+}
+function cm2(id){
+  const m=document.getElementById('m-'+id);
+  if(m){
+    m.classList.remove('op');
+    document.body.style.overflow='';
+  }
+}
 document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m){m.classList.remove('op');document.body.style.overflow=''}}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.mo.op').forEach(m=>m.classList.remove('op'));document.body.style.overflow=''}});
 
@@ -896,19 +1055,6 @@ function subCf(){
   })}).catch(()=>{});
   document.getElementById('cfi').style.display='none';
   document.getElementById('cfs').style.display='block';
-}
-
-// SCHEDULE
-function subSch(){
-  const n=document.getElementById('scn').value.trim(),p=document.getElementById('scp').value.trim();
-  if(!n||!p){alert('אנא מלאו שם וטלפון');return}
-  fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-    type:'schedule_call',name:n,phone:p,
-    note:document.getElementById('scno').value,
-    time:document.getElementById('sct').value,
-    timestamp:new Date().toISOString()
-  })}).catch(()=>{});
-  cm2('sch');alert('תודה '+n+'! נחזור אליך לתאום שיחה.');
 }
 
 // PARTNER — clearly tagged webhook with form fields
@@ -969,6 +1115,79 @@ if(ckState==='accepted'||ckState==='declined'){
   document.getElementById('ck').style.display='none';
   if(ckState==='declined')blockTracking();
   else loadAnalytics();
+}
+
+// MARQUEE DRAG-TO-SCROLL — animation always runs, but drag temporarily moves it
+(function(){
+  const row=document.querySelector('.mq-row');
+  const track=document.querySelector('.mq-track');
+  if(!row||!track)return;
+  let isDown=false,startX=0,currentOffset=0,dragOffset=0;
+  function getMatrix(){
+    const t=getComputedStyle(track).transform;
+    if(t==='none')return 0;
+    const m=t.match(/matrix.*\((.+)\)/);
+    if(m)return parseFloat(m[1].split(',')[4])||0;
+    return 0;
+  }
+  row.addEventListener('mousedown',e=>{
+    isDown=true;
+    row.classList.add('dragging');
+    startX=e.pageX;
+    currentOffset=getMatrix();
+    dragOffset=0;
+    e.preventDefault();
+  });
+  row.addEventListener('touchstart',e=>{
+    isDown=true;
+    row.classList.add('dragging');
+    startX=e.touches[0].pageX;
+    currentOffset=getMatrix();
+    dragOffset=0;
+  },{passive:true});
+  function onMove(pageX){
+    if(!isDown)return;
+    dragOffset=pageX-startX;
+    track.style.transform='translateX('+(currentOffset+dragOffset)+'px)';
+  }
+  document.addEventListener('mousemove',e=>onMove(e.pageX));
+  document.addEventListener('touchmove',e=>onMove(e.touches[0].pageX),{passive:true});
+  function onEnd(){
+    if(!isDown)return;
+    isDown=false;
+    row.classList.remove('dragging');
+    // Resume animation from current position
+    setTimeout(()=>{track.style.transform=''},10);
+  }
+  document.addEventListener('mouseup',onEnd);
+  document.addEventListener('touchend',onEnd);
+  document.addEventListener('mouseleave',onEnd);
+})();
+
+// LEAD FORM (from talk popup)
+function subLead(){
+  const n=document.getElementById('ldName').value.trim();
+  const p=document.getElementById('ldPhone').value.trim();
+  if(!n||!p){alert('אנא מלאו שם וטלפון');return}
+  fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    type:'quick_lead',name:n,phone:p,source:'talk_popup',
+    timestamp:new Date().toISOString()
+  })}).catch(()=>{});
+  cm2('lead');
+  alert('תודה '+n+'! נחזור אליך בהקדם.');
+}
+
+// HOW IT WORKS ACCORDION
+function toggleHow(){
+  const c=document.getElementById('howContent');
+  const a=document.getElementById('howArrow');
+  if(c.style.maxHeight&&c.style.maxHeight!=='0px'){
+    c.style.maxHeight='0px';
+    a.style.transform='rotate(0deg)';
+  }else{
+    c.style.maxHeight=c.scrollHeight+'px';
+    a.style.transform='rotate(180deg)';
+  }
 }
 
 // PORTFOLIO MODAL CAROUSEL — full size images inside project popups
