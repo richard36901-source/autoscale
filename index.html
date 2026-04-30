@@ -136,10 +136,14 @@ nav.sc{background:rgba(6,13,26,.93);border-bottom-color:var(--border);backdrop-f
 .mq-row{display:block;overflow:hidden;direction:ltr;position:relative;z-index:1;cursor:grab;user-select:none}
 .mq-row.dragging{cursor:grabbing}
 .mq-row.dragging .mq-track{animation-play-state:paused}
-.mq-track{display:flex;align-items:center;width:max-content;will-change:transform;animation:mq-f 65s linear infinite;direction:ltr}
+.mq-track{display:flex;align-items:center;width:max-content;will-change:transform;animation:mq-f var(--mq-duration,65s) linear infinite;direction:ltr}
 @keyframes mq-f{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .logo-pill{display:inline-flex;align-items:center;gap:9px;padding:9px 16px;border-radius:999px;background:rgba(12,26,56,.7);border:1px solid var(--border);white-space:nowrap;font-size:13px;font-weight:600;color:var(--text);flex-shrink:0;transition:border-color .2s,transform .2s;direction:ltr;margin-right:12px;pointer-events:none}
 .logo-pill svg{flex-shrink:0;width:20px;height:20px}
+
+/* MARQUEE — speeds up on hover (no buttons) */
+.mq-wrap:hover .mq-track{animation-duration:18s}
+.mq-track{transition:animation-duration .3s ease}
 
 /* PORTFOLIO */
 .pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:36px}
@@ -181,7 +185,7 @@ nav.sc{background:rgba(6,13,26,.93);border-bottom-color:var(--border);backdrop-f
 .tg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;max-width:900px;margin:0 auto}
 .tcard{padding:0;overflow:hidden;display:flex;flex-direction:column;transition:border-color .25s,transform .25s}
 .tcard:hover{border-color:var(--border2);transform:translateY(-4px)}
-.tcard-img{width:100%;aspect-ratio:800/1004;object-fit:cover;display:block;background:#000}
+.tcard-img{width:100%;aspect-ratio:800/953;object-fit:cover;display:block;background:#000}
 .tcard-foot{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid var(--borders)}
 .tcard-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--accent2);text-transform:uppercase}
 .tcard-quote{font-size:12.5px;color:var(--muted);font-style:italic;font-weight:300}
@@ -190,14 +194,14 @@ nav.sc{background:rgba(6,13,26,.93);border-bottom-color:var(--border);backdrop-f
 /* PARTNER */
 #partner{background:rgba(9,18,34,.6)}
 .ptgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
-.ptcard{padding:32px 28px;transition:border-color .2s,transform .2s;position:relative}
+.ptcard{padding:32px 28px;transition:border-color .2s,transform .2s;position:relative;display:flex;flex-direction:column}
 .ptcard:hover{border-color:var(--border2);transform:translateY(-4px)}
 .ptnum{font-family:var(--num);font-size:52px;font-weight:700;line-height:1;margin-bottom:-4px;background:linear-gradient(135deg,#3a8ef6,#1dffd4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:.55;letter-spacing:-.04em}
 .pticon{font-size:26px;margin-bottom:14px;margin-top:8px}
 .ptname{font-size:20px;font-weight:700;margin-bottom:6px}
 .pttag{font-family:var(--mono);font-size:11px;color:var(--accent2);letter-spacing:.04em;margin-bottom:14px}
 .ptdesc{font-size:13.5px;color:var(--muted);line-height:1.7;margin-bottom:20px;font-weight:300}
-.ptpts{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:26px}
+.ptpts{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:26px;flex:1}
 .ptpts li{font-size:13px;color:var(--muted);display:flex;gap:8px;font-weight:300}
 .ptpts li::before{content:'→';color:var(--accent);flex-shrink:0}
 
@@ -262,6 +266,10 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:36
 .fb{font-size:18px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.3px}
 .ftag{font-size:12px;color:var(--muted2);font-family:var(--mono);font-weight:400;margin-top:4px;letter-spacing:.04em}
 .fcopy{font-size:11px;color:var(--muted2);font-family:var(--mono);font-weight:400;margin-top:14px;letter-spacing:.04em}
+
+/* PAYMENT OPTION BUTTONS */
+.pay-option{width:100%;display:flex;align-items:center;gap:14px;padding:18px 20px;background:rgba(58,142,246,.04);border:1.5px solid var(--border);border-radius:16px;color:var(--text);font-family:var(--sans);cursor:pointer;text-align:right;transition:all .18s}
+.pay-option:hover{background:rgba(29,255,212,.06);border-color:rgba(29,255,212,.4);transform:translateY(-2px);box-shadow:0 8px 22px rgba(29,255,212,.08)}
 
 /* HOW IT WORKS — 8-step vertical timeline */
 .how-timeline{position:relative;padding:8px 26px 32px 8px;display:flex;flex-direction:column;gap:14px}
@@ -409,8 +417,8 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
     <p class="sub fade d2">שלושה מסלולי עבודה שמתאימים לסוגים שונים של פרויקטים ולקוחות.</p>
     <div class="sg">
       <div class="sc glass fade"><div class="si">⏱</div><div class="sn2">בנק שעות</div><div class="sd">קונים שעות מראש ומושכים לפי הצורך. אידיאלי לעסקים עם עבודה שוטפת וגמישה.</div><div class="sp">₪270–300</div><div class="sp2">לשעה · ניכוי אוטומטי מהבנק</div><ul class="sf"><li>רכישה מראש בהנחה</li><li>דשבורד לקוח בזמן אמת</li><li>דיווח על כל משימה</li></ul></div>
-      <div class="sc glass ft fade d1"><div class="si">🚀</div><div class="sn2">פרויקט חד-פעמי</div><div class="sd">סקופ ברור, מחיר קבוע, לוח זמנים מוסכם. מהרעיון ועד להשקה.</div><div class="sp">₪2,500+</div><div class="sp2">לפי פרויקט · הצעה ספציפית</div><ul class="sf"><li>סקופ מוגדר ומוסכם</li><li>סרטוני הדרכה לפי צורך + מדריכים</li></ul></div>
-      <div class="sc glass fade d2"><div class="si">🔧</div><div class="sn2">תחזוקה שוטפת</div><div class="sd">ריטיינר חודשי לתמיכה, עדכונים, תיקונים, ופיתוח מתמשך של המערכות שלכם.</div><div class="sp"><span style="font-size:11px;font-weight:400;color:var(--muted2);margin-left:5px;background:none;-webkit-text-fill-color:var(--muted2);letter-spacing:.04em;font-family:var(--mono)">החל מ-</span>₪400–490</div><div class="sp2">לחודש · כולל תמיכה ושדרוגים</div><ul class="sf"><li>תמיכה מועדפת</li><li>בקשות דחיפות בפריוריטי</li><li>ניטור שוטף של מערכות</li></ul></div>
+      <div class="sc glass ft fade d1"><div class="si">🚀</div><div class="sn2">פרויקט חד-פעמי</div><div class="sd">סקופ ברור, מחיר קבוע, לוח זמנים מוסכם. מהרעיון ועד להשקה.</div><div class="sp"><span style="font-size:11px;font-weight:400;color:var(--muted2);margin-left:5px;background:none;-webkit-text-fill-color:var(--muted2);letter-spacing:.04em;font-family:var(--mono)">החל מ-</span>₪2,500</div><div class="sp2">לפי פרויקט · הצעה ספציפית</div><ul class="sf"><li>סקופ מוגדר ומוסכם</li><li>סרטוני הדרכה לפי צורך + מדריכים</li></ul></div>
+      <div class="sc glass fade d2"><div class="si">🔧</div><div class="sn2">תחזוקה שוטפת</div><div class="sd">ריטיינר חודשי לתמיכה, עדכונים, תיקונים, ופיתוח מתמשך של המערכות שלכם.</div><div class="sp"><span style="font-size:11px;font-weight:400;color:var(--muted2);margin-left:5px;background:none;-webkit-text-fill-color:var(--muted2);letter-spacing:.04em;font-family:var(--mono)">החל מ-</span>₪400</div><div class="sp2">לחודש · כולל תמיכה ושדרוגים</div><ul class="sf"><li>תמיכה מועדפת</li><li>בקשות דחיפות בפריוריטי</li><li>ניטור שוטף של מערכות</li></ul></div>
     </div>
   </div>
 </section>
@@ -613,7 +621,7 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
         <span class="ch" style="font-size:12.5px;padding:7px 14px">✅ אישורי הגעה לאירועים</span>
       </div>
     </div>
-    <div class="sb glass fade"><div><h3>ראיתם משהו שתפס אתכם?</h3><p>קבעו שיחת היכרות של 10 דקות — בלי התחייבות.</p></div><div class="sbbtns"><a href="https://wa.me/972545764327?text=היי%20ראיתי%20את%20העבודות%20שלכם" target="_blank" class="btn btn-wa">💬 WhatsApp</a><button class="btn btn-blue" onclick="om('sch')">📅 קביעת שיחה</button></div></div>
+    <div class="sb glass fade"><div><h3>ראיתם משהו שתפס אתכם?</h3><p>קבעו שיחת היכרות של 10 דקות — בלי התחייבות.</p></div><div class="sbbtns"><a href="https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל" target="_blank" class="btn btn-wa">💬 WhatsApp</a><button class="btn btn-blue" onclick="om('sch')">📅 קביעת שיחה</button></div></div>
   </div>
 </section>
 
@@ -625,21 +633,46 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
     <p class="sub fade d2">כמה דוגמאות קצרות להודעות שקיבלנו אחרי הטמעה.</p>
     <div class="tg">
       <div class="tcard glass fade">
-        <img class="tcard-img" src="portfolio-images/testimonial-1.jpg" alt="המלצה — אוטומציית עובדים" loading="lazy">
+        <img class="tcard-img" src="portfolio-images/testimonial-1.jpg" alt="המלצה - דביר, אוטומציה לעובדים" loading="lazy">
         <div class="tcard-foot">
           <span class="tcard-tag">אוטומציה ארגונית</span>
           <span class="tcard-quote">"אחלה שירות ואחלה יחס"</span>
         </div>
       </div>
       <div class="tcard glass fade d1">
-        <img class="tcard-img" src="portfolio-images/testimonial-2.jpg" alt="המלצה — חוזים אוטומטיים" loading="lazy">
+        <img class="tcard-img" src="portfolio-images/testimonial-2.jpg" alt="המלצה - עורך דין אליהו גאלי" loading="lazy">
         <div class="tcard-foot">
-          <span class="tcard-tag">חוזה אוטומטי</span>
-          <span class="tcard-quote">"פשוט תותח. תמשיך ככה 💪"</span>
+          <span class="tcard-tag">אוטומציה לעורכי דין</span>
+          <span class="tcard-quote">"מקצוען אמיתי, מדויק ברמות"</span>
         </div>
       </div>
     </div>
-    <p class="tnote fade d2">* שמות ותמונות פרופיל טושטשו לשמירה על פרטיות הלקוחות</p>
+    <!-- VIDEO TESTIMONIAL PLACEHOLDER -->
+    <div class="glass fade" style="padding:0;margin-top:24px;max-width:900px;margin-left:auto;margin-right:auto;overflow:hidden;border-radius:18px">
+      <div style="position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,rgba(58,142,246,.12),rgba(29,255,212,.06));display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px">
+        <!-- Replace this video tag's src with your video file path -->
+        <video id="testimonialVideo" controls preload="metadata" poster="" style="width:100%;height:100%;object-fit:cover;display:none">
+          <source src="portfolio-images/testimonial-video.mp4" type="video/mp4">
+        </video>
+        <div id="videoPlaceholder" style="text-align:center;padding:40px">
+          <div style="font-size:64px;margin-bottom:16px;opacity:.7">🎬</div>
+          <div style="font-size:17px;font-weight:700;margin-bottom:6px">סרטון המלצה של לקוח</div>
+          <div style="font-size:13px;color:var(--muted);font-weight:300">העלה את הסרטון לתיקיית portfolio-images בשם testimonial-video.mp4</div>
+        </div>
+      </div>
+    </div>
+    <script>
+      (function(){
+        const v=document.getElementById('testimonialVideo');
+        if(!v)return;
+        v.addEventListener('loadedmetadata',()=>{
+          v.style.display='block';
+          const ph=document.getElementById('videoPlaceholder');
+          if(ph)ph.style.display='none';
+        });
+        v.addEventListener('error',()=>{/* keep placeholder */});
+      })();
+    </script>
 
     <!-- COMMON DOMAINS -->
     <div class="glass fade" style="padding:28px 32px;margin-top:42px;max-width:900px;margin-left:auto;margin-right:auto">
@@ -751,7 +784,7 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
     <div class="ptgrid">
       <div class="ptcard glass fade"><div class="ptnum">01</div><div class="pticon">💸</div><div class="ptname">הפניה ועמלה</div><div class="pttag">אתם מפנים — אנחנו סוגרים ועושים</div><div class="ptdesc">יש לכם לקוח שצריך אוטומציה? שלחו אותם אלינו. אנחנו מטפלים בהכל ואתם מקבלים עמלה על כל סגירה.</div><ul class="ptpts"><li>עמלה של 10–15% על כל פרויקט</li><li>אתם לא מעורבים בעבודה</li><li>דיווח שקוף על סטטוס</li><li>פשוט, מהיר, ללא סיכון</li></ul><button class="btn btn-out" style="width:100%" onclick="om('pt1')">אני מעוניין</button></div>
       <div class="ptcard glass fade d1"><div class="ptnum">02</div><div class="pticon">🤝</div><div class="ptname">White Label</div><div class="pttag">אתם סוגרים — אנחנו מבצעים</div><div class="ptdesc">סוכנויות שרוצות להציע אוטומציה. אתם מוכרים תחת השם שלכם, אנחנו עושים את העבודה בשקט.</div><ul class="ptpts"><li>אתם שומרים על קשר הלקוח</li><li>מחיר קמעונאי — אתם קובעים</li><li>עבודה שקטה תחת המותג שלכם</li><li>SLA ברור</li></ul><button class="btn btn-out" style="width:100%" onclick="om('pt2')">אני מעוניין</button></div>
-      <div class="ptcard glass fade d2"><div class="ptnum">03</div><div class="pticon">👨‍💻</div><div class="ptname">הצטרף לצוות</div><div class="pttag">קבלן / פרילנסר / שותף טכני</div><div class="ptdesc">מחפשים אנשי Make.n8n, מערכות מידע, אבטחת מידע, מפתחים, ומומחי אוטומציה לפרויקטים מעניינים עם גיבוי של צוות.</div><ul class="ptpts"><li>עבודה על פרויקטים בתשלום</li><li>גמישות מלאה — קבלן עצמאי</li><li>ליווי וגיבוי של ריצ׳ארד</li><li>אפשרות לצמוח לשותפות</li></ul><button class="btn btn-out" style="width:100%" onclick="om('hire')">שלח קו"ח / פורטפוליו</button></div>
+      <div class="ptcard glass fade d2"><div class="ptnum">03</div><div class="pticon">👨‍💻</div><div class="ptname">הצטרף לצוות</div><div class="pttag">קבלן / פרילנסר / שותף טכני</div><div class="ptdesc">מחפשים אנשי Make.n8n, מערכות ואבטחת מידע, מפתחים, ומומחי אוטומציה לפרויקטים מעניינים.</div><ul class="ptpts"><li>עבודה על פרויקטים בתשלום</li><li>גמישות מלאה — קבלן עצמאי</li><li>ליווי וגיבוי של ריצ׳ארד</li><li>אפשרות לצמוח לשותפות</li></ul><button class="btn btn-out" style="width:100%" onclick="om('hire')">שלח קו"ח / פורטפוליו</button></div>
     </div>
   </div>
 </section>
@@ -795,7 +828,7 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
             <li>בוט WhatsApp בסיסי</li>
           </ul>
         </div>
-        <a href="quick-buy.html" class="btn btn-blue" style="width:100%">לחנות המוצרים →</a>
+        <a href="products" class="btn btn-blue" style="width:100%">לחנות המוצרים →</a>
       </div>
 
     </div>
@@ -811,8 +844,8 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
       <div class="fade">
         <p class="sub" style="margin-bottom:0">מוכנים להתחיל? יש שאלה? פשוט כתבו לנו.</p>
         <div class="chs">
-          <a href="https://wa.me/972545764327" target="_blank" class="ch2 glass"><span class="chicon">💬</span><div><div class="chname">WhatsApp — דונה</div><div class="chsub">הדרך המהירה ביותר · תגובה תוך שעות</div></div></a>
-          <a href="mailto:Donna@autoscalehq.io" class="ch2 glass"><span class="chicon">✉️</span><div><div class="chname">אימייל</div><div class="chsub">Donna@autoscalehq.io</div></div></a>
+          <a href="https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל" target="_blank" class="ch2 glass"><span class="chicon">💬</span><div><div class="chname" style="color:var(--accent2)">WhatsApp — דונה</div><div class="chsub">הדרך המהירה ביותר · תגובה תוך שעות</div></div></a>
+          <a href="mailto:Donna@autoscalehq.io" class="ch2 glass"><span class="chicon">✉️</span><div><div class="chname" style="color:var(--accent2)">אימייל</div><div class="chsub">Donna@autoscalehq.io</div></div></a>
         </div>
       </div>
       <div class="cf glass fade d1">
@@ -841,7 +874,7 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
 </footer>
 
 <!-- WA FLOAT -->
-<a href="https://wa.me/972545764327" target="_blank" class="wa" aria-label="WhatsApp">
+<a href="https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל" target="_blank" class="wa" aria-label="WhatsApp">
   <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
 </a>
 
@@ -853,8 +886,8 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
     <div class="mt" style="margin-bottom:10px">איך תרצו ליצור קשר?</div>
     <div class="ms" style="margin-bottom:24px">בחרו את הדרך שהכי נוחה לכם</div>
     <div style="display:flex;flex-direction:column;gap:11px">
-      <a href="tel:+972545764327" class="btn btn-blue" style="width:100%;padding:16px;border-radius:14px;font-size:14.5px">📞 לחייג עכשיו</a>
-      <a href="https://wa.me/972545764327?text=היי%20דונה" target="_blank" class="btn btn-wa" style="width:100%;padding:16px;border-radius:14px;font-size:14.5px">💬 WhatsApp עם דונה</a>
+      <button class="btn btn-blue" style="width:100%;padding:16px;border-radius:14px;font-size:14.5px;border:none;cursor:pointer" onclick="cm2('talk');om('sch')">📅 לתיאום שיחה</button>
+      <a href="https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל" target="_blank" class="btn btn-wa" style="width:100%;padding:16px;border-radius:14px;font-size:14.5px">💬 WhatsApp עם דונה</a>
       <button class="btn btn-out" style="width:100%;padding:16px;border-radius:14px;font-size:14.5px" onclick="cm2('talk');om('lead')">✏️ השארת פרטים</button>
     </div>
   </div>
@@ -870,6 +903,58 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
     <div class="fg"><label class="fl">שם מלא <span class="req">*</span></label><input class="fi" id="ldName" placeholder="ישראל ישראלי"></div>
     <div class="fg" style="margin-bottom:20px"><label class="fl">טלפון <span class="req">*</span></label><input class="fi" id="ldPhone" placeholder="05X-XXXXXXX" type="tel"></div>
     <button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="subLead()">שלח →</button>
+  </div>
+</div>
+
+<!-- PAYMENT METHOD PICKER POPUP -->
+<div class="mo" id="m-pay">
+  <div class="mb-hours" style="max-width:560px">
+    <div class="mh-handle"></div>
+    <button class="mh-close" onclick="cm2('pay')" aria-label="סגור">×</button>
+    <h2 class="mh-title">בחר אמצעי תשלום</h2>
+    <p class="mh-sub" id="payInfo" style="font-family:var(--num);font-size:13px;letter-spacing:.04em">לפני מע״מ: ₪0  |  כולל: ₪0</p>
+
+    <!-- Payment method logos -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)">
+      <div style="padding:10px 18px;background:rgba(58,142,246,.08);border:1px solid rgba(58,142,246,.4);border-radius:10px;color:var(--text);font-size:12.5px;font-weight:600">העברה</div>
+      <div style="padding:10px 18px;background:#7B2CBF;border-radius:10px;color:#fff;font-size:13px;font-weight:700">Paybox</div>
+      <div style="padding:10px 18px;background:#FF3D5C;border-radius:10px;color:#fff;font-size:13px;font-weight:700">bit</div>
+      <div style="padding:10px 18px;background:#fff;border-radius:10px;color:#000;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px">Google Pay</div>
+      <div style="padding:10px 18px;background:#000;border-radius:10px;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px"> Apple Pay</div>
+      <div style="padding:10px 18px;background:#1a1a2e;border-radius:10px;display:flex;align-items:center"><svg width="32" height="20" viewBox="0 0 32 20" fill="none"><circle cx="11" cy="10" r="7" fill="#EB001B"/><circle cx="21" cy="10" r="7" fill="#F79E1B"/><path d="M16 4.5a7 7 0 010 11 7 7 0 010-11z" fill="#FF5F00"/></svg></div>
+      <div style="padding:10px 18px;background:#1A1F71;border-radius:10px;color:#fff;font-size:12px;font-weight:800;letter-spacing:.05em">VISA</div>
+    </div>
+
+    <!-- Payment options -->
+    <div style="display:flex;flex-direction:column;gap:11px">
+      <button onclick="goToPayment()" class="pay-option">
+        <div style="width:48px;height:48px;border-radius:12px;background:rgba(58,142,246,.12);border:1px solid rgba(58,142,246,.3);display:grid;place-items:center;flex-shrink:0;font-size:22px">💳</div>
+        <div style="flex:1;text-align:right">
+          <div style="font-size:15px;font-weight:700;margin-bottom:3px">כרטיס / Apple Pay / Google Pay</div>
+          <div style="font-size:12.5px;color:var(--muted);font-weight:300">תשלום מאובטח · Visa · Mastercard · Paybox · Grow</div>
+        </div>
+        <span style="color:var(--muted);font-size:18px">←</span>
+      </button>
+      <button onclick="goToPayment()" class="pay-option">
+        <div style="width:48px;height:48px;border-radius:12px;background:rgba(58,142,246,.12);border:1px solid rgba(58,142,246,.3);display:grid;place-items:center;flex-shrink:0;font-size:22px">📱</div>
+        <div style="flex:1;text-align:right">
+          <div style="font-size:15px;font-weight:700;margin-bottom:3px">Bit</div>
+          <div style="font-size:12.5px;color:var(--muted);font-weight:300">תשלום מהיר דרך אפליקציית Bit</div>
+        </div>
+        <span style="color:var(--muted);font-size:18px">←</span>
+      </button>
+      <button onclick="goToPayment()" class="pay-option">
+        <div style="width:48px;height:48px;border-radius:12px;background:rgba(58,142,246,.12);border:1px solid rgba(58,142,246,.3);display:grid;place-items:center;flex-shrink:0;font-size:22px">🏦</div>
+        <div style="flex:1;text-align:right">
+          <div style="font-size:15px;font-weight:700;margin-bottom:3px">העברה בנקאית</div>
+          <div style="font-size:12.5px;color:var(--muted);font-weight:300">פרטי חשבון + אסמכתא</div>
+        </div>
+        <span style="color:var(--muted);font-size:18px">←</span>
+      </button>
+      <button onclick="backToHoursForm()" style="width:100%;background:none;border:1px solid var(--border);border-radius:14px;padding:16px;color:var(--muted);font-family:var(--sans);font-size:13.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s">
+        <span style="font-size:16px">←</span> חזור לפרטים
+      </button>
+    </div>
   </div>
 </div>
 
@@ -953,7 +1038,7 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
 
 <div class="mo" id="m-pt2"><div class="mb glass"><button class="mc" onclick="cm2('pt2')">×</button><span class="mk">White Label</span><div class="mt">שותפות מקצועית</div><div class="ms">לסוכנויות שרוצות להוסיף שירותי אוטומציה.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" data-name="full_name" placeholder="שם מלא"></div><div class="fg"><label class="fl">שם הסוכנות</label><input class="fi" data-name="agency_name" placeholder="שם החברה"></div></div><div class="fg"><label class="fl">טלפון</label><input class="fi" data-name="phone" placeholder="05X-XXXXXXX"></div><div class="fg"><label class="fl">תיאור קצר</label><textarea class="fi" data-name="description" rows="2" placeholder="מה אתם עושים..."></textarea></div><button class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:12px" onclick="subPt('pt2')">שלח →</button></div></div>
 
-<div class="mo" id="m-hire"><div class="mb glass"><button class="mc" onclick="cm2('hire')">×</button><span class="mk">הצטרף לצוות</span><div class="mt">עבדו עם AutoScale</div><div class="ms">קבלנים ומפתחי אוטומציה — רוצים לשמוע מכם.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" data-name="full_name" placeholder="שם מלא"></div><div class="fg"><label class="fl">טלפון</label><input class="fi" data-name="phone" placeholder="05X-XXXXXXX"></div></div><div class="fg"><label class="fl">התמחות</label><input class="fi" data-name="expertise" placeholder="למשל: Make.n8n, מערכות מידע, פיתוח..."></div><div class="fg"><label class="fl">קישור לפורטפוליו</label><input class="fi" data-name="portfolio" placeholder="https://..."></div><button class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:12px" onclick="subPt('hire')">שלח →</button></div></div>
+<div class="mo" id="m-hire"><div class="mb glass"><button class="mc" onclick="cm2('hire')">×</button><span class="mk">הצטרף לצוות</span><div class="mt">עבדו עם AutoScale</div><div class="ms">קבלנים ומפתחי אוטומציה — רוצים לשמוע מכם.</div><div class="fr"><div class="fg"><label class="fl">שם</label><input class="fi" data-name="full_name" placeholder="שם מלא"></div><div class="fg"><label class="fl">טלפון</label><input class="fi" data-name="phone" placeholder="05X-XXXXXXX"></div></div><div class="fg"><label class="fl">התמחות</label><textarea class="fi" data-name="expertise" rows="6" maxlength="2000" placeholder="ספרו על ההתמחויות, הניסיון, והכלים שאתם עובדים איתם... למשל: Make.n8n, מערכות מידע, אבטחת מידע, פיתוח, ועוד" style="resize:vertical;min-height:140px;font-family:var(--sans);font-weight:300;line-height:1.6"></textarea><div style="font-size:11px;color:var(--muted2);margin-top:4px;font-family:var(--mono);text-align:left">עד 2,000 תווים</div></div><div class="fg"><label class="fl">קישור לפורטפוליו</label><input class="fi" data-name="portfolio" placeholder="https://..."></div><button class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:12px" onclick="subPt('hire')">שלח →</button></div></div>
 
 <!-- Portfolio project detail popups -->
 <div class="mo" id="m-p1"><div class="mb mb-portfolio glass"><button class="mc" onclick="cm2('p1')">×</button><div class="mp-img-wrap"><img class="mp-img mp-current" data-mid="mp1" data-idx="0" src="portfolio-images/landing-1.jpg" alt="דף נחיתה 1"><button class="mp-nav prev" onclick="mpNav('mp1',-1,2)" aria-label="הקודם">‹</button><button class="mp-nav next" onclick="mpNav('mp1',1,2)" aria-label="הבא">›</button><div class="mp-dots"><button class="mp-dot on" data-mid="mp1" data-i="0" onclick="mpGo('mp1',0,2)" aria-label="תמונה 1"></button><button class="mp-dot" data-mid="mp1" data-i="1" onclick="mpGo('mp1',1,2)" aria-label="תמונה 2"></button></div></div><span class="mk">תיק עבודות</span><div class="mt">דפי נחיתה</div><div class="ms">דפי וידאו, טפסי לידים, וחיבור מלא לפיקסלים</div><div class="pdet">בנייה והשקה של דפי נחיתה ממירים בעברית: דף וידאו עם step indicator, טופס ליד עם ולידציה inline, דף תודה עם tracking events, וחיבור ל-Make.com, Google Sheets, Meta Pixel, GTM, ו-WhatsApp אוטומטי ללקוח ולצוות.</div><div class="cr" style="margin-bottom:16px"><span class="ch">HTML / CSS</span><span class="ch">GTM</span><span class="ch">Meta Pixel</span><span class="ch">WhatsApp API</span><span class="ch">Make.com</span></div><button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="cm2('p1');om('sch')">📅 קבעו שיחה על פרויקט דומה</button></div></div>
@@ -971,7 +1056,12 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
 <script>
 // CONSTANTS
 const WEBHOOK_URL='https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q';
-const PAYMENT_URL='https://pay.grow.link/b62f5369942b5598987e88bb6170fa75-MzE2MTAzNg';
+const PAYMENT_URLS={
+  5:'https://pay.grow.link/44ea6cce229a52325cd78a56c5a8dd86-MzM0NjI4Mw',
+  10:'https://pay.grow.link/c8a008fc5d54f06f432f9a0d16b988d7-MzM0NjI4NQ',
+  20:'https://pay.grow.link/23dd5274c41ca3433ad573a670d7ce32-MzM0NjI4OA',
+  40:'https://pay.grow.link/300bd5828ca313d35ed0947fd9fcc5e3-MzM0NjI5NQ'
+};
 
 // NAV
 const nav=document.getElementById('nav');
@@ -1038,8 +1128,22 @@ function subHours(){
   })}).catch(()=>{}).finally(()=>{
     btn.disabled=false;btn.textContent='המשך לתשלום 💳';
     cm2('hours');
-    window.open(PAYMENT_URL,'_blank');
+    // Open payment method picker
+    const priceNum=parseInt(curPrc.replace(/,/g,''));
+    const vat=Math.round(priceNum*1.18);
+    document.getElementById('payInfo').textContent='לפני מע״מ: ₪'+curPrc+'  |  כולל: ₪'+vat.toLocaleString();
+    om('pay');
   });
+}
+
+// PAYMENT METHOD PICKER
+function goToPayment(){
+  const url=PAYMENT_URLS[curHrs];
+  if(url){window.open(url,'_blank');cm2('pay');}
+}
+function backToHoursForm(){
+  cm2('pay');
+  om('hours');
 }
 
 // CONTACT FORM
