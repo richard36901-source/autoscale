@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#060d1a" />
   <title>AutoScale | שירותים ומוצרים</title>
+  <link rel="icon" href="portfolio-images/products-favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet" />
@@ -27,10 +28,15 @@
       background-size:40px 40px;pointer-events:none;z-index:0;}
     .wrap{position:relative;z-index:1;max-width:600px;margin:0 auto;padding:28px 16px 100px;}
 
+    /* FLOATING BACK BUTTON */
+    .float-back{position:fixed;top:18px;left:18px;z-index:50;display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:rgba(12,26,56,.85);border:1px solid var(--border);border-radius:999px;color:var(--text);text-decoration:none;font-size:13px;font-weight:600;font-family:'Sora',sans-serif;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:all .18s;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+    .float-back:hover{background:rgba(58,142,246,.18);border-color:var(--accent);transform:translateX(-3px)}
+    .float-back .arr{font-size:15px;line-height:1}
+
     /* HEADER */
     header{margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;}
-    .logo-mark{width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,#0d2a6e,#0a4a3a);border:1px solid rgba(58,142,246,0.28);box-shadow:0 0 28px rgba(58,142,246,0.28),0 0 0 4px rgba(58,142,246,0.07);overflow:hidden;display:grid;place-items:center;}
-    .logo-mark img{width:100%;height:100%;object-fit:cover;display:block;}
+    .logo-mark{width:72px;height:72px;display:grid;place-items:center;}
+    .logo-mark img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 2px 12px rgba(58,142,246,.35));}
     .brand-name{font-size:22px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
     .brand-sub{font-size:11.5px;color:var(--muted);font-family:'Space Mono',monospace;}
 
@@ -58,6 +64,8 @@
     .product-icon.orange{background:rgba(246,168,58,0.1);border-color:rgba(246,168,58,0.2);}
     .product-icon.green{background:rgba(77,219,122,0.1);border-color:rgba(77,219,122,0.2);}
     .product-icon.purple{background:rgba(160,80,255,0.1);border-color:rgba(160,80,255,0.2);}
+    .product-icon.pink{background:rgba(255,80,160,0.1);border-color:rgba(255,80,160,0.2);}
+    .product-icon.red{background:rgba(255,100,100,0.1);border-color:rgba(255,100,100,0.2);}
     .product-name-row{flex:1;}
     .product-name{font-size:16px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
     .product-badge{font-size:9px;font-weight:700;font-family:'Space Mono',monospace;padding:2px 8px;border-radius:999px;letter-spacing:0.5px;}
@@ -65,6 +73,7 @@
     .badge-teal{background:linear-gradient(90deg,#0ab89e,var(--accent2));color:#060d1a;}
     .badge-orange{background:rgba(246,168,58,0.2);color:var(--warn);border:1px solid rgba(246,168,58,0.3);}
     .badge-purple{background:rgba(160,80,255,0.2);color:#c084fc;border:1px solid rgba(160,80,255,0.3);}
+    .badge-pink{background:rgba(255,80,160,0.2);color:#ff7eb6;border:1px solid rgba(255,80,160,0.3);}
     .product-tagline{font-size:12px;color:var(--muted);}
 
     /* PRICE BLOCK */
@@ -246,12 +255,18 @@
   </style>
 </head>
 <body>
+<!-- FLOATING BACK BUTTON -->
+<a href="index.html" class="float-back">
+  <span class="arr">←</span>
+  <span>חזרה לדף הראשי</span>
+</a>
+
 <div class="wrap fade-in">
 
   <!-- HEADER -->
   <header>
     <div class="logo-mark">
-      <img src="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" alt="AutoScale" />
+      <img src="portfolio-images/products-logo.png" alt="AutoScale" onerror="this.src='https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg'" />
     </div>
     <div class="brand-name">AutoScale</div>
     <div class="brand-sub">שירותים ומוצרים</div>
@@ -300,7 +315,7 @@
     </div>
     <div class="product-cta">
       <button class="cta-btn cta-primary" onclick="startCheckout('wa-bot')">🚀 הזמן עכשיו</button>
-      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965','_blank')">💬 שאלה</button>
+      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל','_blank')">💬 שאלה</button>
     </div>
   </div>
 
@@ -333,7 +348,7 @@
     </div>
     <div class="product-cta">
       <button class="cta-btn cta-primary" onclick="startCheckout('crm')">🚀 הזמן עכשיו</button>
-      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965','_blank')">💬 שאלה</button>
+      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל','_blank')">💬 שאלה</button>
     </div>
   </div>
 
@@ -362,7 +377,7 @@
     </div>
     <div class="product-cta">
       <button class="cta-btn cta-primary" onclick="startCheckout('manychat')">🚀 הזמן עכשיו</button>
-      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965','_blank')">💬 שאלה</button>
+      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל','_blank')">💬 שאלה</button>
     </div>
   </div>
 
@@ -391,7 +406,123 @@
     </div>
     <div class="product-cta">
       <button class="cta-btn cta-primary" onclick="startCheckout('landing')">🚀 הזמן עכשיו</button>
-      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965','_blank')">💬 שאלה</button>
+      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל','_blank')">💬 שאלה</button>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION: WEBSITE BUILD (NEW) ═══ -->
+  <div class="section-label">🏗️ בניית אתר</div>
+
+  <div class="product-card">
+    <div class="product-head">
+      <div class="product-icon pink">🏗️</div>
+      <div class="product-name-row">
+        <div class="product-name">בניית אתר לעסק <span class="product-badge badge-pink">מקצועי</span></div>
+        <div class="product-tagline">אתר שלם — Multi-page, מערכת ניהול, מותאם SEO</div>
+      </div>
+      <div class="price-block">
+        <span class="price-from">החל מ-</span>
+        <div class="price-main-big">₪3,500 <small>+מע"מ</small></div>
+        <div class="price-note">לאתר מלא</div>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="feat-dot"></div>עיצוב מותאם אישית לעסק ולמותג</div>
+      <div class="feature"><div class="feat-dot"></div>מספר עמודים (בית, אודות, שירותים, צור קשר)</div>
+      <div class="feature"><div class="feat-dot"></div>אופטימיזציה ל-SEO + מובייל + RTL</div>
+      <div class="feature"><div class="feat-dot"></div>חיבור לטפסים, אנליטיקס, פיקסלים</div>
+      <div class="feature"><div class="feat-dot"></div>הדרכה + תיעוד מסירה</div>
+    </div>
+    <div class="product-cta">
+      <button class="cta-btn cta-primary" onclick="startCheckout('website')">🚀 הזמן עכשיו</button>
+      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל','_blank')">💬 שאלה</button>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION: PAID CAMPAIGN (NEW) ═══ -->
+  <div class="section-label">📈 קמפיין ממומן</div>
+
+  <div class="product-card">
+    <div class="product-head">
+      <div class="product-icon orange">📈</div>
+      <div class="product-name-row">
+        <div class="product-name">קמפיין ממומן <span class="product-badge badge-orange">Meta / Google</span></div>
+        <div class="product-tagline">בניית קמפיין שלם + ניהול ראשוני</div>
+      </div>
+      <div class="price-block">
+        <span class="price-from">החל מ-</span>
+        <div class="price-main-big">₪1,200 <small>+מע"מ</small></div>
+        <div class="price-note">להקמה</div>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="feat-dot"></div>בניית קמפיין ב-Meta או Google Ads</div>
+      <div class="feature"><div class="feat-dot"></div>הגדרת קהלי יעד, פיקסלים ו-Conversions</div>
+      <div class="feature"><div class="feat-dot"></div>3 וריאציות מודעות (טקסט + ויזואל)</div>
+      <div class="feature"><div class="feat-dot"></div>חיבור לטופס לידים אוטומטי</div>
+      <div class="feature"><div class="feat-dot warn"></div>תקציב הפרסום — ישירות לפלטפורמה (לא כלול)</div>
+    </div>
+    <div class="product-cta">
+      <button class="cta-btn cta-primary" onclick="startCheckout('campaign')">🚀 הזמן עכשיו</button>
+      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל','_blank')">💬 שאלה</button>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION: GRAPHICS (NEW) ═══ -->
+  <div class="section-label">🎨 גרפיקות</div>
+
+  <div class="product-card">
+    <div class="product-head">
+      <div class="product-icon purple">🎨</div>
+      <div class="product-name-row">
+        <div class="product-name">גרפיקות לעסק <span class="product-badge badge-purple">עיצוב מותאם</span></div>
+        <div class="product-tagline">פוסטים, סטוריז, באנרים, תמונות פרסום</div>
+      </div>
+      <div class="price-block">
+        <span class="price-from">החל מ-</span>
+        <div class="price-main-big">₪400 <small>+מע"מ</small></div>
+        <div class="price-note">לגרפיקה</div>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="feat-dot"></div>גרפיקה אחת בעיצוב מקצועי</div>
+      <div class="feature"><div class="feat-dot"></div>עד 2 סבבי תיקונים כלולים</div>
+      <div class="feature"><div class="feat-dot"></div>פורמטים שונים: Instagram / Facebook / Story / Banner</div>
+      <div class="feature"><div class="feat-dot"></div>קבצי מקור + גרסאות לפי דרישה</div>
+      <div class="feature"><div class="feat-dot"></div>חבילות חודשיות זמינות לפי דרישה</div>
+    </div>
+    <div class="product-cta">
+      <button class="cta-btn cta-primary" onclick="startCheckout('graphics')">🚀 הזמן עכשיו</button>
+      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל','_blank')">💬 שאלה</button>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION: WEBINAR SYSTEM (NEW) ═══ -->
+  <div class="section-label">🎥 מערך וובינר</div>
+
+  <div class="product-card">
+    <div class="product-head">
+      <div class="product-icon red">🎥</div>
+      <div class="product-name-row">
+        <div class="product-name">מערך וובינר מלא <span class="product-badge badge-blue">End-to-End</span></div>
+        <div class="product-tagline">דף הרשמה + מיילים + תזכורות + מעקב</div>
+      </div>
+      <div class="price-block">
+        <span class="price-from">החל מ-</span>
+        <div class="price-main-big">₪2,500 <small>+מע"מ</small></div>
+        <div class="price-note">להקמה</div>
+      </div>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="feat-dot"></div>דף הרשמה ממיר עם טופס מלא</div>
+      <div class="feature"><div class="feat-dot"></div>סדרת מיילים אוטומטית (אישור + תזכורות)</div>
+      <div class="feature"><div class="feat-dot"></div>חיבור ל-Zoom או פלטפורמת סטרימינג</div>
+      <div class="feature"><div class="feat-dot"></div>מעקב נרשמים, משתתפים ו-follow-up אחרי</div>
+      <div class="feature"><div class="feat-dot"></div>שליחת הקלטה אוטומטית למי שלא הגיע</div>
+    </div>
+    <div class="product-cta">
+      <button class="cta-btn cta-primary" onclick="startCheckout('webinar')">🚀 הזמן עכשיו</button>
+      <button class="cta-btn cta-secondary" onclick="window.open('https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל','_blank')">💬 שאלה</button>
     </div>
   </div>
 
@@ -418,19 +549,13 @@
       <div class="feature"><div class="feat-dot"></div>גמישות — אפשר לשנות בכל עת</div>
     </div>
     <div class="product-cta">
-      <button class="cta-btn cta-primary" onclick="window.open('https://wa.me/972552962965','_blank')">💬 בוא נדבר על חבילה</button>
+      <button class="cta-btn cta-primary" onclick="window.open('https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל','_blank')">💬 בוא נדבר על חבילה</button>
     </div>
   </div>
 
   <!-- ═══ QUICK WINS ═══ -->
   <div class="section-label">⚡ מוצרים מהירים נוספים</div>
   <div class="quick-grid">
-    <div class="quick-card" onclick="startCheckout('linktree')">
-      <div class="quick-icon">🔗</div>
-      <div class="quick-name">דף לינקטרי מותאם</div>
-      <div class="quick-price">החל מ-₪400 +מע"מ</div>
-      <div class="quick-desc">ביו מקצועי לעסק עם עיצוב מותאם</div>
-    </div>
     <div class="quick-card" onclick="startCheckout('lead-bot')">
       <div class="quick-icon">🎯</div>
       <div class="quick-name">Lead Capture Bot</div>
@@ -469,7 +594,7 @@
     <div class="bottom-cta-sub">כל אוטומציה ניתנת לבנייה מותאמת אישית. דבר/י איתנו — נמצא פתרון שמתאים בדיוק לך.</div>
     <div class="bottom-btns">
       <button class="cta-btn cta-primary" style="padding:12px 24px;flex:unset" onclick="startCheckout('custom')">📋 פתח בקשה</button>
-      <button class="cta-btn cta-secondary" style="padding:12px 24px;flex:unset" onclick="window.open('https://wa.me/972552962965','_blank')">💬 WhatsApp</button>
+      <button class="cta-btn cta-secondary" style="padding:12px 24px;flex:unset" onclick="window.open('https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל','_blank')">💬 WhatsApp</button>
     </div>
   </div>
 </div>
@@ -624,17 +749,17 @@
           <div style="font-size:13.5px;color:var(--muted);line-height:1.7">קיבלנו את הפרטים, הגישות והמשימות.<br>נחזור אליך תוך 24 שעות עם עדכון.</div>
         </div>
         <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:14px;font-family:'Space Mono',monospace">רוצה לתאם שיחה/פגישה לעבור על הפרויקט?</div>
-        <div class="action-card ac-primary" onclick="window.open('https://cal.com/autoscale/call','_blank')">
+        <div class="action-card ac-primary" onclick="window.open('https://cal.com/richard-tomskiy/phone-call','_blank')">
           <div class="ac-icon teal">📞</div>
           <div class="ac-info"><div class="ac-title">תזמון שיחה</div><div class="ac-desc">בחר/י זמן נוח לשיחת פתיחת פרויקט</div></div>
           <div>←</div>
         </div>
-        <div class="action-card" onclick="window.open('https://cal.com/autoscale/meeting','_blank')">
+        <div class="action-card" onclick="window.open('https://cal.com/richard-tomskiy/phone-call','_blank')">
           <div class="ac-icon">📅</div>
           <div class="ac-info"><div class="ac-title">תזמון פגישת זום</div><div class="ac-desc">מיפוי מעמיק + תכנון ביחד</div></div>
           <div>←</div>
         </div>
-        <div class="action-card" onclick="window.open('https://wa.me/972552962965','_blank')">
+        <div class="action-card" onclick="window.open('https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל','_blank')">
           <div class="ac-icon" style="background:rgba(37,211,102,0.1);border-color:rgba(37,211,102,0.2)">💬</div>
           <div class="ac-info"><div class="ac-title">WhatsApp</div><div class="ac-desc">שלח/י הודעה — נחזור מיד</div></div>
           <div>←</div>
@@ -761,7 +886,78 @@ const PRODUCTS = {
       { title: 'טקסטים / copy', desc: 'יש לך כבר טקסטים? אפשר לכתוב גם ביחד.', field: { label: 'טקסט הירו (כותרת ראשית)', placeholder: 'הפוך/י כל לקוח למנוע צמיחה...', id: 'task_lp_copy' } },
     ]
   },
-  'linktree': { name: 'דף לינקטרי מותאם', base: 400, growUrl: 'https://richard36901-source.github.io/autoscale-pay', upgrades: [], platforms: [], tasks: [{ title: 'לינקים וקישורים', desc: 'שלח/י רשימה של הקישורים להוסיף.', field: { label: 'רשימת לינקים', placeholder: 'אתר / אינסטגרם / וואטסאפ...', id: 'task_lt_links' } }] },
+  'website': {
+    name: 'בניית אתר לעסק',
+    base: 3500,
+    growUrl: 'https://richard36901-source.github.io/autoscale-pay',
+    upgrades: [
+      { id: 'u1', label: 'מספר עמודים נוסף (מעל 5)', price: '+ תמחור' },
+      { id: 'u2', label: 'מערכת ניהול תוכן (CMS)', price: '+ תמחור' },
+      { id: 'u3', label: 'בלוג / מאמרים', price: '+ תמחור' },
+      { id: 'u4', label: 'חנות אונליין (E-commerce)', price: '+ תמחור' },
+      { id: 'u5', label: 'גרסה רב-לשונית', price: '+ תמחור' },
+    ],
+    platforms: ['Google Analytics', 'Meta Pixel', 'GTM', 'Search Console', 'Mailchimp'],
+    tasks: [
+      { title: 'מטרת האתר', desc: 'מה האתר צריך להשיג? תדמית, מכירות, לידים?', field: { label: 'מטרה ראשית', placeholder: 'הצגת השירותים + לכידת לידים', id: 'task_web_goal' } },
+      { title: 'מבנה ועמודים', desc: 'אילו עמודים צריך? בית, אודות, שירותים, צור קשר, בלוג?', field: { label: 'רשימת עמודים', placeholder: 'בית, אודות, שירותים, פורטפוליו, צור קשר', id: 'task_web_pages' } },
+      { title: 'מיתוג וצבעים', desc: 'שלח/י לוגו, פלטת צבעים, וכל חומר קיים.', field: { label: 'לינק לתדמית', placeholder: 'https://drive.google.com/...', id: 'task_web_brand' } },
+      { title: 'דומיין', desc: 'יש דומיין? אם לא — נעזור לרכוש.', field: { label: 'דומיין מבוקש', placeholder: 'mybusiness.co.il', id: 'task_web_domain' } },
+    ]
+  },
+  'campaign': {
+    name: 'קמפיין ממומן',
+    base: 1200,
+    growUrl: 'https://richard36901-source.github.io/autoscale-pay',
+    upgrades: [
+      { id: 'u1', label: 'ניהול חודשי שוטף', price: '+ תמחור' },
+      { id: 'u2', label: 'A/B Testing מתקדם', price: '+ תמחור' },
+      { id: 'u3', label: 'Retargeting Pixels', price: '+ תמחור' },
+      { id: 'u4', label: 'גרפיקות נוספות', price: '+ תמחור' },
+    ],
+    platforms: ['Meta Business', 'Google Ads', 'TikTok Ads', 'LinkedIn Ads'],
+    tasks: [
+      { title: 'פלטפורמה רצויה', desc: 'Meta (Facebook/Instagram), Google, TikTok?', field: { label: 'פלטפורמה', placeholder: 'Meta + Google', id: 'task_camp_platform' } },
+      { title: 'מטרת הקמפיין', desc: 'לידים, מכירות, חשיפה, התקנות אפליקציה?', field: { label: 'מטרה', placeholder: 'לידים לעסק שירותים', id: 'task_camp_goal' } },
+      { title: 'קהל יעד', desc: 'מי הלקוח האידיאלי? גיל, מיקום, תחומי עניין.', field: { label: 'תאר/י את הקהל', placeholder: 'גילאי 30-55, באזור המרכז, בעלי עסקים', id: 'task_camp_audience' } },
+      { title: 'תקציב חודשי', desc: 'תקציב פרסום משוער? (משולם ישירות לפלטפורמה)', field: { label: 'תקציב חודשי משוער', placeholder: '₪3,000 לחודש', id: 'task_camp_budget' } },
+    ]
+  },
+  'graphics': {
+    name: 'גרפיקות לעסק',
+    base: 400,
+    growUrl: 'https://richard36901-source.github.io/autoscale-pay',
+    upgrades: [
+      { id: 'u1', label: 'חבילה של 5 גרפיקות', price: '+ תמחור' },
+      { id: 'u2', label: 'חבילה של 10 גרפיקות', price: '+ תמחור' },
+      { id: 'u3', label: 'גרפיקות אנימציה / וידאו', price: '+ תמחור' },
+      { id: 'u4', label: 'מיתוג שלם (לוגו + פלטה)', price: '+ תמחור' },
+    ],
+    platforms: ['Instagram', 'Facebook', 'LinkedIn', 'WhatsApp Status'],
+    tasks: [
+      { title: 'סוג הגרפיקה', desc: 'פוסט, סטורי, באנר, תמונת פרסום?', field: { label: 'סוג', placeholder: 'פוסט אינסטגרם 1:1', id: 'task_gr_type' } },
+      { title: 'תוכן ומסר', desc: 'מה הטקסט? מה המסר העיקרי?', field: { label: 'תוכן הגרפיקה', placeholder: 'מבצע סוף שנה — 20% הנחה', id: 'task_gr_content' } },
+      { title: 'מיתוג קיים', desc: 'יש לך לוגו, צבעים, פונטים? שלח/י לינק.', field: { label: 'לינק למיתוג', placeholder: 'https://drive.google.com/...', id: 'task_gr_brand' } },
+    ]
+  },
+  'webinar': {
+    name: 'מערך וובינר מלא',
+    base: 2500,
+    growUrl: 'https://richard36901-source.github.io/autoscale-pay',
+    upgrades: [
+      { id: 'u1', label: 'דף נחיתה מותאם אישית', price: '+ תמחור' },
+      { id: 'u2', label: 'סדרת מיילים מורחבת (10+ מיילים)', price: '+ תמחור' },
+      { id: 'u3', label: 'אינטגרציה עם CRM', price: '+ תמחור' },
+      { id: 'u4', label: 'אוטומציה לאחר הוובינר (sales funnel)', price: '+ תמחור' },
+    ],
+    platforms: ['Zoom', 'Google Meet', 'YouTube Live', 'Mailchimp', 'ActiveCampaign'],
+    tasks: [
+      { title: 'נושא הוובינר', desc: 'מה תלמד/י בוובינר? מהו ערך מוסף?', field: { label: 'נושא ראשי', placeholder: 'איך להגדיל מכירות עם אוטומציה', id: 'task_web_topic' } },
+      { title: 'תאריך ושעה מתוכננים', desc: 'מתי הוובינר? כמה זמן ימשך?', field: { label: 'תאריך + שעה', placeholder: 'יום ה׳, 15.5.26 בשעה 20:00', id: 'task_web_date' } },
+      { title: 'פלטפורמת שידור', desc: 'Zoom, Google Meet, YouTube Live?', field: { label: 'פלטפורמה', placeholder: 'Zoom Webinar', id: 'task_web_platform' } },
+      { title: 'מטרה אחרי הוובינר', desc: 'מכירת קורס? קביעת פגישות? הצעה מיוחדת?', field: { label: 'CTA סוף הוובינר', placeholder: 'הזמנה לשיחת ייעוץ', id: 'task_web_cta' } },
+    ]
+  },
   'lead-bot': { name: 'Lead Capture Bot', base: 800, growUrl: 'https://richard36901-source.github.io/autoscale-pay', upgrades: [], platforms: ['Google Sheets','Monday.com','HubSpot'], tasks: [{ title: 'שדות הטופס', desc: 'אילו שדות רוצה לאסוף — שם, מייל, טלפון, מה עוד?', field: { label: 'שדות רצויים', placeholder: 'שם, טלפון, שאלה אחת מסנן...', id: 'task_lb_fields' } }] },
   'dashboard': { name: 'לוח BI / דשבורד', base: 1200, growUrl: 'https://richard36901-source.github.io/autoscale-pay', upgrades: [], platforms: ['Google Sheets','Monday.com','Airtable','BigQuery'], tasks: [{ title: 'מקורות הנתונים', desc: 'מאיפה מגיעים הנתונים — Sheets? Monday? API?', field: { label: 'מקורות', placeholder: 'Google Sheets + Monday.com', id: 'task_db_sources' } }] },
   'email-auto': { name: 'אוטומציית אימייל', base: 600, growUrl: 'https://richard36901-source.github.io/autoscale-pay', upgrades: [], platforms: ['Gmail','Outlook','Mailchimp','ActiveCampaign'], tasks: [{ title: 'ספק המייל', desc: 'Gmail / Outlook / Mailchimp?', field: { label: 'ספק', placeholder: 'Gmail + Mailchimp', id: 'task_email_provider' } }] },
@@ -896,8 +1092,6 @@ function ckPrev() { if (currentStep > 1) goScreen(currentStep - 1); }
 
 function ckNext() {
   if (currentStep === 1) {
-    // Must have chosen a payment — just advance (card/bit/bank all call payDone)
-    // If they haven't touched payment, prompt
     showToast('בחר/י אמצעי תשלום כדי להמשיך');
     return;
   }
