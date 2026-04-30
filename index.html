@@ -191,6 +191,23 @@ nav.sc{background:rgba(6,13,26,.93);border-bottom-color:var(--border);backdrop-f
 .tcard-quote{font-size:12.5px;color:var(--muted);font-style:italic;font-weight:300}
 .tnote{text-align:center;margin-top:32px;font-size:12.5px;color:var(--muted2);font-family:var(--mono);font-weight:400;letter-spacing:.04em}
 
+/* WHATSAPP-STYLE AUDIO TESTIMONIAL */
+.wa-audio-wrap{display:flex;justify-content:center}
+.wa-audio{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#0e2433,#0a1c2a);border:1px solid rgba(37,211,102,.2);border-radius:18px;padding:10px 14px;box-shadow:0 4px 20px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.04);width:100%;direction:ltr}
+.wa-audio-play{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);border:none;display:grid;place-items:center;cursor:pointer;flex-shrink:0;box-shadow:0 2px 10px rgba(37,211,102,.4);transition:transform .15s}
+.wa-audio-play:hover{transform:scale(1.06)}
+.wa-audio-play:active{transform:scale(.94)}
+.wa-audio-play svg{margin-left:2px}
+.wa-audio-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;direction:rtl}
+.wa-waveform{display:flex;align-items:center;gap:2px;height:28px;cursor:pointer;padding:2px 0;direction:ltr}
+.wa-bar{flex:1;min-width:2px;background:rgba(106,133,182,.45);border-radius:2px;transition:background .12s,height .12s;display:block}
+.wa-bar.played{background:#25D366}
+.wa-bar:hover{background:rgba(37,211,102,.6)}
+.wa-audio-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.wa-audio-time{color:#25D366;font-weight:600;letter-spacing:.04em}
+.wa-audio-author{color:var(--muted);font-family:var(--sans);font-size:12px;font-weight:400}
+.wa-audio-avatar{width:40px;height:40px;border-radius:50%;background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.3);display:grid;place-items:center;font-size:18px;flex-shrink:0}
+
 /* PARTNER */
 #partner{background:rgba(9,18,34,.6)}
 .ptgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
@@ -639,30 +656,96 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
         <img class="tcard-img" src="portfolio-images/testimonial-2.jpg" alt="המלצה - עורך דין אליהו גאלי" loading="lazy">
       </div>
     </div>
-    <!-- VIDEO TESTIMONIAL PLACEHOLDER -->
-    <div class="glass fade" style="padding:0;margin-top:24px;max-width:900px;margin-left:auto;margin-right:auto;overflow:hidden;border-radius:18px">
-      <div style="position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,rgba(58,142,246,.12),rgba(29,255,212,.06));display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px">
-        <!-- Replace this video tag's src with your video file path -->
-        <video id="testimonialVideo" controls preload="metadata" poster="" style="width:100%;height:100%;object-fit:cover;display:none">
-          <source src="portfolio-images/testimonial-video.mp4" type="video/mp4">
-        </video>
-        <div id="videoPlaceholder" style="text-align:center;padding:40px">
-          <div style="font-size:64px;margin-bottom:16px;opacity:.7">🎬</div>
-          <div style="font-size:17px;font-weight:700;margin-bottom:6px">סרטון המלצה של לקוח</div>
-          <div style="font-size:13px;color:var(--muted);font-weight:300">העלה את הסרטון לתיקיית portfolio-images בשם testimonial-video.mp4</div>
+    <!-- AUDIO TESTIMONIAL — WhatsApp style -->
+    <div class="wa-audio-wrap fade" style="margin:24px auto 0;max-width:520px">
+      <div class="wa-audio">
+        <button class="wa-audio-play" id="waPlayBtn" aria-label="הפעל הקלטה" onclick="toggleAudioTestimonial()">
+          <svg id="waPlayIcon" width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="waPauseIcon" width="18" height="18" viewBox="0 0 24 24" fill="#fff" style="display:none"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>
+        </button>
+        <div class="wa-audio-body">
+          <div class="wa-waveform" id="waWaveform" onclick="seekAudio(event)">
+            <!-- bars generated via JS -->
+          </div>
+          <div class="wa-audio-meta">
+            <span class="wa-audio-time" id="waAudioTime">0:00</span>
+            <span class="wa-audio-author">📞 הקלטה של לקוח</span>
+          </div>
         </div>
+        <div class="wa-audio-avatar" aria-hidden="true">🎙️</div>
       </div>
+      <audio id="testimonialAudio" preload="metadata" style="display:none">
+        <source src="portfolio-images/testimonial-audio.mp3" type="audio/mpeg">
+      </audio>
     </div>
+
     <script>
       (function(){
-        const v=document.getElementById('testimonialVideo');
-        if(!v)return;
-        v.addEventListener('loadedmetadata',()=>{
-          v.style.display='block';
-          const ph=document.getElementById('videoPlaceholder');
-          if(ph)ph.style.display='none';
+        const audio = document.getElementById('testimonialAudio');
+        const waveform = document.getElementById('waWaveform');
+        const timeEl = document.getElementById('waAudioTime');
+        const playIc = document.getElementById('waPlayIcon');
+        const pauseIc = document.getElementById('waPauseIcon');
+        if(!audio || !waveform) return;
+
+        // Generate fake waveform bars (54 bars with varied heights)
+        const BAR_COUNT = 54;
+        const heights = [];
+        for(let i=0;i<BAR_COUNT;i++){
+          // Pseudo-random pattern that looks natural for voice
+          const h = 0.25 + Math.abs(Math.sin(i*0.55)*0.55) + Math.abs(Math.cos(i*1.1)*0.25);
+          heights.push(Math.min(1, h));
+        }
+        waveform.innerHTML = heights.map((h,i)=>
+          `<span class="wa-bar" data-i="${i}" style="height:${Math.round(h*100)}%"></span>`
+        ).join('');
+
+        // Format time mm:ss
+        const fmt = s => {
+          if(!isFinite(s)) return '0:00';
+          const m = Math.floor(s/60);
+          const sec = Math.floor(s%60);
+          return m + ':' + (sec<10?'0':'') + sec;
+        };
+
+        audio.addEventListener('loadedmetadata', () => {
+          timeEl.textContent = fmt(audio.duration);
         });
-        v.addEventListener('error',()=>{/* keep placeholder */});
+        audio.addEventListener('timeupdate', () => {
+          const pct = audio.currentTime / audio.duration;
+          const lit = Math.floor(pct * BAR_COUNT);
+          document.querySelectorAll('#waWaveform .wa-bar').forEach((b,i)=>{
+            b.classList.toggle('played', i < lit);
+          });
+          timeEl.textContent = fmt(audio.currentTime);
+        });
+        audio.addEventListener('ended', () => {
+          playIc.style.display='block'; pauseIc.style.display='none';
+          document.querySelectorAll('#waWaveform .wa-bar').forEach(b=>b.classList.remove('played'));
+          audio.currentTime = 0;
+          timeEl.textContent = fmt(audio.duration);
+        });
+
+        window.toggleAudioTestimonial = function(){
+          if(audio.paused){
+            // Pause any other audio
+            document.querySelectorAll('audio').forEach(a => { if(a !== audio) a.pause(); });
+            audio.play();
+            playIc.style.display='none'; pauseIc.style.display='block';
+          } else {
+            audio.pause();
+            playIc.style.display='block'; pauseIc.style.display='none';
+          }
+        };
+
+        window.seekAudio = function(e){
+          if(!isFinite(audio.duration)) return;
+          const rect = waveform.getBoundingClientRect();
+          // RTL: clicking right side = beginning, left = end
+          const x = e.clientX - rect.left;
+          const pct = 1 - (x / rect.width); // RTL inversion
+          audio.currentTime = Math.max(0, Math.min(audio.duration, pct * audio.duration));
+        };
       })();
     </script>
 
