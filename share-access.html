@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#060d1a"/>
+  <title>AutoScale | טופס העברת גישות</title>
+  <link rel="icon" href="portfolio-images/access-favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --bg:#060d1a;--glass:rgba(12,26,56,0.55);--border:rgba(80,140,255,0.13);
+      --border2:rgba(80,160,255,0.32);--text:#e8f0ff;--muted:#6a85b6;--muted2:#4a608a;
+      --accent:#3a8ef6;--accent2:#1dffd4;--warn:#f6a83a;--green:#4ddb7a;--red:#ff6b6b;
+      --radius:18px;--radius-sm:12px;
+      --sans:'Sora',sans-serif;--mono:'Space Mono',monospace;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
+    body::before{content:'';position:fixed;inset:0;background:
+      radial-gradient(ellipse 80vw 55vh at 10% -5%,rgba(30,90,220,0.22) 0%,transparent 65%),
+      radial-gradient(ellipse 60vw 40vh at 90% 10%,rgba(0,200,180,0.10) 0%,transparent 60%),
+      radial-gradient(ellipse 100vw 30vh at 50% 100%,rgba(10,30,80,0.5) 0%,transparent 70%);
+      pointer-events:none;z-index:0}
+    body::after{content:'';position:fixed;inset:0;
+      background-image:linear-gradient(rgba(58,142,246,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(58,142,246,0.04) 1px,transparent 1px);
+      background-size:40px 40px;pointer-events:none;z-index:0}
+    .wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:24px 18px 80px}
+
+    /* FLOATING BACK BUTTON */
+    .float-back{position:fixed;top:18px;left:18px;z-index:50;display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:rgba(12,26,56,.85);border:1px solid var(--border);border-radius:999px;color:var(--text);text-decoration:none;font-size:13px;font-weight:600;font-family:var(--sans);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:all .18s;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+    .float-back:hover{background:rgba(58,142,246,.18);border-color:var(--accent);transform:translateX(-3px)}
+    .float-back .arr{font-size:15px;line-height:1}
+
+    /* HEADER */
+    header{margin-bottom:32px;padding:50px 0 24px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+    .logo-mark{width:96px;height:96px;display:grid;place-items:center;margin-bottom:4px}
+    .logo-mark img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 4px 16px rgba(58,142,246,.45))}
+    .brand-name{font-size:24px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.02em}
+    .brand-sub{font-size:11.5px;color:var(--muted);font-family:var(--mono);letter-spacing:.06em}
+    h1{font-size:32px;font-weight:700;margin-top:8px;letter-spacing:-.02em;line-height:1.2}
+
+    /* INFO BOX */
+    .info-box{background:rgba(58,142,246,.07);border:1px solid rgba(58,142,246,.22);border-radius:16px;padding:14px 18px;margin-bottom:26px;display:flex;align-items:flex-start;gap:11px;font-size:13px;color:rgba(180,210,255,.88);line-height:1.7}
+    .info-box-icon{font-size:16px;flex-shrink:0;line-height:1.3}
+
+    /* SECTION LABEL */
+    .section-label{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-family:var(--mono);margin:8px 0 12px;opacity:.85}
+
+    /* FIELD GROUP */
+    .field-group{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
+    .field-label{font-size:14.5px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:5px}
+    .field-label .req{color:var(--red);font-size:14px;font-weight:700}
+    .field-help{font-size:12px;color:var(--muted);font-weight:300;line-height:1.6;margin-top:-2px}
+    .char-count{font-size:11px;color:var(--muted2);font-family:var(--mono);text-align:left;margin-top:4px;letter-spacing:.04em}
+    .char-count.warn{color:var(--warn)}
+
+    /* INPUTS */
+    input[type=text],input[type=tel],input[type=email],input[type=password],input[type=url],textarea,select{
+      width:100%;background:rgba(9,18,34,.5);border:1.5px solid var(--border);border-radius:13px;
+      padding:14px 16px;color:var(--text);font-family:var(--sans);font-size:14.5px;font-weight:400;
+      direction:rtl;transition:all .15s;outline:none;backdrop-filter:blur(8px);
+    }
+    input:focus,textarea:focus,select:focus{border-color:var(--accent);background:rgba(9,18,34,.7);box-shadow:0 0 0 3px rgba(58,142,246,.15)}
+    input::placeholder,textarea::placeholder{color:var(--muted2);font-weight:300}
+    textarea{resize:vertical;min-height:90px;font-family:var(--sans);line-height:1.6}
+    select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236a85b6' stroke-width='2' stroke-linecap='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:left 16px center;background-size:14px;padding-left:42px;cursor:pointer}
+    select option{background:#0d1f45;color:var(--text)}
+
+    /* PHONE ROW */
+    .phone-row{display:flex;gap:8px}
+    .phone-row select{flex:0 0 130px;font-family:var(--mono);font-size:13.5px;letter-spacing:.02em}
+    .phone-row input{flex:1}
+
+    /* ADD ITEM BUTTON (open access form) */
+    .add-item-btn{width:100%;padding:18px;background:rgba(29,255,212,.06);border:1.5px dashed rgba(29,255,212,.4);border-radius:14px;color:var(--accent2);font-family:var(--sans);font-size:14.5px;font-weight:600;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:9px}
+    .add-item-btn:hover{background:rgba(29,255,212,.12);border-color:var(--accent2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(29,255,212,.12)}
+    .add-item-btn .plus{font-size:18px;line-height:1}
+
+    /* ACCESS ITEMS LIST */
+    .access-list{display:flex;flex-direction:column;gap:14px;margin-bottom:14px}
+    .access-item{background:rgba(12,26,56,.5);border:1px solid var(--border);border-radius:18px;padding:20px;backdrop-filter:blur(10px);position:relative;transition:border-color .15s}
+    .access-item:hover{border-color:var(--border2)}
+    .access-item-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px}
+    .access-item-num{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;color:var(--accent2);letter-spacing:.06em;font-weight:600}
+    .access-item-num-dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 8px var(--accent2)}
+
+    /* STATUS PILL */
+    .status-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.04em;margin-right:8px}
+    .status-pill.checked{background:rgba(77,219,122,.12);color:var(--green);border:1px solid rgba(77,219,122,.3)}
+    .status-pill.should-work{background:rgba(58,142,246,.12);color:var(--accent);border:1px solid rgba(58,142,246,.3)}
+    .status-pill.needs-reset{background:rgba(246,168,58,.12);color:var(--warn);border:1px solid rgba(246,168,58,.3)}
+    .status-pill.empty{display:none}
+
+    /* SUBMIT */
+    .submit-row{display:flex;gap:10px;margin-top:32px}
+    .btn-submit{flex:1;background:linear-gradient(135deg,var(--accent),#1a6bd4);color:#fff;border:none;border-radius:14px;padding:17px;font-size:15.5px;font-weight:700;font-family:var(--sans);cursor:pointer;transition:all .2s;box-shadow:0 0 24px rgba(58,142,246,.3);letter-spacing:.02em}
+    .btn-submit:hover{box-shadow:0 0 36px rgba(58,142,246,.5);transform:translateY(-1px)}
+    .btn-submit:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .btn-draft{background:rgba(12,26,56,.6);border:1px solid var(--border);color:var(--muted);border-radius:14px;padding:17px 24px;font-family:var(--sans);font-size:14px;cursor:pointer;font-weight:500;transition:all .15s}
+    .btn-draft:hover{border-color:var(--border2);color:var(--text)}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(8,20,50,.95);border:1.5px solid rgba(29,255,212,.35);border-radius:999px;padding:12px 22px;font-size:13px;color:var(--accent2);font-weight:600;font-family:var(--sans);z-index:99999;opacity:0;pointer-events:none;transition:all .25s;backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(0,0,0,.4)}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .toast.error{border-color:rgba(255,107,107,.4);color:var(--red)}
+
+    /* SUCCESS OVERLAY */
+    .success-overlay{position:fixed;inset:0;background:rgba(6,13,26,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:9999;display:none;align-items:center;justify-content:center;padding:24px;animation:fadeIn .3s ease both}
+    .success-overlay.show{display:flex}
+    .success-card{max-width:440px;width:100%;background:linear-gradient(160deg,rgba(10,22,50,.99),rgba(6,14,30,.99));border:1px solid rgba(29,255,212,.3);border-radius:24px;padding:40px 32px;text-align:center;box-shadow:0 -8px 60px rgba(29,255,212,.15)}
+    .success-ring{width:88px;height:88px;border-radius:50%;background:rgba(29,255,212,.07);border:2px solid rgba(29,255,212,.4);display:grid;place-items:center;margin:0 auto 22px;font-size:36px;color:var(--accent2);animation:pulse 2.4s infinite}
+    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(29,255,212,.3)}50%{box-shadow:0 0 0 14px rgba(29,255,212,0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+    @media(max-width:560px){
+      h1{font-size:26px}
+      .wrap{padding:18px 14px 60px}
+      header{padding-top:60px}
+      .phone-row{flex-direction:column;gap:8px}
+      .phone-row select{flex:1 1 auto}
+    }
+  </style>
+</head>
+<body>
+
+<!-- FLOATING BACK BUTTON -->
+<a href="index.html" class="float-back">
+  <span class="arr">←</span>
+  <span>לאתר</span>
+</a>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-mark">
+      <img src="portfolio-images/access-logo.png" alt="AutoScale" onerror="this.style.display='none'">
+    </div>
+    <div class="brand-name">AutoScale</div>
+    <div class="brand-sub">אוטומציות חכמות</div>
+    <h1>טופס העברת גישות</h1>
+  </header>
+
+  <!-- INFO BOX -->
+  <div class="info-box">
+    <span class="info-box-icon">🔒</span>
+    <div>הטופס מאובטח ומוצפן. הפרטים נשלחים ישירות לצוות AutoScale ולא נשמרים על שרתים פתוחים.</div>
+  </div>
+
+  <form id="accessForm" novalidate>
+
+    <!-- ח.פ / ת.ז -->
+    <div class="section-label">פרטי לקוח</div>
+    <div class="field-group">
+      <label class="field-label" for="taxId">ח.פ / ת.ז <span class="req">*</span></label>
+      <textarea id="taxId" maxlength="255" placeholder="הזן/י ח.פ או ת.ז של העסק / הלקוח" rows="2" required></textarea>
+      <div class="char-count" id="taxIdCount">0/255</div>
+    </div>
+
+    <!-- ACCESS ITEMS -->
+    <div class="section-label" style="margin-top:28px">גישות שאת/ה רוצה להעביר</div>
+    <div class="field-group">
+      <label class="field-label">יש למלא כל גישה בנפרד <span class="req">*</span></label>
+      <div class="field-help">השתדל/י למלא כמה שיותר פרטים, שדה שלא קיים/לא ידוע — לא למלא.</div>
+
+      <!-- Existing items -->
+      <div class="access-list" id="accessList"></div>
+
+      <!-- Add button -->
+      <button type="button" class="add-item-btn" onclick="addAccessItem()">
+        <span class="plus">+</span>
+        <span>הוסף גישה</span>
+      </button>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-row">
+      <button type="button" class="btn-draft" onclick="saveDraft()">💾 שמור טיוטה</button>
+      <button type="submit" class="btn-submit">שליחת הטופס ✓</button>
+    </div>
+  </form>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">הועתק ✓</div>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-card">
+    <div class="success-ring">✓</div>
+    <h2 style="font-size:24px;font-weight:700;margin-bottom:10px">הטופס נשלח! 🎉</h2>
+    <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px">
+      קיבלנו את הגישות שלך. הצוות יעבור עליהן וניצור איתך קשר בקרוב להמשך התהליך.
+    </p>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <a href="index.html" style="display:block;padding:14px;background:linear-gradient(135deg,var(--accent),#1a6bd4);color:#fff;border-radius:13px;text-decoration:none;font-size:14px;font-weight:600">חזרה לאתר</a>
+      <a href="https://wa.me/972552962965?text=היי%20דונה%2C%20מילאתי%20טופס%20העברת%20גישות" target="_blank" style="display:block;padding:14px;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.4);color:#5DEB8B;border-radius:13px;text-decoration:none;font-size:14px;font-weight:600">💬 שלח/י הודעה לדונה</a>
+    </div>
+  </div>
+</div>
+
+<!-- TEMPLATES -->
+<template id="accessItemTemplate">
+  <div class="access-item" data-item>
+    <div class="access-item-header">
+      <span class="access-item-num">
+        <span class="access-item-num-dot"></span>
+        <span data-num>גישה #1</span>
+      </span>
+    </div>
+
+    <!-- שם גישה -->
+    <div class="field-group">
+      <label class="field-label" style="font-size:13.5px">שם גישה</label>
+      <input type="text" data-name placeholder="לדוגמה: Gmail, Monday.com, Meta Business" maxlength="255">
+    </div>
+
+    <!-- קישור -->
+    <div class="field-group">
+      <label class="field-label" style="font-size:13.5px">קישור</label>
+      <input type="url" data-url placeholder="https://...">
+    </div>
+
+    <!-- נבדק (multi-select up to 3) -->
+    <div class="field-group">
+      <label class="field-label" style="font-size:13.5px">נבדק?</label>
+      <div class="field-help">ניתן לבחור עד 3 אפשרויות + טקסט חופשי בנוסף</div>
+      <div data-checked-options style="display:flex;flex-direction:column;gap:8px;margin-top:6px"></div>
+      <input type="text" data-checked-other placeholder="אחר — פרט/י (אופציונלי)" style="margin-top:8px">
+    </div>
+
+    <!-- מייל -->
+    <div class="field-group">
+      <label class="field-label" style="font-size:13.5px">מייל</label>
+      <input type="email" data-email placeholder="email@example.com">
+    </div>
+
+    <!-- שם משתמש -->
+    <div class="field-group">
+      <label class="field-label" style="font-size:13.5px">שם משתמש</label>
+      <input type="text" data-username placeholder="username">
+    </div>
+
+    <!-- טלפון + קידומת -->
+    <div class="field-group">
+      <label class="field-label" style="font-size:13.5px">טלפון</label>
+      <div class="phone-row">
+        <select data-phone-prefix>
+          <option value="+972">+972 🇮🇱</option>
+          <option value="+1">+1 🇺🇸</option>
+          <option value="+44">+44 🇬🇧</option>
+          <option value="+33">+33 🇫🇷</option>
+          <option value="+49">+49 🇩🇪</option>
+          <option value="+39">+39 🇮🇹</option>
+          <option value="+34">+34 🇪🇸</option>
+          <option value="+31">+31 🇳🇱</option>
+          <option value="+32">+32 🇧🇪</option>
+          <option value="+41">+41 🇨🇭</option>
+          <option value="+43">+43 🇦🇹</option>
+          <option value="+46">+46 🇸🇪</option>
+          <option value="+47">+47 🇳🇴</option>
+          <option value="+45">+45 🇩🇰</option>
+          <option value="+358">+358 🇫🇮</option>
+          <option value="+351">+351 🇵🇹</option>
+          <option value="+30">+30 🇬🇷</option>
+          <option value="+90">+90 🇹🇷</option>
+          <option value="+7">+7 🇷🇺</option>
+          <option value="+380">+380 🇺🇦</option>
+          <option value="+48">+48 🇵🇱</option>
+          <option value="+420">+420 🇨🇿</option>
+          <option value="+86">+86 🇨🇳</option>
+          <option value="+81">+81 🇯🇵</option>
+          <option value="+82">+82 🇰🇷</option>
+          <option value="+91">+91 🇮🇳</option>
+          <option value="+62">+62 🇮🇩</option>
+          <option value="+66">+66 🇹🇭</option>
+          <option value="+84">+84 🇻🇳</option>
+          <option value="+63">+63 🇵🇭</option>
+          <option value="+60">+60 🇲🇾</option>
+          <option value="+65">+65 🇸🇬</option>
+          <option value="+852">+852 🇭🇰</option>
+          <option value="+886">+886 🇹🇼</option>
+          <option value="+61">+61 🇦🇺</option>
+          <option value="+64">+64 🇳🇿</option>
+          <option value="+27">+27 🇿🇦</option>
+          <option value="+20">+20 🇪🇬</option>
+          <option value="+212">+212 🇲🇦</option>
+          <option value="+971">+971 🇦🇪</option>
+          <option value="+966">+966 🇸🇦</option>
+          <option value="+962">+962 🇯🇴</option>
+          <option value="+961">+961 🇱🇧</option>
+          <option value="+55">+55 🇧🇷</option>
+          <option value="+52">+52 🇲🇽</option>
+          <option value="+54">+54 🇦🇷</option>
+          <option value="+56">+56 🇨🇱</option>
+          <option value="+57">+57 🇨🇴</option>
+          <option value="+51">+51 🇵🇪</option>
+        </select>
+        <input type="tel" data-phone placeholder="050-1234567">
+      </div>
+    </div>
+
+    <!-- סיסמא -->
+    <div class="field-group">
+      <label class="field-label" style="font-size:13.5px">סיסמא</label>
+      <input type="text" data-password placeholder="הסיסמה לחשבון" autocomplete="off">
+    </div>
+
+    <!-- ID Number -->
+    <div class="field-group">
+      <label class="field-label" style="font-size:13.5px">ID Number</label>
+      <input type="text" data-idnum placeholder="מזהה / Account ID">
+    </div>
+
+    <!-- אחר -->
+    <div class="field-group">
+      <label class="field-label" style="font-size:13.5px">אחר</label>
+      <input type="text" data-other1 placeholder="שדה נוסף (כותרת קצרה)">
+    </div>
+
+    <!-- פירוט אחר -->
+    <div class="field-group">
+      <label class="field-label" style="font-size:13.5px">פירוט אחר</label>
+      <textarea data-otherdetail1 maxlength="2000" placeholder="פירוט מורחב לשדה האחר" rows="3"></textarea>
+      <div class="char-count" data-other1-count>0/2000</div>
+    </div>
+
+    <!-- אחר 2 -->
+    <div class="field-group">
+      <label class="field-label" style="font-size:13.5px">אחר 2</label>
+      <input type="text" data-other2 placeholder="שדה נוסף (כותרת קצרה)">
+    </div>
+
+    <!-- פירוט אחר 2 -->
+    <div class="field-group">
+      <label class="field-label" style="font-size:13.5px">פירוט אחר 2</label>
+      <textarea data-otherdetail2 maxlength="2000" placeholder="פירוט מורחב" rows="3"></textarea>
+      <div class="char-count" data-other2-count>0/2000</div>
+    </div>
+  </div>
+</template>
+
+<script>
+const WEBHOOK_URL = 'https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q';
+const CHECKED_OPTIONS = ['צריך איפוס','אמור להיות תקין','נבדק תקין'];
+const STORAGE_KEY = 'autoscale_access_draft_v1';
+let itemCount = 0;
+
+// ════ INIT ════
+document.addEventListener('DOMContentLoaded', () => {
+  // Load draft if exists
+  loadDraft();
+  // Add first item if list is empty
+  if(document.querySelectorAll('.access-item').length === 0){
+    addAccessItem();
+  }
+  // Setup tax id counter
+  const taxId = document.getElementById('taxId');
+  taxId.addEventListener('input', () => updateCharCount(taxId, 'taxIdCount', 255));
+  // Form submit
+  document.getElementById('accessForm').addEventListener('submit', handleSubmit);
+});
+
+function updateCharCount(input, counterId, max){
+  const counter = document.getElementById(counterId) || input.parentElement.querySelector('.char-count');
+  if(!counter) return;
+  const len = input.value.length;
+  counter.textContent = len + '/' + max;
+  counter.classList.toggle('warn', len > max * 0.9);
+}
+
+// ════ ADD / REMOVE ITEMS ════
+function addAccessItem(){
+  itemCount++;
+  const tpl = document.getElementById('accessItemTemplate');
+  const clone = tpl.content.cloneNode(true);
+  const item = clone.querySelector('[data-item]');
+  item.dataset.id = itemCount;
+  item.querySelector('[data-num]').textContent = 'גישה #' + document.querySelectorAll('.access-item').length;
+  // Wire checked options (multi-select up to 3)
+  const optsContainer = item.querySelector('[data-checked-options]');
+  CHECKED_OPTIONS.forEach(opt => {
+    const lbl = document.createElement('label');
+    lbl.style.cssText = 'display:flex;align-items:center;gap:10px;padding:11px 14px;background:rgba(9,18,34,.4);border:1px solid var(--border);border-radius:11px;cursor:pointer;font-size:13.5px;color:var(--text);transition:all .15s;font-weight:400';
+    lbl.innerHTML = '<input type="checkbox" value="'+opt+'" style="accent-color:var(--accent2);width:16px;height:16px;cursor:pointer"><span>'+opt+'</span>';
+    const cb = lbl.querySelector('input');
+    cb.addEventListener('change', () => {
+      const checked = optsContainer.querySelectorAll('input:checked');
+      if(checked.length > 3){
+        cb.checked = false;
+        showToast('ניתן לבחור עד 3 אפשרויות', true);
+      } else {
+        lbl.style.borderColor = cb.checked ? 'rgba(29,255,212,.4)' : 'var(--border)';
+        lbl.style.background = cb.checked ? 'rgba(29,255,212,.06)' : 'rgba(9,18,34,.4)';
+      }
+    });
+    optsContainer.appendChild(lbl);
+  });
+  // Wire textarea counters
+  const ta1 = item.querySelector('[data-otherdetail1]');
+  const ta2 = item.querySelector('[data-otherdetail2]');
+  ta1.addEventListener('input', () => {
+    const c = item.querySelector('[data-other1-count]');
+    c.textContent = ta1.value.length + '/2000';
+    c.classList.toggle('warn', ta1.value.length > 1800);
+  });
+  ta2.addEventListener('input', () => {
+    const c = item.querySelector('[data-other2-count]');
+    c.textContent = ta2.value.length + '/2000';
+    c.classList.toggle('warn', ta2.value.length > 1800);
+  });
+
+  document.getElementById('accessList').appendChild(clone);
+  renumberItems();
+  // Scroll into view
+  setTimeout(() => {
+    const items = document.querySelectorAll('.access-item');
+    items[items.length-1].scrollIntoView({behavior:'smooth', block:'center'});
+  }, 50);
+}
+
+function removeAccessItem(){ /* deprecated — no remove button anymore */ }
+
+function renumberItems(){
+  document.querySelectorAll('.access-item').forEach((it, i) => {
+    it.querySelector('[data-num]').textContent = 'גישה #' + (i+1);
+  });
+}
+
+// ════ COLLECT DATA ════
+function collectFormData(){
+  const taxId = document.getElementById('taxId').value.trim();
+  const items = [];
+  document.querySelectorAll('.access-item').forEach(it => {
+    const checked = Array.from(it.querySelectorAll('[data-checked-options] input:checked')).map(c => c.value);
+    items.push({
+      access_name: it.querySelector('[data-name]').value.trim(),
+      url: it.querySelector('[data-url]').value.trim(),
+      checked_status: checked,
+      checked_other: it.querySelector('[data-checked-other]').value.trim(),
+      email: it.querySelector('[data-email]').value.trim(),
+      username: it.querySelector('[data-username]').value.trim(),
+      phone_prefix: it.querySelector('[data-phone-prefix]').value,
+      phone: it.querySelector('[data-phone]').value.trim(),
+      password: it.querySelector('[data-password]').value,
+      id_number: it.querySelector('[data-idnum]').value.trim(),
+      other_1: it.querySelector('[data-other1]').value.trim(),
+      other_1_detail: it.querySelector('[data-otherdetail1]').value.trim(),
+      other_2: it.querySelector('[data-other2]').value.trim(),
+      other_2_detail: it.querySelector('[data-otherdetail2]').value.trim()
+    });
+  });
+  return {tax_id: taxId, accesses: items};
+}
+
+// ════ VALIDATE ════
+function validateForm(data){
+  if(!data.tax_id) return 'חובה למלא ח.פ / ת.ז';
+  if(data.accesses.length === 0) return 'יש להוסיף לפחות גישה אחת';
+  // Each access needs at least a name
+  for(let i=0; i<data.accesses.length; i++){
+    if(!data.accesses[i].access_name) return 'גישה #'+(i+1)+' — חובה לתת שם לגישה';
+  }
+  return null;
+}
+
+// ════ SUBMIT ════
+async function handleSubmit(e){
+  e.preventDefault();
+  const data = collectFormData();
+  const err = validateForm(data);
+  if(err){ showToast(err, true); return; }
+
+  const btn = document.querySelector('.btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'שולח... ⏳';
+
+  const payload = {
+    type: 'share_access_form',
+    submitted_at: new Date().toISOString(),
+    ...data
+  };
+
+  try{
+    await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+  }catch(_){}
+
+  // Clear draft
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(_){}
+  // Show success
+  document.getElementById('successOverlay').classList.add('show');
+  btn.disabled = false;
+  btn.textContent = 'שליחת הטופס ✓';
+}
+
+// ════ DRAFT (localStorage) ════
+function saveDraft(){
+  const data = collectFormData();
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    showToast('טיוטה נשמרה ✓');
+  }catch(e){
+    showToast('שמירת טיוטה נכשלה', true);
+  }
+}
+
+function loadDraft(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const data = JSON.parse(raw);
+    document.getElementById('taxId').value = data.tax_id || '';
+    updateCharCount(document.getElementById('taxId'), 'taxIdCount', 255);
+    if(data.accesses && data.accesses.length){
+      data.accesses.forEach(acc => {
+        addAccessItem();
+        const items = document.querySelectorAll('.access-item');
+        const it = items[items.length-1];
+        it.querySelector('[data-name]').value = acc.access_name || '';
+        it.querySelector('[data-url]').value = acc.url || '';
+        it.querySelector('[data-checked-other]').value = acc.checked_other || '';
+        it.querySelector('[data-email]').value = acc.email || '';
+        it.querySelector('[data-username]').value = acc.username || '';
+        it.querySelector('[data-phone-prefix]').value = acc.phone_prefix || '+972';
+        it.querySelector('[data-phone]').value = acc.phone || '';
+        it.querySelector('[data-password]').value = acc.password || '';
+        it.querySelector('[data-idnum]').value = acc.id_number || '';
+        it.querySelector('[data-other1]').value = acc.other_1 || '';
+        it.querySelector('[data-otherdetail1]').value = acc.other_1_detail || '';
+        it.querySelector('[data-other2]').value = acc.other_2 || '';
+        it.querySelector('[data-otherdetail2]').value = acc.other_2_detail || '';
+        // restore checked
+        if(acc.checked_status && acc.checked_status.length){
+          acc.checked_status.forEach(v => {
+            const cb = it.querySelector('[data-checked-options] input[value="'+v+'"]');
+            if(cb){
+              cb.checked = true;
+              cb.dispatchEvent(new Event('change'));
+            }
+          });
+        }
+      });
+    }
+  }catch(e){}
+}
+
+// ════ TOAST ════
+let toastTimer;
+function showToast(msg, isError){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('error', !!isError);
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
