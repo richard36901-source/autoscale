@@ -288,6 +288,95 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:36
 .pay-option{width:100%;display:flex;align-items:center;gap:14px;padding:18px 20px;background:rgba(58,142,246,.04);border:1.5px solid var(--border);border-radius:16px;color:var(--text);font-family:var(--sans);cursor:pointer;text-align:right;transition:all .18s}
 .pay-option:hover{background:rgba(29,255,212,.06);border-color:rgba(29,255,212,.4);transform:translateY(-2px);box-shadow:0 8px 22px rgba(29,255,212,.08)}
 
+/* PAYMENT SCREEN SWITCHING */
+.pay-screen{display:none;animation:fadeUp .25s ease both}
+.pay-screen-active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* DETAIL ROWS (Bit/Bank info) */
+.pay-detail-row{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);font-size:13.5px;cursor:pointer;transition:background .15s}
+.pay-detail-row:hover{background:rgba(58,142,246,.06)}
+.pdr-label{color:var(--muted);font-size:13px}
+.pdr-val{font-family:var(--mono);font-weight:700;font-size:14.5px;letter-spacing:.04em;color:var(--text)}
+
+/* WARN BOX */
+.pay-warn-box{display:flex;align-items:flex-start;gap:10px;padding:14px 16px;background:rgba(246,168,58,.08);border:1px solid rgba(246,168,58,.25);border-radius:14px;line-height:1.65}
+.pwb-icon{font-size:18px;flex-shrink:0;line-height:1.4}
+.pwb-text{font-size:13px;color:rgba(246,168,58,.92);font-weight:400}
+.pwb-text strong{color:var(--warn);font-weight:700}
+
+/* UPLOAD ZONE */
+.pay-upload-block{display:flex;flex-direction:column;gap:8px}
+.pay-upload-label{font-size:12px;color:var(--muted2);font-family:var(--mono);letter-spacing:.04em;text-align:right}
+.pay-upload-zone{display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(58,142,246,.03);border:1.5px dashed rgba(80,140,255,.3);border-radius:14px;cursor:pointer;transition:all .18s;min-height:54px}
+.pay-upload-zone:hover{border-color:var(--accent);background:rgba(58,142,246,.07)}
+.pay-upload-zone.has-file{border-style:solid;border-color:rgba(29,255,212,.4);background:rgba(29,255,212,.05)}
+.puz-text{font-size:13.5px;color:var(--muted);font-weight:400}
+.pay-upload-zone.has-file .puz-text{color:var(--accent2)}
+
+/* OR DIVIDER */
+.pay-or-divider{display:flex;align-items:center;justify-content:center;margin:18px 0;color:var(--muted2);font-family:var(--mono);font-size:11.5px;letter-spacing:.1em}
+.pay-or-divider span{padding:0 14px}
+
+/* INPUT */
+.pay-input{width:100%;padding:14px 16px;background:rgba(9,18,34,.5);border:1px solid var(--border);border-radius:14px;color:var(--text);font-family:var(--mono);font-size:14px;letter-spacing:.04em;text-align:right;direction:rtl;transition:all .15s}
+.pay-input:focus{outline:none;border-color:var(--accent);background:rgba(9,18,34,.7);box-shadow:0 0 0 3px rgba(58,142,246,.15)}
+.pay-input::placeholder{color:var(--muted2);font-weight:400}
+
+/* CONFIRM BTN DISABLED STATE */
+.pay-confirm-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.pay-confirm-btn:disabled:hover{transform:none;box-shadow:none}
+
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(29,255,212,.3)}50%{box-shadow:0 0 0 14px rgba(29,255,212,0)}}
+
+/* ════ THANK-YOU SCREEN — Matches hours-thankyou.html exactly ════ */
+.ty-hero{text-align:center;margin-bottom:26px}
+.ty-suc-ring{width:88px;height:88px;border-radius:50%;background:rgba(29,255,212,.07);border:2px solid rgba(29,255,212,.35);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 18px;animation:pulse 2.5s infinite;color:var(--accent2)}
+.ty-title{font-size:24px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
+.ty-sub{font-size:13.5px;color:var(--muted);line-height:1.7}
+
+.ty-pkg-strip{background:rgba(29,255,212,.05);border:1px solid rgba(29,255,212,.18);border-radius:18px;padding:13px 18px;margin-bottom:26px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ty-pkg-lbl{font-size:12px;color:var(--muted)}
+.ty-pkg-val{font-size:15px;font-weight:700;font-family:var(--mono);color:var(--accent2);letter-spacing:.02em}
+
+.ty-section-label{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-family:var(--mono);margin:0 0 12px;opacity:.85;text-align:right}
+
+.ty-step-card{display:flex;align-items:flex-start;gap:14px;background:rgba(12,26,56,.55);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:border-color .2s,box-shadow .2s,transform .2s;text-decoration:none;color:var(--text);cursor:pointer}
+.ty-step-card:hover{border-color:var(--border2);box-shadow:0 6px 24px rgba(0,0,0,.22);transform:translateY(-1px)}
+.ty-step-card.primary{border-color:rgba(29,255,212,.32);background:rgba(29,255,212,.04)}
+.ty-step-card.secondary{border-color:rgba(58,142,246,.22)}
+.ty-step-card.portal{border-color:rgba(160,100,255,.28);background:rgba(120,60,220,.04);opacity:.85}
+
+.ty-step-num{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;font-family:var(--mono);border:1.5px solid var(--border);color:var(--muted);background:transparent}
+.ty-step-card.primary .ty-step-num{border-color:var(--accent2);color:var(--accent2);background:rgba(29,255,212,.08)}
+.ty-step-card.secondary .ty-step-num{border-color:var(--accent);color:var(--accent);background:rgba(58,142,246,.08)}
+.ty-step-card.portal .ty-step-num{border-color:#a064ff;color:#a064ff;background:rgba(160,100,255,.08)}
+
+.ty-step-body{flex:1;min-width:0}
+.ty-step-title{font-size:15px;font-weight:600;margin-bottom:5px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.ty-step-badge{font-size:9px;font-weight:700;font-family:var(--mono);padding:2px 8px;border-radius:999px;background:rgba(29,255,212,.15);color:var(--accent2);letter-spacing:.05em}
+.ty-step-badge.blue{background:rgba(58,142,246,.15);color:var(--accent)}
+.ty-step-badge.soon{background:rgba(160,100,255,.18);color:#c89fff;border:1px solid rgba(160,100,255,.35)}
+.ty-step-desc{font-size:12.5px;color:var(--muted);line-height:1.65;font-weight:300}
+.ty-step-arr{color:var(--muted);font-size:16px;opacity:.45;align-self:center;flex-shrink:0}
+
+.ty-divider{height:1px;background:var(--border);margin:22px 0}
+
+.ty-opt-row{display:flex;gap:9px;margin-bottom:14px}
+.ty-opt-card{flex:1;background:rgba(12,26,56,.55);border:1px solid var(--border);border-radius:14px;padding:13px 8px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);cursor:pointer;transition:all .2s;text-decoration:none;color:var(--text);display:flex;flex-direction:column;gap:5px;text-align:center;align-items:center}
+.ty-opt-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.ty-opt-icon{font-size:22px}
+.ty-opt-title{font-size:13px;font-weight:600}
+.ty-opt-desc{font-size:11px;color:var(--muted);font-weight:300}
+
+.ty-info-note{background:rgba(58,142,246,.06);border:1px solid rgba(58,142,246,.18);border-radius:14px;padding:12px 14px;font-size:12.5px;color:rgba(180,210,255,.85);line-height:1.7;margin-bottom:6px}
+.ty-info-note strong{color:var(--text);font-weight:600}
+
+@media(max-width:480px){
+  .ty-opt-row{flex-direction:column}
+  .ty-pkg-strip{flex-direction:column;align-items:flex-start;gap:6px}
+}
+
 /* HOW IT WORKS — 8-step vertical timeline */
 .how-timeline{position:relative;padding:8px 26px 32px 8px;display:flex;flex-direction:column;gap:14px}
 .how-timeline::before{content:'';position:absolute;top:14px;bottom:24px;right:18px;width:2px;background:linear-gradient(180deg,rgba(58,142,246,.55),rgba(29,255,212,.25));border-radius:2px}
@@ -983,53 +1072,244 @@ textarea.mh-input{font-family:var(--sans);font-weight:300;resize:vertical;min-he
 
 <!-- PAYMENT METHOD PICKER POPUP -->
 <div class="mo" id="m-pay">
-  <div class="mb-hours" style="max-width:560px">
+  <div class="mb-hours" style="max-width:580px">
     <div class="mh-handle"></div>
     <button class="mh-close" onclick="cm2('pay')" aria-label="סגור">×</button>
-    <h2 class="mh-title">בחר אמצעי תשלום</h2>
-    <p class="mh-sub" id="payInfo" style="font-family:var(--num);font-size:13px;letter-spacing:.04em">לפני מע״מ: ₪0  |  כולל: ₪0</p>
 
-    <!-- Payment method logos -->
-    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)">
-      <div style="padding:10px 18px;background:rgba(58,142,246,.08);border:1px solid rgba(58,142,246,.4);border-radius:10px;color:var(--text);font-size:12.5px;font-weight:600">העברה</div>
-      <div style="padding:10px 18px;background:#7B2CBF;border-radius:10px;color:#fff;font-size:13px;font-weight:700">Paybox</div>
-      <div style="padding:10px 18px;background:#FF3D5C;border-radius:10px;color:#fff;font-size:13px;font-weight:700">bit</div>
-      <div style="padding:10px 18px;background:#fff;border-radius:10px;color:#000;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px">Google Pay</div>
-      <div style="padding:10px 18px;background:#000;border-radius:10px;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px"> Apple Pay</div>
-      <div style="padding:10px 18px;background:#1a1a2e;border-radius:10px;display:flex;align-items:center"><svg width="32" height="20" viewBox="0 0 32 20" fill="none"><circle cx="11" cy="10" r="7" fill="#EB001B"/><circle cx="21" cy="10" r="7" fill="#F79E1B"/><path d="M16 4.5a7 7 0 010 11 7 7 0 010-11z" fill="#FF5F00"/></svg></div>
-      <div style="padding:10px 18px;background:#1A1F71;border-radius:10px;color:#fff;font-size:12px;font-weight:800;letter-spacing:.05em">VISA</div>
+    <!-- ════ MAIN PICKER SCREEN ════ -->
+    <div class="pay-screen pay-screen-active" data-pay-screen="picker">
+      <h2 class="mh-title">בחר אמצעי תשלום</h2>
+      <p class="mh-sub" id="payInfo" style="font-family:var(--num);font-size:13px;letter-spacing:.04em">לפני מע״מ: ₪0  |  כולל: ₪0</p>
+
+      <!-- Payment method logos -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)">
+        <div style="padding:10px 18px;background:rgba(58,142,246,.08);border:1px solid rgba(58,142,246,.4);border-radius:10px;color:var(--text);font-size:12.5px;font-weight:600">העברה</div>
+        <div style="padding:10px 18px;background:#7B2CBF;border-radius:10px;color:#fff;font-size:13px;font-weight:700">Paybox</div>
+        <div style="padding:10px 18px;background:#FF3D5C;border-radius:10px;color:#fff;font-size:13px;font-weight:700">bit</div>
+        <div style="padding:10px 18px;background:#fff;border-radius:10px;color:#000;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px">Google Pay</div>
+        <div style="padding:10px 18px;background:#000;border-radius:10px;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px"> Apple Pay</div>
+        <div style="padding:10px 18px;background:#1a1a2e;border-radius:10px;display:flex;align-items:center"><svg width="32" height="20" viewBox="0 0 32 20" fill="none"><circle cx="11" cy="10" r="7" fill="#EB001B"/><circle cx="21" cy="10" r="7" fill="#F79E1B"/><path d="M16 4.5a7 7 0 010 11 7 7 0 010-11z" fill="#FF5F00"/></svg></div>
+        <div style="padding:10px 18px;background:#1A1F71;border-radius:10px;color:#fff;font-size:12px;font-weight:800;letter-spacing:.05em">VISA</div>
+      </div>
+
+      <!-- Payment options -->
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <button onclick="goToPayment()" class="pay-option">
+          <div style="width:48px;height:48px;border-radius:12px;background:rgba(58,142,246,.12);border:1px solid rgba(58,142,246,.3);display:grid;place-items:center;flex-shrink:0;font-size:22px">💳</div>
+          <div style="flex:1;text-align:right">
+            <div style="font-size:15px;font-weight:700;margin-bottom:3px">כרטיס / Apple Pay / Google Pay</div>
+            <div style="font-size:12.5px;color:var(--muted);font-weight:300">תשלום מאובטח · Visa · Mastercard · Paybox · Grow</div>
+          </div>
+          <span style="color:var(--muted);font-size:18px">←</span>
+        </button>
+        <button onclick="showPayScreen('bit')" class="pay-option">
+          <div style="width:48px;height:48px;border-radius:12px;background:rgba(58,142,246,.12);border:1px solid rgba(58,142,246,.3);display:grid;place-items:center;flex-shrink:0;font-size:22px">📱</div>
+          <div style="flex:1;text-align:right">
+            <div style="font-size:15px;font-weight:700;margin-bottom:3px">Bit</div>
+            <div style="font-size:12.5px;color:var(--muted);font-weight:300">תשלום מהיר דרך אפליקציית Bit</div>
+          </div>
+          <span style="color:var(--muted);font-size:18px">←</span>
+        </button>
+        <button onclick="showPayScreen('bank')" class="pay-option">
+          <div style="width:48px;height:48px;border-radius:12px;background:rgba(58,142,246,.12);border:1px solid rgba(58,142,246,.3);display:grid;place-items:center;flex-shrink:0;font-size:22px">🏦</div>
+          <div style="flex:1;text-align:right">
+            <div style="font-size:15px;font-weight:700;margin-bottom:3px">העברה בנקאית</div>
+            <div style="font-size:12.5px;color:var(--muted);font-weight:300">פרטי חשבון + אסמכתא</div>
+          </div>
+          <span style="color:var(--muted);font-size:18px">←</span>
+        </button>
+        <button onclick="backToHoursForm()" style="width:100%;background:none;border:1px solid var(--border);border-radius:14px;padding:16px;color:var(--muted);font-family:var(--sans);font-size:13.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s">
+          <span style="font-size:16px">←</span> חזור לפרטים
+        </button>
+      </div>
     </div>
 
-    <!-- Payment options -->
-    <div style="display:flex;flex-direction:column;gap:11px">
-      <button onclick="goToPayment()" class="pay-option">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(58,142,246,.12);border:1px solid rgba(58,142,246,.3);display:grid;place-items:center;flex-shrink:0;font-size:22px">💳</div>
-        <div style="flex:1;text-align:right">
-          <div style="font-size:15px;font-weight:700;margin-bottom:3px">כרטיס / Apple Pay / Google Pay</div>
-          <div style="font-size:12.5px;color:var(--muted);font-weight:300">תשלום מאובטח · Visa · Mastercard · Paybox · Grow</div>
+    <!-- ════ BIT DETAIL SCREEN ════ -->
+    <div class="pay-screen" data-pay-screen="bit">
+      <h2 class="mh-title" style="display:flex;align-items:center;gap:10px;justify-content:flex-end">תשלום ב-Bit <span style="font-size:24px">📲</span></h2>
+      <p class="mh-sub" style="font-family:var(--mono);font-size:12.5px;letter-spacing:.05em;color:var(--muted2)">שלח/י ישירות למספר הבא</p>
+
+      <div style="margin:20px 0 22px;border:1px solid var(--border);border-radius:18px;overflow:hidden;background:rgba(9,18,34,.4)">
+        <div class="pay-detail-row" onclick="cp('054-576-4327','number')">
+          <span class="pdr-label">מספר</span>
+          <span class="pdr-val" id="bitNumberCopy">054-576-4327</span>
         </div>
-        <span style="color:var(--muted);font-size:18px">←</span>
-      </button>
-      <button onclick="goToPayment()" class="pay-option">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(58,142,246,.12);border:1px solid rgba(58,142,246,.3);display:grid;place-items:center;flex-shrink:0;font-size:22px">📱</div>
-        <div style="flex:1;text-align:right">
-          <div style="font-size:15px;font-weight:700;margin-bottom:3px">Bit</div>
-          <div style="font-size:12.5px;color:var(--muted);font-weight:300">תשלום מהיר דרך אפליקציית Bit</div>
+        <div class="pay-detail-row">
+          <span class="pdr-label">סכום (לפני מע״מ)</span>
+          <span class="pdr-val" id="bitBase" style="color:var(--accent2)">₪0</span>
         </div>
-        <span style="color:var(--muted);font-size:18px">←</span>
-      </button>
-      <button onclick="goToPayment()" class="pay-option">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(58,142,246,.12);border:1px solid rgba(58,142,246,.3);display:grid;place-items:center;flex-shrink:0;font-size:22px">🏦</div>
-        <div style="flex:1;text-align:right">
-          <div style="font-size:15px;font-weight:700;margin-bottom:3px">העברה בנקאית</div>
-          <div style="font-size:12.5px;color:var(--muted);font-weight:300">פרטי חשבון + אסמכתא</div>
+        <div class="pay-detail-row" style="border-bottom:none">
+          <span class="pdr-label">סה״כ כולל מע״מ</span>
+          <span class="pdr-val" id="bitVat" style="color:var(--warn)">₪0</span>
         </div>
-        <span style="color:var(--muted);font-size:18px">←</span>
-      </button>
-      <button onclick="backToHoursForm()" style="width:100%;background:none;border:1px solid var(--border);border-radius:14px;padding:16px;color:var(--muted);font-family:var(--sans);font-size:13.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s">
-        <span style="font-size:16px">←</span> חזור לפרטים
-      </button>
+      </div>
+
+      <div class="pay-warn-box">
+        <span class="pwb-icon">⚠️</span>
+        <span class="pwb-text">לאחר ביצוע התשלום — יש לצלם את אישור הביט ולהעלות אותו, <strong>או</strong> להזין מספר אסמכתא. רק אז תוכל/י להמשיך.</span>
+      </div>
+
+      <div class="pay-upload-block" style="margin-top:18px">
+        <label class="pay-upload-label">צילום אישור (העלאת תמונה)</label>
+        <label class="pay-upload-zone" id="bitUploadZone">
+          <input type="file" id="bitUploadFile" accept="image/*,application/pdf" style="display:none" onchange="onUploadChange(this,'bit')">
+          <span class="puz-text" id="bitUploadText">📎 לחץ/י לבחירת קובץ</span>
+        </label>
+      </div>
+
+      <div class="pay-or-divider"><span>— או —</span></div>
+
+      <div class="pay-input-block">
+        <input type="text" id="bitAsmachta" class="pay-input" placeholder="מספר אסמכתא (לדוגמה: 1234567)" oninput="onAsmachtaInput('bit')">
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:24px">
+        <button class="btn btn-blue pay-confirm-btn" id="bitConfirmBtn" onclick="confirmPayment('Bit')" disabled style="flex:1;font-size:14.5px;padding:15px">אישור ✓ — המשך</button>
+        <button onclick="showPayScreen('picker')" style="background:none;border:1px solid var(--border);border-radius:14px;padding:15px 22px;color:var(--muted);font-family:var(--sans);font-size:13px;cursor:pointer;transition:all .15s">← חזור</button>
+      </div>
     </div>
+
+    <!-- ════ BANK TRANSFER DETAIL SCREEN ════ -->
+    <div class="pay-screen" data-pay-screen="bank">
+      <h2 class="mh-title" style="display:flex;align-items:center;gap:10px;justify-content:flex-end">העברה בנקאית <span style="font-size:24px">🏦</span></h2>
+      <p class="mh-sub" style="font-family:var(--mono);font-size:12px;letter-spacing:.05em;color:var(--muted2)">העתק/י פרטים → בצע/י העברה → העלה/י אסמכתא</p>
+
+      <div style="margin:20px 0 12px;border:1px solid var(--border);border-radius:18px;overflow:hidden;background:rgba(9,18,34,.4)">
+        <div class="pay-detail-row" onclick="cp('הפועלים','בנק')">
+          <span class="pdr-label">בנק</span>
+          <span class="pdr-val">הפועלים</span>
+        </div>
+        <div class="pay-detail-row" onclick="cp('12','מספר בנק')">
+          <span class="pdr-label">מספר בנק</span>
+          <span class="pdr-val">12</span>
+        </div>
+        <div class="pay-detail-row" onclick="cp('632','סניף')">
+          <span class="pdr-label">סניף</span>
+          <span class="pdr-val">632</span>
+        </div>
+        <div class="pay-detail-row" onclick="cp('273277','מספר חשבון')">
+          <span class="pdr-label">חשבון</span>
+          <span class="pdr-val">273277</span>
+        </div>
+        <div class="pay-detail-row" onclick="cp('ריצארד טומסקי','שם')">
+          <span class="pdr-label">שם</span>
+          <span class="pdr-val">ריצארד טומסקי</span>
+        </div>
+        <div class="pay-detail-row">
+          <span class="pdr-label">סכום (לפני מע״מ)</span>
+          <span class="pdr-val" id="bankBase" style="color:var(--accent2)">₪0</span>
+        </div>
+        <div class="pay-detail-row" style="border-bottom:none">
+          <span class="pdr-label">סה״כ כולל מע״מ</span>
+          <span class="pdr-val" id="bankVat" style="color:var(--warn)">₪0</span>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--muted2);font-family:var(--mono);text-align:right;margin-bottom:14px">לחץ/י על כל ערך להעתקה</p>
+
+      <div class="pay-warn-box">
+        <span class="pwb-icon">⚠️</span>
+        <span class="pwb-text">לאחר ביצוע ההעברה — יש להעלות צילום אסמכתא <strong>או</strong> להזין מספר אסמכתא. רק אז תוכל/י להמשיך.</span>
+      </div>
+
+      <div class="pay-upload-block" style="margin-top:18px">
+        <label class="pay-upload-label">צילום אסמכתא (העלאת תמונה)</label>
+        <label class="pay-upload-zone" id="bankUploadZone">
+          <input type="file" id="bankUploadFile" accept="image/*,application/pdf" style="display:none" onchange="onUploadChange(this,'bank')">
+          <span class="puz-text" id="bankUploadText">📎 לחץ/י לבחירת קובץ</span>
+        </label>
+      </div>
+
+      <div class="pay-or-divider"><span>— או —</span></div>
+
+      <div class="pay-input-block">
+        <input type="text" id="bankAsmachta" class="pay-input" placeholder="מספר אסמכתא / מספר העברה" oninput="onAsmachtaInput('bank')">
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:24px">
+        <button class="btn btn-blue pay-confirm-btn" id="bankConfirmBtn" onclick="confirmPayment('BankTransfer')" disabled style="flex:1;font-size:14.5px;padding:15px">אישור ✓ — המשך</button>
+        <button onclick="showPayScreen('picker')" style="background:none;border:1px solid var(--border);border-radius:14px;padding:15px 22px;color:var(--muted);font-family:var(--sans);font-size:13px;cursor:pointer;transition:all .15s">← חזור</button>
+      </div>
+    </div>
+
+    <!-- ════ INLINE THANK-YOU SCREEN ════ -->
+    <div class="pay-screen" data-pay-screen="thankyou">
+      <!-- HERO -->
+      <div class="ty-hero">
+        <div class="ty-suc-ring">✓</div>
+        <div class="ty-title">תודה! התשלום התקבל 🎉</div>
+        <div class="ty-sub">בנק השעות שלך פעיל ומוכן.<br>נחזור אליך תוך 24 שעות עם אישור רשמי וחשבונית.</div>
+      </div>
+
+      <!-- PACKAGE STRIP -->
+      <div class="ty-pkg-strip">
+        <div class="ty-pkg-lbl">החבילה שנרכשה</div>
+        <div class="ty-pkg-val" id="tyPkgVal">— שעות | ₪0 +מע"מ (₪0)</div>
+      </div>
+
+      <!-- NEXT STEPS -->
+      <div class="ty-section-label">הצעדים הבאים — לפי הסדר</div>
+
+      <!-- STEP 1: Share Access -->
+      <a class="ty-step-card primary" href="https://forms.monday.com/forms/cecc3e978ab695990753b0053e8bb696?r=use1" target="_blank">
+        <div class="ty-step-num">1</div>
+        <div class="ty-step-body">
+          <div class="ty-step-title">העברת גישות <span class="ty-step-badge">חשוב — קודם כל</span></div>
+          <div class="ty-step-desc">כדי שנוכל להתחיל לעבוד, נדרש גישה למערכות שלך (אתר, CRM, Google, Meta וכו׳). ממלאים את הטופס — מוצפן ומאובטח.</div>
+        </div>
+        <div class="ty-step-arr">←</div>
+      </a>
+
+      <!-- STEP 2: Open Ticket -->
+      <a class="ty-step-card secondary" href="https://forms.monday.com/forms/971d4936269e4b9c4017f5173f95cb59?r=use1" target="_blank">
+        <div class="ty-step-num">2</div>
+        <div class="ty-step-body">
+          <div class="ty-step-title">פתיחת טיקט / בקשה <span class="ty-step-badge blue">מה לעשות</span></div>
+          <div class="ty-step-desc">תאר/י במה להשתמש בשעות — משימה ספציפית, פרויקט, רשימת דברים. ככל שיותר פרטים, נתחיל מהר יותר.</div>
+        </div>
+        <div class="ty-step-arr">←</div>
+      </a>
+
+      <!-- STEP 3: Client Portal -->
+      <a class="ty-step-card portal" href="https://autoscalehq.io/login" target="_blank">
+        <div class="ty-step-num">3</div>
+        <div class="ty-step-body">
+          <div class="ty-step-title">כניסה לאזור הלקוחות <span class="ty-step-badge soon">בקרוב</span></div>
+          <div class="ty-step-desc">מעקב אחר פרויקטים, בנק שעות, תשלומים ותקשורת ישירה — הכל במקום אחד.</div>
+        </div>
+        <div class="ty-step-arr">←</div>
+      </a>
+
+      <div class="ty-divider"></div>
+
+      <!-- OPTIONAL -->
+      <div class="ty-section-label">אופציונלי — רוצה לדבר קודם?</div>
+      <div class="ty-opt-row">
+        <a class="ty-opt-card" href="https://cal.com/richard-tomskiy/phone-call" target="_blank">
+          <div class="ty-opt-icon">📞</div>
+          <div class="ty-opt-title">שיחה</div>
+          <div class="ty-opt-desc">15–30 דק׳ לתכנון</div>
+        </a>
+        <a class="ty-opt-card" href="https://cal.com/richard-tomskiy/phone-call" target="_blank">
+          <div class="ty-opt-icon">📅</div>
+          <div class="ty-opt-title">פגישת זום</div>
+          <div class="ty-opt-desc">מיפוי מעמיק יחד</div>
+        </a>
+        <a class="ty-opt-card" href="https://wa.me/972552962965?text=היי%20דונה%2C%20פונה%20מהאתר%20בנוגע%20ל" target="_blank">
+          <div class="ty-opt-icon">💬</div>
+          <div class="ty-opt-title">WhatsApp</div>
+          <div class="ty-opt-desc">שלח/י הודעה</div>
+        </a>
+      </div>
+
+      <div class="ty-info-note">
+        💡 <strong>הסדר המומלץ:</strong> העברת גישות → פתיחת טיקט → (אופציונלי) תיאום שיחה/פגישה.<br>
+        אם תרצה/י לקבוע שיחה לפני — גם זה בסדר גמור.
+      </div>
+
+      <!-- Close button -->
+      <button class="btn btn-out" style="width:100%;padding:14px;border-radius:14px;font-size:13.5px;margin-top:18px" onclick="cm2('pay');setTimeout(()=>showPayScreen('picker'),300)">✓ סגור וחזור לאתר</button>
+    </div>
+
   </div>
 </div>
 
@@ -1207,6 +1487,15 @@ function subHours(){
     const priceNum=parseInt(curPrc.replace(/,/g,''));
     const vat=Math.round(priceNum*1.18);
     document.getElementById('payInfo').textContent='לפני מע״מ: ₪'+curPrc+'  |  כולל: ₪'+vat.toLocaleString();
+    // Reset to picker screen + clear all forms
+    if(typeof showPayScreen==='function')showPayScreen('picker');
+    ['bit','bank'].forEach(t=>{
+      const f=document.getElementById(t+'UploadFile');if(f)f.value='';
+      const a=document.getElementById(t+'Asmachta');if(a)a.value='';
+      const z=document.getElementById(t+'UploadZone');if(z)z.classList.remove('has-file');
+      const txt=document.getElementById(t+'UploadText');if(txt)txt.textContent='📎 לחץ/י לבחירת קובץ';
+      const cb=document.getElementById(t+'ConfirmBtn');if(cb){cb.disabled=true;cb.textContent='אישור ✓ — המשך'}
+    });
     om('pay');
   });
 }
@@ -1219,6 +1508,127 @@ function goToPayment(){
 function backToHoursForm(){
   cm2('pay');
   om('hours');
+}
+
+// ════ NEW: BIT / BANK / THANK YOU FLOW ════
+
+// Copy to clipboard with toast feedback
+async function cp(text, label){
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch(e){
+    const ta=document.createElement('textarea');
+    ta.value=text;ta.style.position='fixed';ta.style.left='-9999px';
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy')}catch(_){}
+    document.body.removeChild(ta);
+  }
+  showCopyToast((label?label+': ':'')+text+' הועתק ✓');
+}
+
+let copyToastTimer;
+function showCopyToast(msg){
+  let t=document.getElementById('copy-toast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='copy-toast';
+    t.style.cssText='position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(8,20,50,.95);border:1.5px solid rgba(29,255,212,.35);border-radius:999px;padding:12px 22px;font-size:13px;color:var(--accent2);font-weight:600;font-family:var(--sans);z-index:99999;opacity:0;pointer-events:none;transition:all .25s;backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(0,0,0,.4);white-space:nowrap;direction:rtl';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.opacity='1';
+  t.style.transform='translateX(-50%) translateY(0)';
+  clearTimeout(copyToastTimer);
+  copyToastTimer=setTimeout(()=>{
+    t.style.opacity='0';
+    t.style.transform='translateX(-50%) translateY(20px)';
+  },1700);
+}
+
+function showPayScreen(name){
+  document.querySelectorAll('#m-pay .pay-screen').forEach(s=>{
+    s.classList.toggle('pay-screen-active', s.dataset.payScreen === name);
+  });
+  // When entering bit/bank — refresh prices
+  if(name==='bit' || name==='bank'){
+    const priceNum=parseInt(curPrc.replace(/,/g,''));
+    const vatAmount=Math.round(priceNum*1.18);
+    document.getElementById('bitBase').textContent='₪'+curPrc;
+    document.getElementById('bitVat').textContent='₪'+vatAmount.toLocaleString();
+    document.getElementById('bankBase').textContent='₪'+curPrc;
+    document.getElementById('bankVat').textContent='₪'+vatAmount.toLocaleString();
+  }
+  // Scroll modal to top
+  const mb=document.querySelector('#m-pay .mb-hours');
+  if(mb)mb.scrollTop=0;
+}
+
+// File upload handler — enables confirm button
+function onUploadChange(input, type){
+  const zone=document.getElementById(type+'UploadZone');
+  const text=document.getElementById(type+'UploadText');
+  if(input.files && input.files[0]){
+    const f=input.files[0];
+    const sizeKb=Math.round(f.size/1024);
+    text.textContent='✓ '+f.name+' ('+(sizeKb>1024?(sizeKb/1024).toFixed(1)+' MB':sizeKb+' KB')+')';
+    zone.classList.add('has-file');
+    document.getElementById(type+'ConfirmBtn').disabled=false;
+  } else {
+    text.textContent='📎 לחץ/י לבחירת קובץ';
+    zone.classList.remove('has-file');
+    // Keep btn enabled if asmachta has value
+    const asm=document.getElementById(type+'Asmachta').value.trim();
+    document.getElementById(type+'ConfirmBtn').disabled = asm.length < 3;
+  }
+}
+
+// Asmachta input — enables button if value entered
+function onAsmachtaInput(type){
+  const val=document.getElementById(type+'Asmachta').value.trim();
+  const file=document.getElementById(type+'UploadFile').files[0];
+  document.getElementById(type+'ConfirmBtn').disabled = !file && val.length < 3;
+}
+
+// Confirm payment — send webhook + show thank you
+function confirmPayment(method){
+  const isBit = method === 'Bit';
+  const type = isBit ? 'bit' : 'bank';
+  const file = document.getElementById(type+'UploadFile').files[0];
+  const asmachta = document.getElementById(type+'Asmachta').value.trim();
+
+  // Build payload
+  const payload = {
+    type: 'hours_payment_confirmation',
+    payment_method: method,
+    hours: curHrs,
+    price: curPrc,
+    vat_total: Math.round(parseInt(curPrc.replace(/,/g,''))*1.18),
+    asmachta: asmachta || null,
+    has_screenshot: !!file,
+    file_name: file ? file.name : null,
+    timestamp: new Date().toISOString()
+  };
+
+  const btn = document.getElementById(type+'ConfirmBtn');
+  btn.disabled = true;
+  btn.textContent = 'שולח... ⏳';
+
+  // Send confirmation to webhook (file itself sent via WhatsApp by user)
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  }).catch(()=>{}).finally(()=>{
+    // Update thank-you screen with details
+    const priceNum = parseInt(curPrc.replace(/,/g,''));
+    const vat = Math.round(priceNum * 0.18);
+    document.getElementById('tyPkgVal').textContent =
+      curHrs + ' שעות | ₪' + curPrc + ' +מע"מ (₪' + vat.toLocaleString() + ')';
+    // Show inline thank-you screen
+    showPayScreen('thankyou');
+    // Reset button text
+    btn.textContent = 'אישור ✓ — המשך';
+  });
 }
 
 // CONTACT FORM
