@@ -214,8 +214,8 @@
 
     <!-- שם גישה -->
     <div class="field-group">
-      <label class="field-label" style="font-size:13.5px">שם גישה</label>
-      <input type="text" data-name placeholder="לדוגמה: Gmail, Monday.com, Meta Business" maxlength="255">
+      <label class="field-label" style="font-size:13.5px">שם גישה <span class="req">*</span></label>
+      <input type="text" data-name placeholder="לדוגמה: Gmail, Monday.com, Meta Business" maxlength="255" required>
     </div>
 
     <!-- קישור -->
@@ -226,7 +226,7 @@
 
     <!-- נבדק (multi-select up to 3) -->
     <div class="field-group">
-      <label class="field-label" style="font-size:13.5px">נבדק?</label>
+      <label class="field-label" style="font-size:13.5px">נבדק? <span class="req">*</span></label>
       <div class="field-help">ניתן לבחור עד 3 אפשרויות + טקסט חופשי בנוסף</div>
       <div data-checked-options style="display:flex;flex-direction:column;gap:8px;margin-top:6px"></div>
       <input type="text" data-checked-other placeholder="אחר — פרט/י (אופציונלי)" style="margin-top:8px">
@@ -327,24 +327,11 @@
       <textarea data-otherdetail1 maxlength="2000" placeholder="פירוט מורחב לשדה האחר" rows="3"></textarea>
       <div class="char-count" data-other1-count>0/2000</div>
     </div>
-
-    <!-- אחר 2 -->
-    <div class="field-group">
-      <label class="field-label" style="font-size:13.5px">אחר 2</label>
-      <input type="text" data-other2 placeholder="שדה נוסף (כותרת קצרה)">
-    </div>
-
-    <!-- פירוט אחר 2 -->
-    <div class="field-group">
-      <label class="field-label" style="font-size:13.5px">פירוט אחר 2</label>
-      <textarea data-otherdetail2 maxlength="2000" placeholder="פירוט מורחב" rows="3"></textarea>
-      <div class="char-count" data-other2-count>0/2000</div>
-    </div>
   </div>
 </template>
 
 <script>
-const WEBHOOK_URL = 'https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q';
+const WEBHOOK_URL = 'https://hook.eu1.make.com/u9rw1232luihb1rc9u7dpuhgxtavv96n';
 const CHECKED_OPTIONS = ['צריך איפוס','אמור להיות תקין','נבדק תקין'];
 const STORAGE_KEY = 'autoscale_access_draft_v1';
 let itemCount = 0;
@@ -399,18 +386,12 @@ function addAccessItem(){
     });
     optsContainer.appendChild(lbl);
   });
-  // Wire textarea counters
+  // Wire textarea counter
   const ta1 = item.querySelector('[data-otherdetail1]');
-  const ta2 = item.querySelector('[data-otherdetail2]');
   ta1.addEventListener('input', () => {
     const c = item.querySelector('[data-other1-count]');
     c.textContent = ta1.value.length + '/2000';
     c.classList.toggle('warn', ta1.value.length > 1800);
-  });
-  ta2.addEventListener('input', () => {
-    const c = item.querySelector('[data-other2-count]');
-    c.textContent = ta2.value.length + '/2000';
-    c.classList.toggle('warn', ta2.value.length > 1800);
   });
 
   document.getElementById('accessList').appendChild(clone);
@@ -448,9 +429,7 @@ function collectFormData(){
       password: it.querySelector('[data-password]').value,
       id_number: it.querySelector('[data-idnum]').value.trim(),
       other_1: it.querySelector('[data-other1]').value.trim(),
-      other_1_detail: it.querySelector('[data-otherdetail1]').value.trim(),
-      other_2: it.querySelector('[data-other2]').value.trim(),
-      other_2_detail: it.querySelector('[data-otherdetail2]').value.trim()
+      other_1_detail: it.querySelector('[data-otherdetail1]').value.trim()
     });
   });
   return {tax_id: taxId, accesses: items};
@@ -460,9 +439,11 @@ function collectFormData(){
 function validateForm(data){
   if(!data.tax_id) return 'חובה למלא ח.פ / ת.ז';
   if(data.accesses.length === 0) return 'יש להוסיף לפחות גישה אחת';
-  // Each access needs at least a name
+  // Each access needs name + checked status
   for(let i=0; i<data.accesses.length; i++){
-    if(!data.accesses[i].access_name) return 'גישה #'+(i+1)+' — חובה לתת שם לגישה';
+    if(!data.accesses[i].access_name) return 'גישה #'+(i+1)+' — חובה למלא שם גישה';
+    const hasChecked = data.accesses[i].checked_status.length > 0 || data.accesses[i].checked_other;
+    if(!hasChecked) return 'גישה #'+(i+1)+' — חובה לסמן "נבדק?" (לפחות אופציה אחת או טקסט חופשי)';
   }
   return null;
 }
@@ -534,8 +515,6 @@ function loadDraft(){
         it.querySelector('[data-idnum]').value = acc.id_number || '';
         it.querySelector('[data-other1]').value = acc.other_1 || '';
         it.querySelector('[data-otherdetail1]').value = acc.other_1_detail || '';
-        it.querySelector('[data-other2]').value = acc.other_2 || '';
-        it.querySelector('[data-otherdetail2]').value = acc.other_2_detail || '';
         // restore checked
         if(acc.checked_status && acc.checked_status.length){
           acc.checked_status.forEach(v => {
