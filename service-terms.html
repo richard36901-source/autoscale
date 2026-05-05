@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#060d1a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>AutoScale — תנאי בנק שירות</title>
+  <link rel="icon" type="image/x-icon" href="portfolio-images/terms-favicon.ico?v=2" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #060d1a;
+      --glass: rgba(12,26,56,0.55);
+      --border: rgba(80,140,255,0.13);
+      --text: #e8f0ff;
+      --muted: #6a85b6;
+      --muted2: #4a6090;
+      --accent: #3a8ef6;
+      --accent2: #1dffd4;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      padding: env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80vw 55vh at 10% -5%, rgba(30,90,220,0.22) 0%, transparent 65%),
+        radial-gradient(ellipse 60vw 40vh at 90% 10%, rgba(0,200,180,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 100vw 30vh at 50% 100%, rgba(10,30,80,0.5) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(58,142,246,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(58,142,246,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none; z-index: 0;
+    }
+
+    .wrap {
+      position: relative; z-index: 1;
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 28px 16px 80px;
+    }
+
+    header {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; gap: 10px;
+    }
+
+    .logo-mark {
+      width: 96px; height: 96px;
+      display: grid; place-items: center;
+      filter: drop-shadow(0 0 16px rgba(58,142,246,0.35));
+    }
+
+    .logo-mark img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+    .logo-fallback {
+      font-family: 'Space Mono', monospace;
+      font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -1px;
+    }
+
+    .brand-name {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.4px;
+      background: linear-gradient(90deg, #c8deff, #1dffd4 80%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .brand-sub {
+      font-size: 11.5px; color: var(--muted); font-weight: 300;
+      letter-spacing: 0.5px; font-family: 'Space Mono', monospace; margin-top: -4px;
+    }
+
+    .section-label {
+      font-size: 10.5px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      font-family: 'Space Mono', monospace; margin-bottom: 6px; opacity: 0.8;
+    }
+
+    .doc-sub {
+      font-size: 12px; color: var(--muted);
+      font-family: 'Space Mono', monospace; margin-bottom: 20px;
+    }
+
+    .terms-card {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .terms-card p {
+      font-size: 14px;
+      line-height: 1.85;
+      color: rgba(232,240,255,0.82);
+      margin-bottom: 16px;
+    }
+
+    .terms-card p:last-child { margin-bottom: 0; }
+
+    .terms-card strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .last-updated {
+      text-align: center;
+      font-size: 11px;
+      font-family: 'Space Mono', monospace;
+      color: var(--muted2);
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <header>
+      <div class="logo-mark">
+        <img src="portfolio-images/terms-logo.png" alt="AutoScale Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" />
+        <span class="logo-fallback" style="display:none">AS</span>
+      </div>
+      <div class="brand-name">AutoScale</div>
+      <div class="brand-sub">אוטומציות חכמות</div>
+    </header>
+
+    <div class="section-label">תנאי בנק שירות</div>
+    <div class="doc-sub">חלק בלתי נפרד מהסכם השירותים הראשי</div>
+
+    <div class="terms-card">
+      <p>מסמך זה מהווה חלק בלתי נפרד מהסכם שירותים לבניה והטמעה של אוטומציות, וכפוף לכל תנאיו.</p>
+      <p>הלקוח רשאי לרכוש בנק שעות עבודה מראש, כאשר <strong>מינימום הרכישה הינו 5 שעות עבודה</strong>. השעות יהיו בתוקף למשך <strong>12 חודשים</strong> ממועד קבלת התשלום בפועל. שעות שלא נוצלו בתוך תקופה זו יפקעו אוטומטית, ולא יינתן בגינן החזר, זיכוי או העברה לשנה הבאה.</p>
+      <p>כל משימה, בקשה, טיפול, שינוי, בדיקה או פעולה אחרת תחויב במינימום של <strong>רבע שעה עבודה</strong>, גם אם בפועל ארכה פחות מכך. זמן העבודה כולל בין היתר אפיון, פיתוח, בדיקות, תיקונים, התאמות, תקשורת טכנית, בירורים מול מערכות צד ג ותיעוד. לא יתבצע חישוב חלקי שעות או עיגול מטה.</p>
+      <p>הלקוח רשאי לקבל עדכון על ניצול השעות <strong>פעם בחודש</strong>. עדכון זה יימסר בתוך זמן סביר.</p>
+      <p>השירות והמענה יינתנו אך ורק בשעות הפעילות ובהתאם לתנאים המוגדרים בהסכם הראשי. רכישת בנק שירות <strong>אינה מקנה זמינות מיידית, קדימות בטיפול או התחייבות לזמני תגובה</strong>, והשעות ינוצלו לפי שיקול דעת המבצע ובהתאם לעומס העבודה במועד הבקשה. הלקוח אינו רשאי לדרוש הקצאה מיידית או שמירת שעות למועד עתידי קבוע מראש.</p>
+      <p>בנק השירות <strong>אינו ניתן לביטול, החזר או העברה לצד ג׳</strong>. עם סיום בנק השירות, העבודה תיעצר אוטומטית או תימשך רק לאחר רכישת בנק שירות נוסף או אישור תשלום לפי תעריף שעתי.</p>
+      <p>כל סכום שייגבה בגין בנק שירות הינו <strong>לפני מע״מ</strong>, ומע״מ יתווסף כחוק במועד החיוב.</p>
+      <p>התעריף ותנאי בנק השירות תקפים אך ורק לבנק השירות שנרכש בפועל. המבצע רשאי לעדכן את התעריף או התנאים בכל רכישה עתידית, ללא תחולה רטרואקטיבית.</p>
+      <p>בכל מקרה של סתירה בין מסמך זה להסכם הראשי, יגבר האמור בהסכם הראשי.</p>
+    </div>
+
+    <div class="last-updated" id="lastUpdated"></div>
+
+  </div>
+
+<script>
+  const d = new Date();
+  const opts = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Jerusalem' };
+  document.getElementById('lastUpdated').textContent =
+    'עודכן לאחרונה: ' + d.toLocaleDateString('he-IL', opts);
+</script>
+</body>
+</html>
