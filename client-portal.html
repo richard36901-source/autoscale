@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#060d1a">
 <title>AutoScale — פורטל לקוח</title>
-<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg">
+<link rel="icon" href="portfolio-images/portal-favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -20,6 +20,25 @@
   --mono:'Space Mono',monospace;--sans:'Sora',sans-serif;
   --r:16px;
 }
+/* ═══ LIGHT MODE ═══ */
+body.light-mode{
+  --bg:#f5f7fc;--bg2:#ffffff;--bg3:#eef1f8;
+  --glass:rgba(255,255,255,.85);--glass2:rgba(255,255,255,.6);
+  --border:rgba(58,90,160,.18);--border2:rgba(58,90,160,.32);--borders:rgba(58,90,160,.1);
+  --text:#1a2540;--muted:#5a6c8a;--muted2:#8a9bb8;
+  --accent:#1c5dd0;--accent2:#0db89e;
+}
+body.light-mode .topbar{background:rgba(255,255,255,.92) !important}
+body.light-mode .portal-nav{background:rgba(245,247,252,.92) !important}
+body.light-mode .grid-bg{opacity:.4}
+
+/* ═══ THEME TOGGLE (icon-only circle) ═══ */
+.theme-toggle{width:30px;height:30px;border-radius:50%;border:1px solid var(--border2);background:rgba(58,142,246,.08);cursor:pointer;transition:all .2s;flex-shrink:0;padding:0;display:flex;align-items:center;justify-content:center;font-size:14px}
+.theme-toggle:hover{border-color:var(--accent2);background:rgba(29,255,212,.1);transform:scale(1.05)}
+.theme-toggle::before{content:'🌙';line-height:1}
+body.light-mode .theme-toggle{background:rgba(255,179,71,.12);border-color:rgba(255,179,71,.4)}
+body.light-mode .theme-toggle:hover{background:rgba(255,179,71,.2);border-color:rgba(255,179,71,.6)}
+body.light-mode .theme-toggle::before{content:'☀️'}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;direction:rtl;font-size:14px;line-height:1.6}
@@ -54,6 +73,100 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:640px){.g2{grid-template-columns:1fr}}
 .gfl{display:flex;flex-direction:column;gap:12px}
+/* Narrow long timeline + progress cards */
+.tl{display:flex;flex-direction:column}
+.tl-narrow{max-width:none}
+.prog-narrow .prog-bar{max-width:none}
+/* Accordion */
+.upsell-accordion-open #upsell-arrow{transform:rotate(180deg)}
+.upsell-accordion-open #upsell-body{max-height:3000px !important;margin-top:6px !important}
+/* New accordions for requests and tasks */
+.req-open #req-arrow{transform:rotate(180deg)}
+.req-open #req-body{max-height:2000px !important;margin-top:6px !important}
+.tasks-open #tasks-arrow{transform:rotate(180deg)}
+.tasks-open #tasks-body{max-height:2000px !important;margin-top:6px !important}
+
+/* ═══ REVISIONS STRIP (above progress bar) ═══ */
+.rev-strip{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;background:rgba(58,142,246,.04);border:1px solid var(--borders);border-radius:14px;cursor:pointer;transition:all .18s;margin-bottom:12px}
+.rev-strip:hover{border-color:var(--accent2);background:rgba(29,255,212,.04);box-shadow:0 0 14px rgba(29,255,212,.08)}
+.rev-strip-title{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;color:var(--text)}
+.rev-strip-title .rev-icon{font-size:17px}
+.rev-strip-btns{display:flex;align-items:center;gap:8px}
+.rev-num-btn{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:13px;border:1.5px solid;transition:all .15s;pointer-events:none}
+.rev-num-btn.locked{color:#ff5f5f;border-color:rgba(255,95,95,.4);background:rgba(255,95,95,.08)}
+.rev-num-btn.open{color:var(--accent2);border-color:rgba(29,255,212,.5);background:rgba(29,255,212,.1);box-shadow:0 0 8px rgba(29,255,212,.25)}
+.rev-num-btn.submitted{color:var(--warn);border-color:rgba(255,179,71,.4);background:rgba(255,179,71,.08)}
+.rev-num-btn.closed{color:var(--muted2);border-color:var(--border);background:rgba(58,142,246,.03)}
+
+/* ═══ REVISION TASK ROW ═══ */
+.rev-task-row{display:grid;grid-template-columns:1fr 110px 70px;gap:10px;align-items:center;padding:11px 12px;background:rgba(58,142,246,.04);border:1px solid var(--borders);border-radius:10px;margin-bottom:8px}
+.rev-task-row.editable:hover{border-color:var(--border2)}
+.rev-task-row.locked-row{opacity:.85}
+.rev-task-info{min-width:0}
+.rev-task-title{font-size:13px;font-weight:700;margin-bottom:3px;line-height:1.3}
+.rev-task-body{font-size:11.5px;color:var(--muted);font-weight:300;line-height:1.5}
+.rev-task-status{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9.5px;font-weight:700;padding:5px 8px;border-radius:999px;border:1px solid;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+.rts-pending{color:var(--warn);border-color:rgba(255,179,71,.35);background:rgba(255,179,71,.08)}
+.rts-progress{color:var(--accent);border-color:rgba(58,142,246,.35);background:rgba(58,142,246,.08)}
+.rts-done{color:var(--accent2);border-color:rgba(29,255,212,.35);background:rgba(29,255,212,.08)}
+.rev-approve-cell{display:flex;align-items:center;justify-content:center}
+.rev-approve-box{width:24px;height:24px;border-radius:6px;border:2px solid var(--border2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:transparent;transition:all .15s}
+.rev-approve-box.enabled:hover{border-color:var(--accent2)}
+.rev-approve-box.checked{background:var(--accent2);border-color:var(--accent2);color:var(--bg)}
+.rev-approve-box.disabled{opacity:.25;cursor:not-allowed}
+.rev-task-edit-row .rev-task-info{display:flex;flex-direction:column;gap:5px}
+.rev-task-edit-row input,.rev-task-edit-row textarea{width:100%;padding:6px 8px;background:rgba(6,13,26,.5);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--sans);font-size:12px;outline:none;resize:vertical;min-height:auto}
+.rev-task-edit-row input:focus,.rev-task-edit-row textarea:focus{border-color:var(--accent)}
+.rev-task-edit-row textarea{min-height:38px}
+.rev-edit-btns{display:flex;gap:5px;margin-top:5px}
+.rev-edit-btns button{font-size:10.5px;padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:var(--sans)}
+.rev-edit-btns button.save{color:var(--accent2);border-color:var(--accent2);background:rgba(29,255,212,.06)}
+.rev-edit-btns button:hover{filter:brightness(1.2)}
+.rev-add-task-btn{width:100%;padding:11px;background:rgba(29,255,212,.05);border:1px dashed rgba(29,255,212,.35);border-radius:10px;color:var(--accent2);font-family:var(--sans);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:4px}
+.rev-add-task-btn:hover{background:rgba(29,255,212,.09);border-color:var(--accent2)}
+.rev-add-task-btn:disabled{opacity:.35;cursor:not-allowed;border-style:solid}
+.rev-locked-overlay{padding:30px 20px;text-align:center;background:rgba(255,95,95,.05);border:1px dashed rgba(255,95,95,.3);border-radius:12px;margin-top:12px}
+.rev-locked-overlay .lock-icon{font-size:36px;margin-bottom:10px;opacity:.7}
+.rev-locked-overlay .lock-msg{font-size:13px;color:var(--muted);font-weight:300;line-height:1.6}
+.rev-timer-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,179,71,.06);border:1px solid rgba(255,179,71,.25);border-radius:10px;margin-top:10px;font-size:11.5px}
+.rev-timer-bar .timer-label{display:flex;align-items:center;gap:6px;color:var(--warn);font-family:var(--mono);font-weight:600}
+.rev-timer-bar .timer-val{font-family:var(--mono);color:var(--text);font-weight:700}
+
+/* ═══ HORIZONTAL TIMELINE ═══ */
+.tl-horizontal{display:flex;justify-content:space-between;align-items:flex-start;position:relative;padding:14px 8px 0;gap:6px}
+.tl-horizontal::before{content:'';position:absolute;top:30px;right:18px;left:18px;height:2px;background:var(--border);z-index:0}
+.tl-h-item{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:1}
+.tl-h-dot{width:24px;height:22px;margin-bottom:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;filter:drop-shadow(0 0 0 transparent)}
+.tl-h-dot svg{width:100%;height:100%;display:block}
+.tl-h-item.tl-done .tl-h-dot{filter:drop-shadow(0 0 8px rgba(29,255,212,.6))}
+.tl-h-item.tl-now .tl-h-dot{filter:drop-shadow(0 0 10px rgba(58,142,246,.7));animation:tlpulse 2s ease-in-out infinite}
+@keyframes tlpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.tl-h-text{font-size:11.5px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:3px;max-width:100px}
+.tl-h-item.tl-next .tl-h-text{color:var(--muted)}
+.tl-h-date{font-family:var(--mono);font-size:9.5px;color:var(--muted2);letter-spacing:.04em}
+.tl-h-item.tl-now .tl-h-date{color:var(--accent);font-weight:600}
+@media(max-width:640px){
+  .tl-horizontal{overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+  .tl-h-item{min-width:90px}
+  .tl-h-text{font-size:10.5px}
+}
+
+/* ═══ NOTE/REQUEST ITEMS WITH STATUS BADGE ═══ */
+.note-item{padding:12px 14px;background:rgba(58,142,246,.04);border:1px solid var(--borders);border-radius:10px;margin-bottom:8px;transition:border-color .15s}
+.note-item:hover{border-color:var(--border2)}
+.note-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:5px}
+.note-title{font-size:13.5px;font-weight:700;color:var(--text);flex:1;line-height:1.3}
+.note-body{font-size:12px;color:var(--muted);font-weight:300;line-height:1.55;margin-bottom:6px}
+.note-meta-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px}
+.note-meta{font-family:var(--mono);font-size:9.5px;color:var(--muted2);letter-spacing:.04em}
+.note-status-badge{font-family:var(--mono);font-size:9.5px;font-weight:700;padding:3px 10px;border-radius:999px;border:1px solid;letter-spacing:.05em;text-transform:uppercase;flex-shrink:0;white-space:nowrap}
+.nsb-pending{color:var(--warn);border-color:rgba(255,179,71,.35);background:rgba(255,179,71,.08)}
+.nsb-approved{color:var(--accent2);border-color:rgba(29,255,212,.35);background:rgba(29,255,212,.08)}
+.nsb-rejected{color:var(--red);border-color:rgba(255,95,95,.35);background:rgba(255,95,95,.08)}
+.nsb-payment{color:var(--accent);border-color:rgba(58,142,246,.35);background:rgba(58,142,246,.08)}
+.note-pay-btn{background:linear-gradient(135deg,#2f5bea,#1a3aab);color:#fff;border:none;padding:8px 14px;border-radius:999px;font-family:var(--sans);font-size:11.5px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:all .15s;box-shadow:0 3px 10px rgba(47,91,234,.25)}
+.note-pay-btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.g2-top{align-items:start}
 .view{display:none}.view.on{display:block}
 
 /* ══ SCREEN LAYERS ══ */
@@ -62,8 +175,8 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 }
 #login-screen{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
 .login-box{max-width:380px;width:100%;padding:36px 30px;text-align:center}
-.login-logo{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#0d2a6e,#0a4a3a);border:1px solid rgba(58,142,246,.28);box-shadow:0 0 20px rgba(58,142,246,.18);display:grid;place-items:center;margin:0 auto 16px;overflow:hidden}
-.login-logo img{width:100%;height:100%;object-fit:cover}
+.login-logo{width:80px;height:80px;display:grid;place-items:center;margin:0 auto 16px}
+.login-logo img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 16px rgba(58,142,246,.45))}
 .login-brand{font-size:19px;font-weight:700;margin-bottom:3px;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .login-sub{font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:26px}
 .login-input{width:100%;background:rgba(58,142,246,.04);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--sans);font-size:14px;padding:11px 14px;outline:none;transition:border-color .15s;direction:rtl;margin-bottom:10px}
@@ -76,8 +189,8 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .topbar{position:sticky;top:0;z-index:50;background:rgba(6,13,26,.93);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);padding:0 20px}
 .topbar-inner{max-width:960px;margin:0 auto;height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .tbl{display:flex;align-items:center;gap:10px}
-.tbl-img{width:28px;height:28px;border-radius:7px;overflow:hidden;border:1px solid rgba(58,142,246,.25);background:linear-gradient(135deg,#0d2a6e,#0a4a3a);display:grid;place-items:center;flex-shrink:0}
-.tbl-img img{width:100%;height:100%;object-fit:cover}
+.tbl-img{width:36px;height:36px;display:grid;place-items:center;flex-shrink:0}
+.tbl-img img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(58,142,246,.4))}
 .tbl-brand{font-size:14px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .client-pill{display:flex;align-items:center;gap:7px;padding:5px 12px;background:rgba(29,255,212,.07);border:1px solid rgba(29,255,212,.2);border-radius:20px}
 .c-dot{width:6px;height:6px;border-radius:50%;background:var(--accent2);box-shadow:0 0 5px var(--accent2);flex-shrink:0}
@@ -93,7 +206,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 
 /* ITEM CARDS GRID */
 .items-section{margin-bottom:32px}
-.items-section-label{font-family:var(--mono);font-size:10px;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.items-section-label{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--accent);letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px;opacity:.9}
 .items-section-label::after{content:'';flex:1;height:.5px;background:var(--border)}
 .items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
 
@@ -105,13 +218,14 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .item-card:hover{border-color:var(--border2);transform:translateY(-3px)}
 .item-card.archived{opacity:.5;cursor:pointer;filter:grayscale(.8)}
 .item-card.archived:hover{opacity:.7;transform:none}
-.item-card::before{content:'';position:absolute;top:0;right:0;width:80px;height:80px;border-radius:50%;opacity:.08;pointer-events:none}
+.item-card::before{content:'';position:absolute;top:22px;right:22px;width:44px;height:44px;border-radius:50%;opacity:.15;pointer-events:none;transform:scale(1.6);transform-origin:center}
 .item-card.type-project::before{background:var(--accent)}
 .item-card.type-hours::before{background:var(--accent2)}
 .item-card.type-retainer::before{background:var(--warn)}
 
 .ic-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
-.ic-icon-wrap{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ic-icon-wrap{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1;flex-shrink:0;text-align:center}
+.ic-icon-wrap > *{display:flex;align-items:center;justify-content:center;line-height:1}
 .type-project .ic-icon-wrap{background:rgba(58,142,246,.12);border:.5px solid rgba(58,142,246,.25)}
 .type-hours .ic-icon-wrap{background:rgba(29,255,212,.1);border:.5px solid rgba(29,255,212,.2)}
 .type-retainer .ic-icon-wrap{background:rgba(255,179,71,.1);border:.5px solid rgba(255,179,71,.2)}
@@ -130,8 +244,8 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 
 .ic-prog{margin-top:12px}
 .prog-bar{height:3px;background:rgba(58,142,246,.12);border-radius:2px;overflow:hidden}
-.prog-fill{height:100%;border-radius:2px;transition:width .6s ease}
-.type-project .prog-fill{background:linear-gradient(90deg,#3a8ef6,#1dffd4)}
+.prog-fill{height:100%;border-radius:2px;transition:width .6s ease;background:var(--accent2)}
+.type-project .prog-fill{background:var(--accent2)}
 .type-hours .prog-fill{background:linear-gradient(90deg,#1dffd4,#0db89e)}
 .type-retainer .prog-fill{background:linear-gradient(90deg,#ffb347,#ff6d5a)}
 
@@ -143,14 +257,16 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 #portal-screen{min-height:100dvh}
 /* Breadcrumb + quick switch */
 .portal-nav{background:rgba(9,18,34,.7);border-bottom:1px solid var(--borders);padding:0 20px}
-.portal-nav-inner{max-width:960px;margin:0 auto;height:44px;display:flex;align-items:center;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.pnav-back{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);cursor:pointer;padding:5px 10px;border-radius:8px;transition:all .15s;white-space:nowrap;border:none;background:none;font-family:var(--sans);flex-shrink:0}
-.pnav-back:hover{color:var(--text);background:rgba(58,142,246,.08)}
-.pnav-divider{color:var(--muted2);font-size:14px;flex-shrink:0}
-.pnav-current{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;flex-shrink:0}
-.pnav-sep{color:var(--muted2);font-size:12px;flex-shrink:0;margin:0 4px}
-.pnav-pill{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;cursor:pointer;border:.5px solid var(--border);color:var(--muted);background:transparent;transition:all .15s;white-space:nowrap;font-family:var(--sans);flex-shrink:0}
-.pnav-pill:hover{border-color:var(--border2);color:var(--text)}
+.portal-nav-inner{max-width:960px;margin:0 auto;height:58px;display:flex;align-items:center;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.pnav-back{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--accent2);cursor:pointer;padding:9px 18px;border-radius:999px;transition:all .15s;white-space:nowrap;border:1px solid rgba(29,255,212,.35);background:rgba(29,255,212,.06);font-family:var(--sans);flex-shrink:0;letter-spacing:-.01em}
+.pnav-back:hover{color:var(--accent2);background:rgba(29,255,212,.12);border-color:var(--accent2);box-shadow:0 0 14px rgba(29,255,212,.18)}
+.pnav-divider{display:none}
+.pnav-divider{display:none !important}
+.pnav-current{display:none !important}
+.pnav-sep{display:none !important}
+.pnav-pill{display:flex;align-items:center;gap:5px;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:transparent;transition:all .15s;white-space:nowrap;font-family:var(--sans);flex-shrink:0}
+.pnav-pill:hover{border-color:var(--border2);color:var(--text);background:rgba(58,142,246,.05)}
+.pnav-pill.active{color:var(--text);background:rgba(58,142,246,.12);border-color:rgba(58,142,246,.4);box-shadow:0 0 14px rgba(58,142,246,.18)}
 .pnav-archive-notice{display:none;background:rgba(106,133,182,.07);border:.5px solid rgba(106,133,182,.2);border-radius:8px;padding:10px 14px;margin:12px 20px 0;font-size:12px;color:var(--muted);font-weight:300}
 .pnav-archive-notice.show{display:block}
 
@@ -221,7 +337,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .upsell-price{font-family:var(--mono);font-size:13px;color:var(--accent2);font-weight:700}
 .cart-bar{background:rgba(12,26,56,.9);border:1px solid rgba(29,255,212,.22);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;flex-wrap:wrap}
 .ring-wrap{display:flex;align-items:center;gap:18px;margin-bottom:14px}
-.hours-opt{flex:1;min-width:70px;padding:10px 8px;background:rgba(58,142,246,.05);border:1px solid var(--border);border-radius:10px;text-align:center;cursor:pointer;transition:all .15s}
+.hours-opt{flex:1;min-width:60px;padding:7px 6px;background:rgba(58,142,246,.05);border:1px solid var(--border);border-radius:9px;text-align:center;cursor:pointer;transition:all .15s}
 .hours-opt.on{border-color:rgba(29,255,212,.4);background:rgba(29,255,212,.07)}
 .ret-status{display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(29,255,212,.04);border:.5px solid rgba(29,255,212,.18);border-radius:12px;margin-bottom:12px}
 .ret-dot{width:9px;height:9px;border-radius:50%;background:var(--accent2);box-shadow:0 0 7px var(--accent2);flex-shrink:0;animation:pulse 2s ease-in-out infinite}
@@ -240,7 +356,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 <!-- ══════════════════════ LOGIN ══════════════════════ -->
 <div id="login-screen">
   <div class="login-box glass z">
-    <div class="login-logo"><img src="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" alt="AS" onerror="this.style.display='none'"></div>
+    <div class="login-logo"><img src="portfolio-images/portal-logo.png" alt="AS" onerror="this.style.display='none'"></div>
     <div class="login-brand">AutoScale</div>
     <div class="login-sub">פורטל לקוחות</div>
     <div style="text-align:right;margin-bottom:18px">
@@ -250,8 +366,8 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
       <input class="login-input" type="password" id="l-code" placeholder="הקוד שקיבלת" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
     <button class="btn btn-blue" style="width:100%;border-radius:12px" onclick="doLogin()">כניסה לפורטל →</button>
-    <div class="login-err" id="l-err">קוד שגוי. נסה שוב או פנה לריצ׳רד.</div>
-    <p style="font-size:11px;color:var(--muted2);margin-top:14px">אין לך קוד? <a href="https://wa.me/972545764327" target="_blank" style="color:var(--accent2)">שלח הודעה לריצ׳רד</a></p>
+    <div class="login-err" id="l-err">קוד שגוי. נסה שוב או פנה לריצ׳ארד.</div>
+    <p style="font-size:11px;color:var(--muted2);margin-top:14px">אין לך קוד? <a href="https://wa.me/972552962965" target="_blank" style="color:var(--accent2)">שלח הודעה לדונה</a></p>
   </div>
 </div>
 
@@ -260,11 +376,13 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
   <div class="topbar z">
     <div class="topbar-inner">
       <div class="tbl">
-        <div class="tbl-img"><img src="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" alt="AS" onerror="this.style.display='none'"></div>
+        <div class="tbl-img"><img src="portfolio-images/portal-logo.png" alt="AS" onerror="this.style.display='none'"></div>
         <div class="tbl-brand">AutoScale</div>
       </div>
       <div class="tbr">
         <div class="client-pill"><div class="c-dot"></div><span class="c-name" id="home-name">שלום</span></div>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="החלף מצב כהה/בהיר" title="החלף מצב"></button>
+        <button class="btn btn-teal btn-sm" onclick="openReferralModal()" style="border-radius:999px">💎 המלץ עלינו</button>
         <button class="btn btn-out btn-sm" onclick="logout()">יציאה</button>
       </div>
     </div>
@@ -283,11 +401,13 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
   <div class="topbar z">
     <div class="topbar-inner">
       <div class="tbl">
-        <div class="tbl-img"><img src="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" alt="AS" onerror="this.style.display='none'"></div>
+        <div class="tbl-img"><img src="portfolio-images/portal-logo.png" alt="AS" onerror="this.style.display='none'"></div>
         <div class="tbl-brand">AutoScale</div>
       </div>
       <div class="tbr">
         <div class="client-pill"><div class="c-dot"></div><span class="c-name" id="portal-name">—</span></div>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="החלף מצב כהה/בהיר" title="החלף מצב"></button>
+        <button class="btn btn-teal btn-sm" onclick="openReferralModal()" style="border-radius:999px">💎 המלץ עלינו</button>
         <button class="btn btn-out btn-sm" onclick="logout()">יציאה</button>
       </div>
     </div>
@@ -297,10 +417,12 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
   <div class="portal-nav z">
     <div class="portal-nav-inner">
       <button class="pnav-back" onclick="goHome()">← כל השירותים</button>
-      <span class="pnav-divider">/</span>
-      <span class="pnav-current" id="pnav-current">—</span>
-      <span class="pnav-sep" id="pnav-sep" style="display:none">·</span>
-      <div id="pnav-others"></div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-left:80px">
+        <span class="pnav-divider">/</span>
+        <span class="pnav-current" id="pnav-current">—</span>
+        <span class="pnav-sep" id="pnav-sep" style="display:none">·</span>
+        <div id="pnav-others" style="display:flex;gap:6px;align-items:center;flex-shrink:0"></div>
+      </div>
     </div>
   </div>
 
@@ -311,76 +433,161 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
   <div class="portal-content z" id="portal-content">
     <!-- ── PROJECT VIEW ── -->
     <div class="view" id="view-project">
-      <div class="kpi-row">
-        <div class="kpi glass"><div class="kpi-l"><span class="kpi-dot db"></span>התקדמות</div><div class="kpi-n" id="p-pct">0%</div><div class="kpi-s">מהפרויקט</div></div>
-        <div class="kpi glass"><div class="kpi-l"><span class="kpi-dot dt"></span>צפי עלייה</div><div class="kpi-n" id="p-live" style="font-size:15px;padding-top:5px">—</div><div class="kpi-s">תאריך יעד</div></div>
-        <div class="kpi glass"><div class="kpi-l"><span class="kpi-dot dg"></span>שולם</div><div class="kpi-n" id="p-paid">₪0</div><div class="kpi-s" id="p-paid-of">מתוך ₪0</div></div>
-        <div class="kpi glass"><div class="kpi-l"><span class="kpi-dot dw"></span>נשאר</div><div class="kpi-n" id="p-rem" style="-webkit-text-fill-color:var(--warn);color:var(--warn)">₪0</div><div class="kpi-s">לפני מסירה</div></div>
+      <!-- ═══ REVISIONS STRIP ═══ -->
+      <div class="rev-strip" id="rev-strip" onclick="openRevisionsModal()">
+        <div class="rev-strip-title">
+          <span class="rev-icon">🔄</span>
+          <span>סבב תיקונים</span>
+        </div>
+        <div class="rev-strip-btns" id="rev-strip-btns"></div>
       </div>
+
+      <!-- ═══ HORIZONTAL PROGRESS BAR ═══ -->
+      <div class="glass card" style="padding:18px 24px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <div>
+            <span class="sec-k">ציר התקדמות · שלבי פרויקט</span>
+            <div class="sec-t" style="margin-bottom:0" id="p-name">—</div>
+          </div>
+          <div style="text-align:left">
+            <div style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--accent2);line-height:1" id="p-pct2">0%</div>
+            <div style="font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:2px">הושלם</div>
+          </div>
+        </div>
+        <div class="prog-bar" style="height:7px;border-radius:4px"><div class="prog-fill" id="p-prog" style="width:0%;background:var(--accent2)"></div></div>
+      </div>
+
+      <!-- ═══ HORIZONTAL TIMELINE ═══ -->
+      <div class="glass card" style="padding:18px 24px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <div>
+            <span class="sec-k">ציר זמן</span>
+            <div class="sec-t" style="margin-bottom:0">שלבי הפרויקט</div>
+          </div>
+        </div>
+        <div class="tl-horizontal" id="p-timeline-h"></div>
+      </div>
+
+      <!-- ═══ TWO-CARD ROW: REQUESTS + ACTIVE TASKS ═══ -->
+      <div class="g2 g2-top">
+        <div class="glass card" id="req-card">
+          <div onclick="toggleReq()" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none">
+            <div>
+              <span class="sec-k">בקשות ששלחתי</span>
+              <div class="sec-t" style="margin-bottom:0">לחץ להוספה ולצפייה</div>
+            </div>
+            <span id="req-arrow" style="font-size:20px;color:var(--accent2);transition:transform .25s">⌄</span>
+          </div>
+          <div id="req-body" style="max-height:0;overflow:hidden;transition:max-height .35s ease,margin-top .25s">
+            <div style="margin-top:14px">
+              <div id="p-notes" style="margin-bottom:12px"></div>
+              <div class="fg" style="margin-bottom:6px">
+                <label class="fl">כותרת הבקשה</label>
+                <input type="text" class="fi" id="p-note-title" placeholder="כותרת קצרה" style="margin-bottom:8px">
+                <label class="fl">תיאור / פירוט</label>
+                <textarea class="fi" id="p-note-inp" rows="2" placeholder="הרחבה על הבקשה..."></textarea>
+              </div>
+              <button class="btn btn-teal btn-sm" style="border-radius:10px;width:100%" onclick="addNote()">שלח בקשה →</button>
+            </div>
+          </div>
+        </div>
+        <div class="glass card" id="tasks-card">
+          <div onclick="toggleTasks()" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none">
+            <div>
+              <span class="sec-k">משימות בביצוע</span>
+              <div class="sec-t" style="margin-bottom:0">לחץ לצפייה</div>
+            </div>
+            <span id="tasks-arrow" style="font-size:20px;color:var(--accent2);transition:transform .25s">⌄</span>
+          </div>
+          <div id="tasks-body" style="max-height:0;overflow:hidden;transition:max-height .35s ease,margin-top .25s">
+            <div style="margin-top:14px" id="p-tasks"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ TWO-CARD ROW: DOCUMENTS + CONTRACT ═══ -->
       <div class="g2">
-        <div class="gfl">
-          <div class="glass card">
-            <span class="sec-k">התקדמות</span><div class="sec-t" id="p-name">—</div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px">
-              <span style="color:var(--muted)">כולל</span>
-              <span style="font-family:var(--mono);color:var(--accent2)" id="p-pct2">0%</span>
+        <div class="glass card" style="padding:14px 16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px;flex:1">
+              <span style="font-size:20px">📁</span>
+              <div>
+                <div style="font-size:13.5px;font-weight:700">מסמכים</div>
+                <div style="font-family:var(--mono);font-size:11px;color:var(--accent2)">קבצי הפרויקט</div>
+              </div>
             </div>
-            <div class="prog-bar" style="height:5px;margin-bottom:16px"><div class="prog-fill" id="p-prog" style="width:0%"></div></div>
-            <div id="p-tasks"></div>
-          </div>
-          <div class="glass card">
-            <span class="sec-k">הערות ובקשות</span><div class="sec-t">הוספת הערה</div>
-            <div id="p-notes"></div>
-            <div class="fg"><label class="fl">הערה חדשה</label><textarea class="fi" id="p-note-inp" rows="2" placeholder="שינוי, בקשה, שאלה..."></textarea></div>
-            <button class="btn btn-out btn-sm" style="border-radius:8px" onclick="addNote()">שלח →</button>
+            <button onclick="openDocsModal()" class="btn btn-teal btn-sm">פרטים</button>
           </div>
         </div>
-        <div class="gfl">
-          <div class="glass card">
-            <span class="sec-k">ציר זמן</span><div class="sec-t">שלבי הפרויקט</div>
-            <div class="tl" id="p-timeline"></div>
-          </div>
-          <div class="glass card">
-            <span class="sec-k">תשלומים</span><div class="sec-t">לוח תשלומים</div>
-            <div id="p-payments"></div>
-            <div class="div"></div>
-            <div id="p-pay-action"></div>
-          </div>
-          <div class="glass card">
-            <span class="sec-k">מסמכים</span><div class="sec-t" style="margin-bottom:10px">חוזה</div>
-            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(58,142,246,.04);border:.5px solid var(--border2);border-radius:10px">
+        <div class="glass card" style="padding:14px 16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px;flex:1">
               <span style="font-size:20px">📄</span>
-              <div style="flex:1"><div style="font-size:13px;font-weight:600" id="p-contract-name">—</div><div style="font-size:11px;color:var(--muted)">לחץ לפתיחה</div></div>
-              <a id="p-contract-link" href="#" target="_blank" class="btn btn-out btn-sm btn-view-only">פתח</a>
+              <div>
+                <div style="font-size:13.5px;font-weight:700" id="p-contract-name">—</div>
+                <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">חוזה הפרויקט</div>
+              </div>
             </div>
-          </div>
-          <div class="glass card">
-            <span class="sec-k">המשך שירות</span><div class="sec-t" style="margin-bottom:8px">תחזוקה עתידית</div>
-            <p style="font-size:12px;color:var(--muted);font-weight:300;margin-bottom:12px;line-height:1.6">לאחר מסירת הפרויקט — ריטיינר חודשי לתמיכה שוטפת.</p>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:rgba(29,255,212,.04);border:.5px solid rgba(29,255,212,.15);border-radius:10px">
-              <div><div style="font-size:13px;font-weight:600">ריטיינר חודשי</div><div style="font-family:var(--mono);font-size:12px;color:var(--accent2)">₪390–490/חודש</div></div>
-              <a href="https://wa.me/972545764327?text=היי%20אשמח%20לשמוע%20על%20ריטיינר%20חודשי" target="_blank" class="btn btn-teal btn-sm">פרטים</a>
-            </div>
+            <a id="p-contract-link" href="#" target="_blank" class="btn btn-out btn-sm btn-view-only">חוזה</a>
           </div>
         </div>
       </div>
+
+      <!-- ═══ PAYMENTS — THREE STACKED ROWS ═══ -->
       <div class="glass card">
-        <span class="sec-k">הוסף לפרויקט</span><div class="sec-t" style="margin-bottom:6px">שדרוגים ותוספות</div>
-        <p style="font-size:12px;color:var(--muted);font-weight:300;margin-bottom:14px">בחר שירותים נוספים — לאחר תשלום יכנסו אוטומטית לפרויקט.</p>
-        <div class="upsell-grid" id="p-upsells"></div>
-        <div class="cart-bar" id="p-cart" style="display:none">
-          <div><div style="font-size:10px;color:var(--muted);font-family:var(--mono);margin-bottom:2px">סל הוספות</div><div style="font-size:13px;font-weight:600" id="p-cart-items">—</div></div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="font-family:var(--mono);font-size:17px;color:var(--accent2);font-weight:700" id="p-cart-total">₪0</div>
-            <button class="btn btn-teal btn-sm" onclick="checkoutCart()">לתשלום →</button>
-            <button class="btn btn-out btn-sm" onclick="clearCart()">נקה</button>
+        <span class="sec-k">ניהול תשלומים</span><div class="sec-t" style="margin-bottom:14px">סטטוס פיננסי</div>
+
+        <!-- ROW 1: יתרה -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:rgba(255,179,71,.05);border:1px solid rgba(255,179,71,.22);border-radius:12px;margin-bottom:8px">
+          <div>
+            <div style="font-family:var(--mono);font-size:9.5px;color:var(--warn);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;opacity:.85">⏳ יתרה לתשלום</div>
+            <div style="font-size:11.5px;color:var(--muted);font-family:var(--mono)">
+              <span id="p-next-pay-label">תשלום הבא:</span>
+              <span id="p-next-pay-date" style="color:var(--text);font-weight:600">—</span>
+            </div>
+          </div>
+          <div style="font-family:var(--mono);font-size:21px;font-weight:700;color:var(--warn);line-height:1" id="p-rem-sum">₪0</div>
+        </div>
+
+        <!-- ROW 2: שולם -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:rgba(29,255,212,.05);border:1px solid rgba(29,255,212,.22);border-radius:12px;margin-bottom:8px">
+          <div>
+            <div style="font-family:var(--mono);font-size:9.5px;color:var(--accent2);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;opacity:.85">✅ שולם</div>
+            <div id="p-paid-dates" style="font-size:11px;color:var(--muted);font-family:var(--mono);line-height:1.7"></div>
+          </div>
+          <div style="font-family:var(--mono);font-size:21px;font-weight:700;color:var(--accent2);line-height:1" id="p-paid-sum">₪0</div>
+        </div>
+
+        <!-- ROW 3: תשלום יתרה (button) -->
+        <div id="p-pay-action"></div>
+      </div>
+
+      <!-- ═══ UPSELLS ACCORDION ═══ -->
+      <div class="glass card" id="upsell-card" style="cursor:pointer">
+        <div onclick="toggleUpsells()" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none">
+          <div>
+            <span class="sec-k">הוסף לפרויקט</span>
+            <div class="sec-t" style="margin-bottom:0">שדרוגים ותוספות</div>
+          </div>
+          <span id="upsell-arrow" style="font-size:20px;color:var(--accent2);transition:transform .25s">⌄</span>
+        </div>
+        <div id="upsell-body" style="max-height:0;overflow:hidden;transition:max-height .35s ease,margin-top .25s">
+          <p style="font-size:12px;color:var(--muted);font-weight:300;margin-top:14px;margin-bottom:14px">בחר שירותים נוספים — לאחר תשלום יכנסו אוטומטית לפרויקט.</p>
+          <div class="upsell-grid" id="p-upsells"></div>
+          <div class="cart-bar" id="p-cart" style="display:none">
+            <div><div style="font-size:10px;color:var(--muted);font-family:var(--mono);margin-bottom:2px">סל הוספות</div><div style="font-size:13px;font-weight:600" id="p-cart-items">—</div></div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="font-family:var(--mono);font-size:17px;color:var(--accent2);font-weight:700" id="p-cart-total">₪0</div>
+              <button class="btn btn-teal btn-sm" onclick="checkoutCart()">לתשלום →</button>
+              <button class="btn btn-out btn-sm" onclick="clearCart()">נקה</button>
+            </div>
           </div>
         </div>
       </div>
       <div class="donna-box glass" style="margin-top:12px">
         <div class="donna-icon">💬</div>
         <div class="donna-text"><strong>שאלות ובקשות?</strong> שלח לדונה — היא תנחה אותך ותפתח משימה.</div>
-        <a href="https://wa.me/972545764327?text=שלום%20דונה" target="_blank" class="btn btn-wa btn-sm btn-view-only">💬 דונה</a>
+        <a href="https://wa.me/972552962965?text=שלום%20דונה" target="_blank" class="btn btn-wa btn-sm btn-view-only">💬 דונה</a>
       </div>
     </div>
 
@@ -412,32 +619,33 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
         </div>
       </div>
       <div class="g2">
-        <div class="gfl">
+        <div class="gfl" style="gap:6px">
           <div class="glass card"><span class="sec-k">יומן שעות</span><div class="sec-t">פירוט לפי משימה</div><div id="h-log"></div></div>
-          <div class="glass card">
-            <span class="sec-k">רכישת שעות</span><div class="sec-t" style="margin-bottom:10px">הוסף לבנק</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+          <div class="glass card" style="padding:14px 16px 12px;margin-top:-8px">
+            <span class="sec-k">רכישת שעות</span><div class="sec-t" style="margin-bottom:8px">הוסף לבנק</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
               <div class="hours-opt" onclick="selH(this,'10',2700)"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--accent2)">10</div><div style="font-size:9px;color:var(--muted2);font-family:var(--mono)">שעות</div><div style="font-size:11px;color:var(--muted);margin-top:3px">₪2,700</div></div>
               <div class="hours-opt" onclick="selH(this,'20',4800)"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--accent2)">20</div><div style="font-size:9px;color:var(--muted2);font-family:var(--mono)">שעות</div><div style="font-size:11px;color:var(--muted);margin-top:3px">₪4,800</div></div>
               <div class="hours-opt" onclick="selH(this,'30',6600)"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--accent2)">30</div><div style="font-size:9px;color:var(--muted2);font-family:var(--mono)">שעות</div><div style="font-size:11px;color:var(--muted);margin-top:3px">₪6,600</div></div>
             </div>
-            <button class="btn btn-blue" style="width:100%;border-radius:12px" id="h-buy-btn" onclick="buyH()">בחר כמות</button>
+            <button class="btn btn-blue" style="width:100%;border-radius:10px;padding:11px;font-size:13px" id="h-buy-btn" onclick="buyH()">בחר כמות</button>
           </div>
         </div>
         <div class="gfl">
-          <div class="glass card">
-            <span class="sec-k">בקשה חדשה</span><div class="sec-t">פתח משימה</div>
-            <div class="fg"><label class="fl">כותרת</label><input class="fi" id="h-t" placeholder="תיאור קצר"></div>
-            <div class="fg"><label class="fl">פרטים</label><textarea class="fi" id="h-d" rows="2" placeholder="מה צריך לבצע..."></textarea></div>
-            <div class="fg"><label class="fl">דחיפות</label><select class="fi" id="h-p" style="appearance:none"><option value="normal">רגילה</option><option value="high">גבוהה</option><option value="low">נמוכה</option></select></div>
+          <div class="glass card" style="padding:16px 18px">
+            <span class="sec-k">בקשה חדשה</span><div class="sec-t" style="margin-bottom:10px">פתח משימה</div>
+            <div id="h-requests" style="margin-bottom:10px"></div>
+            <div class="fg" style="margin-bottom:8px"><label class="fl">כותרת</label><input class="fi" id="h-t" placeholder="תיאור קצר" style="margin-bottom:0"></div>
+            <div class="fg" style="margin-bottom:6px"><label class="fl" style="margin-bottom:2px">פרטים</label><textarea class="fi" id="h-d" rows="2" placeholder="מה צריך לבצע..." style="margin-bottom:0"></textarea></div>
+            <div class="fg" style="margin-bottom:10px"><label class="fl" style="margin-bottom:2px">דחיפות</label><select class="fi" id="h-p" style="appearance:none;margin-bottom:0"><option value="normal">רגילה</option><option value="high">גבוהה</option><option value="low">נמוכה</option></select></div>
             <button class="btn btn-teal" style="width:100%;border-radius:12px" onclick="submitTask()">שלח בקשה →</button>
           </div>
-          <div class="donna-box glass">
-            <div class="donna-icon">💬</div>
-            <div class="donna-text"><strong>דחוף?</strong> שלח ישירות לדונה לטיפול מהיר.</div>
-            <a href="https://wa.me/972545764327?text=שלום%20דונה" target="_blank" class="btn btn-wa btn-sm btn-view-only">דונה</a>
-          </div>
         </div>
+      </div>
+      <div class="donna-box glass" style="margin-top:12px">
+        <div class="donna-icon">💬</div>
+        <div class="donna-text"><strong>דחוף?</strong> שלח ישירות לדונה לטיפול מהיר.</div>
+        <a href="https://wa.me/972552962965?text=שלום%20דונה" target="_blank" class="btn btn-wa btn-sm btn-view-only">דונה</a>
       </div>
     </div>
 
@@ -448,29 +656,157 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
         <div><div style="font-size:13px;font-weight:600;color:var(--accent2)">תחזוקה פעילה</div><div style="font-size:11px;color:var(--muted);font-weight:300">ריטיינר חודשי · <span id="r-month">—</span></div></div>
         <div style="margin-right:auto;text-align:left"><div style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--accent2)" id="r-price">₪0</div><div style="font-size:10px;color:var(--muted)">לחודש</div></div>
       </div>
-      <div class="g2">
+      <div class="g2 g2-top">
         <div class="gfl">
-          <div class="glass card"><span class="sec-k">מה כלול</span><div class="sec-t">הריטיינר שלך</div><div id="r-includes"></div></div>
-          <div class="glass card"><span class="sec-k">החודש הנוכחי</span><div class="sec-t">משימות <span id="r-month2">—</span></div><div id="r-tasks"></div></div>
+          <div class="glass card" style="padding:16px 16px 18px"><span class="sec-k">מה כלול</span><div class="sec-t" style="margin-bottom:8px">הריטיינר שלך</div><div id="r-includes"></div></div>
+          <div class="glass card" style="margin-top:-2px"><span class="sec-k">החודש הנוכחי</span><div class="sec-t">משימות <span id="r-month2">—</span></div><div id="r-tasks"></div></div>
         </div>
         <div class="gfl">
-          <div class="glass card"><span class="sec-k">תשלום חודשי</span><div class="sec-t">סטטוס</div><div id="r-pay"></div></div>
-          <div class="glass card">
-            <span class="sec-k">בקשה חדשה</span><div class="sec-t">שלח בקשה</div>
-            <div class="fg"><label class="fl">מה צריך?</label><input class="fi" id="r-t" placeholder="תיאור קצר"></div>
-            <div class="fg"><label class="fl">פרטים</label><textarea class="fi" id="r-d" rows="2" placeholder="הרחבה..."></textarea></div>
-            <button class="btn btn-teal" style="width:100%;border-radius:12px" onclick="submitRetTask()">שלח →</button>
-          </div>
-          <div class="donna-box glass">
-            <div class="donna-icon">💬</div>
-            <div class="donna-text"><strong>דונה</strong> — לשאלות ובקשות דחופות.</div>
-            <a href="https://wa.me/972545764327?text=שלום%20דונה" target="_blank" class="btn btn-wa btn-sm btn-view-only">פתח</a>
+          <div class="glass card" style="padding:14px 16px"><span class="sec-k">תשלום חודשי</span><div class="sec-t" style="margin-bottom:8px">סטטוס</div><div id="r-pay"></div></div>
+          <div class="glass card" style="padding:14px 16px;margin-top:-12px">
+            <span class="sec-k">בקשה חדשה</span><div class="sec-t" style="margin-bottom:8px">שלח בקשה</div>
+            <div id="r-requests" style="margin-bottom:8px"></div>
+            <div class="fg" style="margin-bottom:6px"><label class="fl">מה צריך?</label><input class="fi" id="r-t" placeholder="תיאור קצר" style="margin-bottom:0"></div>
+            <div class="fg" style="margin-bottom:8px"><label class="fl">פרטים</label><textarea class="fi" id="r-d" rows="2" placeholder="הרחבה..." style="margin-bottom:0"></textarea></div>
+            <button class="btn btn-teal" style="width:100%;border-radius:10px;padding:11px;font-size:13px" onclick="submitRetTask()">שלח →</button>
           </div>
         </div>
+      </div>
+      <div class="donna-box glass" style="margin-top:-2px">
+        <div class="donna-icon">💬</div>
+        <div class="donna-text"><strong>דונה</strong> — לשאלות ובקשות דחופות.</div>
+        <a href="https://wa.me/972552962965?text=שלום%20דונה" target="_blank" class="btn btn-wa btn-sm btn-view-only">פתח</a>
       </div>
     </div>
   </div><!-- /portal-content -->
 </div><!-- /portal-screen -->
+
+<!-- ══════════════════════ REFERRAL MODAL ══════════════════════ -->
+<div id="referral-modal" style="display:none;position:fixed;inset:0;background:rgba(6,13,26,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;align-items:center;justify-content:center;padding:20px;animation:mfade .25s ease both">
+  <div class="glass" style="max-width:480px;width:100%;padding:32px 28px;text-align:center;position:relative;animation:mslide .3s ease both">
+    <button onclick="closeReferralModal()" style="position:absolute;top:14px;left:14px;width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:rgba(58,142,246,.06);color:var(--muted);font-size:18px;cursor:pointer;display:grid;place-items:center;transition:all .15s">×</button>
+    <div style="width:64px;height:64px;border-radius:14px;background:rgba(29,255,212,.07);border:1px solid rgba(29,255,212,.25);display:grid;place-items:center;margin:0 auto 16px;font-size:32px">💎</div>
+    <h3 style="font-size:21px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em">המלץ עלינו לחבר</h3>
+    <p style="font-size:13.5px;color:var(--muted);font-weight:300;margin-bottom:20px;line-height:1.7">חבר/ה שתמליץ/י עליו וייסגר פרויקט דרכך — <strong style="color:var(--accent2)">תקבל/י 10% הנחה</strong> לפרויקט הבא 🎁</p>
+
+    <div style="background:rgba(58,142,246,.05);border:1px solid var(--borders);border-radius:12px;padding:16px;margin-bottom:20px;text-align:right">
+      <div style="font-family:var(--mono);font-size:9.5px;color:var(--accent2);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px">📱 הודעת WhatsApp לשליחה</div>
+      <div id="ref-msg-preview" style="font-size:12.5px;color:var(--text);line-height:1.65;font-weight:300;white-space:pre-line"></div>
+    </div>
+
+    <a href="#" id="ref-wa-btn" target="_blank" class="btn btn-wa" style="width:100%;border-radius:12px;padding:14px;font-size:14px;font-weight:600;justify-content:center;gap:8px">
+      <span style="font-size:18px">💬</span>
+      <span>שלח לחבר/ה ב-WhatsApp</span>
+    </a>
+    <button onclick="copyRefMsg()" class="btn btn-out btn-sm" style="width:100%;border-radius:12px;padding:11px;margin-top:8px;font-size:12.5px">📋 העתק הודעה</button>
+  </div>
+</div>
+
+<!-- ══════════════════════ REVISIONS MAIN MODAL ══════════════════════ -->
+<div id="revisions-modal" style="display:none;position:fixed;inset:0;background:rgba(6,13,26,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;align-items:center;justify-content:center;padding:20px;animation:mfade .25s ease both">
+  <div class="glass" style="max-width:460px;width:100%;padding:30px 28px;text-align:center;position:relative;animation:mslide .3s ease both">
+    <button onclick="closeRevisionsModal()" style="position:absolute;top:14px;left:14px;width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:rgba(58,142,246,.06);color:var(--muted);font-size:18px;cursor:pointer;display:grid;place-items:center;transition:all .15s">×</button>
+    <div style="width:60px;height:60px;border-radius:14px;background:rgba(29,255,212,.07);border:1px solid rgba(29,255,212,.25);display:grid;place-items:center;margin:0 auto 16px;font-size:28px">🔄</div>
+    <h3 style="font-size:20px;font-weight:700;margin-bottom:6px;letter-spacing:-.01em">סבבי תיקונים</h3>
+    <p style="font-size:13px;color:var(--muted);font-weight:300;margin-bottom:24px;line-height:1.7">בחר/י סבב לעריכה או הוסף סבב חדש:</p>
+    <div style="display:flex;flex-direction:column;gap:10px" id="revs-buttons-list"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ ROUND TASKS MODAL ══════════════════════ -->
+<div id="round-modal" style="display:none;position:fixed;inset:0;background:rgba(6,13,26,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;align-items:center;justify-content:center;padding:20px;animation:mfade .25s ease both">
+  <div class="glass" style="max-width:680px;width:100%;padding:28px 26px;position:relative;animation:mslide .3s ease both;max-height:90vh;overflow-y:auto">
+    <button onclick="closeRoundModal()" style="position:absolute;top:14px;left:14px;width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:rgba(58,142,246,.06);color:var(--muted);font-size:18px;cursor:pointer;display:grid;place-items:center;transition:all .15s;z-index:5">×</button>
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="width:54px;height:54px;border-radius:14px;background:rgba(29,255,212,.07);border:1px solid rgba(29,255,212,.25);display:grid;place-items:center;margin:0 auto 12px;font-size:24px">🔄</div>
+      <h3 id="round-modal-title" style="font-size:19px;font-weight:700;letter-spacing:-.01em">סבב 1</h3>
+      <p id="round-modal-sub" style="font-size:12px;color:var(--muted);font-weight:300;margin-top:4px">רשימת משימות לסבב</p>
+    </div>
+    <!-- Header row -->
+    <div style="display:grid;grid-template-columns:1fr 110px 70px;gap:10px;padding:0 12px 8px;font-family:var(--mono);font-size:9.5px;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase">
+      <div>משימה</div>
+      <div style="text-align:center">סטטוס</div>
+      <div style="text-align:center">אישור</div>
+    </div>
+    <div id="round-tasks-list"></div>
+    <button class="rev-add-task-btn" id="round-add-btn" onclick="addRoundTask()">➕ הוסף משימה</button>
+    <div id="round-timer-bar"></div>
+    <div id="round-bottom-actions" style="margin-top:14px;display:flex;flex-direction:column;gap:8px"></div>
+    <div id="round-locked-msg"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ SUBMIT CONFIRM MODAL ══════════════════════ -->
+<div id="submit-confirm-modal" style="display:none;position:fixed;inset:0;background:rgba(6,13,26,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1010;align-items:center;justify-content:center;padding:20px;animation:mfade .25s ease both">
+  <div class="glass" style="max-width:500px;width:100%;padding:30px 28px;text-align:center;position:relative;animation:mslide .3s ease both">
+    <div style="width:72px;height:72px;border-radius:18px;background:rgba(255,179,71,.1);border:1px solid rgba(255,179,71,.35);display:grid;place-items:center;margin:0 auto 16px;font-size:36px">⚠️</div>
+    <h3 style="font-size:20px;font-weight:700;margin-bottom:8px">בטוח/ה שתרצה/י להגיש?</h3>
+    <div style="background:rgba(58,142,246,.05);border:1px solid var(--borders);border-radius:12px;padding:16px;margin:18px 0;text-align:right;font-size:12.5px;color:var(--muted);line-height:1.7;font-weight:300">
+      יש לעבור על הכל כמה פעמים כדי לוודא. לאחר התחלת ביצוע לא יהיה ניתן לערוך אלא בסבב נוסף בלבד.<br><br>
+      <strong style="color:var(--text)">שים/י לב:</strong> כלולים <strong style="color:var(--accent2)">2 סבבים בלבד</strong>. מעבר לכך עלות סבב היא <strong style="color:var(--warn)">10% מהפרויקט</strong> ללא קשר לגודל הסבב.<br><br>
+      בלחיצה על כפתור "הגש" אני מסכים/ה לתנאים אלו.
+    </div>
+    <div style="display:flex;gap:10px">
+      <button onclick="proceedSubmitRound()" class="btn btn-teal" style="flex:1;border-radius:12px;padding:13px">📤 הגש</button>
+      <button onclick="closeSubmitConfirm()" class="btn btn-out" style="flex:1;border-radius:12px;padding:13px">↩️ חזור</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ TYPE-TO-CONFIRM MODAL ══════════════════════ -->
+<div id="type-confirm-modal" style="display:none;position:fixed;inset:0;background:rgba(6,13,26,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1020;align-items:center;justify-content:center;padding:20px;animation:mfade .25s ease both">
+  <div class="glass" style="max-width:420px;width:100%;padding:30px 28px;text-align:center;position:relative;animation:mslide .3s ease both">
+    <div style="width:60px;height:60px;border-radius:14px;background:rgba(29,255,212,.07);border:1px solid rgba(29,255,212,.25);display:grid;place-items:center;margin:0 auto 14px;font-size:26px">✍️</div>
+    <h3 style="font-size:18px;font-weight:700;margin-bottom:6px">אישור סופי</h3>
+    <p style="font-size:13px;color:var(--muted);font-weight:300;margin-bottom:18px;line-height:1.6">רשמ/י <strong style="color:var(--accent2);font-family:var(--mono)">"הגש"</strong> כדי לאשר:</p>
+    <input type="text" id="type-confirm-input" placeholder='הקלד "הגש"' style="width:100%;padding:13px 14px;background:rgba(6,13,26,.5);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--mono);font-size:14px;text-align:center;outline:none;margin-bottom:14px" oninput="checkTypeConfirm()">
+    <div style="display:flex;gap:10px">
+      <button id="type-confirm-finish" onclick="finalizeRoundSubmission()" disabled class="btn btn-teal" style="flex:1;border-radius:12px;padding:12px;opacity:.4;cursor:not-allowed">✓ סיום</button>
+      <button onclick="closeTypeConfirm()" class="btn btn-out" style="flex:1;border-radius:12px;padding:12px">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ DOCUMENTS MODAL ══════════════════════ -->
+<div id="docs-modal" style="display:none;position:fixed;inset:0;background:rgba(6,13,26,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;align-items:center;justify-content:center;padding:20px;animation:mfade .25s ease both">
+  <div class="glass" style="max-width:520px;width:100%;padding:30px 26px;position:relative;animation:mslide .3s ease both;max-height:85vh;overflow-y:auto">
+    <button onclick="closeDocsModal()" style="position:absolute;top:14px;left:14px;width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:rgba(58,142,246,.06);color:var(--muted);font-size:18px;cursor:pointer;display:grid;place-items:center;transition:all .15s">×</button>
+    <div style="text-align:center;margin-bottom:22px">
+      <div style="width:60px;height:60px;border-radius:14px;background:rgba(58,142,246,.07);border:1px solid rgba(58,142,246,.25);display:grid;place-items:center;margin:0 auto 14px;font-size:28px">📁</div>
+      <h3 style="font-size:20px;font-weight:700;margin-bottom:6px;letter-spacing:-.01em">מסמכי הפרויקט</h3>
+      <p style="font-size:13px;color:var(--muted);font-weight:300">כל הקבצים שהועלו בפרויקט</p>
+    </div>
+    <div id="docs-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ MAINTENANCE MODAL ══════════════════════ -->
+<div id="maint-modal" style="display:none;position:fixed;inset:0;background:rgba(6,13,26,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;align-items:center;justify-content:center;padding:20px;animation:mfade .25s ease both">
+  <div class="glass" style="max-width:440px;width:100%;padding:32px 28px;text-align:center;position:relative;animation:mslide .3s ease both">
+    <button onclick="closeMaintModal()" style="position:absolute;top:14px;left:14px;width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:rgba(58,142,246,.06);color:var(--muted);font-size:18px;cursor:pointer;display:grid;place-items:center;transition:all .15s">×</button>
+    <div style="width:60px;height:60px;border-radius:14px;background:rgba(29,255,212,.07);border:1px solid rgba(29,255,212,.25);display:grid;place-items:center;margin:0 auto 16px;font-size:28px">🔧</div>
+    <h3 style="font-size:20px;font-weight:700;margin-bottom:6px;letter-spacing:-.01em">תחזוקה — ריטיינר חודשי</h3>
+    <p style="font-size:13px;color:var(--muted);font-weight:300;margin-bottom:24px;line-height:1.7">תמיכה שוטפת לאחר מסירת הפרויקט. בחר/י את הפעולה הרצויה:</p>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <a href="maintenance-terms.html" target="_blank" class="btn btn-out" style="width:100%;border-radius:12px;padding:14px;font-size:14px;justify-content:space-between">
+        <span style="display:flex;align-items:center;gap:9px"><span style="font-size:18px">📋</span><span>תנאים</span></span>
+        <span style="opacity:.6;font-size:14px">←</span>
+      </a>
+      <a href="#" id="maint-upgrade-btn" target="_blank" class="btn btn-teal" style="width:100%;border-radius:12px;padding:14px;font-size:14px;justify-content:space-between">
+        <span style="display:flex;align-items:center;gap:9px"><span style="font-size:18px">⚡</span><span>שדרוג</span></span>
+        <span style="opacity:.85;font-size:14px">←</span>
+      </a>
+      <button onclick="alert('פנייה לביטול — הפיצ׳ר יושלם בהמשך')" class="btn btn-out" style="width:100%;border-radius:12px;padding:14px;font-size:14px;justify-content:space-between;border-color:rgba(255,95,95,.2);color:var(--red)">
+        <span style="display:flex;align-items:center;gap:9px"><span style="font-size:18px">✕</span><span>פנייה לביטול</span></span>
+        <span style="opacity:.6;font-size:14px">←</span>
+      </button>
+    </div>
+  </div>
+</div>
+<style>
+@keyframes mfade{from{opacity:0}to{opacity:1}}
+@keyframes mslide{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
+</style>
 
 <script>
 // ══════════════════════════════════════════════════════════
@@ -478,14 +814,32 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 // ══════════════════════════════════════════════════════════
 const CLIENTS = {
   'richard@demo.com': {
-    code:'0000', name:'ריצ׳רד (דמו)', items:[
+    code:'0000', name:'ריצ׳ארד (דמו)', items:[
       {id:'p1',type:'project',label:'Digital Online — משפך',status:'active',data:{
         name:'Digital Online — משפך שיווקי',pct:75,goLive:'28.01.2025',totalPrice:8500,paid:4250,
         contractName:'חוזה — Digital Online',contractUrl:'#',
+        rounds:[
+          {opened:true, submitted:false, closed:false, lockedAt:null, allDoneAt:null, tasks:[
+            {title:'שינוי כותרת ראשית בדף נחיתה',body:'הכותרת תהיה: "אוטומציות חכמות לעסק שלך"',status:'pending',approved:false}
+          ]},
+          {opened:false, submitted:false, closed:false, lockedAt:null, allDoneAt:null, tasks:[]}
+        ],
+        documents:[
+          {icon:'📄',name:'אפיון הפרויקט',type:'PDF',size:'2.3MB',date:'03.01.2025',url:'#'},
+          {icon:'🎨',name:'מוקאפ עיצוב — דפי וידאו',type:'Figma',size:'12 דפים',date:'07.01.2025',url:'#'},
+          {icon:'📊',name:'מבנה הנתונים — Sheets',type:'Sheets',size:'4 גליונות',date:'10.01.2025',url:'#'},
+          {icon:'📝',name:'מסמך תוכן — דפי הנחיתה',type:'DOCX',size:'8 עמודים',date:'12.01.2025',url:'#'},
+          {icon:'🔧',name:'תיעוד טכני — אוטומציות',type:'PDF',size:'1.5MB',date:'18.01.2025',url:'#'}
+        ],
         tasks:[{t:'בניית דפי וידאו',done:true,s:'4 דפים + seekbar'},{t:'טופס ליד + ולידציה',done:true,s:'inline'},{t:'Make + Google Sheets',done:true,s:'webhook'},{t:'GTM + Meta Pixel',done:false,s:'ממתין ל-GA4'},{t:'אוטומציית WhatsApp',done:false,s:'בפיתוח'}],
         timeline:[{t:'done',text:'חתימת חוזה',sub:'+ קבלת מקדמה',date:'03.01'},{t:'done',text:'קיק-אוף',sub:'איסוף נכסים',date:'05.01'},{t:'done',text:'בניית דפים',sub:'4 דפים',date:'14.01'},{t:'now',text:'אוטומציות',sub:'Make + WhatsApp',date:'בתהליך'},{t:'next',text:'QA',sub:'mobile + desktop',date:'26.01'},{t:'next',text:'מסירה',sub:'Loom + מסמך',date:'28.01'}],
         payments:[{desc:'מקדמה 50%',amount:4250,date:'03.01.2025',status:'paid'},{desc:'יתרה 50%',amount:4250,date:'לפני מסירה',status:'unpaid'}],
-        notes:[{text:'לוודא כפתור גלוי במובייל',date:'10.01'}]
+        notes:[
+          {title:'לוודא כפתור גלוי במובייל',body:'הכפתור התחתון בדף הנחיתה לא נראה טוב במסך iPhone SE',status:'approved',date:'10.01'},
+          {title:'הוספת אנימציה לכותרת',body:'אם אפשר fade-in עדין על הכותרת הראשית',status:'pending',date:'12.01'},
+          {title:'שינוי שדה טופס נוסף',body:'הוספת שדה "תקציב" לטופס הליד',status:'payment',amount:450,date:'14.01'},
+          {title:'בקשה לתרגום לאנגלית',body:'תרגום של דף הנחיתה לאנגלית',status:'rejected',date:'15.01'}
+        ]
       }},
       {id:'p2',type:'project',label:'המרכז הארצי למיגון',status:'archived',data:{
         name:'המרכז הארצי למיגון — לידים',pct:100,goLive:'15.12.2024',totalPrice:3200,paid:3200,
@@ -497,7 +851,11 @@ const CLIENTS = {
       }},
       {id:'h1',type:'hours',label:'בנק שעות — ינואר 2025',status:'active',data:{
         total:20,used:13,expiry:'01.07.2025',
-        log:[{task:'עדכון טופס לידים',hours:2.5,date:'15.01'},{task:'דיבאג Make',hours:4,date:'12.01'},{task:'Sheets חיבור',hours:1.5,date:'08.01'},{task:'דף נחיתה',hours:5,date:'04.01'}]
+        log:[{task:'עדכון טופס לידים',hours:2.5,date:'15.01'},{task:'דיבאג Make',hours:4,date:'12.01'},{task:'Sheets חיבור',hours:1.5,date:'08.01'},{task:'דף נחיתה',hours:5,date:'04.01'}],
+        requests:[
+          {title:'תיקון באג בטופס',body:'הטופס לא שולח לפעמים בכרום',status:'approved',date:'18.01'},
+          {title:'הוספת שדה תקציב',body:'להוסיף שדה תקציב לטופס הליד',status:'pending',date:'19.01'}
+        ]
       }},
       {id:'h2',type:'hours',label:'בנק שעות — אוקטובר 2024',status:'archived',data:{
         total:10,used:10,expiry:'01.04.2025',
@@ -507,7 +865,12 @@ const CLIENTS = {
         price:490,month:'ינואר 2025',
         includes:['תמיכה מועדפת עד 24 שעות','עד 3 שינויים קטנים בחודש','ניטור סצנריות Make','גישה לדונה','עדכוני WhatsApp templates'],
         tasks:[{t:'עדכון תבנית WhatsApp',done:true,s:'אושר ב-Meta'},{t:'תיקון באג טופס',done:true,s:''},{t:'הוספת שדה לדוח',done:false,s:'בתהליך'}],
-        payStatus:'paid',payDate:'01.01.2025'
+        payStatus:'paid',payDate:'01.01.2025',
+        requests:[
+          {title:'הוספת ערוץ Email',body:'להוסיף ערוץ Email נוסף',status:'approved',date:'14.01'},
+          {title:'דוח חודשי מורחב',body:'דוח עם פילוחים נוספים',status:'pending',date:'17.01'},
+          {title:'אינטגרציה Pipedrive',body:'חיבור ל-Pipedrive',status:'payment',amount:850,date:'19.01'}
+        ]
       }}
     ]
   },
@@ -644,22 +1007,19 @@ function openItem(id){
     pc.classList.remove('archived');
   }
 
-  // Breadcrumb
+  // Breadcrumb — show ALL items as tabs in fixed order, mark current as active
   const tc=typeConfig[currentItem.type];
   document.getElementById('pnav-current').textContent=tc.icon+' '+currentItem.label;
 
-  // Other items as pills
-  const others=client.items.filter(i=>i.id!==id);
+  // All items as pills (including current — marked active)
   const othersEl=document.getElementById('pnav-others');
-  const sep=document.getElementById('pnav-sep');
-  if(others.length){
-    sep.style.display='inline';
-    othersEl.innerHTML=others.map(o=>{
+  if(client.items.length>0){
+    othersEl.innerHTML=client.items.map(o=>{
       const oc=typeConfig[o.type];
-      return `<button class="pnav-pill" onclick="openItem('${o.id}')">${oc.icon} ${o.label}</button>`;
+      const activeClass=o.id===id?' active':'';
+      return `<button class="pnav-pill${activeClass}" onclick="openItem('${o.id}')">${oc.icon} ${o.label}</button>`;
     }).join('');
   } else {
-    sep.style.display='none';
     othersEl.innerHTML='';
   }
 
@@ -675,38 +1035,591 @@ function openItem(id){
 function renderProject(){
   const d=currentItem.data;
   const rem=d.totalPrice-d.paid;
-  document.getElementById('p-pct').textContent=d.pct+'%';
   document.getElementById('p-pct2').textContent=d.pct+'%';
   document.getElementById('p-prog').style.width=d.pct+'%';
-  document.getElementById('p-live').textContent=d.goLive;
-  document.getElementById('p-paid').textContent='₪'+d.paid.toLocaleString();
-  document.getElementById('p-paid-of').textContent='מתוך ₪'+d.totalPrice.toLocaleString();
-  document.getElementById('p-rem').textContent='₪'+rem.toLocaleString();
   document.getElementById('p-name').textContent=d.name;
-  document.getElementById('p-tasks').innerHTML=d.tasks.map(t=>`<div class="task-item"><div class="task-check ${t.done?'done':''}">${t.done?'✓':''}</div><div class="task-main"><div class="task-text ${t.done?'done':''}">${t.t}</div>${t.s?`<div class="task-sub">${t.s}</div>`:''}</div><span class="badge ${t.done?'b-done2':'b-pending'}">${t.done?'הושלם':'בתהליך'}</span></div>`).join('');
-  document.getElementById('p-timeline').innerHTML=d.timeline.map(t=>`<div class="tl-item tl-${t.t}"><div class="tl-dot"></div><div style="flex:1"><div class="tl-text">${t.text}</div>${t.sub?`<div class="tl-sub">${t.sub}</div>`:''}</div><div class="tl-date">${t.date}</div></div>`).join('');
-  document.getElementById('p-payments').innerHTML=d.payments.map(p=>`<div class="pay-item ${p.status}"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px">${p.status==='paid'?'✅':'⏳'}</span><div><div class="pay-desc">${p.desc}</div><div class="pay-date">${p.date}</div></div></div><div class="pay-amount ${p.status}">₪${p.amount.toLocaleString()}</div></div>`).join('');
+
+  // Active tasks only (not done)
+  const activeTasks = d.tasks.filter(t=>!t.done);
+  document.getElementById('p-tasks').innerHTML = activeTasks.length
+    ? activeTasks.map(t=>`<div class="task-item"><div class="task-check">${t.done?'✓':''}</div><div class="task-main"><div class="task-text">${t.t}</div>${t.s?`<div class="task-sub">${t.s}</div>`:''}</div><span class="badge b-pending">בתהליך</span></div>`).join('')
+    : '<p style="font-size:12px;color:var(--muted2);font-weight:300;text-align:center;padding:14px 0">אין משימות פתוחות 🎉</p>';
+
+  // Horizontal timeline with diamond icons
+  const diamondSVG = (status) => {
+    let fill, stroke, opacity;
+    if(status==='done'){
+      fill='url(#diaGradDone)'; stroke='#1dffd4'; opacity=1;
+    } else if(status==='now'){
+      fill='url(#diaGradNow)'; stroke='#3a8ef6'; opacity=1;
+    } else {
+      fill='url(#diaGradNext)'; stroke='#3a4a6f'; opacity=.5;
+    }
+    return `<svg viewBox="0 0 24 22" xmlns="http://www.w3.org/2000/svg" style="opacity:${opacity}">
+      <defs>
+        <linearGradient id="diaGradDone" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#7afff0"/>
+          <stop offset="50%" stop-color="#1dffd4"/>
+          <stop offset="100%" stop-color="#0db89e"/>
+        </linearGradient>
+        <linearGradient id="diaGradNow" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#7eb6ff"/>
+          <stop offset="50%" stop-color="#3a8ef6"/>
+          <stop offset="100%" stop-color="#1c5dd0"/>
+        </linearGradient>
+        <linearGradient id="diaGradNext" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#4a5b7e"/>
+          <stop offset="100%" stop-color="#26334e"/>
+        </linearGradient>
+      </defs>
+      <!-- Crown lines (top facets) -->
+      <path d="M 4 7 L 12 1 L 20 7 L 12 11 Z" fill="${fill}" stroke="${stroke}" stroke-width="0.6" stroke-linejoin="round"/>
+      <!-- Pavilion (bottom point) -->
+      <path d="M 4 7 L 12 11 L 20 7 L 12 21 Z" fill="${fill}" stroke="${stroke}" stroke-width="0.6" stroke-linejoin="round" opacity="0.85"/>
+      <!-- Inner facet lines -->
+      <line x1="8" y1="3.5" x2="8" y2="9" stroke="${stroke}" stroke-width="0.4" opacity="0.5"/>
+      <line x1="16" y1="3.5" x2="16" y2="9" stroke="${stroke}" stroke-width="0.4" opacity="0.5"/>
+      <line x1="12" y1="11" x2="8" y2="9" stroke="${stroke}" stroke-width="0.4" opacity="0.4"/>
+      <line x1="12" y1="11" x2="16" y2="9" stroke="${stroke}" stroke-width="0.4" opacity="0.4"/>
+    </svg>`;
+  };
+  document.getElementById('p-timeline-h').innerHTML = d.timeline.map(t=>`
+    <div class="tl-h-item tl-${t.t}">
+      <div class="tl-h-dot">${diamondSVG(t.t)}</div>
+      <div class="tl-h-text">${t.text}</div>
+      <div class="tl-h-date">${t.date}</div>
+    </div>
+  `).join('');
+
+  // ── Combined Payments + Contract logic ──
+  const paidPayments=d.payments.filter(p=>p.status==='paid');
+  const unpaidPayments=d.payments.filter(p=>p.status!=='paid');
+  const paidSum=paidPayments.reduce((s,p)=>s+p.amount,0);
+  document.getElementById('p-paid-sum').textContent='₪'+paidSum.toLocaleString();
+  document.getElementById('p-paid-dates').innerHTML=paidPayments.length
+    ? paidPayments.map(p=>`<div>${p.desc}: <span style="color:var(--text)">${p.date}</span></div>`).join('')
+    : '<div style="opacity:.55">—</div>';
+  document.getElementById('p-rem-sum').textContent='₪'+rem.toLocaleString();
+  if(unpaidPayments.length){
+    document.getElementById('p-next-pay-label').textContent='תשלום הבא:';
+    document.getElementById('p-next-pay-date').textContent=unpaidPayments[0].date;
+    document.getElementById('p-next-pay-date').style.color='var(--text)';
+  } else {
+    document.getElementById('p-next-pay-label').textContent='';
+    document.getElementById('p-next-pay-date').textContent='✓ שולם במלואו';
+    document.getElementById('p-next-pay-date').style.color='var(--accent2)';
+  }
   document.getElementById('p-pay-action').innerHTML=rem>0
-    ?`<a href="https://pay.grow.link/b62f5369942b5598987e88bb6170fa75-MzE2MTAzNg" target="_blank" class="btn btn-blue" style="width:100%;border-radius:12px">💳 תשלום יתרה — ₪${rem.toLocaleString()} →</a>`
-    :`<div class="badge b-paid" style="width:100%;text-align:center;padding:8px">✓ שולם במלואו</div>`;
+    ?`<a href="https://pay.grow.link/b62f5369942b5598987e88bb6170fa75-MzE2MTAzNg" target="_blank" class="btn btn-blue" style="width:100%;border-radius:12px;padding:14px;font-size:14px">💳 תשלום יתרה — ₪${rem.toLocaleString()} →</a>`
+    :``;
   document.getElementById('p-contract-name').textContent=d.contractName;
   document.getElementById('p-contract-link').href=d.contractUrl;
+  // Reset accordions to closed each time
+  document.getElementById('upsell-card').classList.remove('upsell-accordion-open');
+  document.getElementById('req-card').classList.remove('req-open');
+  document.getElementById('tasks-card').classList.remove('tasks-open');
+  // Revisions strip + auto-check timer
+  checkAllDone();
+  renderRevStrip();
   renderNotes();
   renderUpsells();
 }
+// ══════ MAINTENANCE MODAL ══════
+function openMaintModal(){
+  // Set upgrade button URL — placeholder for now, will be updated when grow.link arrives
+  document.getElementById('maint-upgrade-btn').href='https://pay.grow.link/b62f5369942b5598987e88bb6170fa75-MzE2MTAzNg';
+  document.getElementById('maint-modal').style.display='flex';
+}
+function closeMaintModal(){
+  document.getElementById('maint-modal').style.display='none';
+}
+// Close modal on backdrop click
+document.addEventListener('click',(e)=>{
+  const m=document.getElementById('maint-modal');
+  if(e.target===m)closeMaintModal();
+  const r=document.getElementById('referral-modal');
+  if(e.target===r)closeReferralModal();
+  const dc=document.getElementById('docs-modal');
+  if(e.target===dc)closeDocsModal();
+});
+// Close modal on Escape
+document.addEventListener('keydown',(e)=>{
+  if(e.key==='Escape'){
+    closeMaintModal();
+    closeReferralModal();
+    closeDocsModal();
+  }
+});
+
+// ══════ REFERRAL MODAL ══════
+const REFERRAL_MSG = `היי 👋
+רציתי להמליץ לך על AutoScale - חברה שמתמחה בבניית מערכות אוטומציה חכמות לעסקים:
+CRM, WhatsApp, דפי נחיתה, אתרים, קמפיינים ואוטומציות שממש חוסכות זמן ומגדילות הכנסות.
+
+אני עובד/ת איתם ומאוד מרוצה מהתוצאות 🚀
+
+אם תיכנס/י דרך הקישור שלי ותסגור/י פרויקט - יש הטבה לשנינו 💎
+
+מוזמן/ת לבדוק:
+👉 https://autoscalehq.io`;
+
+function openReferralModal(){
+  // No phone number — WhatsApp will open contact picker
+  const encoded = encodeURIComponent(REFERRAL_MSG);
+  document.getElementById('ref-wa-btn').href = `https://wa.me/?text=${encoded}`;
+  document.getElementById('ref-msg-preview').textContent = REFERRAL_MSG;
+  document.getElementById('referral-modal').style.display='flex';
+}
+function closeReferralModal(){
+  document.getElementById('referral-modal').style.display='none';
+}
+function copyRefMsg(){
+  navigator.clipboard.writeText(REFERRAL_MSG).then(()=>{
+    const btn = event.target;
+    const orig = btn.textContent;
+    btn.textContent = '✓ הועתק!';
+    setTimeout(()=>btn.textContent=orig, 1500);
+  }).catch(()=>{});
+}
+
+// ══════ DOCUMENTS MODAL ══════
+function openDocsModal(){
+  const docs = (currentItem && currentItem.data && currentItem.data.documents) || [];
+  const list = document.getElementById('docs-list');
+  if(docs.length){
+    list.innerHTML = docs.map(d=>`
+      <a href="${d.url||'#'}" target="_blank" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(58,142,246,.05);border:1px solid var(--borders);border-radius:12px;text-decoration:none;color:var(--text);transition:all .15s" onmouseover="this.style.borderColor='var(--accent)';this.style.background='rgba(58,142,246,.1)'" onmouseout="this.style.borderColor='var(--borders)';this.style.background='rgba(58,142,246,.05)'">
+        <span style="font-size:24px">${d.icon||'📄'}</span>
+        <div style="flex:1">
+          <div style="font-size:13.5px;font-weight:600;margin-bottom:2px">${d.name}</div>
+          <div style="font-family:var(--mono);font-size:10.5px;color:var(--muted)">${d.type||'PDF'} · ${d.size||'—'} · ${d.date||''}</div>
+        </div>
+        <span style="opacity:.5;font-size:14px">←</span>
+      </a>
+    `).join('');
+  } else {
+    list.innerHTML = `<div style="text-align:center;padding:30px 20px;color:var(--muted);font-size:13px">📭 עדיין לא הועלו מסמכים לפרויקט הזה.<br><span style="font-size:11px;opacity:.7">המסמכים יופיעו כאן אוטומטית כשהם יועלו.</span></div>`;
+  }
+  document.getElementById('docs-modal').style.display='flex';
+}
+function closeDocsModal(){
+  document.getElementById('docs-modal').style.display='none';
+}
+
+// ══════ UPSELL ACCORDION ══════
+function toggleUpsells(){
+  document.getElementById('upsell-card').classList.toggle('upsell-accordion-open');
+}
+
+// ══════ REQUEST + TASKS ACCORDIONS ══════
+function toggleReq(){
+  document.getElementById('req-card').classList.toggle('req-open');
+}
+function toggleTasks(){
+  document.getElementById('tasks-card').classList.toggle('tasks-open');
+}
+
+// ══════ THEME TOGGLE (Dark / Light) ══════
+function toggleTheme(){
+  const isLight=document.body.classList.toggle('light-mode');
+  try{localStorage.setItem('autoscale-theme',isLight?'light':'dark');}catch(e){}
+}
+// Apply saved theme on load
+(function(){
+  try{
+    const saved=localStorage.getItem('autoscale-theme');
+    if(saved==='light')document.body.classList.add('light-mode');
+  }catch(e){}
+})();
+
+// ══════════════════════ REVISIONS LOGIC ══════════════════════
+let currentRoundIndex = null; // 0 or 1 for current open round modal
+let pendingTaskEdit = null; // {roundIdx, taskIdx, newTask} during edit
+
+// Make sure project has rounds initialized
+function ensureRounds(){
+  if(!currentItem || !currentItem.data) return;
+  if(!currentItem.data.rounds){
+    currentItem.data.rounds = [
+      {opened:false, submitted:false, closed:false, lockedAt:null, allDoneAt:null, tasks:[]},
+      {opened:false, submitted:false, closed:false, lockedAt:null, allDoneAt:null, tasks:[]}
+    ];
+  }
+  // Backward-compat
+  while(currentItem.data.rounds.length < 2){
+    currentItem.data.rounds.push({opened:false, submitted:false, closed:false, lockedAt:null, allDoneAt:null, tasks:[]});
+  }
+}
+
+// Render the strip with status of each round
+function renderRevStrip(){
+  ensureRounds();
+  const rounds = currentItem.data.rounds;
+  const html = rounds.map((r,i)=>{
+    let cls = 'locked';
+    if(r.closed){cls='closed';}
+    else if(r.submitted){cls='submitted';}
+    else if(r.opened){cls='open';}
+    return `<div class="rev-num-btn ${cls}">${i+1}</div>`;
+  }).join('');
+  document.getElementById('rev-strip-btns').innerHTML = html;
+}
+
+// === MAIN REVISIONS MODAL ===
+function openRevisionsModal(){
+  ensureRounds();
+  const rounds = currentItem.data.rounds;
+  const list = document.getElementById('revs-buttons-list');
+  list.innerHTML = rounds.map((r,i)=>{
+    let badge = '';
+    if(r.closed) badge = '<span style="font-family:var(--mono);font-size:9.5px;color:var(--muted2);letter-spacing:.05em">🔒 נסגר</span>';
+    else if(r.submitted) badge = '<span style="font-family:var(--mono);font-size:9.5px;color:var(--warn);letter-spacing:.05em">🟠 הוגש</span>';
+    else if(r.opened) badge = '<span style="font-family:var(--mono);font-size:9.5px;color:var(--accent2);letter-spacing:.05em">🟢 פתוח</span>';
+    else badge = '<span style="font-family:var(--mono);font-size:9.5px;color:#ff5f5f;letter-spacing:.05em">🔴 סגור</span>';
+    const opensRoundCss = r.opened || r.closed || r.submitted ? 'btn-out' : 'btn-out';
+    const opacity = r.opened || r.closed || r.submitted ? 1 : 0.55;
+    return `<button onclick="openRoundModal(${i})" class="btn ${opensRoundCss}" style="width:100%;border-radius:12px;padding:14px;font-size:14px;justify-content:space-between;opacity:${opacity}">
+      <span style="display:flex;align-items:center;gap:9px"><span style="font-size:18px">🔄</span><span>סבב ${i+1}</span></span>
+      ${badge}
+    </button>`;
+  }).join('') + `<button onclick="addRoundCheckout()" class="btn btn-teal" style="width:100%;border-radius:12px;padding:14px;font-size:14px;justify-content:space-between;margin-top:6px">
+    <span style="display:flex;align-items:center;gap:9px"><span style="font-size:18px">➕</span><span>הוסף סבב</span></span>
+    <span style="opacity:.85;font-size:12.5px">לתשלום →</span>
+  </button>`;
+  document.getElementById('revisions-modal').style.display='flex';
+}
+function closeRevisionsModal(){
+  document.getElementById('revisions-modal').style.display='none';
+}
+
+// === EXTRA ROUND CHECKOUT (10% of project) ===
+function addRoundCheckout(){
+  const total = (currentItem && currentItem.data && currentItem.data.totalPrice) || 0;
+  const roundCost = Math.round(total * 0.10);
+  alert(`עלות סבב נוסף: ₪${roundCost.toLocaleString()} (10% מהפרויקט)\n\nתועבר/י לעמוד הסליקה.`);
+  window.open('https://pay.grow.link/b62f5369942b5598987e88bb6170fa75-MzE2MTAzNg','_blank');
+}
+
+// === ROUND TASKS MODAL ===
+function openRoundModal(idx){
+  ensureRounds();
+  const round = currentItem.data.rounds[idx];
+  if(!round) return;
+  // If round is not yet opened by us — show locked state
+  if(!round.opened){
+    alert('סבב זה עדיין לא נפתח לעריכה.\nאנא המתן שניצור עבורך את הסבב.');
+    return;
+  }
+  currentRoundIndex = idx;
+  closeRevisionsModal();
+  document.getElementById('round-modal-title').textContent = `סבב ${idx+1}`;
+  // Sub-text
+  const subEl = document.getElementById('round-modal-sub');
+  if(round.closed) subEl.textContent = '🔒 הסבב נסגר ואינו ניתן לעריכה';
+  else if(round.submitted) subEl.textContent = '🟠 הסבב הוגש — בהמתנה לטיפול';
+  else subEl.textContent = 'רשימת משימות לסבב';
+  renderRoundContent();
+  document.getElementById('round-modal').style.display='flex';
+}
+function closeRoundModal(){
+  document.getElementById('round-modal').style.display='none';
+  currentRoundIndex = null;
+}
+
+function renderRoundContent(){
+  const round = currentItem.data.rounds[currentRoundIndex];
+  const tasks = round.tasks || [];
+  const list = document.getElementById('round-tasks-list');
+
+  // If LOCKED — show only lock message
+  if(round.closed){
+    list.innerHTML = '';
+    document.getElementById('round-add-btn').style.display='none';
+    document.getElementById('round-bottom-actions').innerHTML='';
+    document.getElementById('round-timer-bar').innerHTML='';
+    document.getElementById('round-locked-msg').innerHTML = `
+      <div class="rev-locked-overlay">
+        <div class="lock-icon">🔒</div>
+        <div class="lock-msg"><strong style="color:var(--text)">סבב זה נסגר ולא ניתן לעריכה</strong><br>הסבב הוגש ואושר באופן סופי מטעם הלקוח/ה.</div>
+      </div>`;
+    return;
+  }
+  document.getElementById('round-locked-msg').innerHTML='';
+
+  // Render task rows
+  if(tasks.length){
+    list.innerHTML = tasks.map((t,i)=>renderTaskRow(t,i,round)).join('');
+  } else {
+    list.innerHTML = '<p style="font-size:12px;color:var(--muted2);text-align:center;padding:18px;font-weight:300">אין משימות עדיין. לחצ/י על "הוסף משימה" למטה.</p>';
+  }
+
+  // Add button — disable if submitted
+  const addBtn = document.getElementById('round-add-btn');
+  if(round.submitted){addBtn.disabled=true;addBtn.style.display='none';}
+  else{addBtn.disabled=false;addBtn.style.display='flex';}
+
+  // Timer bar — show only if all done & not yet closed
+  const allDone = tasks.length>0 && tasks.every(t=>t.status==='done');
+  const allApproved = tasks.length>0 && tasks.every(t=>t.approved);
+  const timerEl = document.getElementById('round-timer-bar');
+  if(allDone && round.allDoneAt && !round.closed){
+    const days = computeDaysLeft(round.allDoneAt);
+    timerEl.innerHTML = `<div class="rev-timer-bar">
+      <div class="timer-label">⏰ סגירה אוטומטית</div>
+      <div class="timer-val">${days > 0 ? `בעוד ${days} ${days===1?'יום':'ימים'}` : 'בקרוב מאוד'}</div>
+    </div>`;
+  } else {
+    timerEl.innerHTML='';
+  }
+
+  // Bottom actions
+  const actions = document.getElementById('round-bottom-actions');
+  let actionsHtml = '';
+  if(!round.submitted){
+    if(tasks.length > 0){
+      actionsHtml += `<button onclick="openSubmitConfirm()" class="btn btn-teal" style="width:100%;border-radius:12px;padding:13px">📤 הגש סבב</button>`;
+    }
+  }
+  if(allDone && allApproved && !round.closed){
+    actionsHtml += `<button onclick="closeRoundFinal()" class="btn btn-blue" style="width:100%;border-radius:12px;padding:13px">✓ סגור סבב</button>`;
+  }
+  actions.innerHTML = actionsHtml;
+}
+
+function renderTaskRow(t,i,round){
+  const status = t.status||'pending';
+  const statusCfg = {
+    pending: {txt:'⏳ ממתין', cls:'rts-pending'},
+    progress: {txt:'🔵 בביצוע', cls:'rts-progress'},
+    done: {txt:'✅ בוצע', cls:'rts-done'}
+  }[status];
+
+  // Editable only if pending AND not submitted
+  const isEditable = status==='pending' && !round.submitted && !round.closed;
+
+  // Approve checkbox: enabled only when status=done and not closed
+  const canApprove = status==='done' && !round.closed;
+  const approveCls = canApprove ? (t.approved ? 'enabled checked' : 'enabled') : 'disabled';
+  const approveSym = t.approved ? '✓' : '';
+  const approveOnclick = canApprove ? `onclick="toggleApprove(${i})"` : '';
+
+  const lockedRowClass = !isEditable ? 'locked-row' : 'editable';
+  const editClickable = isEditable ? `onclick="startEditTask(${i})" style="cursor:pointer"` : '';
+
+  return `<div class="rev-task-row ${lockedRowClass}" data-task-idx="${i}">
+    <div class="rev-task-info" ${editClickable}>
+      <div class="rev-task-title">${escapeHtml(t.title||'(ללא כותרת)')}</div>
+      ${t.body ? `<div class="rev-task-body">${escapeHtml(t.body)}</div>` : ''}
+    </div>
+    <div class="rev-approve-cell" style="grid-column:2"><span class="rev-task-status ${statusCfg.cls}">${statusCfg.txt}</span></div>
+    <div class="rev-approve-cell" style="grid-column:3"><div class="rev-approve-box ${approveCls}" ${approveOnclick}>${approveSym}</div></div>
+  </div>`;
+}
+
+function escapeHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// === EDIT TASK (only when pending) ===
+function startEditTask(idx){
+  const round = currentItem.data.rounds[currentRoundIndex];
+  const task = round.tasks[idx];
+  if(!task || task.status!=='pending' || round.submitted || round.closed) return;
+  const row = document.querySelector(`#round-tasks-list .rev-task-row[data-task-idx="${idx}"]`);
+  if(!row) return;
+  row.classList.add('rev-task-edit-row');
+  row.innerHTML = `
+    <div class="rev-task-info">
+      <input type="text" id="edit-title-${idx}" value="${escapeHtml(task.title||'')}" placeholder="כותרת">
+      <textarea id="edit-body-${idx}" placeholder="פירוט (לא חובה)">${escapeHtml(task.body||'')}</textarea>
+      <div class="rev-edit-btns">
+        <button class="save" onclick="saveEditTask(${idx})">שמור</button>
+        <button onclick="cancelEditTask()">ביטול</button>
+        <button onclick="deleteTask(${idx})">🗑 מחק</button>
+      </div>
+    </div>
+    <div></div>
+    <div></div>`;
+}
+function cancelEditTask(){
+  renderRoundContent();
+}
+function saveEditTask(idx){
+  const round = currentItem.data.rounds[currentRoundIndex];
+  const title = document.getElementById('edit-title-'+idx).value.trim();
+  if(!title){alert('כותרת חובה');return;}
+  const body = document.getElementById('edit-body-'+idx).value.trim();
+  round.tasks[idx].title = title;
+  round.tasks[idx].body = body;
+  renderRoundContent();
+}
+function deleteTask(idx){
+  const round = currentItem.data.rounds[currentRoundIndex];
+  if(!confirm('למחוק משימה זו?')) return;
+  round.tasks.splice(idx,1);
+  renderRoundContent();
+}
+
+// === ADD TASK ===
+function addRoundTask(){
+  const round = currentItem.data.rounds[currentRoundIndex];
+  if(round.submitted || round.closed) return;
+  round.tasks.push({title:'', body:'', status:'pending', approved:false});
+  renderRoundContent();
+  // Auto-open edit on the new task
+  setTimeout(()=>startEditTask(round.tasks.length-1),50);
+}
+
+// === APPROVE TASK ===
+function toggleApprove(idx){
+  const round = currentItem.data.rounds[currentRoundIndex];
+  const task = round.tasks[idx];
+  if(task.status!=='done' || round.closed) return;
+  task.approved = !task.approved;
+  renderRoundContent();
+}
+
+// === SUBMIT ROUND ===
+function openSubmitConfirm(){
+  document.getElementById('submit-confirm-modal').style.display='flex';
+}
+function closeSubmitConfirm(){
+  document.getElementById('submit-confirm-modal').style.display='none';
+}
+function proceedSubmitRound(){
+  closeSubmitConfirm();
+  document.getElementById('type-confirm-input').value='';
+  document.getElementById('type-confirm-finish').disabled=true;
+  document.getElementById('type-confirm-finish').style.opacity='.4';
+  document.getElementById('type-confirm-finish').style.cursor='not-allowed';
+  document.getElementById('type-confirm-modal').style.display='flex';
+  setTimeout(()=>document.getElementById('type-confirm-input').focus(),100);
+}
+function closeTypeConfirm(){
+  document.getElementById('type-confirm-modal').style.display='none';
+}
+function checkTypeConfirm(){
+  const v = document.getElementById('type-confirm-input').value.trim();
+  const btn = document.getElementById('type-confirm-finish');
+  if(v==='הגש'){
+    btn.disabled=false; btn.style.opacity='1'; btn.style.cursor='pointer';
+  } else {
+    btn.disabled=true; btn.style.opacity='.4'; btn.style.cursor='not-allowed';
+  }
+}
+function finalizeRoundSubmission(){
+  const round = currentItem.data.rounds[currentRoundIndex];
+  round.submitted = true;
+  round.submittedAt = new Date().toISOString();
+  // Send to webhook
+  fetch('https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'round_submitted',client:client.name,roundNum:currentRoundIndex+1,tasks:round.tasks})}).catch(()=>{});
+  closeTypeConfirm();
+  renderRoundContent();
+  renderRevStrip();
+  alert(`✓ סבב ${currentRoundIndex+1} הוגש בהצלחה!\nניצור קשר בקרוב להתחיל את הביצוע.`);
+}
+
+// === CLOSE ROUND (final approval by client) ===
+function closeRoundFinal(){
+  const round = currentItem.data.rounds[currentRoundIndex];
+  if(!confirm(`לסגור את סבב ${currentRoundIndex+1} סופית?\nלא ניתן יהיה לבצע שינויים יותר.`)) return;
+  round.closed = true;
+  round.lockedAt = new Date().toISOString();
+  fetch('https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'round_closed_by_client',client:client.name,roundNum:currentRoundIndex+1})}).catch(()=>{});
+  renderRoundContent();
+  renderRevStrip();
+}
+
+// === TIMER (9-day auto-close from when all tasks marked 'done') ===
+function computeDaysLeft(allDoneAtISO){
+  if(!allDoneAtISO) return 9;
+  const start = new Date(allDoneAtISO).getTime();
+  const now = Date.now();
+  const elapsed = (now - start) / (1000 * 60 * 60 * 24);
+  return Math.max(0, Math.ceil(9 - elapsed));
+}
+
+// Auto-set allDoneAt when all tasks in a round become 'done'
+function checkAllDone(){
+  if(!currentItem || !currentItem.data || !currentItem.data.rounds) return;
+  currentItem.data.rounds.forEach(r=>{
+    const allDone = r.tasks.length>0 && r.tasks.every(t=>t.status==='done');
+    if(allDone && !r.allDoneAt){
+      r.allDoneAt = new Date().toISOString();
+    } else if(!allDone){
+      r.allDoneAt = null;
+    }
+    // Auto-close if 9 days passed
+    if(r.allDoneAt && !r.closed){
+      const elapsed = (Date.now() - new Date(r.allDoneAt).getTime()) / (1000*60*60*24);
+      if(elapsed >= 9){r.closed = true; r.lockedAt = new Date().toISOString();}
+    }
+  });
+}
+
+// Add modal-close handlers (extend existing)
+document.addEventListener('click',(e)=>{
+  const rm=document.getElementById('revisions-modal');
+  if(rm && e.target===rm)closeRevisionsModal();
+  const rrm=document.getElementById('round-modal');
+  if(rrm && e.target===rrm)closeRoundModal();
+  const sc=document.getElementById('submit-confirm-modal');
+  if(sc && e.target===sc)closeSubmitConfirm();
+  const tc=document.getElementById('type-confirm-modal');
+  if(tc && e.target===tc)closeTypeConfirm();
+});
+
+const STATUS_LABELS={
+  pending:{txt:'⏳ ממתין',cls:'nsb-pending'},
+  approved:{txt:'✅ אושר',cls:'nsb-approved'},
+  rejected:{txt:'❌ נדחה',cls:'nsb-rejected'},
+  payment:{txt:'💳 תשלום',cls:'nsb-payment'},
+};
 function renderNotes(){
   const notes=currentItem.data.notes||[];
-  document.getElementById('p-notes').innerHTML=notes.length
-    ?notes.map(n=>`<div class="note-item"><div class="note-text">${n.text}</div><div class="note-meta">${n.date}</div></div>`).join('')
-    :'<p style="font-size:12px;color:var(--muted2);margin-bottom:10px;font-weight:300">אין הערות עדיין.</p>';
+  if(!notes.length){
+    document.getElementById('p-notes').innerHTML='<p style="font-size:12px;color:var(--muted2);font-weight:300;text-align:center;padding:8px 0">אין בקשות ששלחת עדיין.</p>';
+    return;
+  }
+  document.getElementById('p-notes').innerHTML=notes.map(n=>{
+    const status = n.status || 'pending';
+    const sCfg = STATUS_LABELS[status] || STATUS_LABELS.pending;
+    const title = n.title || n.text || '';
+    const body = n.body || (n.title ? n.text : '');
+    // Show pay button if status === payment and there's a payUrl
+    const isPayment = status === 'payment';
+    const payUrl = n.payUrl || 'https://pay.grow.link/b62f5369942b5598987e88bb6170fa75-MzE2MTAzNg';
+    const amount = n.amount ? ` — ₪${n.amount.toLocaleString()}` : '';
+    return `<div class="note-item">
+      <div class="note-head">
+        <div class="note-title">${title}</div>
+        ${isPayment
+          ? `<a href="${payUrl}" target="_blank" class="note-pay-btn">💳 לתשלום${amount}</a>`
+          : `<span class="note-status-badge ${sCfg.cls}">${sCfg.txt}</span>`}
+      </div>
+      ${body ? `<div class="note-body">${body}</div>` : ''}
+      <div class="note-meta-row">
+        <span class="note-meta">${n.date}</span>
+      </div>
+    </div>`;
+  }).join('');
 }
 function addNote(){
-  const inp=document.getElementById('p-note-inp'),text=inp.value.trim();
-  if(!text)return;
+  const titleInp=document.getElementById('p-note-title');
+  const bodyInp=document.getElementById('p-note-inp');
+  const title=titleInp.value.trim();
+  const body=bodyInp.value.trim();
+  if(!title){alert('אנא מלא/י כותרת');return;}
   if(!currentItem.data.notes)currentItem.data.notes=[];
-  currentItem.data.notes.unshift({text,date:new Date().toLocaleDateString('he-IL')});
-  fetch('https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'client_note',client:client.name,note:text})}).catch(()=>{});
-  inp.value='';renderNotes();
+  currentItem.data.notes.unshift({
+    title,
+    body,
+    status:'pending',
+    date:new Date().toLocaleDateString('he-IL')
+  });
+  fetch('https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'client_request',client:client.name,title,body})}).catch(()=>{});
+  titleInp.value='';bodyInp.value='';
+  renderNotes();
 }
 function renderUpsells(){
   document.getElementById('p-upsells').innerHTML=UPSELLS.map(u=>`<div class="upsell-item glass2" id="us-${u.id}" onclick="toggleCart('${u.id}')"><div class="upsell-check">✓</div><div class="upsell-icon">${u.icon}</div><div class="upsell-name">${u.name}</div><div class="upsell-desc">${u.desc}</div><div class="upsell-price">₪${u.price.toLocaleString()}</div></div>`).join('');
@@ -749,6 +1662,13 @@ function renderHours(){
   document.getElementById('h-ring').style.strokeDashoffset=226-(226*pct);
   if(left<=3){document.getElementById('h-badge').textContent='כמעט נגמר';document.getElementById('h-badge').className='badge b-pending';}
   document.getElementById('h-log').innerHTML=d.log.map(l=>`<div class="hlog-item"><div class="hlog-task">${l.task}</div><div class="hlog-date">${l.date}</div><div class="hlog-h">-${l.hours}h</div></div>`).join('');
+  renderHourRequests();
+}
+function renderHourRequests(){
+  const reqs=currentItem.data.requests||[];
+  const el=document.getElementById('h-requests');
+  if(!reqs.length){el.innerHTML='';return;}
+  el.innerHTML=reqs.map(r=>renderRequestCard(r)).join('');
 }
 function selH(el,h,p){
   document.querySelectorAll('.hours-opt').forEach(x=>x.classList.remove('on'));
@@ -762,9 +1682,37 @@ function buyH(){
 function submitTask(){
   const title=document.getElementById('h-t').value.trim();
   if(!title){alert('אנא הוסף כותרת');return;}
-  fetch('https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'hours_task',client:client.name,title,desc:document.getElementById('h-d').value,priority:document.getElementById('h-p').value})}).catch(()=>{});
-  alert('הבקשה נשלחה! נחזור תוך 24 שעות.');
+  const desc=document.getElementById('h-d').value.trim();
+  const priority=document.getElementById('h-p').value;
+  if(!currentItem.data.requests)currentItem.data.requests=[];
+  currentItem.data.requests.unshift({
+    title,body:desc,priority,status:'pending',
+    date:new Date().toLocaleDateString('he-IL')
+  });
+  fetch('https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'hours_task',client:client.name,title,desc,priority})}).catch(()=>{});
   document.getElementById('h-t').value='';document.getElementById('h-d').value='';
+  renderHourRequests();
+}
+
+// ══════ SHARED REQUEST CARD RENDERER ══════
+function renderRequestCard(r){
+  const status=r.status||'pending';
+  const sCfg=STATUS_LABELS[status]||STATUS_LABELS.pending;
+  const isPayment=status==='payment';
+  const payUrl=r.payUrl||'https://pay.grow.link/b62f5369942b5598987e88bb6170fa75-MzE2MTAzNg';
+  const amount=r.amount?` — ₪${r.amount.toLocaleString()}`:'';
+  return `<div class="note-item">
+    <div class="note-head">
+      <div class="note-title">${r.title}</div>
+      ${isPayment
+        ?`<a href="${payUrl}" target="_blank" class="note-pay-btn">💳 לתשלום${amount}</a>`
+        :`<span class="note-status-badge ${sCfg.cls}">${sCfg.txt}</span>`}
+    </div>
+    ${r.body?`<div class="note-body">${r.body}</div>`:''}
+    <div class="note-meta-row">
+      <span class="note-meta">${r.date}</span>
+    </div>
+  </div>`;
 }
 
 // ══════ RETAINER ══════
@@ -773,17 +1721,30 @@ function renderRetainer(){
   document.getElementById('r-month').textContent=d.month;
   document.getElementById('r-month2').textContent=d.month;
   document.getElementById('r-price').textContent='₪'+d.price.toLocaleString();
-  document.getElementById('r-includes').innerHTML=d.includes.map(i=>`<div style="display:flex;gap:8px;padding:7px 0;border-bottom:.5px solid var(--borders);font-size:13px;color:var(--muted2);font-weight:300"><span style="color:var(--accent2);flex-shrink:0">✓</span>${i}</div>`).join('');
+  document.getElementById('r-includes').innerHTML=d.includes.map(i=>`<div style="display:flex;gap:7px;padding:5px 0;border-bottom:.5px solid var(--borders);font-size:12px;color:var(--muted2);font-weight:300"><span style="color:var(--accent2);flex-shrink:0">✓</span>${i}</div>`).join('');
   document.getElementById('r-tasks').innerHTML=d.tasks.map(t=>`<div class="task-item"><div class="task-check ${t.done?'done':''}">${t.done?'✓':''}</div><div class="task-main"><div class="task-text ${t.done?'done':''}">${t.t}</div>${t.s?`<div class="task-sub">${t.s}</div>`:''}</div><span class="badge ${t.done?'b-done2':'b-active'}">${t.done?'הושלם':'בתהליך'}</span></div>`).join('');
   const paid=d.payStatus==='paid';
-  document.getElementById('r-pay').innerHTML=`<div class="pay-item ${paid?'paid':'unpaid'}"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px">${paid?'✅':'⚠️'}</span><div><div class="pay-desc">ריטיינר ${d.month}</div><div class="pay-date">${paid?'שולם ב-'+d.payDate:'ממתין לתשלום'}</div></div></div><div class="pay-amount ${paid?'paid':'unpaid'}">₪${d.price.toLocaleString()}</div></div>${!paid?`<a href="https://pay.grow.link/b62f5369942b5598987e88bb6170fa75-MzE2MTAzNg" target="_blank" class="btn btn-blue" style="width:100%;border-radius:12px;margin-top:10px">💳 תשלום ריטיינר →</a>`:''}`;
+  document.getElementById('r-pay').innerHTML=`<div class="pay-item ${paid?'paid':'unpaid'}" style="margin-bottom:0;padding:8px 11px"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px">${paid?'✅':'⚠️'}</span><div><div class="pay-desc" style="font-size:11.5px">ריטיינר ${d.month}</div><div class="pay-date" style="font-size:10px">${paid?'שולם ב-'+d.payDate:'ממתין לתשלום'}</div></div></div><div class="pay-amount ${paid?'paid':'unpaid'}" style="font-size:13px">₪${d.price.toLocaleString()}</div></div>${!paid?`<a href="https://pay.grow.link/b62f5369942b5598987e88bb6170fa75-MzE2MTAzNg" target="_blank" class="btn btn-blue" style="width:100%;border-radius:10px;margin-top:8px;padding:9px;font-size:12px">💳 תשלום ריטיינר →</a>`:''}`;
+  renderRetainerRequests();
+}
+function renderRetainerRequests(){
+  const reqs=currentItem.data.requests||[];
+  const el=document.getElementById('r-requests');
+  if(!reqs.length){el.innerHTML='';return;}
+  el.innerHTML=reqs.map(r=>renderRequestCard(r)).join('');
 }
 function submitRetTask(){
-  const t=document.getElementById('r-t').value.trim();
-  if(!t){alert('אנא הוסף תיאור');return;}
-  fetch('https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'retainer_task',client:client.name,title:t,desc:document.getElementById('r-d').value})}).catch(()=>{});
-  alert('הבקשה נשלחה!');
+  const title=document.getElementById('r-t').value.trim();
+  if(!title){alert('אנא הוסף תיאור');return;}
+  const body=document.getElementById('r-d').value.trim();
+  if(!currentItem.data.requests)currentItem.data.requests=[];
+  currentItem.data.requests.unshift({
+    title,body,status:'pending',
+    date:new Date().toLocaleDateString('he-IL')
+  });
+  fetch('https://hook.eu1.make.com/jp6ukjt7tpk3y4yly9c691g01f47cq8q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'retainer_task',client:client.name,title,desc:body})}).catch(()=>{});
   document.getElementById('r-t').value='';document.getElementById('r-d').value='';
+  renderRetainerRequests();
 }
 </script>
 </body>
