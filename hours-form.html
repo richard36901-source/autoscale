@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#060d1a" />
   <title>AutoScale | רכישת בנק שעות</title>
+  <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" />
+  <link rel="shortcut icon" type="image/jpeg" href="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" />
+  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet" />
@@ -282,7 +285,7 @@
   <div class="nav-pills">
     <span class="nav-pill" onclick="openTermsModal()">📄 תנאי שימוש</span>
     <span class="nav-pill"><span class="dot dot-green avail-dot"></span> זמין עכשיו</span>
-    <span class="nav-pill">🕐 א׳–ה׳ 9:00–18:00</span>
+    <span class="nav-pill">🕐 א׳–ה׳ 10:00–18:00</span>
   </div>
 
   <!-- PIPS -->
@@ -296,15 +299,6 @@
   <div id="step1" class="fade-in">
     <div class="section-label">בחר חבילת שעות</div>
 
-    <!-- HOW IT WORKS NOTE -->
-    <div style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;margin-bottom:12px;background:rgba(58,142,246,0.05);border:1px solid rgba(58,142,246,0.18);border-radius:var(--radius-sm);">
-      <span style="font-size:16px;flex-shrink:0;margin-top:1px;">💡</span>
-      <div style="font-size:12px;color:rgba(160,192,255,0.85);line-height:1.7;">
-        <strong style="color:var(--text);display:block;margin-bottom:3px;">רוצה מספר שעות שלא ברשימה?</strong>
-        בחר/י את החבילה הקרובה מלמטה (לדוגמה: 7 שעות → בחר/י <strong style="color:var(--accent2)">5 שעות</strong>), מלא/י פרטים, ובדף התשלום ניתן לעדכן את הכמות הרצויה.
-      </div>
-    </div>
-
     <!-- Less than 5h — collapsible -->
     <div onclick="toggleSmallNote()" style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 13px;margin-bottom:10px;cursor:pointer;border-radius:var(--radius-sm);background:rgba(246,168,58,0.05);border:1px solid rgba(246,168,58,0.15);transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(246,168,58,0.32)'" onmouseout="this.style.borderColor='rgba(246,168,58,0.15)'">
       <span style="font-size:11.5px;color:rgba(246,168,58,0.75);">💬 <span style="text-decoration:underline dotted">צריך/ה פחות מ-5 שעות? לחץ/י כאן</span></span>
@@ -314,7 +308,7 @@
       <div style="background:rgba(246,168,58,0.07);border:1px solid rgba(246,168,58,0.22);border-radius:var(--radius-sm);padding:12px 14px;font-size:12.5px;color:rgba(246,168,58,0.9);line-height:1.7;">
         המינימום בבנק השעות הוא <strong>5 שעות</strong>.<br>לפרויקטים קטנים יותר — דבר/י איתנו ישירות בוואטסאפ.
         <div style="margin-top:10px;">
-          <a href="https://wa.me/972552962965?text=%D7%94%D7%99%D7%99%2C%20%D7%9E%D7%A2%D7%95%D7%A0%D7%99%D7%99%D7%9F%20%D7%91%D7%A4%D7%97%D7%95%D7%AA%20%D7%9E%D7%90%D7%A0%D7%99%205%20%D7%A9%D7%A2%D7%95%D7%AA" style="display:inline-flex;align-items:center;gap:6px;color:#4ddb7a;font-family:'Space Mono',monospace;font-size:12px;background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.2);border-radius:var(--radius-sm);padding:7px 13px;text-decoration:none;">💬 פתח/י שיחה עם Donna</a>
+          <a href="https://wa.me/972552962965?text=%D7%94%D7%99%D7%99%2C%20%D7%9E%D7%A2%D7%95%D7%A0%D7%99%D7%99%D7%9F%20%D7%9C%D7%A8%D7%9B%D7%95%D7%A9%20%D7%A4%D7%97%D7%95%D7%AA%20%D7%9E5%20%D7%A9%D7%A2%D7%95%D7%AA." style="display:inline-flex;align-items:center;gap:6px;color:#4ddb7a;font-family:'Space Mono',monospace;font-size:12px;background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.2);border-radius:var(--radius-sm);padding:7px 13px;text-decoration:none;">💬 פתח/י שיחה עם Donna</a>
         </div>
       </div>
     </div>
@@ -544,6 +538,101 @@
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- ══ HIDDEN SMALL-HOURS PICKER (1–5h)                     ══ -->
+<!-- ══ Auto-opens when URL contains #hour                   ══ -->
+<!-- ══ Closing it returns the user to the regular page      ══ -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="smallOverlay">
+  <div class="modal">
+    <span class="modal-handle"></span>
+    <button class="modal-close" onclick="closeSmall()">✕</button>
+    <div class="modal-title">חבילת שעות גמישה</div>
+    <div class="modal-sub">בחר/י כמות שעות · ₪300 לשעה</div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
+      <div class="link-card"
+           data-h="1"
+           data-price="300"
+           data-link="https://pay.grow.link/a122013c601afce5be7359b77b5c0753-MzM0NjMwMg"
+           onclick="selectSmallPkg(this)">
+        <div class="radio-dot"></div>
+        <div class="card-left">
+          <div class="card-name">שעה 1</div>
+          <div class="card-sub">פגישה / שינוי קטן · לא כולל מע"מ</div>
+        </div>
+        <div class="price-pill">
+          <div class="price-main">₪300 <small>+מע"מ</small></div>
+        </div>
+      </div>
+
+      <div class="link-card"
+           data-h="2"
+           data-price="600"
+           data-link="https://pay.grow.link/NTY2OTg~0d8c777d15e38fecc0ceac1db61e8e6b-MzM4NTkyMw"
+           onclick="selectSmallPkg(this)">
+        <div class="radio-dot"></div>
+        <div class="card-left">
+          <div class="card-name">2 שעות</div>
+          <div class="card-sub">₪300 לשעה · לא כולל מע"מ</div>
+        </div>
+        <div class="price-pill">
+          <div class="price-main">₪600 <small>+מע"מ</small></div>
+        </div>
+      </div>
+
+      <div class="link-card"
+           data-h="3"
+           data-price="900"
+           data-link="https://pay.grow.link/NTY2OTg~e62881c7d3a1e50c9677473c9de0cce6-MzM4NTkyNA"
+           onclick="selectSmallPkg(this)">
+        <div class="radio-dot"></div>
+        <div class="card-left">
+          <div class="card-name">3 שעות</div>
+          <div class="card-sub">₪300 לשעה · לא כולל מע"מ</div>
+        </div>
+        <div class="price-pill">
+          <div class="price-main">₪900 <small>+מע"מ</small></div>
+        </div>
+      </div>
+
+      <div class="link-card"
+           data-h="4"
+           data-price="1200"
+           data-link="https://pay.grow.link/NTY2OTg~0c54b2b3e4c8b4f09312771eb786bfb7-MzM4NTkyNQ"
+           onclick="selectSmallPkg(this)">
+        <div class="radio-dot"></div>
+        <div class="card-left">
+          <div class="card-name">4 שעות</div>
+          <div class="card-sub">₪300 לשעה · לא כולל מע"מ</div>
+        </div>
+        <div class="price-pill">
+          <div class="price-main">₪1,200 <small>+מע"מ</small></div>
+        </div>
+      </div>
+
+      <div class="link-card"
+           data-h="5"
+           data-price="1500"
+           data-link="https://pay.grow.link/44ea6cce229a52325cd78a56c5a8dd86-MzM0NjI4Mw"
+           onclick="selectSmallPkg(this)">
+        <div class="radio-dot"></div>
+        <div class="card-left">
+          <div class="card-name">5 שעות</div>
+          <div class="card-sub">₪300 לשעה · לא כולל מע"מ</div>
+        </div>
+        <div class="price-pill">
+          <div class="price-main">₪1,500 <small>+מע"מ</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px;font-family:'Space Mono',monospace">
+      * המחירים אינם כוללים מע"מ (18%)
+    </div>
+  </div>
+</div>
+
 <!-- TERMS MODAL -->
 <div class="overlay" id="termsOverlay">
   <div class="modal">
@@ -552,20 +641,36 @@
     <div class="modal-title">תנאי שימוש — בנק שעות</div>
     <div style="height:16px"></div>
     <div class="terms-content">
-      <h3>1. כללי</h3>
-      <p>בנק השעות של AutoScale מאפשר רכישה מראש של שעות עבודה בתנאים מועדפים. הרכישה מחייבת אישור תשלום לפני תחילת העבודה.</p>
-      <h3>2. תוקף</h3>
-      <p>שעות שנרכשו תקפות ל-12 חודשים ממועד הרכישה. שעות שלא נוצלו תוך התקופה לא יוחזרו ולא יועברו.</p>
-      <h3>3. תשלום ומחירים</h3>
-      <p>כל המחירים המצוינים אינם כוללים מע"מ (18%). חשבונית מס תישלח לאחר קבלת התשלום. לא ניתן להחזיר חבילות שנרכשו.</p>
-      <h3>4. לו"ז וזמינות</h3>
-      <p>זמינות בימים א׳–ה׳ בין 9:00 ל-18:00. עבודות דחופות מחוץ לשעות הפעילות כפופות לתוספת תמחור.</p>
-      <h3>5. הפסקת שירות</h3>
-      <p>AutoScale שומרת לעצמה את הזכות להפסיק שירות בהתראה של 30 יום. במקרה זה יוחזר חלק יחסי מהשעות שלא נוצלו.</p>
-      <h3>6. קניין רוחני</h3>
-      <p>כל העבודות שנוצרו במסגרת בנק השעות הן קניין הלקוח לאחר השלמת התשלום המלא.</p>
-      <h3>7. צד שלישי</h3>
-      <p>עלויות כלים, תוכנות ושירותי צד שלישי אינן כלולות ומשולמות ישירות על ידי הלקוח.</p>
+      <p style="background:rgba(58,142,246,0.06);border:1px solid rgba(58,142,246,0.18);border-radius:var(--radius-sm);padding:11px 13px;margin-bottom:14px;color:rgba(200,222,255,0.9);">
+        מסמך זה מהווה חלק בלתי נפרד מהסכם שירותים לבניה והטמעה של אוטומציות, וכפוף לכל תנאיו.
+      </p>
+
+      <h3>1. רכישה ותוקף</h3>
+      <p>הלקוח רשאי לרכוש בנק שעות עבודה מראש, כאשר מינימום הרכישה הינו 5 שעות עבודה. השעות יהיו בתוקף למשך 12 חודשים ממועד קבלת התשלום בפועל. שעות שלא נוצלו בתוך תקופה זו יפקעו אוטומטית, ולא יינתן בגינן החזר, זיכוי או העברה לשנה הבאה.</p>
+
+      <h3>2. חישוב זמן עבודה</h3>
+      <p>כל משימה, בקשה, טיפול, שינוי, בדיקה או פעולה אחרת תחויב במינימום של רבע שעה עבודה, גם אם בפועל ארכה פחות מכך. זמן העבודה כולל בין היתר אפיון, פיתוח, בדיקות, תיקונים, התאמות, תקשורת טכנית, בירורים מול מערכות צד ג׳ ותיעוד. לא יתבצע חישוב חלקי שעות או עיגול מטה.</p>
+
+      <h3>3. דיווח ניצול שעות</h3>
+      <p>הלקוח רשאי לקבל עדכון על ניצול השעות פעם בחודש. עדכון זה יימסר בתוך זמן סביר.</p>
+
+      <h3>4. זמינות וקדימות</h3>
+      <p>השירות והמענה יינתנו אך ורק בשעות הפעילות ובהתאם לתנאים המוגדרים בהסכם הראשי. רכישת בנק שירות אינה מקנה זמינות מיידית, קדימות בטיפול או התחייבות לזמני תגובה, והשעות ינוצלו לפי שיקול דעת המבצע ובהתאם לעומס העבודה במועד הבקשה. הלקוח אינו רשאי לדרוש הקצאה מיידית או שמירת שעות למועד עתידי קבוע מראש.</p>
+
+      <h3>5. ביטול והעברה</h3>
+      <p>בנק השירות אינו ניתן לביטול, החזר או העברה לצד ג׳. עם סיום בנק השירות, העבודה תיעצר אוטומטית או תימשך רק לאחר רכישת בנק שירות נוסף או אישור תשלום לפי תעריף שעתי.</p>
+
+      <h3>6. עלויות צד ג׳, רישיונות ושירותים חיצוניים</h3>
+      <p>בנק השעות אינו כולל רכישה של מוצרים, רישיונות, תוכנות, מנויים או שירותי צד ג׳ מכל סוג שהוא.</p>
+
+      <h3>7. מע"מ</h3>
+      <p>כל סכום שייגבה בגין בנק שירות הינו לפני מע"מ, ומע"מ יתווסף כחוק במועד החיוב.</p>
+
+      <h3>8. שינויי תעריף</h3>
+      <p>התעריף ותנאי בנק השירות תקפים אך ורק לבנק השירות שנרכש בפועל. המבצע רשאי לעדכן את התעריף או התנאים בכל רכישה עתידית, ללא תחולה רטרואקטיבית.</p>
+
+      <h3>9. סתירה עם ההסכם הראשי</h3>
+      <p>בכל מקרה של סתירה בין מסמך זה להסכם הראשי, יגבר האמור בהסכם הראשי.</p>
     </div>
     <div style="margin-top:20px">
       <button class="btn-primary" onclick="closeTermsModal()">הבנתי ✓</button>
@@ -581,6 +686,7 @@
 
 <script>
 let selHours = null, selPrice = 0, selLink = '', termsOk = false, toastT;
+let isSmallFlow = false; // track whether user came via #hour
 const VAT = 0.18;
 function withVat(n){ return Math.round(n * (1 + VAT)); }
 function fmt(n){ return '₪' + n.toLocaleString(); }
@@ -606,7 +712,7 @@ function selectPkg(el){
 
 /* ── MODAL OPEN ── */
 function openPay(){
-  document.getElementById('modalPkgLabel').textContent = selHours + '+ שעות | ' + fmt(selPrice) + ' +מע"מ';
+  document.getElementById('modalPkgLabel').textContent = selHours + ' שעות | ' + fmt(selPrice) + ' +מע"מ';
   document.getElementById('modalPaySub').textContent   = 'לפני מע"מ: ' + fmt(selPrice) + ' | כולל: ' + fmt(withVat(selPrice));
   document.getElementById('bitAmt').textContent        = fmt(selPrice);
   document.getElementById('bitAmtVat').textContent     = fmt(withVat(selPrice));
@@ -618,6 +724,12 @@ function openPay(){
 
 function closePay(){
   document.getElementById('overlay').classList.remove('open');
+  // If user came via #hour and closes the main modal, reopen small picker
+  // so they don't lose their context. Comment this out if you'd rather drop
+  // them straight onto the regular packages page.
+  if (isSmallFlow) {
+    setTimeout(() => openSmall(), 200);
+  }
 }
 
 /* ── MODAL SCREENS ── */
@@ -658,8 +770,9 @@ function checkDetails(){
 /* ── PAYMENT METHODS ── */
 function chooseCard(){
   sendWebhook('כרטיס אשראי / Grow', { status: 'הועבר לדף תשלום Grow' });
+  // Don't reopen small picker after card flow - they're leaving the page
+  isSmallFlow = false;
   closePay();
-  // Navigate in same tab
   window.location.href = selLink;
 }
 
@@ -697,6 +810,8 @@ function confirmDone(){
     status: 'ממתין לאישור'
   });
 
+  // User is being redirected away — disable reopen-on-close
+  isSmallFlow = false;
   closePay();
   setTimeout(() => {
     window.location.href = 'hours-thankyou.html?hours=' + encodeURIComponent(selHours)
@@ -730,7 +845,11 @@ function showToast(msg){
 
 /* ── CLOSE OVERLAY ON BACKDROP CLICK ── */
 document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', function(e){
-  if(e.target === this) this.classList.remove('open');
+  if(e.target === this){
+    this.classList.remove('open');
+    // If small overlay was dismissed by backdrop click, treat it as a full exit
+    if(this.id === 'smallOverlay'){ isSmallFlow = false; }
+  }
 }));
 
 /* ── WEBHOOK ── */
@@ -740,10 +859,11 @@ async function sendWebhook(paymentMethod, extra = {}){
   const payload = {
     timestamp:          new Date().toISOString(),
     product:            'בנק שעות',
-    hours:              selHours + '',
+    hours:              parseInt(selHours, 10),
     price_before_vat:   selPrice,
     price_with_vat:     withVat(selPrice),
     payment_method:     paymentMethod,
+    flow:               isSmallFlow ? 'small (1-5h)' : 'standard (5h+)',
     client_name:        document.getElementById('fName')?.value?.trim()  || '',
     client_id:          document.getElementById('fId')?.value?.trim()    || '',
     client_phone:       document.getElementById('fPhone')?.value?.trim() || '',
@@ -777,6 +897,37 @@ function checkProof(type){
   const ref  = document.getElementById(type + 'Ref').value.trim();
   document.getElementById(type + 'ConfirmBtn').disabled = !(file || ref.length >= 4);
 }
+
+/* ════════════════════════════════════════════════════════════ */
+/* ══ HIDDEN SMALL-HOURS FLOW (1–5h, accessed via #hour)     ══ */
+/* ════════════════════════════════════════════════════════════ */
+function openSmall(){
+  isSmallFlow = true;
+  document.getElementById('smallOverlay').classList.add('open');
+}
+
+function closeSmall(){
+  document.getElementById('smallOverlay').classList.remove('open');
+  isSmallFlow = false;
+}
+
+function selectSmallPkg(el){
+  // Mark we're in the small flow, close the picker, then reuse standard flow
+  isSmallFlow = true;
+  document.getElementById('smallOverlay').classList.remove('open');
+  // brief delay so the close animation isn't visually fighting the open
+  setTimeout(() => selectPkg(el), 180);
+}
+
+/* Auto-open when URL hash matches */
+function maybeOpenSmall(){
+  const h = (location.hash || '').toLowerCase();
+  if (h === '#hour' || h === '#/hour' || h === '#hours' || h === '#small') {
+    openSmall();
+  }
+}
+window.addEventListener('DOMContentLoaded', maybeOpenSmall);
+window.addEventListener('hashchange', maybeOpenSmall);
 </script>
 </body>
 </html>
