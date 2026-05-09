@@ -740,7 +740,7 @@ async function sendWebhook(paymentMethod, extra = {}){
   const payload = {
     timestamp:          new Date().toISOString(),
     product:            'בנק שעות',
-    hours:              selHours + '+',
+    hours:              selHours + '',
     price_before_vat:   selPrice,
     price_with_vat:     withVat(selPrice),
     payment_method:     paymentMethod,
