@@ -774,11 +774,13 @@ function checkDetails(){
 
 /* ── PAYMENT METHODS ── */
 function chooseCard(){
+  // Fire webhook (with keepalive so it survives the redirect)
   sendWebhook('כרטיס אשראי / Grow', { status: 'הועבר לדף תשלום Grow' });
   // Don't reopen small picker after card flow - they're leaving the page
   isSmallFlow = false;
   closePay();
-  window.location.href = selLink;
+  // Small delay so the keepalive request has a moment to dispatch before navigation
+  setTimeout(() => { window.location.href = selLink; }, 250);
 }
 
 function showBit(){
@@ -879,7 +881,8 @@ async function sendWebhook(paymentMethod, extra = {}){
     await fetch(WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      keepalive: true   // ensure the request completes even if page navigates away
     });
   } catch(e){ console.warn('Webhook failed:', e); }
 }
