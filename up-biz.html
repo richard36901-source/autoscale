@@ -6,305 +6,152 @@
   <title>AutoScale – חוו אוטומציה עכשיו</title>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
-      --bg: #04101E;
-      --glass-fill: rgba(90, 154, 255, 0.07);
-      --glass-border: rgba(255, 255, 255, 0.15);
-      --glass-shimmer: rgba(255, 255, 255, 0.32);
-      --accent: #5B9CFF;
-      --accent-bright: #90BFFF;
-      --text-primary: #FFFFFF;
-      --text-sec: #7FAACC;
-      --text-dim: #3A5878;
+      --bg: #04101E; --glass: rgba(90,154,255,0.07); --border: rgba(255,255,255,0.14);
+      --shimmer: rgba(255,255,255,0.30); --acc: #5B9CFF; --acc-b: #90BFFF;
+      --white: #FFFFFF; --sec: #7FAACC; --dim: #1E3550;
     }
+    html, body { min-height: 100%; background: var(--bg); color: var(--white);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
+    body { display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 32px 20px; position: relative; }
+    body::before { content: ''; position: fixed; top: -20%; right: -15%; width: 65%; height: 70%;
+      background: radial-gradient(ellipse, rgba(16,60,180,0.16) 0%, transparent 70%);
+      pointer-events: none; z-index: 0; }
+    body::after  { content: ''; position: fixed; bottom: -25%; left: -15%; width: 55%; height: 65%;
+      background: radial-gradient(ellipse, rgba(8,30,80,0.20) 0%, transparent 70%);
+      pointer-events: none; z-index: 0; }
 
-    html, body {
-      min-height: 100%;
-      background: var(--bg);
-      color: var(--text-primary);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-    }
+    .logo { font-size: 11px; letter-spacing: 0.14em; color: var(--acc);
+      text-align: center; margin-bottom: 36px; position: relative; z-index: 1; }
 
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 32px 20px;
-      position: relative;
-      overflow-x: hidden;
-    }
+    .card { position: relative; z-index: 1; width: 100%; max-width: 420px;
+      background: var(--glass); border: 0.5px solid var(--border); border-radius: 20px;
+      padding: 44px 36px 40px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+    .card::before { content: ''; position: absolute; top: 5px; left: 14%; right: 14%;
+      height: 1px; background: var(--shimmer); border-radius: 1px; }
+    .card::after  { content: ''; position: absolute; top: 8%; bottom: 8%; right: 5px;
+      width: 1px; background: linear-gradient(to bottom, rgba(255,255,255,0.20),
+      transparent 50%, rgba(255,255,255,0.05)); }
 
-    /* Ambient glow layers */
-    body::before {
-      content: '';
-      position: fixed;
-      top: -20%; right: -15%;
-      width: 65%; height: 70%;
-      background: radial-gradient(ellipse, rgba(16, 60, 180, 0.18) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-    body::after {
-      content: '';
-      position: fixed;
-      bottom: -25%; left: -15%;
-      width: 55%; height: 65%;
-      background: radial-gradient(ellipse, rgba(8, 30, 80, 0.22) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
+    .group-badge { display: flex; align-items: center; justify-content: center; gap: 7px;
+      background: rgba(91,156,255,0.12); border: 0.5px solid rgba(91,156,255,0.28);
+      border-radius: 30px; padding: 7px 16px; font-size: 13px; color: var(--acc-b); margin-bottom: 28px; }
 
-    /* Logo area */
-    .logo {
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      color: var(--accent);
-      text-align: center;
-      margin-bottom: 40px;
-      position: relative;
-      z-index: 1;
-    }
+    h1 { font-size: 32px; font-weight: 700; line-height: 1.25; text-align: center; margin-bottom: 8px; }
+    h1 span { color: var(--acc); }
+    .sub { font-size: 16px; color: var(--sec); text-align: center; line-height: 1.6; margin-bottom: 34px; }
 
-    /* Glass card */
-    .card {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 420px;
-      background: var(--glass-fill);
-      border: 0.5px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 44px 36px 40px;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-    }
+    .field { margin-bottom: 16px; }
+    label { display: block; font-size: 12px; color: var(--sec); margin-bottom: 7px; letter-spacing: 0.03em; }
 
-    /* Specular shimmer */
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 5px;
-      left: 14%; right: 14%;
-      height: 1px;
-      background: var(--glass-shimmer);
-      border-radius: 1px;
-    }
-    /* Left edge shimmer */
-    .card::after {
-      content: '';
-      position: absolute;
-      top: 8%; bottom: 8%;
-      right: 5px;
-      width: 1px;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.22), transparent 50%, rgba(255,255,255,0.06));
-      border-radius: 1px;
-    }
-
-    /* Group badge */
-    .group-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: rgba(91, 156, 255, 0.13);
-      border: 0.5px solid rgba(91, 156, 255, 0.3);
-      border-radius: 30px;
-      padding: 6px 14px;
-      font-size: 13px;
-      color: var(--accent-bright);
-      margin-bottom: 28px;
-      width: 100%;
-      justify-content: center;
-    }
-
-    h1 {
-      font-size: 34px;
-      font-weight: 700;
-      line-height: 1.2;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    h1 span { color: var(--accent); }
-
-    .sub {
-      font-size: 16px;
-      color: var(--text-sec);
-      text-align: center;
-      line-height: 1.6;
-      margin-bottom: 36px;
-    }
-
-    /* Form */
-    .field { margin-bottom: 18px; }
-
-    label {
-      display: block;
-      font-size: 12px;
-      color: var(--text-sec);
-      margin-bottom: 8px;
-      letter-spacing: 0.03em;
-    }
-
-    input {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.05);
-      border: 0.5px solid rgba(255, 255, 255, 0.14);
-      border-radius: 12px;
-      padding: 15px 18px;
-      font-size: 16px;
-      color: var(--text-primary);
-      outline: none;
-      transition: border-color 0.2s, background 0.2s;
-      font-family: inherit;
-      text-align: right;
-      -webkit-appearance: none;
-    }
+    input[type="text"], input[type="tel"] {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 0.5px solid rgba(255,255,255,0.14); border-radius: 12px;
+      padding: 15px 18px; font-size: 16px; color: var(--white); outline: none;
+      transition: border-color 0.2s, background 0.2s; font-family: inherit;
+      text-align: right; -webkit-appearance: none; }
     input::placeholder { color: rgba(255,255,255,0.22); }
-    input:focus {
-      border-color: rgba(91, 156, 255, 0.45);
-      background: rgba(91, 156, 255, 0.06);
-    }
+    input:focus { border-color: rgba(91,156,255,0.44); background: rgba(91,156,255,0.06); }
 
-    /* Submit button */
-    .btn {
-      width: 100%;
-      margin-top: 28px;
-      background: #1A73E8;
-      border: none;
-      border-radius: 14px;
-      padding: 17px;
-      font-size: 17px;
-      font-weight: 600;
-      color: #fff;
-      cursor: pointer;
-      font-family: inherit;
-      transition: opacity 0.2s, transform 0.12s;
-      position: relative;
-      overflow: hidden;
-    }
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 10%; right: 10%;
-      height: 1px;
-      background: rgba(255,255,255,0.3);
-    }
-    .btn:hover { opacity: 0.92; }
+    /* Type – read-only badge row */
+    .type-row {
+      width: 100%; background: rgba(91,156,255,0.08); border: 0.5px solid rgba(91,156,255,0.22);
+      border-radius: 12px; padding: 14px 18px; display: flex;
+      align-items: center; justify-content: flex-end; gap: 10px; }
+    .type-row span { font-size: 15px; color: var(--acc-b); }
+    .type-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--acc); flex-shrink: 0; }
+
+    .btn { width: 100%; margin-top: 24px; background: #1A73E8; border: none;
+      border-radius: 14px; padding: 17px; font-size: 17px; font-weight: 600;
+      color: #fff; cursor: pointer; font-family: inherit;
+      transition: opacity 0.2s, transform 0.12s; position: relative; overflow: hidden; }
+    .btn::before { content: ''; position: absolute; top: 0; left: 10%; right: 10%;
+      height: 1px; background: rgba(255,255,255,0.28); }
+    .btn:hover  { opacity: 0.92; }
     .btn:active { transform: scale(0.98); }
-    .btn:disabled { opacity: 0.45; cursor: default; transform: none; }
+    .btn:disabled { opacity: 0.42; cursor: default; transform: none; }
 
-    /* Success state */
-    #success {
-      display: none;
-      text-align: center;
-      padding: 16px 0;
-    }
-    #success .icon { font-size: 58px; margin-bottom: 20px; display: block; }
-    #success h2 { font-size: 26px; margin-bottom: 10px; }
-    #success p { color: var(--text-sec); font-size: 16px; line-height: 1.7; }
-    #success .wow {
-      margin-top: 24px;
-      font-size: 14px;
-      color: var(--accent);
-      padding: 12px 20px;
-      background: rgba(91, 156, 255, 0.1);
-      border-radius: 10px;
-      border: 0.5px solid rgba(91, 156, 255, 0.2);
-    }
+    #success { display: none; text-align: center; padding: 12px 0; }
+    #success .icon { font-size: 56px; margin-bottom: 18px; display: block; }
+    #success h2 { font-size: 24px; margin-bottom: 10px; }
+    #success p { color: var(--sec); font-size: 16px; line-height: 1.7; }
+    #success .note { margin-top: 22px; font-size: 13px; color: var(--acc);
+      padding: 11px 18px; background: rgba(91,156,255,0.10);
+      border-radius: 10px; border: 0.5px solid rgba(91,156,255,0.2); }
 
-    /* Footer */
-    .footer {
-      margin-top: 28px;
-      font-size: 11px;
-      color: var(--text-dim);
-      letter-spacing: 0.08em;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    @media (max-width: 480px) {
-      .card { padding: 36px 24px 32px; }
-      h1 { font-size: 28px; }
-    }
+    .footer { margin-top: 26px; font-size: 11px; color: var(--dim);
+      letter-spacing: 0.08em; text-align: center; position: relative; z-index: 1; }
   </style>
 </head>
 <body>
-
   <div class="logo">AUTOSCALE</div>
 
   <div class="card">
-
-    <!-- Form -->
     <div id="form-section">
       <div class="group-badge">⚡ מיוחד לחברי קבוצת Up – לעסקים</div>
-
       <h1>חוו <span>אוטומציה</span><br>עכשיו</h1>
-      <p class="sub">מלאו שם ומספר טלפון. תראו מה קורה תוך 30 שניות.</p>
+      <p class="sub">מלאו שם ומספר טלפון.<br>ראו מה קורה תוך 30 שניות.</p>
 
+      <!-- 1. שם פרטי -->
       <div class="field">
-        <label>שם מלא</label>
-        <input type="text" id="name" placeholder="הכניסו את שמכם" autocomplete="name" inputmode="text">
+        <label>שם פרטי</label>
+        <input type="text" id="firstName" placeholder="הכניסו את שמכם"
+               autocomplete="given-name" inputmode="text">
       </div>
+
+      <!-- 2. Type (read-only) -->
+      <div class="field">
+        <label>סוג</label>
+        <div class="type-row">
+          <span>אחרי שיחה</span>
+          <div class="type-dot"></div>
+        </div>
+      </div>
+
+      <!-- 3. מספר טלפון -->
       <div class="field">
         <label>מספר טלפון</label>
-        <input type="tel" id="phone" placeholder="05X-XXXXXXX" autocomplete="tel" inputmode="tel">
+        <input type="tel" id="phone" placeholder="05X-XXXXXXX"
+               autocomplete="tel" inputmode="tel">
       </div>
 
-      <button class="btn" id="submit-btn" onclick="handleSubmit()">שליחה ←</button>
+      <button class="btn" id="submit-btn" onclick="send()">שליחה ←</button>
     </div>
 
-    <!-- Success -->
     <div id="success">
       <span class="icon">📲</span>
       <h2>בדרך אליך</h2>
       <p>תוך שניות ספורות<br>תקבלו הודעת ווצאפ.</p>
-      <div class="wow">זו לא הבטחה. זו הדגמה בזמן אמת.</div>
+      <div class="note">זו לא הבטחה. זו הדגמה בזמן אמת.</div>
     </div>
-
   </div>
 
   <div class="footer">autoscalehq.io</div>
 
   <script>
-    async function handleSubmit() {
-      const name  = document.getElementById('name').value.trim();
+    async function send() {
+      const name  = document.getElementById('firstName').value.trim();
       const phone = document.getElementById('phone').value.trim();
-
-      if (!name)  { document.getElementById('name').focus();  return; }
-      if (!phone) { document.getElementById('phone').focus(); return; }
+      if (!name)  { document.getElementById('firstName').focus(); return; }
+      if (!phone) { document.getElementById('phone').focus();     return; }
 
       const btn = document.getElementById('submit-btn');
-      btn.disabled    = true;
-      btn.textContent = 'שולח...';
-
-      const payload = {
-        name:  name,
-        phone: phone,
-        Type:  'אחרי שיחה'
-      };
+      btn.disabled = true; btn.textContent = 'שולח...';
 
       try {
         await fetch('https://hook.eu1.make.com/w9giggm11dd63tjqgf2gmqfnhgeva9gs', {
-          method:  'POST',
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify(payload),
-          mode:    'no-cors'   // webhook may not send CORS headers
+          body: JSON.stringify({ name, Type: 'אחרי שיחה', phone }),
+          mode: 'no-cors'
         });
-      } catch (_) {
-        // no-cors mode throws on network errors only; proceed to success
-      }
+      } catch (_) {}
 
       document.getElementById('form-section').style.display = 'none';
       document.getElementById('success').style.display      = 'block';
     }
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Enter') handleSubmit();
-    });
+    document.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
   </script>
-
 </body>
 </html>
