@@ -1,149 +1,941 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AutoScale – חוו אוטומציה עכשיו</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#060d1a" />
+  <title>AutoScale | רכישת בנק שעות</title>
+  <!-- Favicons — actual brand logo, transparent background -->
+  <link rel="icon" type="image/png" sizes="16x16" href="portfolio-images/favicon-16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="portfolio-images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="portfolio-images/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="portfolio-images/favicon-64.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="portfolio-images/favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="portfolio-images/favicon-192.png">
+  <link rel="shortcut icon" href="portfolio-images/favicon-32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --bg: #04101E; --glass: rgba(90,154,255,0.07); --border: rgba(255,255,255,0.14);
-      --shimmer: rgba(255,255,255,0.30); --acc: #5B9CFF; --acc-b: #90BFFF;
-      --white: #FFFFFF; --sec: #7FAACC; --dim: #1E3550;
+      --bg: #060d1a;
+      --glass: rgba(12,26,56,0.55);
+      --border: rgba(80,140,255,0.13);
+      --border-hover: rgba(80,160,255,0.32);
+      --text: #e8f0ff;
+      --muted: #6a85b6;
+      --accent: #3a8ef6;
+      --accent2: #1dffd4;
+      --warn: #f6a83a;
+      --radius: 18px;
+      --radius-sm: 12px;
     }
-    html, body { min-height: 100%; background: var(--bg); color: var(--white);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
-    body { display: flex; flex-direction: column; align-items: center; justify-content: center;
-      min-height: 100vh; padding: 32px 20px; position: relative; }
-    body::before { content: ''; position: fixed; top: -20%; right: -15%; width: 65%; height: 70%;
-      background: radial-gradient(ellipse, rgba(16,60,180,0.16) 0%, transparent 70%);
-      pointer-events: none; z-index: 0; }
-    body::after  { content: ''; position: fixed; bottom: -25%; left: -15%; width: 55%; height: 65%;
-      background: radial-gradient(ellipse, rgba(8,30,80,0.20) 0%, transparent 70%);
-      pointer-events: none; z-index: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100dvh; overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80vw 55vh at 10% -5%, rgba(30,90,220,0.22) 0%, transparent 65%),
+        radial-gradient(ellipse 60vw 40vh at 90% 10%, rgba(0,200,180,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 100vw 30vh at 50% 100%, rgba(10,30,80,0.5) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(58,142,246,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(58,142,246,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none; z-index: 0;
+    }
+    .wrap {
+      position: relative; z-index: 1;
+      max-width: 560px; margin: 0 auto;
+      padding: 28px 16px 100px;
+    }
 
-    .logo { font-size: 11px; letter-spacing: 0.14em; color: var(--acc);
-      text-align: center; margin-bottom: 36px; position: relative; z-index: 1; }
+    /* HEADER */
+    header {
+      margin-bottom: 32px; padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center; gap: 10px;
+    }
+    .logo-mark {
+      width: 72px; height: 72px; border-radius: 18px;
+      background: linear-gradient(135deg,#0d2a6e,#0a4a3a);
+      border: 1px solid rgba(58,142,246,0.28);
+      box-shadow: 0 0 28px rgba(58,142,246,0.28), 0 0 0 4px rgba(58,142,246,0.07);
+      overflow: hidden; display: grid; place-items: center;
+    }
+    .logo-mark img { width:100%; height:100%; object-fit:cover; display:block; }
+    .brand-name {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.4px;
+      background: linear-gradient(90deg, #c8deff, #1dffd4 80%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .brand-sub {
+      font-size: 11.5px; color: var(--muted); font-weight: 300;
+      letter-spacing: 0.5px; font-family: 'Space Mono', monospace; margin-top: -4px;
+    }
 
-    .card { position: relative; z-index: 1; width: 100%; max-width: 420px;
-      background: var(--glass); border: 0.5px solid var(--border); border-radius: 20px;
-      padding: 44px 36px 40px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-    .card::before { content: ''; position: absolute; top: 5px; left: 14%; right: 14%;
-      height: 1px; background: var(--shimmer); border-radius: 1px; }
-    .card::after  { content: ''; position: absolute; top: 8%; bottom: 8%; right: 5px;
-      width: 1px; background: linear-gradient(to bottom, rgba(255,255,255,0.20),
-      transparent 50%, rgba(255,255,255,0.05)); }
+    /* NAV ROW */
+    .nav-pills { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+    .nav-pill {
+      font-size: 11px; font-family: 'Space Mono', monospace;
+      color: var(--muted); background: var(--glass);
+      border: 1px solid var(--border); border-radius: 999px;
+      padding: 5px 12px; cursor: pointer; text-decoration: none;
+      transition: all 0.2s; display: flex; align-items: center; gap: 5px;
+    }
+    .nav-pill:hover { border-color: var(--border-hover); color: var(--text); }
+    .dot { width:6px;height:6px;border-radius:50%; }
+    .dot-green { background: #4ddb7a; box-shadow: 0 0 6px #4ddb7a; }
 
-    .group-badge { display: flex; align-items: center; justify-content: center; gap: 7px;
-      background: rgba(91,156,255,0.12); border: 0.5px solid rgba(91,156,255,0.28);
-      border-radius: 30px; padding: 7px 16px; font-size: 13px; color: var(--acc-b); margin-bottom: 28px; }
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 10.5px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      font-family: 'Space Mono', monospace; margin: 0 0 12px; opacity: 0.8;
+    }
 
-    h1 { font-size: 32px; font-weight: 700; line-height: 1.25; text-align: center; margin-bottom: 8px; }
-    h1 span { color: var(--acc); }
-    .sub { font-size: 16px; color: var(--sec); text-align: center; line-height: 1.6; margin-bottom: 34px; }
+    /* PIPS */
+    .steps { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 28px; }
+    .pip { height: 4px; border-radius: 999px; background: var(--border); width: 28px; transition: all 0.3s; }
+    .pip.active { background: var(--accent); width: 42px; }
+    .pip.done   { background: var(--accent2); }
 
-    .field { margin-bottom: 16px; }
-    label { display: block; font-size: 12px; color: var(--sec); margin-bottom: 7px; letter-spacing: 0.03em; }
+    /* PACKAGE CARDS */
+    .link-card {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; background: var(--glass);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 14px 16px; margin-bottom: 9px;
+      backdrop-filter: blur(12px); cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      position: relative; overflow: hidden;
+    }
+    .link-card.selected {
+      border-color: rgba(29,255,212,0.45);
+      background: rgba(29,255,212,0.05);
+      box-shadow: 0 0 0 1px rgba(29,255,212,0.12), 0 0 28px rgba(29,255,212,0.06);
+    }
+    .link-card.popular { border-color: rgba(58,142,246,0.3); }
+    .link-card:active { transform: scale(0.985); }
+    @media (hover:hover) {
+      .link-card:hover { border-color: var(--border-hover); box-shadow: 0 0 0 1px rgba(58,142,246,0.08), 0 8px 28px rgba(0,0,0,0.3); }
+    }
+    .card-left { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; }
+    .card-name { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 7px; }
+    .card-badge {
+      font-size: 9px; font-weight: 700; font-family: 'Space Mono', monospace;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: #060d1a; padding: 2px 7px; border-radius: 999px; letter-spacing: 0.5px;
+    }
+    .card-sub { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
+    .price-pill { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+    .price-from { font-size: 9.5px; color: var(--muted); font-family: 'Space Mono', monospace; letter-spacing: 0.3px; }
+    .price-main { font-size: 18px; font-weight: 700; font-family: 'Space Mono', monospace; color: var(--accent2); }
+    .price-main small { font-size: 11px; color: var(--muted); font-weight: 400; }
+    .price-sub { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; }
+    .radio-dot {
+      width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+      border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .link-card.selected .radio-dot { background: var(--accent2); border-color: var(--accent2); box-shadow: 0 0 10px rgba(29,255,212,0.4); }
+    .radio-dot::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #060d1a; opacity: 0; transition: opacity 0.15s; }
+    .link-card.selected .radio-dot::after { opacity: 1; }
 
-    input[type="text"], input[type="tel"] {
-      width: 100%; background: rgba(255,255,255,0.05);
-      border: 0.5px solid rgba(255,255,255,0.14); border-radius: 12px;
-      padding: 15px 18px; font-size: 16px; color: var(--white); outline: none;
-      transition: border-color 0.2s, background 0.2s; font-family: inherit;
-      text-align: right; -webkit-appearance: none; }
-    input::placeholder { color: rgba(255,255,255,0.22); }
-    input:focus { border-color: rgba(91,156,255,0.44); background: rgba(91,156,255,0.06); }
+    /* MODAL */
+    .overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(4,10,28,0.88); backdrop-filter: blur(12px);
+      display: flex; align-items: flex-end; justify-content: center;
+      padding: 0 16px 16px;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: linear-gradient(160deg, rgba(10,22,50,0.98), rgba(6,14,30,0.98));
+      border: 1px solid var(--border); border-radius: 24px 24px 20px 20px;
+      padding: 28px 20px 28px; width: 100%; max-width: 520px;
+      transform: translateY(28px) scale(0.97); transition: all 0.3s ease;
+      position: relative; box-shadow: 0 -8px 60px rgba(0,0,0,0.5);
+      max-height: 85dvh; overflow-y: auto;
+    }
+    .overlay.open .modal { transform: translateY(0) scale(1); }
+    .modal-handle { width: 36px; height: 4px; border-radius: 999px; background: var(--border); margin: 0 auto 24px; display: block; }
+    .modal-close {
+      position: absolute; top: 14px; left: 16px;
+      background: var(--glass); border: 1px solid var(--border);
+      color: var(--muted); width: 30px; height: 30px; border-radius: 50%;
+      cursor: pointer; font-size: 14px;
+      display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+    }
+    .modal-close:hover { color: var(--text); border-color: var(--border-hover); }
+    .modal-title { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+    .modal-sub { color: var(--muted); font-size: 12.5px; margin-bottom: 20px; font-family: 'Space Mono', monospace; }
 
+    /* FIELDS */
+    input, textarea {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 12px 14px;
+      color: var(--text); font-family: 'Sora', sans-serif; font-size: 15px;
+      direction: rtl; width: 100%; transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+      backdrop-filter: blur(8px);
+    }
+    input:focus, textarea:focus { border-color: rgba(58,142,246,0.4); box-shadow: 0 0 0 3px rgba(58,142,246,0.08); }
+    input::placeholder, textarea::placeholder { color: rgba(106,133,182,0.45); }
+    textarea { resize: none; height: 60px; }
 
+    /* TERMS */
+    .chk-box {
+      width: 18px; height: 18px; border: 1.5px solid var(--border);
+      border-radius: 5px; flex-shrink: 0; margin-top: 1px;
+      display: flex; align-items: center; justify-content: center; transition: all 0.2s; cursor: pointer;
+    }
+    .chk-box.on { background: var(--accent2); border-color: var(--accent2); }
 
-    .btn { width: 100%; margin-top: 24px; background: #1A73E8; border: none;
-      border-radius: 14px; padding: 17px; font-size: 17px; font-weight: 600;
-      color: #fff; cursor: pointer; font-family: inherit;
-      transition: opacity 0.2s, transform 0.12s; position: relative; overflow: hidden; }
-    .btn::before { content: ''; position: absolute; top: 0; left: 10%; right: 10%;
-      height: 1px; background: rgba(255,255,255,0.28); }
-    .btn:hover  { opacity: 0.92; }
-    .btn:active { transform: scale(0.98); }
-    .btn:disabled { opacity: 0.42; cursor: default; transform: none; }
+    /* BUTTONS */
+    .btn-primary {
+      width: 100%; background: linear-gradient(135deg, var(--accent) 0%, #1a6bd4 100%);
+      color: #fff; border: none; border-radius: var(--radius);
+      padding: 15px; font-size: 15px; font-weight: 600;
+      font-family: 'Sora', sans-serif; cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 0 24px rgba(58,142,246,0.3); position: relative; overflow: hidden;
+    }
+    .btn-primary::after { content:''; position:absolute; inset:0; background: linear-gradient(135deg,rgba(255,255,255,0.1),transparent); pointer-events:none; }
+    .btn-primary:hover { box-shadow: 0 0 32px rgba(58,142,246,0.45); transform: translateY(-1px); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-secondary {
+      background: var(--glass); color: var(--muted);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 13px 20px; font-size: 13.5px; font-family: 'Sora', sans-serif;
+      cursor: pointer; transition: all 0.2s; backdrop-filter: blur(8px);
+    }
+    .btn-secondary:hover { border-color: var(--border-hover); color: var(--text); }
 
-    #success { display: none; text-align: center; padding: 12px 0; }
-    #success .icon { font-size: 56px; margin-bottom: 18px; display: block; }
-    #success h2 { font-size: 24px; margin-bottom: 10px; }
-    #success p { color: var(--sec); font-size: 16px; line-height: 1.7; }
-    #success .note { margin-top: 22px; font-size: 13px; color: var(--acc);
-      padding: 11px 18px; background: rgba(91,156,255,0.10);
-      border-radius: 10px; border: 0.5px solid rgba(91,156,255,0.2); }
+    /* PAYMENT OPTIONS */
+    .pay-opts { display: flex; flex-direction: column; gap: 9px; }
+    .pay-opt {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px 16px; cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s; backdrop-filter: blur(8px);
+    }
+    .pay-opt:hover { border-color: var(--border-hover); }
+    .pay-opt:active { transform: scale(0.985); }
+    .pay-icon { width: 40px; height: 40px; border-radius: 12px; background: rgba(58,142,246,0.12); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .pay-info { flex: 1; }
+    .pay-name { font-size: 15px; font-weight: 600; }
+    .pay-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .pay-arr { color: var(--muted); font-size: 18px; opacity: 0.5; }
 
-    .footer { margin-top: 26px; font-size: 11px; color: var(--dim);
-      letter-spacing: 0.08em; text-align: center; position: relative; z-index: 1; }
+    /* BIT / BANK SUB SCREENS */
+    .sub-screen { display: none; }
+    .sub-screen.active { display: block; }
+    .detail-box { background: var(--glass); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; backdrop-filter: blur(8px); }
+    .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-key { color: var(--muted); }
+    .detail-val { font-family: 'Space Mono', monospace; font-weight: 700; cursor: pointer; transition: color 0.2s; }
+    .detail-val:hover { color: var(--accent2); }
+    .modal-footer { display: flex; gap: 9px; margin-top: 18px; }
+
+    /* TERMS MODAL */
+    .terms-content { font-size: 12.5px; color: var(--muted); line-height: 1.8; }
+    .terms-content h3 { color: var(--text); font-size: 13.5px; margin: 16px 0 6px; }
+    .terms-content p { margin-bottom: 10px; }
+
+    /* TOAST */
+    .toast {
+      position: fixed; bottom: calc(env(safe-area-inset-bottom,0px) + 22px);
+      left: 50%; transform: translateX(-50%) translateY(12px);
+      background: rgba(8,20,50,0.92); border: 1px solid rgba(29,255,212,0.25);
+      border-radius: 999px; padding: 11px 18px;
+      font-size: 13px; color: var(--accent2); font-weight: 600;
+      display: flex; align-items: center; gap: 8px;
+      z-index: 9999; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s; backdrop-filter: blur(16px);
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast-dot { width:8px;height:8px;border-radius:50%;background:var(--accent2);box-shadow:0 0 8px var(--accent2); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+    .fade-in { animation: fadeUp 0.35s ease both; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .avail-dot { animation: blink 2s infinite; }
   </style>
 </head>
 <body>
-  <div class="logo">AUTOSCALE</div>
+<div class="wrap">
 
-  <div class="card">
-    <div id="form-section">
-      <div class="group-badge">⚡ מיוחד לחברי קבוצת Up – לעסקים</div>
-      <h1>חוו <span>אוטומציה</span><br>עכשיו</h1>
-      <p class="sub">מלאו שם ומספר טלפון.<br>ראו מה קורה תוך 30 שניות.</p>
+  <!-- HEADER -->
+  <header>
+    <div class="logo-mark">
+      <img src="https://raw.githubusercontent.com/richard36901-source/Home-page/main/logo.jpg" alt="AutoScale" />
+    </div>
+    <div class="brand-name">AutoScale</div>
+    <div class="brand-sub">אוטומציות חכמות</div>
+  </header>
 
-      <!-- 1. שם פרטי -->
-      <div class="field">
-        <label>שם פרטי</label>
-        <input type="text" id="firstName" placeholder="הכניסו את שמכם"
-               autocomplete="given-name" inputmode="text">
+  <!-- NAV PILLS -->
+  <div class="nav-pills">
+    <span class="nav-pill" onclick="openTermsModal()">📄 תנאי שימוש</span>
+    <span class="nav-pill"><span class="dot dot-green avail-dot"></span> זמין עכשיו</span>
+    <span class="nav-pill">🕐 א׳–ה׳ 9:00–18:00</span>
+  </div>
+
+  <!-- PIPS -->
+  <div class="steps">
+    <div class="pip active" id="p1"></div>
+    <div class="pip" id="p2"></div>
+    <div class="pip" id="p3"></div>
+  </div>
+
+  <!-- STEP 1 — PACKAGES -->
+  <div id="step1" class="fade-in">
+    <div class="section-label">בחר חבילת שעות</div>
+
+    <!-- Less than 5h — collapsible -->
+    <div onclick="toggleSmallNote()" style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 13px;margin-bottom:10px;cursor:pointer;border-radius:var(--radius-sm);background:rgba(246,168,58,0.05);border:1px solid rgba(246,168,58,0.15);transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(246,168,58,0.32)'" onmouseout="this.style.borderColor='rgba(246,168,58,0.15)'">
+      <span style="font-size:11.5px;color:rgba(246,168,58,0.75);">💬 <span style="text-decoration:underline dotted">צריך/ה פחות מ-5 שעות? לחץ/י כאן</span></span>
+      <span id="smallNoteChev" style="color:rgba(246,168,58,0.5);font-size:12px;transition:transform 0.2s;">▾</span>
+    </div>
+    <div id="smallNoteExpand" style="display:none;margin-bottom:10px;">
+      <div style="background:rgba(246,168,58,0.07);border:1px solid rgba(246,168,58,0.22);border-radius:var(--radius-sm);padding:12px 14px;font-size:12.5px;color:rgba(246,168,58,0.9);line-height:1.7;">
+        המינימום בבנק השעות הוא <strong>5 שעות</strong>.<br>לפרויקטים קטנים יותר — דבר/י איתנו ישירות בוואטסאפ.
+        <div style="margin-top:10px;">
+          <a href="https://wa.me/972552962965?text=%D7%94%D7%99%D7%99%2C%20%D7%9E%D7%A2%D7%95%D7%A0%D7%99%D7%99%D7%9F%20%D7%9C%D7%A8%D7%9B%D7%95%D7%A9%20%D7%A4%D7%97%D7%95%D7%AA%20%D7%9E5%20%D7%A9%D7%A2%D7%95%D7%AA." style="display:inline-flex;align-items:center;gap:6px;color:#4ddb7a;font-family:'Space Mono',monospace;font-size:12px;background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.2);border-radius:var(--radius-sm);padding:7px 13px;text-decoration:none;">💬 פתח/י שיחה עם Donna</a>
+        </div>
       </div>
-
-
-      <div class="field">
-        <label>מספר טלפון</label>
-        <input type="tel" id="phone" placeholder="05X-XXXXXXX"
-               autocomplete="tel" inputmode="tel">
-      </div>
-
-      <button class="btn" id="submit-btn" onclick="send()">שליחה ←</button>
     </div>
 
-    <div id="success">
-      <span class="icon">📲</span>
-      <h2>בדרך אליך</h2>
-      <p>תוך שניות ספורות<br>תקבלו הודעת ווצאפ.</p>
-      <div class="note">זו לא הבטחה. זו הדגמה בזמן אמת.</div>
+    <!-- 5h+ -->
+    <div class="link-card"
+         data-h="5"
+         data-price="1500"
+         data-link="https://pay.grow.link/44ea6cce229a52325cd78a56c5a8dd86-MzM0NjI4Mw"
+         onclick="selectPkg(this)">
+      <div class="radio-dot"></div>
+      <div class="card-left">
+        <div class="card-name">5 שעות</div>
+        <div class="card-sub">₪300 לשעה · לא כולל מע"מ</div>
+      </div>
+      <div class="price-pill">
+        <div class="price-from">החל מ-</div>
+        <div class="price-main">₪1,500 <small>+מע"מ</small></div>
+      </div>
+    </div>
+
+    <!-- 10h+ -->
+    <div class="link-card"
+         data-h="10"
+         data-price="2900"
+         data-link="https://pay.grow.link/c8a008fc5d54f06f432f9a0d16b988d7-MzM0NjI4NQ"
+         onclick="selectPkg(this)">
+      <div class="radio-dot"></div>
+      <div class="card-left">
+        <div class="card-name">10 שעות</div>
+        <div class="card-sub">₪290 לשעה · חיסכון ₪100 · לא כולל מע"מ</div>
+      </div>
+      <div class="price-pill">
+        <div class="price-from">החל מ-</div>
+        <div class="price-main">₪2,900 <small>+מע"מ</small></div>
+      </div>
+    </div>
+
+    <!-- 20h+ POPULAR -->
+    <div class="link-card popular"
+         data-h="20"
+         data-price="5600"
+         data-link="https://pay.grow.link/23dd5274c41ca3433ad573a670d7ce32-MzM0NjI4OA"
+         onclick="selectPkg(this)">
+      <div class="radio-dot"></div>
+      <div class="card-left">
+        <div class="card-name">20 שעות <span class="card-badge">⭐ פופולרי</span></div>
+        <div class="card-sub">₪280 לשעה · חיסכון ₪400 · לא כולל מע"מ</div>
+      </div>
+      <div class="price-pill">
+        <div class="price-from">החל מ-</div>
+        <div class="price-main">₪5,600 <small>+מע"מ</small></div>
+      </div>
+    </div>
+
+    <!-- 40h+ -->
+    <div class="link-card"
+         data-h="40"
+         data-price="10800"
+         data-link="https://pay.grow.link/300bd5828ca313d35ed0947fd9fcc5e3-MzM0NjI5NQ"
+         onclick="selectPkg(this)">
+      <div class="radio-dot"></div>
+      <div class="card-left">
+        <div class="card-name">40 שעות</div>
+        <div class="card-sub">₪270 לשעה · חיסכון ₪1,200 · לא כולל מע"מ</div>
+      </div>
+      <div class="price-pill">
+        <div class="price-from">החל מ-</div>
+        <div class="price-main">₪10,800 <small>+מע"מ</small></div>
+      </div>
+    </div>
+
+    <!-- VAT note -->
+    <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px;font-family:'Space Mono',monospace">
+      * כל המחירים אינם כוללים מע"מ (18%)
     </div>
   </div>
 
-  <div class="footer">autoscalehq.io</div>
+</div><!-- /wrap -->
 
-  <script>
-    async function send() {
-      const name  = document.getElementById('firstName').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      if (!name)  { document.getElementById('firstName').focus(); return; }
-      if (!phone) { document.getElementById('phone').focus();     return; }
+<!-- ══ MAIN MODAL: DETAILS → PAYMENT ══ -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <span class="modal-handle"></span>
+    <button class="modal-close" onclick="closePay()">✕</button>
 
-      const btn = document.getElementById('submit-btn');
-      btn.disabled = true; btn.textContent = 'שולח...';
+    <!-- SCREEN A: CLIENT DETAILS -->
+    <div id="screenDetails">
+      <div class="modal-title">רכישת בנק שעות</div>
+      <div class="modal-sub">מלא/י פרטים — ונעבור לתשלום</div>
 
-      const payload = {
-        timestamp:    new Date().toISOString(),
-        Type:         'אחרי שיחה',
-        client_name:  name,
-        client_phone: phone,
-      };
+      <div style="background:rgba(29,255,212,0.05);border:1px solid rgba(29,255,212,0.15);border-radius:12px;padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-size:12px;color:var(--muted)">חבילה נבחרת</div>
+        <div style="font-size:15px;font-weight:700;font-family:'Space Mono',monospace;color:var(--accent2)" id="modalPkgLabel">—</div>
+      </div>
 
-      try {
-        await fetch('https://hook.eu1.make.com/w9giggm11dd63tjqgf2gmqfnhgeva9gs', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          mode: 'no-cors'
-        });
-      } catch (_) {}
+      <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:16px;">
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="font-size:11.5px;color:var(--muted);">שם לקוח / חברה <span style="color:#e05a6a">*</span></div>
+          <input type="text" id="fName" placeholder='ישראל ישראלי / חברה בע"מ' oninput="checkDetails()" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="font-size:11.5px;color:var(--muted);">ח.פ / ת.ז לחשבונית <span style="color:#e05a6a">*</span></div>
+          <input type="text" id="fId" placeholder="000000000" oninput="checkDetails()" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="font-size:11.5px;color:var(--muted);">טלפון <span style="color:#e05a6a">*</span></div>
+          <div style="display:flex;gap:8px;">
+            <div style="background:var(--glass);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;color:var(--muted);font-size:14px;white-space:nowrap;font-family:'Space Mono',monospace;backdrop-filter:blur(8px);">🇮🇱 +972</div>
+            <input type="tel" id="fPhone" placeholder="05X-XXXXXXX" style="flex:1" oninput="checkDetails()" />
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="font-size:11.5px;color:var(--muted);">הערות (אופציונלי)</div>
+          <textarea id="fNotes" placeholder="הוסף הערה לבקשה..."></textarea>
+        </div>
+      </div>
 
-      document.getElementById('form-section').style.display = 'none';
-      document.getElementById('success').style.display      = 'block';
-    }
-    document.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
-  </script>
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:18px;font-size:12.5px;color:var(--muted);cursor:pointer;" onclick="toggleTerms()">
+        <div class="chk-box" id="termsBox"></div>
+        <span>קראתי ואני מאשר/ת את <span style="color:var(--accent2);cursor:pointer" onclick="event.stopPropagation();openTermsModal()">תנאי השימוש</span> של AutoScale</span>
+      </div>
+
+      <button class="btn-primary" id="toPayBtn" disabled onclick="showPayScreen()">המשך לתשלום 💳</button>
+    </div>
+
+    <!-- SCREEN B: PAYMENT METHODS -->
+    <div id="screenPay" style="display:none;">
+      <div class="modal-title">בחר אמצעי תשלום</div>
+      <div class="modal-sub" id="modalPaySub"></div>
+
+      <!-- PAYMENT BADGES -->
+      <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;padding:10px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;">
+        <svg width="42" height="26" viewBox="0 0 42 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:5px;background:#1a1f71;padding:3px 5px;flex-shrink:0"><text x="21" y="18" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="900" fill="#fff" letter-spacing="-0.5">VISA</text></svg>
+        <svg width="42" height="26" viewBox="0 0 42 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:5px;background:#252525;flex-shrink:0"><circle cx="16" cy="13" r="8" fill="#EB001B"/><circle cx="26" cy="13" r="8" fill="#F79E1B"/><path d="M21 7.3a8 8 0 0 1 0 11.4A8 8 0 0 1 21 7.3z" fill="#FF5F00"/></svg>
+        <svg width="52" height="26" viewBox="0 0 52 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:5px;background:#000;padding:3px 6px;flex-shrink:0"><text x="26" y="17" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro',Arial,sans-serif" font-size="10" fill="#fff">Apple Pay</text></svg>
+        <svg width="56" height="26" viewBox="0 0 56 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:5px;background:#fff;padding:3px 6px;flex-shrink:0"><text x="28" y="17" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#3c4043">Google Pay</text></svg>
+        <svg width="42" height="26" viewBox="0 0 42 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:5px;background:#ff3c6a;padding:3px 7px;flex-shrink:0"><text x="21" y="18" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#fff">bit</text></svg>
+        <svg width="52" height="26" viewBox="0 0 52 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:5px;background:#6c3de8;padding:3px 6px;flex-shrink:0"><text x="26" y="17" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="#fff">Paybox</text></svg>
+        <svg width="52" height="26" viewBox="0 0 52 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:5px;background:rgba(80,140,255,0.15);border:1px solid rgba(80,140,255,0.3);padding:2px 4px;flex-shrink:0"><text x="26" y="17" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#a0c0ff">העברה</text></svg>
+      </div>
+
+      <div id="methodPicker">
+        <div class="pay-opts">
+          <div class="pay-opt" onclick="chooseCard()">
+            <div class="pay-icon">💳</div>
+            <div class="pay-info">
+              <div class="pay-name">כרטיס / Apple Pay / Google Pay</div>
+              <div class="pay-desc">Visa · Mastercard · Paybox · תשלום מאובטח דרך Grow</div>
+            </div>
+            <div class="pay-arr">←</div>
+          </div>
+          <div class="pay-opt" onclick="showBit()">
+            <div class="pay-icon">📲</div>
+            <div class="pay-info"><div class="pay-name">Bit</div><div class="pay-desc">תשלום מהיר דרך אפליקציית Bit</div></div>
+            <div class="pay-arr">←</div>
+          </div>
+          <div class="pay-opt" onclick="showBank()">
+            <div class="pay-icon">🏦</div>
+            <div class="pay-info"><div class="pay-name">העברה בנקאית</div><div class="pay-desc">פרטי חשבון + אסמכתא</div></div>
+            <div class="pay-arr">←</div>
+          </div>
+        </div>
+        <button class="btn-secondary" style="width:100%;margin-top:12px" onclick="showDetailsScreen()">← חזור לפרטים</button>
+      </div>
+
+      <!-- BIT sub -->
+      <div id="bitScreen" class="sub-screen">
+        <div class="modal-title">תשלום ב-Bit 📲</div>
+        <div class="modal-sub">שלח/י ישירות למספר הבא</div>
+        <div class="detail-box">
+          <div class="detail-row"><span class="detail-key">מספר</span><span class="detail-val" onclick="cp('0545764327')">054-576-4327</span></div>
+          <div class="detail-row"><span class="detail-key">סכום (לפני מע"מ)</span><span class="detail-val" id="bitAmt" style="color:var(--accent2)"></span></div>
+          <div class="detail-row"><span class="detail-key">סה"כ כולל מע"מ</span><span class="detail-val" id="bitAmtVat" style="color:var(--warn)"></span></div>
+        </div>
+        <div style="background:rgba(246,168,58,0.07);border:1px solid rgba(246,168,58,0.22);border-radius:var(--radius-sm);padding:12px 14px;margin-top:12px;font-size:12px;color:rgba(246,168,58,0.9);line-height:1.6;">
+          ⚠️ לאחר ביצוע התשלום — יש לצלם את אישור הביט ולהעלות אותו, <strong style="color:var(--warn)">או</strong> להזין מספר אסמכתא. רק אז תוכל/י להמשיך.
+        </div>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:9px;">
+          <div style="font-size:11.5px;color:var(--muted);font-weight:500;">צילום אישור (העלאת תמונה)</div>
+          <label id="bitUploadLabel" style="display:flex;align-items:center;justify-content:center;gap:8px;background:var(--glass);border:1.5px dashed rgba(80,140,255,0.25);border-radius:var(--radius-sm);padding:16px;cursor:pointer;font-size:13px;color:var(--muted);transition:all 0.2s;">
+            <span id="bitUploadTxt">📎 לחץ/י לבחירת קובץ</span>
+            <input type="file" id="bitFile" accept="image/*,.pdf" style="display:none" onchange="onFileChange('bit')"/>
+          </label>
+          <div style="text-align:center;font-size:11px;color:var(--muted);">— או —</div>
+          <input type="text" id="bitRef" placeholder="מספר אסמכתא (לדוגמה: 1234567)" oninput="checkProof('bit')" style="text-align:center;font-family:'Space Mono',monospace;letter-spacing:1px;"/>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" onclick="backMethods()">← חזור</button>
+          <button class="btn-primary" style="flex:1" id="bitConfirmBtn" disabled onclick="confirmDone()">אישור ✓ — המשך</button>
+        </div>
+      </div>
+
+      <!-- BANK sub -->
+      <div id="bankScreen" class="sub-screen">
+        <div class="modal-title">העברה בנקאית 🏦</div>
+        <div class="modal-sub">העתק/י פרטים → בצע/י העברה → העלה/י אסמכתא</div>
+        <div class="detail-box">
+          <div class="detail-row"><span class="detail-key">בנק</span><span class="detail-val" onclick="cp('הפועלים')">הפועלים</span></div>
+          <div class="detail-row"><span class="detail-key">מספר בנק</span><span class="detail-val" onclick="cp('12')">12</span></div>
+          <div class="detail-row"><span class="detail-key">סניף</span><span class="detail-val" onclick="cp('632')">632</span></div>
+          <div class="detail-row"><span class="detail-key">חשבון</span><span class="detail-val" onclick="cp('273277')">273277</span></div>
+          <div class="detail-row"><span class="detail-key">שם</span><span class="detail-val" onclick="cp('ריצארד טומסקי')">ריצארד טומסקי</span></div>
+          <div class="detail-row"><span class="detail-key">סכום (לפני מע"מ)</span><span class="detail-val" id="bankAmt" style="color:var(--accent2)"></span></div>
+          <div class="detail-row"><span class="detail-key">סה"כ כולל מע"מ</span><span class="detail-val" id="bankAmtVat" style="color:var(--warn)"></span></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px;text-align:left">לחץ/י על כל ערך להעתקה</div>
+        <div style="background:rgba(246,168,58,0.07);border:1px solid rgba(246,168,58,0.22);border-radius:var(--radius-sm);padding:12px 14px;margin-top:10px;font-size:12px;color:rgba(246,168,58,0.9);line-height:1.6;">
+          ⚠️ לאחר ביצוע ההעברה — יש להעלות צילום אסמכתא <strong style="color:var(--warn)">או</strong> להזין מספר אסמכתא. רק אז תוכל/י להמשיך.
+        </div>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:9px;">
+          <div style="font-size:11.5px;color:var(--muted);font-weight:500;">צילום אסמכתא (העלאת תמונה)</div>
+          <label id="bankUploadLabel" style="display:flex;align-items:center;justify-content:center;gap:8px;background:var(--glass);border:1.5px dashed rgba(80,140,255,0.25);border-radius:var(--radius-sm);padding:16px;cursor:pointer;font-size:13px;color:var(--muted);transition:all 0.2s;">
+            <span id="bankUploadTxt">📎 לחץ/י לבחירת קובץ</span>
+            <input type="file" id="bankFile" accept="image/*,.pdf" style="display:none" onchange="onFileChange('bank')"/>
+          </label>
+          <div style="text-align:center;font-size:11px;color:var(--muted);">— או —</div>
+          <input type="text" id="bankRef" placeholder="מספר אסמכתא / מספר העברה" oninput="checkProof('bank')" style="text-align:center;font-family:'Space Mono',monospace;letter-spacing:1px;"/>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" onclick="backMethods()">← חזור</button>
+          <button class="btn-primary" style="flex:1" id="bankConfirmBtn" disabled onclick="confirmDone()">אישור ✓ — המשך</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- ══ HIDDEN SMALL-HOURS PICKER (1–5h)                     ══ -->
+<!-- ══ Auto-opens when URL contains #hour                   ══ -->
+<!-- ══ Closing it returns the user to the regular page      ══ -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="smallOverlay">
+  <div class="modal">
+    <span class="modal-handle"></span>
+    <button class="modal-close" onclick="closeSmall()">✕</button>
+    <div class="modal-title">חבילת שעות גמישה</div>
+    <div class="modal-sub">בחר/י כמות שעות · ₪300 לשעה</div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
+      <div class="link-card"
+           data-h="1"
+           data-price="300"
+           data-link="https://pay.grow.link/a122013c601afce5be7359b77b5c0753-MzM0NjMwMg"
+           onclick="selectSmallPkg(this)">
+        <div class="radio-dot"></div>
+        <div class="card-left">
+          <div class="card-name">שעה 1</div>
+          <div class="card-sub">פגישה / שינוי קטן · לא כולל מע"מ</div>
+        </div>
+        <div class="price-pill">
+          <div class="price-main">₪300 <small>+מע"מ</small></div>
+        </div>
+      </div>
+
+      <div class="link-card"
+           data-h="2"
+           data-price="600"
+           data-link="https://pay.grow.link/NTY2OTg~0d8c777d15e38fecc0ceac1db61e8e6b-MzM4NTkyMw"
+           onclick="selectSmallPkg(this)">
+        <div class="radio-dot"></div>
+        <div class="card-left">
+          <div class="card-name">2 שעות</div>
+          <div class="card-sub">₪300 לשעה · לא כולל מע"מ</div>
+        </div>
+        <div class="price-pill">
+          <div class="price-main">₪600 <small>+מע"מ</small></div>
+        </div>
+      </div>
+
+      <div class="link-card"
+           data-h="3"
+           data-price="900"
+           data-link="https://pay.grow.link/NTY2OTg~e62881c7d3a1e50c9677473c9de0cce6-MzM4NTkyNA"
+           onclick="selectSmallPkg(this)">
+        <div class="radio-dot"></div>
+        <div class="card-left">
+          <div class="card-name">3 שעות</div>
+          <div class="card-sub">₪300 לשעה · לא כולל מע"מ</div>
+        </div>
+        <div class="price-pill">
+          <div class="price-main">₪900 <small>+מע"מ</small></div>
+        </div>
+      </div>
+
+      <div class="link-card"
+           data-h="4"
+           data-price="1200"
+           data-link="https://pay.grow.link/NTY2OTg~0c54b2b3e4c8b4f09312771eb786bfb7-MzM4NTkyNQ"
+           onclick="selectSmallPkg(this)">
+        <div class="radio-dot"></div>
+        <div class="card-left">
+          <div class="card-name">4 שעות</div>
+          <div class="card-sub">₪300 לשעה · לא כולל מע"מ</div>
+        </div>
+        <div class="price-pill">
+          <div class="price-main">₪1,200 <small>+מע"מ</small></div>
+        </div>
+      </div>
+
+      <div class="link-card"
+           data-h="5"
+           data-price="1500"
+           data-link="https://pay.grow.link/44ea6cce229a52325cd78a56c5a8dd86-MzM0NjI4Mw"
+           onclick="selectSmallPkg(this)">
+        <div class="radio-dot"></div>
+        <div class="card-left">
+          <div class="card-name">5 שעות</div>
+          <div class="card-sub">₪300 לשעה · לא כולל מע"מ</div>
+        </div>
+        <div class="price-pill">
+          <div class="price-main">₪1,500 <small>+מע"מ</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px;font-family:'Space Mono',monospace">
+      * המחירים אינם כוללים מע"מ (18%)
+    </div>
+  </div>
+</div>
+
+<!-- TERMS MODAL -->
+<div class="overlay" id="termsOverlay">
+  <div class="modal">
+    <span class="modal-handle"></span>
+    <button class="modal-close" onclick="closeTermsModal()">✕</button>
+    <div class="modal-title">תנאי שימוש — בנק שעות</div>
+    <div style="height:16px"></div>
+    <div class="terms-content">
+      <p style="background:rgba(58,142,246,0.06);border:1px solid rgba(58,142,246,0.18);border-radius:var(--radius-sm);padding:11px 13px;margin-bottom:14px;color:rgba(200,222,255,0.9);">
+        מסמך זה מהווה חלק בלתי נפרד מהסכם שירותים לבניה והטמעה של אוטומציות, וכפוף לכל תנאיו.
+      </p>
+
+      <h3>1. רכישה ותוקף</h3>
+      <p>הלקוח רשאי לרכוש בנק שעות עבודה מראש, כאשר מינימום הרכישה הינו 5 שעות עבודה. השעות יהיו בתוקף למשך 12 חודשים ממועד קבלת התשלום בפועל. שעות שלא נוצלו בתוך תקופה זו יפקעו אוטומטית, ולא יינתן בגינן החזר, זיכוי או העברה לשנה הבאה.</p>
+
+      <h3>2. חישוב זמן עבודה</h3>
+      <p>כל משימה, בקשה, טיפול, שינוי, בדיקה או פעולה אחרת תחויב במינימום של רבע שעה עבודה, גם אם בפועל ארכה פחות מכך. זמן העבודה כולל בין היתר אפיון, פיתוח, בדיקות, תיקונים, התאמות, תקשורת טכנית, בירורים מול מערכות צד ג׳ ותיעוד. לא יתבצע חישוב חלקי שעות או עיגול מטה.</p>
+
+      <h3>3. דיווח ניצול שעות</h3>
+      <p>הלקוח רשאי לקבל עדכון על ניצול השעות פעם בחודש. עדכון זה יימסר בתוך זמן סביר.</p>
+
+      <h3>4. זמינות וקדימות</h3>
+      <p>השירות והמענה יינתנו אך ורק בשעות הפעילות ובהתאם לתנאים המוגדרים בהסכם הראשי. רכישת בנק שירות אינה מקנה זמינות מיידית, קדימות בטיפול או התחייבות לזמני תגובה, והשעות ינוצלו לפי שיקול דעת המבצע ובהתאם לעומס העבודה במועד הבקשה. הלקוח אינו רשאי לדרוש הקצאה מיידית או שמירת שעות למועד עתידי קבוע מראש.</p>
+
+      <h3>5. ביטול והעברה</h3>
+      <p>בנק השירות אינו ניתן לביטול, החזר או העברה לצד ג׳. עם סיום בנק השירות, העבודה תיעצר אוטומטית או תימשך רק לאחר רכישת בנק שירות נוסף או אישור תשלום לפי תעריף שעתי.</p>
+
+      <h3>6. עלויות צד ג׳, רישיונות ושירותים חיצוניים</h3>
+      <p>בנק השעות אינו כולל רכישה של מוצרים, רישיונות, תוכנות, מנויים או שירותי צד ג׳ מכל סוג שהוא.</p>
+
+      <h3>7. מע"מ</h3>
+      <p>כל סכום שייגבה בגין בנק שירות הינו לפני מע"מ, ומע"מ יתווסף כחוק במועד החיוב.</p>
+
+      <h3>8. שינויי תעריף</h3>
+      <p>התעריף ותנאי בנק השירות תקפים אך ורק לבנק השירות שנרכש בפועל. המבצע רשאי לעדכן את התעריף או התנאים בכל רכישה עתידית, ללא תחולה רטרואקטיבית.</p>
+
+      <h3>9. סתירה עם ההסכם הראשי</h3>
+      <p>בכל מקרה של סתירה בין מסמך זה להסכם הראשי, יגבר האמור בהסכם הראשי.</p>
+    </div>
+    <div style="margin-top:20px">
+      <button class="btn-primary" onclick="closeTermsModal()">הבנתי ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toastMsg">הועתק ✓</span>
+</div>
+
+<script>
+let selHours = null, selPrice = 0, selLink = '', termsOk = false, toastT;
+let isSmallFlow = false; // track whether user came via #hour
+const VAT = 0.18;
+function withVat(n){ return Math.round(n * (1 + VAT)); }
+function fmt(n){ return '₪' + n.toLocaleString(); }
+
+/* ── SMALL NOTE TOGGLE ── */
+function toggleSmallNote(){
+  const exp  = document.getElementById('smallNoteExpand');
+  const chev = document.getElementById('smallNoteChev');
+  const open = exp.style.display === 'none' || exp.style.display === '';
+  exp.style.display       = open ? 'block' : 'none';
+  chev.style.transform    = open ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+
+/* ── PACKAGE SELECTION ── */
+function selectPkg(el){
+  document.querySelectorAll('.link-card').forEach(r => r.classList.remove('selected'));
+  el.classList.add('selected');
+  selHours = el.dataset.h;
+  selPrice = parseInt(el.dataset.price, 10) || 0;
+  selLink  = el.dataset.link || '';
+  openPay();
+}
+
+/* ── MODAL OPEN ── */
+function openPay(){
+  document.getElementById('modalPkgLabel').textContent = selHours + ' שעות | ' + fmt(selPrice) + ' +מע"מ';
+  document.getElementById('modalPaySub').textContent   = 'לפני מע"מ: ' + fmt(selPrice) + ' | כולל: ' + fmt(withVat(selPrice));
+  document.getElementById('bitAmt').textContent        = fmt(selPrice);
+  document.getElementById('bitAmtVat').textContent     = fmt(withVat(selPrice));
+  document.getElementById('bankAmt').textContent       = fmt(selPrice);
+  document.getElementById('bankAmtVat').textContent    = fmt(withVat(selPrice));
+  showDetailsScreen();
+  document.getElementById('overlay').classList.add('open');
+}
+
+function closePay(){
+  document.getElementById('overlay').classList.remove('open');
+  // If user came via #hour and closes the main modal, reopen small picker
+  // so they don't lose their context. Comment this out if you'd rather drop
+  // them straight onto the regular packages page.
+  if (isSmallFlow) {
+    setTimeout(() => openSmall(), 200);
+  }
+}
+
+/* ── MODAL SCREENS ── */
+function showDetailsScreen(){
+  document.getElementById('screenDetails').style.display = '';
+  document.getElementById('screenPay').style.display     = 'none';
+  checkDetails();
+}
+
+function showPayScreen(){
+  const name  = document.getElementById('fName').value.trim();
+  const id    = document.getElementById('fId').value.trim();
+  const phone = document.getElementById('fPhone').value.trim();
+  if(!name || !id || !phone){ showToast('נא למלא שם, ח.פ וטלפון'); return; }
+  if(!termsOk){ showToast('יש לאשר את תנאי השימוש'); return; }
+  document.getElementById('screenDetails').style.display = 'none';
+  document.getElementById('screenPay').style.display     = '';
+  backMethods();
+}
+
+/* ── TERMS ── */
+function toggleTerms(){
+  termsOk = !termsOk;
+  const box = document.getElementById('termsBox');
+  box.classList.toggle('on', termsOk);
+  box.innerHTML = termsOk ? '<svg width="11" height="9" viewBox="0 0 12 10" fill="none"><path d="M1 5l3 3 7-7" stroke="#060d1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
+  checkDetails();
+}
+
+function checkDetails(){
+  const ok = document.getElementById('fName').value.trim()
+           && document.getElementById('fId').value.trim()
+           && document.getElementById('fPhone').value.trim()
+           && termsOk;
+  document.getElementById('toPayBtn').disabled = !ok;
+}
+
+/* ── PAYMENT METHODS ── */
+function chooseCard(){
+  // Fire webhook (with keepalive so it survives the redirect)
+  sendWebhook('כרטיס אשראי / Grow', { status: 'הועבר לדף תשלום Grow' });
+  // Don't reopen small picker after card flow - they're leaving the page
+  isSmallFlow = false;
+  closePay();
+  // Small delay so the keepalive request has a moment to dispatch before navigation
+  setTimeout(() => { window.location.href = selLink; }, 250);
+}
+
+function showBit(){
+  document.getElementById('methodPicker').style.display = 'none';
+  document.getElementById('bankScreen').classList.remove('active');
+  document.getElementById('bitScreen').classList.add('active');
+}
+
+function showBank(){
+  document.getElementById('methodPicker').style.display = 'none';
+  document.getElementById('bitScreen').classList.remove('active');
+  document.getElementById('bankScreen').classList.add('active');
+}
+
+function backMethods(){
+  document.getElementById('methodPicker').style.display = '';
+  document.getElementById('bitScreen').classList.remove('active');
+  document.getElementById('bankScreen').classList.remove('active');
+}
+
+function confirmDone(){
+  const bitActive  = document.getElementById('bitScreen').classList.contains('active');
+  const method     = bitActive ? 'Bit' : 'העברה בנקאית';
+  const refId      = bitActive
+    ? document.getElementById('bitRef').value.trim()
+    : document.getElementById('bankRef').value.trim();
+  const hasFile    = bitActive
+    ? !!document.getElementById('bitFile').files[0]
+    : !!document.getElementById('bankFile').files[0];
+
+  sendWebhook(method, {
+    reference_number: refId,
+    has_proof_image:  hasFile,
+    status: 'ממתין לאישור'
+  });
+
+  // User is being redirected away — disable reopen-on-close
+  isSmallFlow = false;
+  closePay();
+  setTimeout(() => {
+    window.location.href = 'hours-thankyou.html?hours=' + encodeURIComponent(selHours)
+      + '&price=' + encodeURIComponent(selPrice)
+      + '&method=' + encodeURIComponent(method);
+  }, 400);
+}
+
+/* ── TERMS MODAL ── */
+function openTermsModal(){ document.getElementById('termsOverlay').classList.add('open'); }
+function closeTermsModal(){ document.getElementById('termsOverlay').classList.remove('open'); }
+
+/* ── COPY ── */
+async function cp(txt){
+  try{ await navigator.clipboard.writeText(txt); }
+  catch{
+    const ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  }
+  showToast('הועתק ✓');
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('show'), 1500);
+}
+
+/* ── CLOSE OVERLAY ON BACKDROP CLICK ── */
+document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', function(e){
+  if(e.target === this){
+    this.classList.remove('open');
+    // If small overlay was dismissed by backdrop click, treat it as a full exit
+    if(this.id === 'smallOverlay'){ isSmallFlow = false; }
+  }
+}));
+
+/* ── WEBHOOK ── */
+const WEBHOOK_URL = 'https://hook.eu1.make.com/agx6pltz9s5brwyxb6o37jk2tsnpsard';
+
+async function sendWebhook(paymentMethod, extra = {}){
+  const payload = {
+    timestamp:          new Date().toISOString(),
+    product:            'בנק שעות',
+    hours:              parseInt(selHours, 10),
+    price_before_vat:   selPrice,
+    price_with_vat:     withVat(selPrice),
+    payment_method:     paymentMethod,
+    flow:               isSmallFlow ? 'small (1-5h)' : 'standard (5h+)',
+    client_name:        document.getElementById('fName')?.value?.trim()  || '',
+    client_id:          document.getElementById('fId')?.value?.trim()    || '',
+    client_phone:       document.getElementById('fPhone')?.value?.trim() || '',
+    client_notes:       document.getElementById('fNotes')?.value?.trim() || '',
+    ...extra
+  };
+  try {
+    await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      keepalive: true   // ensure the request completes even if page navigates away
+    });
+  } catch(e){ console.warn('Webhook failed:', e); }
+}
+
+/* ── FILE / PROOF ── */
+function onFileChange(type){
+  const file  = document.getElementById(type + 'File').files[0];
+  const label = document.getElementById(type + 'UploadLabel');
+  const txt   = document.getElementById(type + 'UploadTxt');
+  if(file){
+    txt.textContent = '✅ ' + file.name;
+    label.style.borderColor = 'rgba(29,255,212,0.45)';
+    label.style.color = 'var(--accent2)';
+  }
+  checkProof(type);
+}
+
+function checkProof(type){
+  const file = document.getElementById(type + 'File').files[0];
+  const ref  = document.getElementById(type + 'Ref').value.trim();
+  document.getElementById(type + 'ConfirmBtn').disabled = !(file || ref.length >= 4);
+}
+
+/* ════════════════════════════════════════════════════════════ */
+/* ══ HIDDEN SMALL-HOURS FLOW (1–5h, accessed via #hour)     ══ */
+/* ════════════════════════════════════════════════════════════ */
+function openSmall(){
+  isSmallFlow = true;
+  document.getElementById('smallOverlay').classList.add('open');
+}
+
+function closeSmall(){
+  document.getElementById('smallOverlay').classList.remove('open');
+  isSmallFlow = false;
+}
+
+function selectSmallPkg(el){
+  // Mark we're in the small flow, close the picker, then reuse standard flow
+  isSmallFlow = true;
+  document.getElementById('smallOverlay').classList.remove('open');
+  // brief delay so the close animation isn't visually fighting the open
+  setTimeout(() => selectPkg(el), 180);
+}
+
+/* Auto-open when URL hash matches */
+function maybeOpenSmall(){
+  const h = (location.hash || '').toLowerCase();
+  if (h === '#hour' || h === '#/hour' || h === '#hours' || h === '#small') {
+    openSmall();
+  }
+}
+window.addEventListener('DOMContentLoaded', maybeOpenSmall);
+window.addEventListener('hashchange', maybeOpenSmall);
+</script>
 </body>
 </html>
