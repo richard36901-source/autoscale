@@ -54,8 +54,6 @@
     input::placeholder { color: rgba(255,255,255,0.22); }
     input:focus { border-color: rgba(91,156,255,0.44); background: rgba(91,156,255,0.06); }
 
-
-
     .btn { width: 100%; margin-top: 24px; background: #1A73E8; border: none;
       border-radius: 14px; padding: 17px; font-size: 17px; font-weight: 600;
       color: #fff; cursor: pointer; font-family: inherit;
@@ -87,13 +85,11 @@
       <h1>חוו <span>אוטומציה</span><br>עכשיו</h1>
       <p class="sub">מלאו שם ומספר טלפון.<br>ראו מה קורה תוך 30 שניות.</p>
 
-      <!-- 1. שם פרטי -->
       <div class="field">
         <label>שם פרטי</label>
         <input type="text" id="firstName" placeholder="הכניסו את שמכם"
                autocomplete="given-name" inputmode="text">
       </div>
-
 
       <div class="field">
         <label>מספר טלפון</label>
@@ -125,10 +121,10 @@
       btn.disabled = true; btn.textContent = 'שולח...';
 
       const payload = {
-        timestamp:    new Date().toISOString(),
-        Type:         'אחרי שיחה',
-        client_name:  name,
-        client_phone: phone,
+        timestamp: new Date().toISOString(),
+        type:      'אחרי שיחה',
+        name:      name,
+        phone:     phone,
       };
 
       try {
