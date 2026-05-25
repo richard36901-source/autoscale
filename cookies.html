@@ -1,46 +1,591 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>מדיניות עוגיות — autoscale</title>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060d1a">
+<meta name="description" content="מדיניות Cookies של AutoScale">
+<meta name="robots" content="index, follow">
+<title>מדיניות Cookies · AutoScale</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="portfolio-images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="portfolio-images/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="portfolio-images/favicon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
-:root{--bg:#080809;--gold:#c9a84c;--text:#f0eff5;--muted:#6e6d7a;--muted2:#9998a8;--border:rgba(201,168,76,.12);--sans:'Heebo',sans-serif}
-*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.7;direction:rtl}
-.container{max-width:760px;margin:0 auto;padding:40px 24px 80px}
-.back{display:inline-flex;align-items:center;gap:6px;color:var(--gold);font-size:13px;margin-bottom:32px;text-decoration:none}
-h1{font-size:32px;font-weight:700;margin-bottom:8px}
-.meta{font-size:12px;color:var(--muted);font-family:monospace;margin-bottom:40px}
-h2{font-size:18px;font-weight:600;margin-top:36px;margin-bottom:10px;color:var(--gold)}
-p{color:var(--muted2);margin-bottom:14px}
-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
-th{text-align:right;padding:8px 12px;background:#141418;color:var(--muted2);border:.5px solid var(--border)}
-td{padding:8px 12px;border:.5px solid var(--border);color:var(--muted2)}
+:root{
+  --bg:#060d1a;--bg2:#091222;--bg3:#0c1a30;
+  --glass:rgba(12,26,56,.55);--glass2:rgba(12,26,56,.35);
+  --border:rgba(80,140,255,.13);--border2:rgba(80,140,255,.28);--borders:rgba(80,140,255,.07);
+  --text:#e8f0ff;--muted:#6a85b6;--muted2:#4a6090;
+  --accent:#3a8ef6;--accent2:#1dffd4;--green:#25D366;--warn:#ffb347;--danger:#ef4444;
+  --r:18px;--rs:12px;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --sans:'Sora',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;direction:rtl;font-size:15px;line-height:1.75;font-weight:300}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80vw 55vh at 10% -5%,rgba(30,90,220,.22) 0%,transparent 65%),radial-gradient(ellipse 60vw 40vh at 90% 10%,rgba(0,200,180,.10) 0%,transparent 60%),radial-gradient(ellipse 100vw 30vh at 50% 100%,rgba(10,30,80,.5) 0%,transparent 70%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(58,142,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(58,142,246,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 24px;background:rgba(6,13,26,.93);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.ni{max-width:1180px;margin:0 auto;height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.nl{display:flex;align-items:center;gap:11px;text-decoration:none}
+.nb{font-size:18px;font-weight:700;letter-spacing:-.3px;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nbtn-portal{padding:9px 18px;font-size:12.5px;border-radius:999px;background:rgba(58,142,246,.08);border:1px solid var(--border2);color:var(--text);text-decoration:none;font-weight:600;letter-spacing:.2px;transition:all .15s;white-space:nowrap}
+.nbtn-portal:hover{background:rgba(58,142,246,.16);border-color:var(--accent)}
+
+/* HERO */
+.hero{padding:130px 0 50px}
+.kicker{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);opacity:.9;margin-bottom:12px;display:block}
+.h1{font-size:clamp(34px,5vw,52px);font-weight:700;line-height:1.1;letter-spacing:-.025em;margin-bottom:14px}
+.h1 .grad{background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hsub{font-size:16px;color:var(--muted);max-width:680px;line-height:1.7;font-weight:300;margin-bottom:18px}
+.eff{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--muted2);padding:6px 14px;border:1px solid var(--border);border-radius:999px;background:rgba(58,142,246,.04);letter-spacing:.04em}
+.eff::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 10px rgba(29,255,212,.6)}
+
+/* MAIN GRID */
+.grid{display:grid;grid-template-columns:240px 1fr;gap:36px;padding-bottom:80px;padding-top:24px}
+@media(max-width:880px){.grid{grid-template-columns:1fr;gap:18px}}
+
+/* TOC */
+.toc{position:sticky;top:96px;align-self:start;max-height:calc(100dvh - 120px);overflow-y:auto;padding:22px 18px;background:var(--glass2);border:1px solid var(--borders);border-radius:18px;backdrop-filter:blur(8px)}
+.toc-title{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent2);margin-bottom:14px;opacity:.9}
+.toc ol{list-style:none;counter-reset:tocnum;display:flex;flex-direction:column;gap:2px}
+.toc li{counter-increment:tocnum}
+.toc a{display:block;padding:8px 10px;border-radius:8px;font-size:12.5px;color:var(--muted);text-decoration:none;transition:all .15s;line-height:1.45;font-weight:400;position:relative;padding-right:30px}
+.toc a::before{content:counter(tocnum,decimal-leading-zero);position:absolute;right:10px;top:9px;font-family:var(--mono);font-size:10px;color:var(--muted2);font-weight:500}
+.toc a:hover{background:rgba(58,142,246,.08);color:var(--text)}
+.toc a.active{background:rgba(29,255,212,.07);color:var(--accent2)}
+.toc a.active::before{color:var(--accent2)}
+@media(max-width:880px){.toc{position:relative;top:0;max-height:none;display:none}.toc.mobile-open{display:block}}
+.toc-mobile-toggle{display:none;width:100%;padding:14px 18px;background:var(--glass2);border:1px solid var(--border);border-radius:14px;color:var(--text);font-family:var(--sans);font-size:13.5px;font-weight:600;text-align:right;direction:rtl;cursor:pointer;backdrop-filter:blur(8px)}
+@media(max-width:880px){.toc-mobile-toggle{display:flex;align-items:center;justify-content:space-between}}
+
+/* CONTENT */
+.content{min-width:0}
+.sec{margin-bottom:42px;scroll-margin-top:90px}
+.sec h2{font-size:24px;font-weight:700;letter-spacing:-.015em;margin-bottom:14px;display:flex;align-items:center;gap:12px;color:var(--text);line-height:1.25}
+.sec h2 .num{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--accent);opacity:.7;letter-spacing:.02em}
+.sec h3{font-size:16.5px;font-weight:600;margin:22px 0 8px;color:var(--text)}
+.sec p{font-size:14.5px;color:var(--muted);line-height:1.75;margin-bottom:11px;font-weight:300}
+.sec p strong{color:var(--text);font-weight:600}
+.sec ul,.sec ol{padding-right:20px;margin:8px 0 14px}
+.sec li{font-size:14.5px;color:var(--muted);line-height:1.75;margin-bottom:7px;font-weight:300;padding-right:6px}
+.sec li strong{color:var(--text);font-weight:600}
+.sec a{color:var(--accent2);text-decoration:none;border-bottom:1px dotted rgba(29,255,212,.4);transition:border-color .15s}
+.sec a:hover{border-bottom-color:var(--accent2)}
+
+/* CALLOUT BOX */
+.callout{margin:16px 0;padding:16px 18px;background:rgba(58,142,246,.06);border:1px solid rgba(58,142,246,.2);border-radius:14px}
+.callout p{margin-bottom:0;font-size:13.5px}
+.callout-warn{background:rgba(246,168,58,.06);border-color:rgba(246,168,58,.22)}
+.callout-warn p{color:rgba(246,168,58,.9)}
+.callout strong{color:var(--text)}
+
+/* COOKIE CATEGORY BADGES */
+.cat-pills{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 20px}
+.cat-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;border:1px solid var(--border)}
+.cat-pill .dot{width:7px;height:7px;border-radius:50%}
+.cat-pill.essential{color:var(--accent2);background:rgba(29,255,212,.06)}
+.cat-pill.essential .dot{background:var(--accent2)}
+.cat-pill.functional{color:var(--accent);background:rgba(58,142,246,.06)}
+.cat-pill.functional .dot{background:var(--accent)}
+.cat-pill.analytics{color:var(--warn);background:rgba(246,168,58,.06)}
+.cat-pill.analytics .dot{background:var(--warn)}
+.cat-pill.marketing{color:#ff6b9d;background:rgba(255,107,157,.06);border-color:rgba(255,107,157,.2)}
+.cat-pill.marketing .dot{background:#ff6b9d}
+
+/* TABLES */
+.dtable{width:100%;border-collapse:collapse;margin:14px 0;background:rgba(58,142,246,.03);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.dtable th,.dtable td{padding:12px 16px;text-align:right;font-size:13.5px;border-bottom:1px solid var(--borders)}
+.dtable th{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent2);font-weight:700;background:rgba(58,142,246,.05);text-align:right}
+.dtable td{color:var(--muted);font-weight:300;line-height:1.65;vertical-align:top}
+.dtable td strong{color:var(--text);font-weight:500}
+.dtable td code{font-family:var(--mono);font-size:12px;color:var(--accent2);background:rgba(29,255,212,.06);padding:2px 7px;border-radius:5px;letter-spacing:.02em;direction:ltr;unicode-bidi:embed;display:inline-block}
+.dtable tr:last-child td{border-bottom:none}
+
+/* Wide cookie table - horizontal scroll on mobile */
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:14px;border:1px solid var(--border)}
+.scroll-x .dtable{margin:0;border:none;border-radius:0;min-width:680px}
+.scroll-x::-webkit-scrollbar{height:6px}
+.scroll-x::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:36px 24px}
+.fi2{max-width:1100px;margin:0 auto;text-align:center}
+.fb{font-size:18px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.3px}
+.ftag{font-size:12px;color:var(--muted2);font-family:var(--mono);font-weight:400;margin-top:4px;letter-spacing:.04em}
+.fcopy{font-size:11px;color:var(--muted2);font-family:var(--mono);font-weight:400;margin-top:14px;letter-spacing:.04em}
+.flinks{display:flex;gap:18px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.flinks a{font-size:12px;color:var(--muted);text-decoration:none;transition:color .15s}
+.flinks a:hover{color:var(--accent2)}
+
+/* PRINT */
+@media print{
+  body{background:#fff;color:#000;font-size:12pt}
+  body::before,body::after{display:none}
+  nav,.toc,.toc-mobile-toggle,footer{display:none}
+  .grid{grid-template-columns:1fr}
+  .hero{padding:20px 0}
+  .h1{color:#000}
+  .h1 .grad{-webkit-text-fill-color:#000;color:#000;background:none}
+  .sec h2{color:#000;page-break-after:avoid}
+  .sec p,.sec li{color:#222}
+  .sec a{color:#0066cc}
+  .callout{background:#f5f5f5;border:1px solid #ccc}
+  .callout-warn{background:#fffbe6;border-color:#e0c060}
+  .dtable{background:#fff;border:1px solid #999}
+  .dtable th{background:#eee;color:#000}
+  .dtable td{color:#222}
+  .dtable td code{background:#f0f0f0;color:#000}
+  .cat-pill{border:1px solid #999;background:#fff;color:#000}
+  .scroll-x{overflow:visible}
+  .scroll-x .dtable{min-width:0}
+}
 </style>
 </head>
 <body>
-<div class="container">
-<a href="index.html" class="back">← חזרה לאתר</a>
-<h1>מדיניות עוגיות</h1>
-<div class="meta">עדכון אחרון: ינואר 2025 · autoscale</div>
-<p>אתר autoscale משתמש בעוגיות (cookies) כדי לשפר את חוויית הגלישה. דף זה מסביר אילו עוגיות אנו משתמשים ולמה.</p>
 
-<h2>מהן עוגיות?</h2>
-<p>עוגיות הן קבצי טקסט קטנים שנשמרים בדפדפן שלכם כשאתם מבקרים באתר. הן מסייעות לאתר לזכור את ההעדפות שלכם ולשפר את הפונקציונליות.</p>
+<!-- NAV -->
+<nav>
+  <div class="ni">
+    <a href="index.html" class="nl">
+      <span class="nb">AutoScale</span>
+    </a>
+    <a href="index.html" class="nbtn-portal">← חזרה לאתר</a>
+  </div>
+</nav>
 
-<h2>העוגיות שאנו משתמשים בהן</h2>
-<table>
-<tr><th>שם</th><th>סוג</th><th>מטרה</th><th>תפוגה</th></tr>
-<tr><td>as_cookies</td><td>הכרחית</td><td>שמירת הסכמה לעוגיות</td><td>שנה</td></tr>
-<tr><td>_ga, _gid</td><td>אנליטיקה</td><td>Google Analytics — סטטיסטיקות גלישה</td><td>2 שנים / יום</td></tr>
-<tr><td>_fbp</td><td>שיווקית</td><td>Meta Pixel — מעקב המרות</td><td>90 יום</td></tr>
-</table>
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <span class="kicker">מסמך משפטי</span>
+    <h1 class="h1">מדיניות <span class="grad">Cookies</span></h1>
+    <p class="hsub">המסמך מתאר את השימוש שלנו ב-Cookies וטכנולוגיות מעקב באתר, פירוט סוגי ה-Cookies, מטרותיהם, משך הזמן שהם נשמרים אצלך, ואיך לנהל את ההסכמה שלך אליהם.</p>
+    <span class="eff">תאריך עדכון: מאי 2026</span>
+  </div>
+</section>
 
-<h2>ניהול עוגיות</h2>
-<p>ניתן לבטל עוגיות בהגדרות הדפדפן שלכם. שימו לב שביטול עוגיות מסוימות עלול לפגוע בפונקציונליות האתר.</p>
+<!-- MAIN CONTENT -->
+<div class="wrap">
+  <button class="toc-mobile-toggle" onclick="document.querySelector('.toc').classList.toggle('mobile-open');this.querySelector('span').textContent=document.querySelector('.toc').classList.contains('mobile-open')?'הסתר תוכן עניינים ▲':'תוכן עניינים ▼'">
+    <span>תוכן עניינים ▼</span>
+  </button>
 
-<h2>יצירת קשר</h2>
-<p>לשאלות: support@digitalonline.co.il</p>
+  <div class="grid">
+    <!-- TOC -->
+    <aside class="toc">
+      <div class="toc-title">תוכן עניינים</div>
+      <ol>
+        <li><a href="#s1">הקדמה</a></li>
+        <li><a href="#s2">מה זה Cookies</a></li>
+        <li><a href="#s3">למה אנו משתמשים</a></li>
+        <li><a href="#s4">סיווג לפי משך ומקור</a></li>
+        <li><a href="#s5">סיווג לפי מטרה</a></li>
+        <li><a href="#s6">רשימה מפורטת</a></li>
+        <li><a href="#s7">שירותי צד שלישי</a></li>
+        <li><a href="#s8">ניהול הסכמה באתר</a></li>
+        <li><a href="#s9">ניהול דרך הדפדפן</a></li>
+        <li><a href="#s10">השלכות חסימה</a></li>
+        <li><a href="#s11">שינויים במדיניות</a></li>
+        <li><a href="#s12">קשר ויצירת קשר</a></li>
+      </ol>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="content">
+
+      <!-- 1 -->
+      <section class="sec" id="s1">
+        <h2><span class="num">01</span>הקדמה</h2>
+        <p>מדיניות Cookies זו (להלן: "מדיניות זו") הינה חלק בלתי נפרד מ<a href="privacy.html">מדיניות הפרטיות</a> של AutoScale, ומתארת בפירוט נוסף את השימוש שלנו ב-Cookies ובטכנולוגיות מעקב דומות באתר <a href="https://autoscalehq.io" target="_blank" rel="noopener">autoscalehq.io</a> (להלן: "האתר") ובשירותים שאנו מספקים.</p>
+        <p>מדיניות זו תקפה ביחס לכל מבקר באתר, בין אם הוא לקוח קיים, ליד פוטנציאלי, שותף עסקי, או גולש מזדמן.</p>
+        <p>המדיניות נכתבה בלשון זכר מטעמי נוחות בלבד, ומיועדת לכל המגדרים באופן שווה.</p>
+        <p><strong>שימוש באתר ומסירת הסכמה דרך באנר ה-Cookies מהווים הסכמתך להוראות מדיניות זו</strong>, בכפוף לבחירותיך במנגנון ההסכמה. אם אינך מסכים, אנא הימנע משימוש באתר או הגדר את הדפדפן שלך לחסום Cookies.</p>
+        <p>מדיניות זו פועלת בכפוף ובהתאם לחוק הגנת הפרטיות, התשמ"א-1981 (להלן: "החוק") על תיקוניו, ובכלל זאת תיקון מס' 13 לחוק שהרחיב משמעותית את סמכויות האכיפה של הרשות להגנת הפרטיות, לרבות הסמכות להטיל עיצומים כספיים מהותיים.</p>
+        <p>חוק הגנת הפרטיות בישראל אינו כולל כיום הוראות יעודיות ייחודיות לעוגיות (Cookies), אך עקרון ההסכמה הקבוע בחוק חל על כל איסוף ועיבוד של מידע אישי, לרבות באמצעות Cookies. בהתאם להמלצות הרשות להגנת הפרטיות ולפרקטיקה הבינלאומית המקובלת (ובפרט הרגולציה האירופית), אנו פועלים לפי גישת ההסכמה האקטיבית (opt-in) ביחס ל-Cookies שאינם הכרחיים, ומאפשרים לך לסרב להם בכל עת.</p>
+      </section>
+
+      <!-- 2 -->
+      <section class="sec" id="s2">
+        <h2><span class="num">02</span>מה זה Cookies</h2>
+        <p><strong>Cookies</strong> הם קבצי טקסט קטנים שאתר אינטרנט שולח לדפדפן שלך, ושנשמרים על המכשיר שלך (מחשב, טאבלט, סמארטפון). כאשר אתה חוזר לאתר, הדפדפן שולח את ה-Cookies חזרה לשרת, מה שמאפשר לאתר לזהות אותך ולשמור על העדפותיך.</p>
+        <p>בנוסף ל-Cookies קלאסיים, אנו עשויים להשתמש בטכנולוגיות מעקב מקבילות, ביניהן:</p>
+        <ul>
+          <li><strong>Local Storage ו-Session Storage</strong>: שטחי אחסון בדפדפן בעלי קיבולת גדולה יותר מ-Cookies רגילים. בשימוש לדוגמה לשמירת בחירת ההסכמה שלך לאיסוף Cookies.</li>
+          <li><strong>Pixels (פיקסלים)</strong>: תמונות זעירות ולעיתים בלתי נראות הנטענות בדף, המעבירות מידע סטטיסטי על הצפייה לשרתי צד שלישי (לדוגמה: Meta Pixel).</li>
+          <li><strong>Web Beacons</strong>: רכיבים דומים לפיקסלים המשמשים למעקב פתיחת אימייל או לחיצה על קישור.</li>
+          <li><strong>Tags (תגיות)</strong>: סקריפטים שמוטענים על ידי מערכת ניהול תגיות (לדוגמה: Google Tag Manager) להפעלת שירותי מעקב ואנליטיקה.</li>
+        </ul>
+        <p>למען הפשטות, בכל מקום במסמך זה שנכתב "Cookies", הכוונה גם לטכנולוגיות המעקב הדומות המפורטות לעיל.</p>
+      </section>
+
+      <!-- 3 -->
+      <section class="sec" id="s3">
+        <h2><span class="num">03</span>למה אנחנו משתמשים ב-Cookies</h2>
+        <p>אנו עושים שימוש ב-Cookies למטרות הבאות:</p>
+        <ul>
+          <li><strong>הפעלה תקינה של האתר</strong>: שמירת בחירותיך במנגנון ההסכמה, אבטחה בסיסית, ניהול סשן.</li>
+          <li><strong>שיפור חוויית המשתמש</strong>: שמירת העדפות, זכירת מילוי טפסים, התאמה אישית בסיסית.</li>
+          <li><strong>ניתוח ושיפור</strong>: הבנה כיצד מבקרים משתמשים באתר, אילו דפים פופולריים, מאיזה ערוץ הם הגיעו, היכן יש נקודות חיכוך. המידע משמש לשיפור מתמיד.</li>
+          <li><strong>שיווק ופרסום</strong>: מדידת אפקטיביות של קמפיינים ממומנים, פרסום מותאם אישית (retargeting), מעקב המרות.</li>
+          <li><strong>קשר עם שירותים חיצוניים</strong>: שילוב של שירותי צד שלישי כמו תיאום פגישות (Cal.com), שיחה ב-WhatsApp, ועוד.</li>
+        </ul>
+      </section>
+
+      <!-- 4 -->
+      <section class="sec" id="s4">
+        <h2><span class="num">04</span>סיווג Cookies לפי משך ומקור</h2>
+
+        <h3>4.1 לפי משך זמן</h3>
+        <ul>
+          <li><strong>Cookies זמניים (Session)</strong>: נמחקים אוטומטית כאשר אתה סוגר את הדפדפן. משמשים לתפעול בסיסי במהלך הביקור.</li>
+          <li><strong>Cookies קבועים (Persistent)</strong>: נשמרים על המכשיר שלך לפרק זמן מוגדר מראש (לרוב בין כמה דקות לכמה שנים), עד שהם פגים או עד שאתה מוחק אותם ידנית.</li>
+        </ul>
+
+        <h3>4.2 לפי מקור</h3>
+        <ul>
+          <li><strong>Cookies של צד ראשון (First-party)</strong>: מוטמעים על ידי AutoScale ישירות מהדומיין autoscalehq.io. בעיקר משמשים להפעלת האתר ולזכירת בחירותיך.</li>
+          <li><strong>Cookies של צד שלישי (Third-party)</strong>: מוטמעים על ידי שירותים חיצוניים שאנו עובדים איתם (כמו Google, Meta, Cloudflare). הם פועלים תחת מדיניות הפרטיות של הספק עצמו, בנוסף למדיניות זו.</li>
+        </ul>
+      </section>
+
+      <!-- 5 -->
+      <section class="sec" id="s5">
+        <h2><span class="num">05</span>סיווג Cookies לפי מטרה (4 קטגוריות)</h2>
+        <p>אנו מסווגים את ה-Cookies שלנו לפי מטרתם, לארבע קטגוריות עיקריות. הסיווג מבוסס על העמדות המקובלות של הרשות להגנת הפרטיות בישראל ועל הסטנדרט הבינלאומי המקובל.</p>
+
+        <div class="cat-pills">
+          <span class="cat-pill essential"><span class="dot"></span>הכרחיים</span>
+          <span class="cat-pill functional"><span class="dot"></span>תפקודיים</span>
+          <span class="cat-pill analytics"><span class="dot"></span>אנליטיקה</span>
+          <span class="cat-pill marketing"><span class="dot"></span>שיווק</span>
+        </div>
+
+        <h3>5.1 הכרחיים (Strictly Necessary)</h3>
+        <p>Cookies הנדרשים להפעלה הבסיסית של האתר ולתפקודים שאתה ביקשת במפורש (כמו שמירת בחירת ההסכמה שלך). ללא Cookies אלה האתר לא יכול לעבוד תקין. <strong>אינם דורשים הסכמה</strong>, ובדרך כלל לא ניתן לבטלם.</p>
+
+        <h3>5.2 תפקודיים (Functional)</h3>
+        <p>Cookies המאפשרים פונקציונליות מתקדמת יותר (כמו שמירת שפה, התאמה אישית של תוכן, זכירת מילוי טפסים). לא הכרחיים, אבל משפרים את חוויית המשתמש. דורשים <strong>הסכמה משתמעת</strong>.</p>
+
+        <h3>5.3 אנליטיקה (Analytics)</h3>
+        <p>Cookies המודדים את התנהגות המשתמשים באתר באופן מצרפי וסטטיסטי (לדוגמה: כמה אנשים ביקרו, מאילו דפים יצאו, איך הגיעו לאתר). משמשים לשיפור האתר. דורשים <strong>הסכמה מפורשת</strong>.</p>
+
+        <h3>5.4 שיווק (Marketing & Advertising)</h3>
+        <p>Cookies המשמשים לפרסום מותאם אישית, מעקב המרות, ו-retargeting (הצגת פרסומות לאחר ביקור באתר). דורשים <strong>הסכמה מפורשת</strong>.</p>
+      </section>
+
+      <!-- 6 -->
+      <section class="sec" id="s6">
+        <h2><span class="num">06</span>רשימה מפורטת של Cookies שעשויים להיות בשימוש</h2>
+        <p>הטבלה שלהלן מפרטת את ה-Cookies העיקריים העשויים להיות מוטמעים באתר. שים לב שלא כל ה-Cookies פעילים תמיד; חלקם נטענים רק אם הסכמת לכך במנגנון ההסכמה, וחלקם נטענים רק כאשר אתה משתמש בתכונה ספציפית (לדוגמה, פתיחת חלון תיאום פגישה).</p>
+
+        <h3>6.1 הכרחיים</h3>
+        <div class="scroll-x">
+          <table class="dtable">
+            <thead>
+              <tr><th>שם</th><th>ספק</th><th>מטרה</th><th>משך</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>as_ck</code></td>
+                <td>AutoScale</td>
+                <td>שמירת בחירת ההסכמה שלך ל-Cookies (accepted / declined). נשמר ב-localStorage.</td>
+                <td>קבוע, עד מחיקה ידנית</td>
+              </tr>
+              <tr>
+                <td><code>as_ck_date</code></td>
+                <td>AutoScale</td>
+                <td>תיעוד התאריך והשעה של מתן הסכמתך. נשמר ב-localStorage.</td>
+                <td>קבוע, עד מחיקה ידנית</td>
+              </tr>
+              <tr>
+                <td><code>__cf_bm</code> / <code>cf_clearance</code></td>
+                <td>Cloudflare</td>
+                <td>אבטחה בסיסית, זיהוי בוטים, הגנה מפני התקפות.</td>
+                <td>עד 30 ימים</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>6.2 אנליטיקה</h3>
+        <div class="scroll-x">
+          <table class="dtable">
+            <thead>
+              <tr><th>שם</th><th>ספק</th><th>מטרה</th><th>משך</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>_ga</code></td>
+                <td>Google Analytics</td>
+                <td>מזהה ייחודי לכל משתמש, לחישוב סטטיסטיקות שימוש מצרפיות.</td>
+                <td>2 שנים</td>
+              </tr>
+              <tr>
+                <td><code>_ga_*</code></td>
+                <td>Google Analytics</td>
+                <td>שמירת סטטוס סשן עבור מאפיין ספציפי.</td>
+                <td>2 שנים</td>
+              </tr>
+              <tr>
+                <td><code>_gid</code></td>
+                <td>Google Analytics</td>
+                <td>מזהה משתמש לטווח קצר.</td>
+                <td>24 שעות</td>
+              </tr>
+              <tr>
+                <td><code>_gat</code></td>
+                <td>Google Analytics</td>
+                <td>הגבלת קצב בקשות (rate limiting).</td>
+                <td>דקה</td>
+              </tr>
+              <tr>
+                <td><code>_hjSession*</code></td>
+                <td>Hotjar</td>
+                <td>זיהוי סשן לצורך ניתוח התנהגות (heatmaps, recordings) - אם השירות פעיל.</td>
+                <td>30 דקות</td>
+              </tr>
+              <tr>
+                <td><code>_hjSessionUser*</code></td>
+                <td>Hotjar</td>
+                <td>זיהוי משתמש בין סשנים - אם השירות פעיל.</td>
+                <td>שנה</td>
+              </tr>
+              <tr>
+                <td><code>_clck</code></td>
+                <td>Microsoft Clarity</td>
+                <td>מזהה משתמש לצורך ניתוח התנהגות - אם השירות פעיל.</td>
+                <td>שנה</td>
+              </tr>
+              <tr>
+                <td><code>_clsk</code></td>
+                <td>Microsoft Clarity</td>
+                <td>נתוני סשן ופעולות - אם השירות פעיל.</td>
+                <td>יום</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>6.3 שיווק ופרסום</h3>
+        <div class="scroll-x">
+          <table class="dtable">
+            <thead>
+              <tr><th>שם</th><th>ספק</th><th>מטרה</th><th>משך</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>_fbp</code></td>
+                <td>Meta (Facebook Pixel)</td>
+                <td>זיהוי דפדפן לצורך מעקב המרות ו-retargeting בקמפיינים של Meta.</td>
+                <td>90 ימים</td>
+              </tr>
+              <tr>
+                <td><code>_fbc</code></td>
+                <td>Meta (Facebook Pixel)</td>
+                <td>מעקב לחיצות על מודעות שהובילו לאתר.</td>
+                <td>90 ימים</td>
+              </tr>
+              <tr>
+                <td><code>_gcl_au</code></td>
+                <td>Google Ads / Tag Manager</td>
+                <td>Conversion linker, קישור בין לחיצה על מודעה להמרה באתר.</td>
+                <td>90 ימים</td>
+              </tr>
+              <tr>
+                <td>תגיות וסקריפטים</td>
+                <td>Google Tag Manager</td>
+                <td>תשתית לטעינת תגיות מעקב אחרות. אינו מטמיע Cookies בעצמו, אך מנהל את הטעינה של אחרים.</td>
+                <td>תלוי בתגיות</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <p>📌 <strong>חשוב לדעת:</strong> רשימה זו אינה ממצה ועשויה להתעדכן מעת לעת. שירותי צד שלישי עשויים לעדכן את שמות ה-Cookies שלהם או להוסיף חדשים מבלי שניידע אותך מראש. לעיון בנתונים הספציפיים הקיימים אצלך כרגע, ניתן להשתמש בכלי בקרת Cookies של הדפדפן.</p>
+        </div>
+      </section>
+
+      <!-- 7 -->
+      <section class="sec" id="s7">
+        <h2><span class="num">07</span>שירותי צד שלישי וקישורים למדיניות שלהם</h2>
+        <p>חלק מה-Cookies מוטמעים על ידי שירותי צד שלישי שאנו עושים בהם שימוש. הם פועלים בכפוף למדיניות הפרטיות שלהם, ואנו ממליצים לעיין במדיניות זו. הספקים העיקריים:</p>
+        <div class="scroll-x">
+          <table class="dtable">
+            <thead>
+              <tr><th>ספק</th><th>שימוש</th><th>מדיניות פרטיות</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Google</strong></td>
+                <td>Analytics, Tag Manager, Ads, Fonts, Calendar, Drive</td>
+                <td><a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a></td>
+              </tr>
+              <tr>
+                <td><strong>Meta</strong></td>
+                <td>Facebook Pixel, Instagram Pixel, WhatsApp Business API</td>
+                <td><a href="https://www.facebook.com/privacy/policy" target="_blank" rel="noopener">facebook.com/privacy/policy</a></td>
+              </tr>
+              <tr>
+                <td><strong>Cloudflare</strong></td>
+                <td>הגנת DDoS, CDN, אבטחה</td>
+                <td><a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">cloudflare.com/privacypolicy</a></td>
+              </tr>
+              <tr>
+                <td><strong>Cal.com</strong></td>
+                <td>תיאום פגישות (נטען כ-iframe בעת לחיצה על "קביעת שיחה")</td>
+                <td><a href="https://cal.com/privacy" target="_blank" rel="noopener">cal.com/privacy</a></td>
+              </tr>
+              <tr>
+                <td><strong>GitHub</strong></td>
+                <td>אחסון האתר באמצעות GitHub Pages</td>
+                <td><a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">github.com/privacy</a></td>
+              </tr>
+              <tr>
+                <td><strong>Microsoft</strong></td>
+                <td>Clarity (ניתוח התנהגות) - אם השירות פעיל</td>
+                <td><a href="https://privacy.microsoft.com/en-us/privacystatement" target="_blank" rel="noopener">privacy.microsoft.com</a></td>
+              </tr>
+              <tr>
+                <td><strong>Hotjar</strong></td>
+                <td>Heatmaps והקלטות סשנים - אם השירות פעיל</td>
+                <td><a href="https://www.hotjar.com/legal/policies/privacy/" target="_blank" rel="noopener">hotjar.com/legal/policies/privacy</a></td>
+              </tr>
+              <tr>
+                <td><strong>Grow</strong></td>
+                <td>סליקת תשלומים (בדפי תשלום בלבד)</td>
+                <td><a href="https://grow.link/privacy" target="_blank" rel="noopener">grow.link/privacy</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>שים לב: ייתכן ושירותים נוספים יתווספו או יוסרו מהאתר מעת לעת, ללא עדכון מיידי של רשימה זו. במקרה של שאלה ספציפית, ניתן ליצור איתנו קשר.</p>
+        <div class="callout">
+          <p>💳 <strong>הבהרה לגבי תהליך תשלום:</strong> כאשר אתה לוחץ על כפתור תשלום באתר, אתה מועבר לדף תשלום של ספק הסליקה (Grow) או לאפליקציית Bit. מרגע המעבר, אתה נמצא בשליטת מערכת חיצונית, ולא של AutoScale. ה-Cookies, איסוף המידע ואבטחת הנתונים בדף התשלום כפופים למדיניות של אותו ספק. אנו ממליצים לעיין במדיניות שלהם לפני ביצוע התשלום.</p>
+        </div>
+      </section>
+
+      <!-- 8 -->
+      <section class="sec" id="s8">
+        <h2><span class="num">08</span>ניהול הסכמה באתר</h2>
+        <p>בעת ביקור ראשון באתר, מוצגת לך הודעת Cookies בתחתית המסך עם שני כפתורים:</p>
+        <ul>
+          <li><strong>"אשר הכל"</strong>: כל ה-Cookies, לרבות אנליטיקה ושיווק, יוטענו ויפעלו.</li>
+          <li><strong>"דחה"</strong>: רק Cookies הכרחיים יפעלו. אנו לא נטען סקריפטי אנליטיקה ושיווק, ובנוסף נפעל למחוק Cookies מעקב קיימים בדפדפן שלך (לדוגמה: <code>_ga</code>, <code>_fbp</code>, <code>_gcl_au</code>, <code>_hjSession</code>, <code>_clck</code>, <code>_clsk</code>).</li>
+        </ul>
+        <p>בחירתך נשמרת בדפדפן שלך באמצעות מנגנון <code>localStorage</code> (תחת המפתחות <code>as_ck</code> ו-<code>as_ck_date</code>) ולא מועברת לשרת. כל עוד הבחירה שמורה, הבאנר לא יוצג שוב.</p>
+        <p>אם אתה רוצה לשנות את בחירתך, באפשרותך:</p>
+        <ul>
+          <li>למחוק את ה-localStorage של האתר דרך הגדרות הדפדפן (פעולה זו תגרום להופעת הבאנר מחדש בביקור הבא)</li>
+          <li>לפנות אלינו דרך פרטי הקשר בסעיף 12 ולבקש את ביטול ההסכמה</li>
+        </ul>
+      </section>
+
+      <!-- 9 -->
+      <section class="sec" id="s9">
+        <h2><span class="num">09</span>ניהול Cookies דרך הדפדפן</h2>
+        <p>בנוסף למנגנון ההסכמה באתר, כל דפדפן מודרני מאפשר לך לנהל את ה-Cookies ישירות: לראות אילו Cookies שמורים, למחוק אותם, לחסום באופן סלקטיבי, או לחסום הכל. הקישורים להוראות הספציפיות:</p>
+        <ul>
+          <li><strong>Google Chrome</strong>: <a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener">support.google.com/chrome/answer/95647</a></li>
+          <li><strong>Mozilla Firefox</strong>: <a href="https://support.mozilla.org/he/kb/cookies-information-websites-store-on-your-computer" target="_blank" rel="noopener">support.mozilla.org</a></li>
+          <li><strong>Safari (Mac)</strong>: <a href="https://support.apple.com/he-il/guide/safari/sfri11471/mac" target="_blank" rel="noopener">support.apple.com/he-il/guide/safari</a></li>
+          <li><strong>Safari (iPhone / iPad)</strong>: <a href="https://support.apple.com/he-il/HT201265" target="_blank" rel="noopener">support.apple.com/he-il/HT201265</a></li>
+          <li><strong>Microsoft Edge</strong>: <a href="https://support.microsoft.com/he-il/microsoft-edge" target="_blank" rel="noopener">support.microsoft.com/he-il/microsoft-edge</a></li>
+        </ul>
+        <p>בנוסף, ישנם כלים אנונימיים כדוגמת <a href="https://www.youronlinechoices.com/" target="_blank" rel="noopener">Your Online Choices</a> ו-<a href="https://optout.aboutads.info/" target="_blank" rel="noopener">DAA Opt-out</a> שמאפשרים לבטל מעקב פרסומי של רשת מפרסמים מאוחדת.</p>
+        <div class="callout">
+          <p>🔕 <strong>אותות Do Not Track (DNT) ו-Global Privacy Control (GPC):</strong> חלק מהדפדפנים מאפשרים שליחת אות אוטומטי לאתרים המסמן שאינך מעוניין במעקב. נכון להיום, הדין הישראלי אינו מחייב אתרים לכבד אותות אלה, ואין סטנדרט בינלאומי אחיד. <strong>האתר שלנו אינו מגיב כיום באופן אוטומטי לאותות DNT או GPC</strong>. כדי לבטל מעקב, יש להשתמש במנגנון ההסכמה שלנו (סעיף 8), בהגדרות הדפדפן, או לפנות אלינו ישירות. אנו עשויים להתאים את ההתנהגות בעתיד עם התפתחות הרגולציה והסטנדרטים.</p>
+        </div>
+      </section>
+
+      <!-- 10 -->
+      <section class="sec" id="s10">
+        <h2><span class="num">10</span>השלכות של חסימת Cookies</h2>
+        <p>חסימה גורפת של Cookies או דחיית ההסכמה עשויות להשפיע על חוויית השימוש שלך באתר. בפרט:</p>
+        <ul>
+          <li><strong>Cookies הכרחיים</strong>: אם נחסמו, חלק מהפונקציות הבסיסיות של האתר עשויות לא לעבוד, כולל באנר ההסכמה עצמו.</li>
+          <li><strong>תפקודיים</strong>: העדפותיך לא יישמרו ותצטרך להגדיר אותן מחדש בכל ביקור.</li>
+          <li><strong>אנליטיקה</strong>: לא תהיה השפעה ישירה עליך, אך לנו תהיה פחות תובנה לשפר את האתר.</li>
+          <li><strong>שיווק</strong>: עדיין תראה פרסומות כשאתה גולש ברשת, אך הן יהיו פחות רלוונטיות לתחומי העניין שלך.</li>
+        </ul>
+        <div class="callout callout-warn">
+          <p>⚠️ <strong>שירותי צד שלישי משובצים:</strong> חלק מהשירותים שאנו משלבים (כמו תיאום פגישה דרך Cal.com, או מעבר ל-WhatsApp) עשויים שלא לעבוד תקין אם חסמת את ה-Cookies שלהם. במקרה כזה, ייתכן ותצטרך להשתמש בערוץ אחר ליצירת קשר.</p>
+        </div>
+      </section>
+
+      <!-- 11 -->
+      <section class="sec" id="s11">
+        <h2><span class="num">11</span>שינויים במדיניות זו</h2>
+        <p>אנו עשויים לעדכן את מדיניות ה-Cookies מעת לעת, על מנת לשקף שינויים בשירותים שלנו, בכלים שאנו משתמשים בהם, בעמדות הרגולציה, או מסיבות מקצועיות אחרות.</p>
+        <p>במקרה של עדכון, הנוסח החדש יפורסם בדף זה עם תאריך עדכון מעודכן. במקרה של שינויים מהותיים (לדוגמה: הוספת ספק מעקב חדש), נשתדל ליידע אותך גם בדרכים נוספות, כדוגמת הצגת הבאנר מחדש כדי שתוכל לבחון את הסכמתך.</p>
+        <p>המשך השימוש שלך באתר לאחר עדכון המדיניות מהווה את הסכמתך לנוסח המעודכן, בכפוף לבחירותיך במנגנון ההסכמה.</p>
+      </section>
+
+      <!-- 12 -->
+      <section class="sec" id="s12">
+        <h2><span class="num">12</span>קשר למדיניות הפרטיות ויצירת קשר</h2>
+        <p>מדיניות זו משלימה את <a href="privacy.html">מדיניות הפרטיות</a> הכללית של AutoScale. במקרה של סתירה בין השתיים ביחס לנושאים הקשורים ל-Cookies, יגברו ההוראות של מדיניות זו. בכל נושא אחר הקשור לעיבוד מידע אישי, תחול מדיניות הפרטיות הכללית.</p>
+        <p>לכל שאלה, בקשה, פנייה או תלונה ביחס למדיניות זו, ניתן לפנות אלינו:</p>
+        <div class="callout">
+          <p><strong>אימייל לפניות פרטיות:</strong> <a href="mailto:Donna@autoscalehq.io">Donna@autoscalehq.io</a></p>
+          <p><strong>WhatsApp:</strong> <a href="https://wa.me/972552962965" target="_blank" rel="noopener">052-2962965</a></p>
+          <p><strong>אתר:</strong> <a href="https://autoscalehq.io" target="_blank" rel="noopener">autoscalehq.io</a></p>
+        </div>
+        <p>בנוסף, אם אתה סבור שעיבוד המידע שלנו אינו עומד בדרישות הדין, ניתן להגיש תלונה לרשות להגנת הפרטיות במשרד המשפטים: <a href="https://www.gov.il/he/departments/the_privacy_protection_authority" target="_blank" rel="noopener">www.gov.il/he/departments/the_privacy_protection_authority</a>.</p>
+      </section>
+
+      <!-- BOTTOM NOTE -->
+      <div class="callout" style="margin-top:30px">
+        <p style="text-align:center;font-family:var(--mono);font-size:12px;color:var(--muted2);letter-spacing:.05em">תאריך עדכון: מאי 2026 | גרסה 1.0</p>
+      </div>
+
+    </main>
+  </div>
 </div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fi2">
+    <div class="fb">AutoScale</div>
+    <div class="ftag">אוטומציות חכמות לעסקים</div>
+    <div class="flinks">
+      <a href="index.html">דף הבית</a>
+      <a href="privacy.html">פרטיות</a>
+      <a href="cookies.html">Cookies</a>
+      <a href="terms.html">תנאי שימוש</a>
+    </div>
+    <div class="fcopy">© 2025 כל הזכויות שמורות ל-AutoScale</div>
+  </div>
+</footer>
+
+<script>
+// Highlight active TOC link based on scroll position
+(function(){
+  const links = document.querySelectorAll('.toc a');
+  const sections = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  function update(){
+    let active = 0;
+    const offset = 110;
+    for (let i = 0; i < sections.length; i++){
+      if (sections[i] && sections[i].getBoundingClientRect().top - offset <= 0){
+        active = i;
+      }
+    }
+    links.forEach((l, i) => l.classList.toggle('active', i === active));
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
 </body>
 </html>
