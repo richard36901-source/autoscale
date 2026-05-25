@@ -1,63 +1,597 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>מדיניות פרטיות — autoscale</title>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060d1a">
+<meta name="description" content="מדיניות פרטיות AutoScale">
+<meta name="robots" content="index, follow">
+<title>מדיניות פרטיות · AutoScale</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="portfolio-images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="portfolio-images/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="portfolio-images/favicon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
-:root{--bg:#080809;--bg2:#0e0e11;--gold:#c9a84c;--text:#f0eff5;--muted:#6e6d7a;--muted2:#9998a8;--border:rgba(201,168,76,.12);--sans:'Heebo',sans-serif}
-*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.7;direction:rtl}
-.container{max-width:760px;margin:0 auto;padding:40px 24px 80px}
-.back{display:inline-flex;align-items:center;gap:6px;color:var(--gold);font-size:13px;margin-bottom:32px;text-decoration:none}
-.back:hover{opacity:.7}
-h1{font-size:32px;font-weight:700;margin-bottom:8px}
-.meta{font-size:12px;color:var(--muted);font-family:monospace;margin-bottom:40px}
-h2{font-size:18px;font-weight:600;margin-top:36px;margin-bottom:10px;color:var(--gold)}
-p{color:var(--muted2);margin-bottom:14px}ul{color:var(--muted2);margin-bottom:14px;padding-right:20px}li{margin-bottom:6px}
+:root{
+  --bg:#060d1a;--bg2:#091222;--bg3:#0c1a30;
+  --glass:rgba(12,26,56,.55);--glass2:rgba(12,26,56,.35);
+  --border:rgba(80,140,255,.13);--border2:rgba(80,140,255,.28);--borders:rgba(80,140,255,.07);
+  --text:#e8f0ff;--muted:#6a85b6;--muted2:#4a6090;
+  --accent:#3a8ef6;--accent2:#1dffd4;--green:#25D366;--warn:#ffb347;--danger:#ef4444;
+  --r:18px;--rs:12px;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --sans:'Sora',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;direction:rtl;font-size:15px;line-height:1.75;font-weight:300}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80vw 55vh at 10% -5%,rgba(30,90,220,.22) 0%,transparent 65%),radial-gradient(ellipse 60vw 40vh at 90% 10%,rgba(0,200,180,.10) 0%,transparent 60%),radial-gradient(ellipse 100vw 30vh at 50% 100%,rgba(10,30,80,.5) 0%,transparent 70%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(58,142,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(58,142,246,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 24px;background:rgba(6,13,26,.93);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.ni{max-width:1180px;margin:0 auto;height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.nl{display:flex;align-items:center;gap:11px;text-decoration:none}
+.nb{font-size:18px;font-weight:700;letter-spacing:-.3px;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nbtn-portal{padding:9px 18px;font-size:12.5px;border-radius:999px;background:rgba(58,142,246,.08);border:1px solid var(--border2);color:var(--text);text-decoration:none;font-weight:600;letter-spacing:.2px;transition:all .15s;white-space:nowrap}
+.nbtn-portal:hover{background:rgba(58,142,246,.16);border-color:var(--accent)}
+
+/* HERO */
+.hero{padding:130px 0 50px}
+.kicker{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);opacity:.9;margin-bottom:12px;display:block}
+.h1{font-size:clamp(34px,5vw,52px);font-weight:700;line-height:1.1;letter-spacing:-.025em;margin-bottom:14px}
+.h1 .grad{background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hsub{font-size:16px;color:var(--muted);max-width:680px;line-height:1.7;font-weight:300;margin-bottom:18px}
+.eff{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--muted2);padding:6px 14px;border:1px solid var(--border);border-radius:999px;background:rgba(58,142,246,.04);letter-spacing:.04em}
+.eff::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 10px rgba(29,255,212,.6)}
+
+/* MAIN GRID */
+.grid{display:grid;grid-template-columns:240px 1fr;gap:36px;padding-bottom:80px}
+@media(max-width:880px){.grid{grid-template-columns:1fr;gap:18px}}
+
+/* TOC */
+.toc{position:sticky;top:96px;align-self:start;max-height:calc(100dvh - 120px);overflow-y:auto;padding:22px 18px;background:var(--glass2);border:1px solid var(--borders);border-radius:18px;backdrop-filter:blur(8px)}
+.toc-title{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent2);margin-bottom:14px;opacity:.9}
+.toc ol{list-style:none;counter-reset:tocnum;display:flex;flex-direction:column;gap:2px}
+.toc li{counter-increment:tocnum}
+.toc a{display:block;padding:8px 10px;border-radius:8px;font-size:12.5px;color:var(--muted);text-decoration:none;transition:all .15s;line-height:1.45;font-weight:400;position:relative;padding-right:30px}
+.toc a::before{content:counter(tocnum,decimal-leading-zero);position:absolute;right:10px;top:9px;font-family:var(--mono);font-size:10px;color:var(--muted2);font-weight:500}
+.toc a:hover{background:rgba(58,142,246,.08);color:var(--text)}
+.toc a.active{background:rgba(29,255,212,.07);color:var(--accent2)}
+.toc a.active::before{color:var(--accent2)}
+@media(max-width:880px){.toc{position:relative;top:0;max-height:none;display:none}.toc.mobile-open{display:block}}
+.toc-mobile-toggle{display:none;width:100%;padding:14px 18px;background:var(--glass2);border:1px solid var(--border);border-radius:14px;color:var(--text);font-family:var(--sans);font-size:13.5px;font-weight:600;text-align:right;direction:rtl;cursor:pointer;backdrop-filter:blur(8px)}
+@media(max-width:880px){.toc-mobile-toggle{display:flex;align-items:center;justify-content:space-between}}
+
+/* CONTENT */
+.content{min-width:0}
+.sec{margin-bottom:42px;scroll-margin-top:90px}
+.sec h2{font-size:24px;font-weight:700;letter-spacing:-.015em;margin-bottom:14px;display:flex;align-items:center;gap:12px;color:var(--text);line-height:1.25}
+.sec h2 .num{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--accent);opacity:.7;letter-spacing:.02em}
+.sec h3{font-size:16.5px;font-weight:600;margin:22px 0 8px;color:var(--text)}
+.sec p{font-size:14.5px;color:var(--muted);line-height:1.75;margin-bottom:11px;font-weight:300}
+.sec p strong{color:var(--text);font-weight:600}
+.sec ul,.sec ol{padding-right:20px;margin:8px 0 14px}
+.sec li{font-size:14.5px;color:var(--muted);line-height:1.75;margin-bottom:7px;font-weight:300;padding-right:6px}
+.sec li strong{color:var(--text);font-weight:600}
+.sec a{color:var(--accent2);text-decoration:none;border-bottom:1px dotted rgba(29,255,212,.4);transition:border-color .15s}
+.sec a:hover{border-bottom-color:var(--accent2)}
+
+/* CALLOUT BOX */
+.callout{margin:16px 0;padding:16px 18px;background:rgba(58,142,246,.06);border:1px solid rgba(58,142,246,.2);border-radius:14px}
+.callout p{margin-bottom:0;font-size:13.5px}
+.callout-warn{background:rgba(246,168,58,.06);border-color:rgba(246,168,58,.22)}
+.callout-warn p{color:rgba(246,168,58,.9)}
+.callout strong{color:var(--text)}
+
+/* TABLE STYLE FOR DATA TYPES */
+.dtable{width:100%;border-collapse:collapse;margin:14px 0;background:rgba(58,142,246,.03);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.dtable th,.dtable td{padding:12px 16px;text-align:right;font-size:13.5px;border-bottom:1px solid var(--borders)}
+.dtable th{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent2);font-weight:700;background:rgba(58,142,246,.05);text-align:right}
+.dtable td{color:var(--muted);font-weight:300;line-height:1.65}
+.dtable td strong{color:var(--text);font-weight:500}
+.dtable tr:last-child td{border-bottom:none}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:36px 24px}
+.fi2{max-width:1100px;margin:0 auto;text-align:center}
+.fb{font-size:18px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.3px}
+.ftag{font-size:12px;color:var(--muted2);font-family:var(--mono);font-weight:400;margin-top:4px;letter-spacing:.04em}
+.fcopy{font-size:11px;color:var(--muted2);font-family:var(--mono);font-weight:400;margin-top:14px;letter-spacing:.04em}
+.flinks{display:flex;gap:18px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.flinks a{font-size:12px;color:var(--muted);text-decoration:none;transition:color .15s}
+.flinks a:hover{color:var(--accent2)}
+
+/* PRINT */
+@media print{
+  body{background:#fff;color:#000;font-size:12pt}
+  body::before,body::after{display:none}
+  nav,.toc,.toc-mobile-toggle,footer{display:none}
+  .grid{grid-template-columns:1fr}
+  .hero{padding:20px 0}
+  .h1{color:#000}
+  .h1 .grad{-webkit-text-fill-color:#000;color:#000;background:none}
+  .sec h2{color:#000;page-break-after:avoid}
+  .sec p,.sec li{color:#222}
+  .sec a{color:#0066cc}
+  .callout{background:#f5f5f5;border:1px solid #ccc}
+  .callout-warn{background:#fffbe6;border-color:#e0c060}
+  .dtable{background:#fff;border:1px solid #999}
+  .dtable th{background:#eee;color:#000}
+  .dtable td{color:#222}
+}
 </style>
 </head>
 <body>
-<div class="container">
-<a href="index.html" class="back">← חזרה לאתר</a>
-<h1>מדיניות פרטיות</h1>
-<div class="meta">עדכון אחרון: ינואר 2025 · autoscale</div>
-<p>autoscale מכבדת את פרטיות המשתמשים שלה. מדיניות זו מסבירה אילו מידע אנו אוספים, כיצד אנו משתמשים בו, ואיך ניתן לממש זכויות.</p>
 
-<h2>1. מידע שאנו אוספים</h2>
-<ul>
-<li>פרטי קשר שנמסרים בטפסים: שם, טלפון, אימייל, שם עסק</li>
-<li>נתוני גלישה: עמודים שנצפו, זמן שהייה (דרך Google Analytics)</li>
-<li>מידע שנמסר בצ׳אטים עם בוט דונה</li>
-</ul>
+<!-- NAV -->
+<nav>
+  <div class="ni">
+    <a href="index.html" class="nl">
+      <span class="nb">AutoScale</span>
+    </a>
+    <a href="index.html" class="nbtn-portal">← חזרה לאתר</a>
+  </div>
+</nav>
 
-<h2>2. שימוש במידע</h2>
-<ul>
-<li>יצירת קשר חוזרת וטיפול בפניות</li>
-<li>ניהול פרויקטים ובנק שעות</li>
-<li>שיפור השירותים שלנו</li>
-<li>שליחת עדכונים רלוונטיים (ניתן לבטל בכל עת)</li>
-</ul>
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <span class="kicker">מסמך משפטי</span>
+    <h1 class="h1">מדיניות <span class="grad">פרטיות</span></h1>
+    <p class="hsub">המסמך מתאר איזה מידע אנחנו אוספים עליך, איך הוא מעובד, עם מי הוא משותף, ומה הזכויות שלך כנושא המידע לפי חוק הגנת הפרטיות, התשמ"א-1981 (כפי שתוקן, כולל תיקון 13).</p>
+    <span class="eff">תאריך עדכון: מאי 2026</span>
+  </div>
+</section>
 
-<h2>3. שיתוף מידע</h2>
-<p>autoscale אינה מוכרת מידע לצדדים שלישיים. המידע עשוי להיות מועבר לכלים טכניים שאנו משתמשים בהם (Make.com, Monday, Google Sheets) לצורך מתן השירות בלבד.</p>
+<!-- MAIN CONTENT -->
+<div class="wrap">
+  <button class="toc-mobile-toggle" onclick="document.querySelector('.toc').classList.toggle('mobile-open');this.querySelector('span').textContent=document.querySelector('.toc').classList.contains('mobile-open')?'הסתר תוכן עניינים ▲':'תוכן עניינים ▼'">
+    <span>תוכן עניינים ▼</span>
+  </button>
 
-<h2>4. אחסון מידע</h2>
-<p>המידע מאוחסן על שרתים מאובטחים. אנו שומרים מידע כל עוד הוא רלוונטי לשירות הפעיל, ועד 3 שנים לאחר סיום ההתקשרות.</p>
+  <div class="grid">
+    <!-- TOC -->
+    <aside class="toc">
+      <div class="toc-title">תוכן עניינים</div>
+      <ol>
+        <li><a href="#s1">הקדמה ותחולה</a></li>
+        <li><a href="#s2">הגדרות</a></li>
+        <li><a href="#s3">בעל מאגר המידע</a></li>
+        <li><a href="#s4">המידע הנאסף</a></li>
+        <li><a href="#s5">מטרות העיבוד ובסיס חוקי</a></li>
+        <li><a href="#s6">שיתוף מידע עם צדדים שלישיים</a></li>
+        <li><a href="#s7">העברת מידע מחוץ לישראל</a></li>
+        <li><a href="#s8">Cookies וטכנולוגיות מעקב</a></li>
+        <li><a href="#s9">תקופות שמירה</a></li>
+        <li><a href="#s10">אבטחת מידע</a></li>
+        <li><a href="#s11">הזכויות שלך</a></li>
+        <li><a href="#s12">דיוור ישיר ושיווק</a></li>
+        <li><a href="#s13">קטינים</a></li>
+        <li><a href="#s14">קישורים לאתרים חיצוניים</a></li>
+        <li><a href="#s15">שינויים במדיניות</a></li>
+        <li><a href="#s16">הסכמתך</a></li>
+        <li><a href="#s17">דין חל וסמכות שיפוט</a></li>
+        <li><a href="#s18">יצירת קשר</a></li>
+      </ol>
+    </aside>
 
-<h2>5. זכויות משתמשים</h2>
-<ul>
-<li>זכות לעיין במידע האצור עליכם</li>
-<li>זכות לתיקון מידע שגוי</li>
-<li>זכות למחיקת מידע (במסגרת דרישות חוקיות)</li>
-<li>זכות להתנגד לשיווק ישיר</li>
-</ul>
-<p>לממוש זכויות: support@digitalonline.co.il</p>
+    <!-- CONTENT -->
+    <main class="content">
 
-<h2>6. עוגיות</h2>
-<p>ראו את מדיניות העוגיות שלנו לפירוט על השימוש ב-cookies.</p>
+      <!-- 1 -->
+      <section class="sec" id="s1">
+        <h2><span class="num">01</span>הקדמה ותחולה</h2>
+        <p>אנחנו ב-AutoScale (להלן: "AutoScale", "אנחנו", "אנו", "שלנו") רואים בפרטיות שלך ערך עליון. מסמך זה (להלן: "מדיניות הפרטיות") מהווה חלק בלתי נפרד מתנאי השימוש של אתר האינטרנט <a href="https://autoscalehq.io" target="_blank" rel="noopener">autoscalehq.io</a> (להלן: "האתר") ושל מכלול השירותים שאנו מספקים, לרבות בנק שעות, פרויקטים, ריטיינרים, אוטומציות, יעוץ, ותקשורת עסקית (להלן יחד: "השירותים").</p>
+        <p>מדיניות זו מתארת אילו פרטי מידע אנו אוספים אודותיך, כיצד אנו עושים בהם שימוש, עם מי אנו משתפים אותם, כיצד אנו שומרים ומאבטחים אותם, ומהן הזכויות העומדות לרשותך ביחס למידע זה.</p>
+        <p>המדיניות חלה על כל מבקר באתר, פונה דרך טפסי האתר, לקוח, ספק, שותף, או מועמד לעבודה, וכן על כל אדם אחר שמידע אישי אודותיו מגיע לידינו במסגרת פעילותנו (להלן: "המשתמש" או "אתה"). המדיניות נכתבה בלשון זכר מטעמי נוחות בלבד, ומיועדת לכל המגדרים באופן שווה.</p>
+        <p><strong>שימוש בשירותים, מסירת מידע באתר, או יצירת קשר איתנו, מהווים הסכמתך להוראות מדיניות פרטיות זו.</strong> אם אינך מסכים, אנא הימנע משימוש בשירותים ומפנייה אלינו.</p>
+        <p>מדיניות זו פועלת בכפוף ובהתאם לחוק הגנת הפרטיות, התשמ"א-1981 (להלן: "החוק") על תיקוניו (לרבות תיקון מס' 13 לחוק), תקנות הגנת הפרטיות (אבטחת מידע), התשע"ז-2017 (להלן: "תקנות אבטחת מידע"), תיקון מס' 40 לחוק התקשורת (בזק ושידורים), התשמ"ב-1982 (להלן: "חוק הספאם"), וההנחיות והעמדות של הרשות להגנת הפרטיות.</p>
+      </section>
 
-<h2>7. יצירת קשר</h2>
-<p>לשאלות פרטיות: support@digitalonline.co.il</p>
+      <!-- 2 -->
+      <section class="sec" id="s2">
+        <h2><span class="num">02</span>הגדרות</h2>
+        <p>במסמך זה למונחים הבאים תהיה המשמעות המפורטת לצידם:</p>
+        <ul>
+          <li><strong>"מידע אישי"</strong>: כהגדרתו בחוק הגנת הפרטיות, לרבות מידע כהגדרתו בסעיף 7 לחוק, וכן נתוני זיהוי ופרטים אישיים אחרים המאפשרים זיהוי של אדם מסוים, במישרין או בעקיפין.</li>
+          <li><strong>"מאגר מידע"</strong>: כהגדרתו בחוק.</li>
+          <li><strong>"עיבוד"</strong>: כל פעולה ביחס למידע, לרבות איסוף, רישום, ארגון, אחסון, שינוי, אחזור, שימוש, גילוי, העברה, מחיקה או השמדה.</li>
+          <li><strong>"בעל המאגר"</strong>: AutoScale, כמפורט בסעיף 3 להלן.</li>
+          <li><strong>"מחזיק"</strong>: כל גורם המחזיק בפועל במידע בשם בעל המאגר (לדוגמה: ספקי שירותי ענן, ספקי תוכנה כשירות).</li>
+          <li><strong>"Cookies"</strong>: קבצי טקסט קטנים הנשמרים בדפדפן של המשתמש המאפשרים זיהוי, מעקב והתאמת תוכן.</li>
+          <li><strong>"דיוור ישיר"</strong>: כהגדרתו בסעיף 17ג לחוק הגנת הפרטיות.</li>
+          <li><strong>"מסר פרסומי"</strong>: כהגדרתו בסעיף 30א לחוק התקשורת (חוק הספאם).</li>
+        </ul>
+      </section>
+
+      <!-- 3 -->
+      <section class="sec" id="s3">
+        <h2><span class="num">03</span>בעל מאגר המידע ופרטי קשר</h2>
+        <p>בעל מאגר המידע, האחראי על עיבוד המידע ועל יישום מדיניות זו, הוא:</p>
+        <div class="callout">
+          <p><strong>שם השירות:</strong> AutoScale</p>
+          <p><strong>אימייל לפניות פרטיות:</strong> <a href="mailto:Donna@autoscalehq.io">Donna@autoscalehq.io</a></p>
+          <p><strong>WhatsApp:</strong> <a href="https://wa.me/972552962965" target="_blank" rel="noopener">052-2962965</a></p>
+          <p><strong>אתר:</strong> <a href="https://autoscalehq.io" target="_blank" rel="noopener">autoscalehq.io</a></p>
+        </div>
+        <p>פרטי הישות המשפטית המלאים (לרבות שם רשום, מספר עוסק וכתובת רשומה לעניינים משפטיים) יימסרו לכל גורם המבקש אותם לצורך לגיטימי, באמצעות פנייה לפרטי הקשר שלעיל.</p>
+        <p>כל פנייה בעניין מדיניות זו, בקשה למימוש זכויות, תלונה או שאלה ניתן להפנות באמצעות פרטי הקשר שלעיל. נשתדל להשיב לפניות מהותיות תוך זמן סביר, ובכל מקרה תוך פרק הזמן הקבוע בחוק.</p>
+      </section>
+
+      <!-- 4 -->
+      <section class="sec" id="s4">
+        <h2><span class="num">04</span>המידע הנאסף ואופן איסופו</h2>
+
+        <h3>4.1 מידע שאתה מוסר ביוזמתך</h3>
+        <p>בעת מילוי טפסי קשר באתר, פנייה ב-WhatsApp, רכישת בנק שעות, פתיחת פרויקט, רישום לשירות, או יצירת קשר בכל דרך אחרת, ייתכן ותתבקש למסור מידע, ביניהם:</p>
+        <table class="dtable">
+          <thead>
+            <tr>
+              <th>קטגוריה</th>
+              <th>פרטים</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>פרטי זיהוי וקשר</strong></td><td>שם פרטי, שם משפחה, מספר טלפון, כתובת דוא"ל</td></tr>
+            <tr><td><strong>פרטים עסקיים</strong></td><td>שם החברה, תפקיד, תחום פעילות, אתר, פורטפוליו</td></tr>
+            <tr><td><strong>פרטים לחשבונית</strong></td><td>מספר ת.ז או ח.פ או ע.מ, כתובת לחשבונית, פרטי דיווח מע"מ</td></tr>
+            <tr><td><strong>פרטי תשלום</strong></td><td>אסמכתאות תשלום (Bit, העברה בנקאית), צילומי קבלות. <em>פרטי כרטיס אשראי מלאים אינם נשמרים אצלנו ועוברים ישירות לספק סליקה מוסמך (Grow).</em></td></tr>
+            <tr><td><strong>תוכן תקשורת</strong></td><td>תוכן הודעות, פניות, ציטוטים, הערות, מסמכים שאתה משתף איתנו</td></tr>
+            <tr><td><strong>בקשות וצרכים</strong></td><td>אופי הפנייה, צרכים עסקיים, יעדים, אילוצים</td></tr>
+          </tbody>
+        </table>
+
+        <h3>4.2 מידע הנאסף אוטומטית בעת השימוש באתר</h3>
+        <p>בעת ביקור באתר, חלק מהמידע נאסף באופן אוטומטי באמצעות הדפדפן שלך, השרתים שלנו, וספקי השירות שלנו, ביניהם:</p>
+        <ul>
+          <li>כתובת IP, מזהה מכשיר, סוג דפדפן ומערכת הפעלה</li>
+          <li>מקור ההגעה לאתר (referrer), כולל קמפיינים פרסומיים (UTM)</li>
+          <li>דפים שצפית בהם, זמני שהייה, רצפי ניווט</li>
+          <li>פעולות שביצעת באתר (לחיצות, מילוי טפסים, השארת פרטים)</li>
+          <li>מועדי כניסה ויציאה, תדירות ביקור</li>
+          <li>שפת הדפדפן, רזולוציית מסך, אזור זמן</li>
+        </ul>
+
+        <h3>4.3 מידע מצדדים שלישיים</h3>
+        <p>בנסיבות מסוימות אנו עשויים לקבל מידע אודותיך מצדדים שלישיים, לדוגמה: רשתות פרסום (Meta, Google) כאשר הגעת דרך קמפיין ממומן, מערכות מעקב לידים, שותפים עסקיים שהפנו אותך אלינו, ספקי שירות לאימות נתונים. במקרים אלה אנו מעבדים את המידע בכפוף למדיניות פרטיות זו ולחוק.</p>
+
+        <h3>4.4 מידע על תקשורת איתנו</h3>
+        <p>הודעות שאתה שולח אלינו ב-WhatsApp, אימייל, או כל ערוץ אחר, יישמרו לצורך טיפול בפנייה, מתן שירות, שיפור איכות השירות, וכן לצרכים תיעודיים ומשפטיים. ייתכן ושיחות טלפון יוקלטו עם הודעה מראש, ובכפוף להסכמתך.</p>
+
+        <div class="callout">
+          <p>📌 <strong>חשוב לדעת:</strong> חלק מהמידע נחוץ לצורך התקשרות, מתן שירות, וקיום חובות חוקיות (לדוגמה: דיווח לרשויות המס). ללא מסירת מידע זה, ייתכן ולא נוכל לספק לך את השירותים המבוקשים.</p>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section class="sec" id="s5">
+        <h2><span class="num">05</span>מטרות העיבוד והבסיס החוקי</h2>
+        <p>אנו אוספים ומעבדים מידע אישי למטרות הבאות בלבד, וביחס לכל מטרה קיים בסיס חוקי לעיבוד:</p>
+
+        <h3>5.1 מתן שירות וביצוע התחייבויות חוזיות</h3>
+        <ul>
+          <li>טיפול בפנייתך והחזרה אליך</li>
+          <li>הצעת הצעות מחיר, ניהול משא ומתן, חתימת הסכמים</li>
+          <li>אספקת השירותים שרכשת (אוטומציות, בנק שעות, פרויקטים, ריטיינרים)</li>
+          <li>תקשורת שוטפת בנוגע לפרויקטים, סטטוסים, אישורים, ועדכונים</li>
+          <li>גביית תשלום, הוצאת חשבוניות וקבלות, ניהול חוב</li>
+        </ul>
+        <p><strong>בסיס חוקי:</strong> ביצוע חוזה / נחיצות לצורך התקשרות חוזית, וכן הסכמתך.</p>
+
+        <h3>5.2 קיום חובות חוקיות</h3>
+        <ul>
+          <li>הוצאת חשבוניות מס וקבלות לפי דרישות חוק מע"מ ופקודת מס הכנסה</li>
+          <li>שמירת תיעוד חשבונאי לפי הדין (בדרך כלל שבע שנים)</li>
+          <li>דיווח לרשויות המוסמכות במקרה של דרישה חוקית מחייבת</li>
+          <li>שיתוף פעולה עם חקירות חוקיות, צווים שיפוטיים, ודרישות אכיפה</li>
+        </ul>
+        <p><strong>בסיס חוקי:</strong> חובה חוקית.</p>
+
+        <h3>5.3 ניהול עסקי ושיפור השירותים</h3>
+        <ul>
+          <li>ניתוח דפוסי שימוש באתר, מקורות הגעה, אפקטיביות תכנים</li>
+          <li>שיפור חוויית המשתמש, התאמת תוכן, בדיקות A/B</li>
+          <li>פיתוח שירותים חדשים</li>
+          <li>ניהול תיק לקוחות (CRM)</li>
+        </ul>
+        <p><strong>בסיס חוקי:</strong> אינטרס לגיטימי של AutoScale, בכפוף לכך שלא נדרסים אינטרסי המשתמש.</p>
+
+        <h3>5.4 שיווק ודיוור ישיר</h3>
+        <ul>
+          <li>שליחת תוכן שיווקי, ניוזלטר, עדכונים, הצעות, באמצעות אימייל, SMS, או WhatsApp</li>
+          <li>פרסום מותאם אישית (retargeting) ברשתות חברתיות</li>
+        </ul>
+        <p><strong>בסיס חוקי:</strong> הסכמתך המפורשת מראש (opt-in) כנדרש לפי תיקון 40 לחוק התקשורת. ניתן לבטל הסכמה בכל עת (ראה סעיף 12).</p>
+
+        <h3>5.5 הגנה משפטית</h3>
+        <ul>
+          <li>הגנה על זכויותינו וזכויות צדדים שלישיים</li>
+          <li>אכיפת תנאי השימוש וההסכמים שבינינו</li>
+          <li>זיהוי וטיפול בהתנהגות פוגעת, הונאה, או שימוש לרעה</li>
+          <li>ניהול הליכים משפטיים, ככל שיתחייבו</li>
+        </ul>
+        <p><strong>בסיס חוקי:</strong> אינטרס לגיטימי וקיום חובה חוקית.</p>
+
+        <div class="callout callout-warn">
+          <p><strong>⚠️ הצמדת מטרה:</strong> לא נשתמש במידע למטרות שאינן תואמות את המטרות שלשמן נאסף, ולא נעביר את המידע לצדדים שלישיים לשימוש למטרות אחרות, אלא בהסכמתך או כאשר הדבר מותר או מתחייב לפי דין.</p>
+        </div>
+      </section>
+
+      <!-- 6 -->
+      <section class="sec" id="s6">
+        <h2><span class="num">06</span>שיתוף מידע עם צדדים שלישיים</h2>
+        <p>אנו לא מוכרים את המידע שלך לצדדים שלישיים. עם זאת, על מנת לספק את השירותים, אנו עשויים לחלוק את המידע עם הקטגוריות הבאות של נמענים, וזאת בכפוף להתחייבותם לשמור על סודיות ולעבד את המידע אך ורק למטרות הקבועות מראש:</p>
+
+        <h3>6.1 ספקי שירותי תוכנה ותשתית</h3>
+        <p>אנו עושים שימוש בספקי שירות מקצועיים לצרכי אחסון, עיבוד, אוטומציה, תקשורת, ניתוח ושירותי תשלום. הספקים העיקריים כוללים, בין היתר:</p>
+        <table class="dtable">
+          <thead>
+            <tr><th>ספק</th><th>שימוש</th><th>מיקום עיבוד</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Make.com</strong> (Celonis)</td><td>פלטפורמת אוטומציה, אינטגרציות בין מערכות</td><td>האיחוד האירופי</td></tr>
+            <tr><td><strong>Cloudflare</strong></td><td>הגנת DDoS, CDN, אבטחת אתר</td><td>גלובלי</td></tr>
+            <tr><td><strong>GitHub Pages</strong> (Microsoft)</td><td>אחסון אתרים סטטיים</td><td>גלובלי</td></tr>
+            <tr><td><strong>Google</strong></td><td>שירותי דוא"ל (Gmail), Google Workspace, Drive, Calendar, Fonts</td><td>גלובלי</td></tr>
+            <tr><td><strong>Cal.com</strong></td><td>מערכת תיאום פגישות</td><td>האיחוד האירופי / ארה"ב</td></tr>
+            <tr><td><strong>WhatsApp Business API</strong> (Meta)</td><td>תקשורת עם משתמשים</td><td>גלובלי</td></tr>
+            <tr><td><strong>Grow</strong></td><td>סליקת תשלומים בכרטיסי אשראי</td><td>ישראל / EU</td></tr>
+            <tr><td><strong>Bit</strong> (פועלים)</td><td>תשלומים מיידיים</td><td>ישראל</td></tr>
+            <tr><td><strong>Supabase</strong></td><td>בסיס נתונים מנוהל</td><td>האיחוד האירופי / גלובלי</td></tr>
+            <tr><td><strong>Monday.com</strong></td><td>ניהול פרויקטים ו-CRM</td><td>גלובלי</td></tr>
+            <tr><td><strong>Meta</strong> (Facebook, Instagram)</td><td>פרסום ממומן, פיקסל מעקב</td><td>גלובלי</td></tr>
+            <tr><td><strong>Google Tag Manager / Analytics</strong></td><td>ניתוח התנהגות משתמשים, ניהול תגיות</td><td>גלובלי</td></tr>
+          </tbody>
+        </table>
+        <p>רשימה מלאה ומעודכנת של תת-ספקים זמינה לבקשה דרך אימייל לפניות פרטיות.</p>
+
+        <h3>6.2 רשויות ממשלתיות וערכאות שיפוטיות</h3>
+        <p>אנו עשויים להעביר מידע לרשויות מוסמכות (כדוגמת רשויות מס, משטרה, בתי משפט) כאשר הדבר מתחייב על פי דין, צו שיפוטי, או דרישה חוקית מחייבת אחרת.</p>
+
+        <h3>6.3 יועצים מקצועיים</h3>
+        <p>עורכי דין, רואי חשבון, יועצי מס, מבטחים, וכל יועץ מקצועי אחר שאנו נדרשים לשתפו במידע לצורך קבלת ייעוץ או שירות.</p>
+
+        <h3>6.4 העברה בעקבות מהלך עסקי</h3>
+        <p>במקרה של מיזוג, רכישה, מכירת נכסים או שינוי מבני אחר, המידע עשוי לעבור לרוכש או לישות הממוזגת, ובלבד שהיא מתחייבת להמשיך ולקיים את הוראות מדיניות זו.</p>
+
+        <h3>6.5 בהסכמתך</h3>
+        <p>בכל מקרה אחר נעביר מידע רק בהסכמתך המפורשת.</p>
+      </section>
+
+      <!-- 7 -->
+      <section class="sec" id="s7">
+        <h2><span class="num">07</span>העברת מידע מחוץ לישראל</h2>
+        <p>חלק מספקי השירות שלנו מאחסנים או מעבדים מידע מחוץ לישראל, בעיקר באיחוד האירופי, בארצות הברית, ובמדינות אחרות. שימוש בשירותינו עשוי לכלול העברה של המידע שלך לטריטוריות מחוץ למדינת ישראל.</p>
+        <p>במידה ומידע מועבר למדינות שדיני הגנת הפרטיות שלהן אינם מקבילים בהיקפם לדיני הגנת הפרטיות בישראל, אנו פועלים לכך שההעברה תתבצע בהתאם להוראות הדין הישראלי, ובכלל זה תקנות הגנת הפרטיות (העברת מידע אל מאגרי מידע שמחוץ לגבולות המדינה), התשס"א-2001.</p>
+        <p>במיוחד, אנו פועלים לוודא שספקי השירות שלנו עומדים באחד או יותר מהמנגנונים הבאים:</p>
+        <ul>
+          <li>פועלים במדינה המספקת רמת הגנה נאותה (Adequacy)</li>
+          <li>חתומים על Standard Contractual Clauses או מנגנון חוזי שווה ערך</li>
+          <li>קיבלו אישור פרטני מאת הרשות להגנת הפרטיות</li>
+          <li>עומדים במנגנונים מקובלים בינלאומיים (כדוגמת תקני ISO 27001 או SOC 2)</li>
+        </ul>
+        <p>בעת מסירת מידע אישי אלינו, אתה נותן הסכמתך להעברת המידע מחוץ לישראל, בכפוף לאמור לעיל.</p>
+      </section>
+
+      <!-- 8 -->
+      <section class="sec" id="s8">
+        <h2><span class="num">08</span>Cookies וטכנולוגיות מעקב</h2>
+        <p>האתר עשוי לעשות שימוש בקבצי Cookies, פיקסלים, web beacons, local storage וטכנולוגיות מעקב דומות (להלן יחד: "Cookies"). חלק מה-Cookies הם של AutoScale (First Party) וחלקם של ספקי שירות צד שלישי (Third Party).</p>
+
+        <h3>8.1 סוגי Cookies שאנו משתמשים בהם</h3>
+        <table class="dtable">
+          <thead>
+            <tr><th>סוג</th><th>מטרה</th><th>הסכמה</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>הכרחיים</strong></td><td>תפעול בסיסי של האתר, אבטחה, ניהול הסכמה ל-Cookies. ללא Cookies אלה האתר לא יכול לעבוד.</td><td>אינם דורשים הסכמה</td></tr>
+            <tr><td><strong>תפקודיים</strong></td><td>שמירת העדפות (שפה, אזור), זכירת מילוי טפסים, התאמה אישית בסיסית.</td><td>הסכמה משתמעת</td></tr>
+            <tr><td><strong>אנליטיקה</strong></td><td>ניתוח התנהגות משתמשים, מדידת תנועה, מקורות הגעה, אפקטיביות תוכן (לדוגמה: Google Analytics, GTM, Microsoft Clarity, Hotjar).</td><td>הסכמה מפורשת</td></tr>
+            <tr><td><strong>שיווק ופרסום</strong></td><td>מעקב המרות, retargeting, פרסום מותאם אישית (לדוגמה: Meta Pixel, Google Ads).</td><td>הסכמה מפורשת</td></tr>
+          </tbody>
+        </table>
+
+        <h3>8.2 ניהול הסכמה</h3>
+        <p>בעת ביקור ראשון באתר, מוצגת לך הודעת Cookies ומאפשרת לבחור: לאשר הכל, או לדחות. בחירתך נשמרת ב-localStorage של הדפדפן שלך.</p>
+        <p>במקרה של דחייה, איננו טוענים סקריפטי אנליטיקה ושיווק, ובנוסף אנו פועלים למחוק Cookies מעקב שכבר נטענו בדפדפן (כדוגמת _ga, _fbp, _gcl_au, _hjSession, _clck, _clsk).</p>
+
+        <h3>8.3 ניהול דרך הדפדפן</h3>
+        <p>בנוסף, אתה יכול לנהל את ה-Cookies ישירות דרך הגדרות הדפדפן: לחסום Cookies מסוימים, למחוק Cookies קיימים, או להגדיר התראה לפני שמירת Cookies חדשים. שים לב שחסימה גורפת עלולה לפגוע בתפקוד האתר.</p>
+
+        <h3>8.4 מידע נוסף</h3>
+        <p>למידע מפורט יותר אנא עיין במסמך <a href="cookies.html">מדיניות Cookies</a> הנפרד, ככל שזה זמין.</p>
+      </section>
+
+      <!-- 9 -->
+      <section class="sec" id="s9">
+        <h2><span class="num">09</span>תקופות שמירה של המידע</h2>
+        <p>אנו שומרים מידע אישי רק למשך הזמן הדרוש להגשמת המטרות שלשמן נאסף, או למשך הזמן שאנו מחויבים על פי דין, לפי הארוך מביניהם. תקופות השמירה המנחות הן:</p>
+        <table class="dtable">
+          <thead>
+            <tr><th>סוג מידע</th><th>תקופת שמירה</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>פניות ולידים שלא הבשילו</strong></td><td>עד 24 חודשים, ולאחר מכן מוצנעים או נמחקים</td></tr>
+            <tr><td><strong>תיק לקוח פעיל</strong></td><td>למשך כל תקופת ההתקשרות + 7 שנים לאחר סיומה (לצרכי תיעוד, חבות מס, ותביעות אפשריות)</td></tr>
+            <tr><td><strong>חשבוניות, מסמכי הנהלת חשבונות, מסמכי תשלום</strong></td><td>7 שנים, כנדרש בפקודת מס הכנסה ובחוק מע"מ</td></tr>
+            <tr><td><strong>תוכן תקשורת (WhatsApp, אימייל)</strong></td><td>בהתאם להתיישנות תביעות חוזיות, בדרך כלל עד 7 שנים</td></tr>
+            <tr><td><strong>Cookies וטכנולוגיות מעקב</strong></td><td>בהתאם להגדרה של כל Cookie, נע בין סוף הסשן ועד 24 חודשים</td></tr>
+            <tr><td><strong>נתונים שנמסרו לצורך דיוור ישיר</strong></td><td>עד הסרת הסכמה / בקשת הסרה מרשימת תפוצה</td></tr>
+            <tr><td><strong>קורות חיים ומועמדויות</strong></td><td>עד 24 חודשים, אלא אם תבקש מחיקה קודם לכן</td></tr>
+            <tr><td><strong>לוגים טכניים</strong></td><td>עד 12 חודשים, למעט לוגים הקשורים לאירועי אבטחה שיישמרו זמן ארוך יותר</td></tr>
+          </tbody>
+        </table>
+        <p>בתום תקופת השמירה, המידע יימחק או יוצנע (anonymization) באופן בלתי הפיך, אלא אם קיימת חובה משפטית להמשך החזקתו.</p>
+      </section>
+
+      <!-- 10 -->
+      <section class="sec" id="s10">
+        <h2><span class="num">10</span>אבטחת מידע</h2>
+        <p>אנו מיישמים אמצעי אבטחה מנהליים, פיזיים וטכנולוגיים סבירים ומקובלים בענף על מנת להגן על המידע מפני גישה, שימוש, שינוי, או גילוי בלתי מורשים. אמצעי האבטחה כוללים, בין היתר:</p>
+        <ul>
+          <li><strong>הצפנה בתעבורה:</strong> כל התקשורת עם האתר מאובטחת ב-HTTPS / TLS</li>
+          <li><strong>הצפנה במנוחה:</strong> מידע רגיש מוצפן בעת אחסון אצל ספקי השירות המאושרים</li>
+          <li><strong>בקרת גישה:</strong> הגבלת גישה למידע לצוות מוסמך בלבד, על בסיס "צורך לדעת" (need to know)</li>
+          <li><strong>אימות חזק:</strong> חיוב סיסמאות חזקות ואימות דו-שלבי (2FA) במערכות פנימיות</li>
+          <li><strong>בקרת ספקים:</strong> ביצוע בדיקות נאותות (due diligence) ספקי שירות, חתימה על הסכמי DPA במידת הצורך</li>
+          <li><strong>ניטור והתראות:</strong> ניטור פעילות חריגה, גיבויים תקופתיים, תוכנית התאוששות</li>
+          <li><strong>מודעות:</strong> הדרכת מודעות לאבטחת מידע ופרטיות</li>
+        </ul>
+        <p>אנו פועלים בהתאם לעקרונות תקנות הגנת הפרטיות (אבטחת מידע), התשע"ז-2017, בכפוף לסיווג המאגרים ולרמת האבטחה הנדרשת.</p>
+        <div class="callout callout-warn">
+          <p><strong>⚠️ הצהרה ביחס לאבטחה:</strong> חרף נקיטת אמצעי האבטחה, אין באפשרותנו להבטיח אבטחה מוחלטת. שום מערכת אינה חסינה מפני פריצות, וירוסים, או תקלות. שימוש בשירותינו נעשה על דעתך, ואנו ממליצים גם לך לנקוט אמצעי אבטחה (סיסמאות חזקות, מכשירים מאובטחים, רשתות מוצפנות).</p>
+        </div>
+        <p>במקרה של אירוע אבטחת מידע חמור (כהגדרתו בתקנות אבטחת מידע), נפעל לפי הוראות הדין, לרבות מתן הודעה לרשות להגנת הפרטיות ולנושאי המידע, ככל שנדרש.</p>
+      </section>
+
+      <!-- 11 -->
+      <section class="sec" id="s11">
+        <h2><span class="num">11</span>הזכויות שלך כנושא המידע</h2>
+        <p>על פי החוק עומדות לך זכויות שונות ביחס למידע האישי שלך, ובכלל זה:</p>
+
+        <h3>11.1 זכות עיון</h3>
+        <p>אתה רשאי לעיין במידע שמוחזק עליך במאגר המידע שלנו, בהתאם להוראות סעיף 13 לחוק הגנת הפרטיות. נשיב לבקשתך תוך 30 ימים מיום קבלתה.</p>
+
+        <h3>11.2 זכות לתיקון מידע</h3>
+        <p>אם המידע אינו נכון, שלם, ברור, או מעודכן, אתה רשאי לבקש את תיקונו או השלמתו, בהתאם להוראות סעיף 14 לחוק. נשתדל לטפל בבקשתך בהקדם האפשרי.</p>
+
+        <h3>11.3 זכות למחיקת מידע</h3>
+        <p>אתה רשאי לבקש מחיקה של מידע אישי שלך, בכפוף לזכויותינו וחובותינו לפי הדין (לדוגמה: לא נוכל למחוק חשבוניות תוך תקופת השמירה החוקית).</p>
+
+        <h3>11.4 זכות התנגדות לדיוור ישיר</h3>
+        <p>אתה רשאי בכל עת לדרוש בכתב שמידע המתייחס אליך יימחק ממאגר המידע המשמש לדיוור ישיר, וכן להתנגד לקבלת מסרים פרסומיים, בהתאם להוראות סעיף 17ו לחוק הגנת הפרטיות וסעיף 30א לחוק הספאם. ראה פרטים נוספים בסעיף 12.</p>
+
+        <h3>11.5 זכות לביטול הסכמה</h3>
+        <p>במידה והעיבוד מבוסס על הסכמתך, אתה רשאי לחזור בך מן ההסכמה בכל עת. ביטול ההסכמה אינו פוגע בחוקיות העיבוד שבוצע על בסיס ההסכמה לפני ביטולה.</p>
+
+        <h3>11.6 זכות להגשת תלונה</h3>
+        <p>אם אתה סבור שעיבוד המידע אודותיך מפר את החוק, אתה רשאי להגיש תלונה לרשות להגנת הפרטיות במשרד המשפטים: <a href="https://www.gov.il/he/departments/the_privacy_protection_authority" target="_blank" rel="noopener">www.gov.il/he/departments/the_privacy_protection_authority</a>. עם זאת, נשמח אם תפנה אלינו תחילה.</p>
+
+        <h3>11.7 כיצד לממש את זכויותיך</h3>
+        <p>על מנת לממש זכויות אלה אנא פנה אלינו דרך פרטי הקשר המופיעים בסעיף 18, באמצעות אימייל אל <a href="mailto:Donna@autoscalehq.io">Donna@autoscalehq.io</a>. נבקש לוודא את זהותך לפני הטיפול בבקשה, על מנת להגן עליך מפני שימוש לרעה.</p>
+        <p>הטיפול בבקשות מימוש זכויות הוא ללא תשלום. עם זאת, במקרה של בקשות חוזרות, מוגזמות, או בלתי מבוססות, אנו שומרים על הזכות לגבות תשלום סביר או לדחות את הבקשה.</p>
+      </section>
+
+      <!-- 12 -->
+      <section class="sec" id="s12">
+        <h2><span class="num">12</span>דיוור ישיר ושיווק</h2>
+        <p>בכפוף להסכמתך המפורשת, אנו עשויים לפנות אליך מעת לעת בהודעות שיווקיות בנושאים שעשויים לעניין אותך, כדוגמת שירותים חדשים, מבצעים, חומרי הדרכה, וובינרים, תוכן מקצועי. הדיוור עשוי להישלח באמצעות אימייל, SMS, WhatsApp, או הודעות פנימיות בפלטפורמות.</p>
+
+        <h3>12.1 הסכמה מראש</h3>
+        <p>בהתאם לתיקון 40 לחוק התקשורת (חוק הספאם), משלוח מסר פרסומי טעון הסכמתך המפורשת מראש (opt-in). הסכמתך תינתן באמצעות סימון מפורש במהלך הרשמה לטופס, רכישת שירות, או בכל דרך אחרת שתאשר באופן ברור.</p>
+
+        <h3>12.2 דרכי הסרה</h3>
+        <p>בכל הודעה שיווקית שתישלח אליך תופיע אופציה להסיר עצמך מרשימת התפוצה, ללא עלות וללא מאמץ. ניתן להסיר עצמך גם באמצעות:</p>
+        <ul>
+          <li>שליחת אימייל לכתובת <a href="mailto:Donna@autoscalehq.io">Donna@autoscalehq.io</a> עם בקשה להסרה</li>
+          <li>שליחת הודעת WhatsApp עם המילה "הסר" או "STOP"</li>
+          <li>מענה לאימייל שיווקי עם המילה "הסר"</li>
+        </ul>
+        <p>הסרה תיכנס לתוקף תוך מספר ימי עסקים.</p>
+
+        <h3>12.3 הודעות שירות</h3>
+        <p>שים לב: גם לאחר הסרתך מרשימת תפוצה שיווקית, אנו עשויים להמשיך לשלוח אליך הודעות שירות מהותיות (לדוגמה: אישורי עסקה, חשבוניות, תזכורות לפגישה, התראות בנושא חשבונך), שכן אלה אינן בגדר "מסר פרסומי" ואינן טעונות הסכמה.</p>
+      </section>
+
+      <!-- 13 -->
+      <section class="sec" id="s13">
+        <h2><span class="num">13</span>קטינים</h2>
+        <p>השירותים שלנו מיועדים לבעלי עסקים, מנהלים ואנשי מקצוע ואינם מכוונים אל מי שטרם מלאו לו 18 שנים (להלן: "קטין").</p>
+        <p>איננו אוספים ביודעין מידע אישי מקטינים. אם נודע לנו שמידע אישי של קטין נאסף ללא הסכמת הוריו או אפוטרופוסיו החוקיים, נפעל למחיקתו בהקדם.</p>
+        <p>הורים, אפוטרופוסים, או נציגי קטין שיש להם בסיס לסבור שמידע אישי של קטין נמסר אלינו ללא הסכמתם מתבקשים ליצור איתנו קשר באמצעות פרטי הקשר בסעיף 18.</p>
+      </section>
+
+      <!-- 14 -->
+      <section class="sec" id="s14">
+        <h2><span class="num">14</span>קישורים לאתרים חיצוניים</h2>
+        <p>האתר עשוי לכלול קישורים לאתרים, אפליקציות, או שירותים של צדדים שלישיים. מדיניות פרטיות זו אינה חלה על אתרים חיצוניים אלה. אנו ממליצים לקרוא את מדיניות הפרטיות של כל אתר שאתה מבקר בו.</p>
+        <p>איננו אחראים לתוכן, להתנהלות, או למדיניות הפרטיות של אתרים חיצוניים, ואין לראות בקישור אליהם המלצה או אישור לפעילותם.</p>
+      </section>
+
+      <!-- 15 -->
+      <section class="sec" id="s15">
+        <h2><span class="num">15</span>שינויים במדיניות</h2>
+        <p>אנו עשויים לעדכן את מדיניות הפרטיות מעת לעת, בהתאם לשינויים בחוק, בפסיקה, בשירותים שלנו, או מטעמים מקצועיים אחרים.</p>
+        <p>הנוסח העדכני יפורסם תמיד באתר, עם ציון תאריך תחילה. במקרה של שינויים מהותיים, נשתדל ליידע אותך בדרכים סבירות, לדוגמה: באמצעות הודעה באתר, אימייל, או הודעה בערוצי תקשורת אחרים.</p>
+        <p>המשך השימוש שלך בשירותים לאחר פרסום השינויים יהווה את הסכמתך לנוסח המעודכן. אם אינך מסכים לשינויים, הימנע משימוש בשירותים והודיע לנו בכתב.</p>
+      </section>
+
+      <!-- 16 -->
+      <section class="sec" id="s16">
+        <h2><span class="num">16</span>הסכמתך</h2>
+        <p>מסירת מידע אישי לידינו, שימוש בשירותים, או יצירת קשר איתנו מהווים את הסכמתך לאיסוף ולעיבוד המידע על פי מדיניות פרטיות זו.</p>
+        <p>במקומות שבהם הסכמתך נדרשת באופן מפורש (לדוגמה: דיוור ישיר), הסכמתך תתבקש ותינתן באופן נפרד.</p>
+        <p>אינך חייב לפי חוק למסור לנו מידע, אך ללא מסירת חלק מהמידע ייתכן ולא נוכל לספק לך את השירותים, להוציא חשבונית, או לעמוד בקשר איתך.</p>
+      </section>
+
+      <!-- 17 -->
+      <section class="sec" id="s17">
+        <h2><span class="num">17</span>דין חל וסמכות שיפוט</h2>
+        <p>על מדיניות זו ועל כל עניין הנוגע למידע, לפרטיות, ולשירותים, יחולו דיני מדינת ישראל בלבד, ללא תחולת כללי ברירת דין.</p>
+        <p>סמכות השיפוט הבלעדית בכל מחלוקת הנובעת ממדיניות זו, מתוקפה, או מהיחסים בינך לבין AutoScale, תהיה נתונה לבתי המשפט המוסמכים במחוז תל אביב-יפו בלבד, בכפוף לסמכות הרשות להגנת הפרטיות לפי חוק הגנת הפרטיות.</p>
+      </section>
+
+      <!-- 18 -->
+      <section class="sec" id="s18">
+        <h2><span class="num">18</span>יצירת קשר</h2>
+        <p>בכל שאלה, בקשה, פנייה או תלונה בעניין מדיניות פרטיות זו או עיבוד המידע שלך, אנא צור איתנו קשר:</p>
+        <div class="callout">
+          <p><strong>אימייל לפניות פרטיות:</strong> <a href="mailto:Donna@autoscalehq.io">Donna@autoscalehq.io</a></p>
+          <p><strong>WhatsApp:</strong> <a href="https://wa.me/972552962965" target="_blank" rel="noopener">052-2962965</a></p>
+          <p><strong>אתר:</strong> <a href="https://autoscalehq.io" target="_blank" rel="noopener">autoscalehq.io</a></p>
+        </div>
+        <p>בנוסף, ניתן להגיש פנייה לרשות להגנת הפרטיות, משרד המשפטים, ירושלים: <a href="https://www.gov.il/he/departments/the_privacy_protection_authority" target="_blank" rel="noopener">www.gov.il/he/departments/the_privacy_protection_authority</a></p>
+      </section>
+
+      <!-- BOTTOM NOTE -->
+      <div class="callout" style="margin-top:30px">
+        <p style="text-align:center;font-family:var(--mono);font-size:12px;color:var(--muted2);letter-spacing:.05em">תאריך עדכון: מאי 2026 | גרסה 1.0</p>
+      </div>
+
+    </main>
+  </div>
 </div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fi2">
+    <div class="fb">AutoScale</div>
+    <div class="ftag">אוטומציות חכמות לעסקים</div>
+    <div class="flinks">
+      <a href="index.html">דף הבית</a>
+      <a href="privacy.html">פרטיות</a>
+      <a href="cookies.html">Cookies</a>
+      <a href="terms.html">תנאי שימוש</a>
+    </div>
+    <div class="fcopy">© 2025 כל הזכויות שמורות ל-AutoScale</div>
+  </div>
+</footer>
+
+<script>
+// Highlight active TOC link based on scroll position
+(function(){
+  const links = document.querySelectorAll('.toc a');
+  const sections = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  function update(){
+    let active = 0;
+    const offset = 110;
+    for (let i = 0; i < sections.length; i++){
+      if (sections[i] && sections[i].getBoundingClientRect().top - offset <= 0){
+        active = i;
+      }
+    }
+    links.forEach((l, i) => l.classList.toggle('active', i === active));
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
 </body>
 </html>
