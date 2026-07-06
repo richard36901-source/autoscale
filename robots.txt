@@ -1,0 +1,36 @@
+# robots.txt for autoscalehq.io
+#
+# ONE wildcard block below applies to ALL crawlers, including every AI crawler
+# (GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, Claude-Web, anthropic-ai,
+#  PerplexityBot, Perplexity-User, Google-Extended, Bingbot, CCBot).
+# They all obey "User-agent: *". This is the correct way to let them read your
+# PUBLIC pages while keeping internal app pages out of search and AI listings.
+#
+# (Why not one block per bot? If a bot has its own block, it ignores the wildcard
+#  rules, which would accidentally let AI bots crawl your internal pages. A single
+#  wildcard block avoids that trap.)
+
+User-agent: *
+Allow: /
+
+# --- Internal / app pages: keep OUT of Google and AI results ---
+# IMPORTANT: this hides them from honest crawlers and search listings only.
+# It does NOT make them private or secure, and does NOT stop webhook spam.
+# The path names below are visible to anyone who opens this file.
+# For real privacy also add  <meta name="robots" content="noindex">  to each page,
+# and protect your forms with the Cloudflare Worker (see cloudflare-webhook-proxy.js).
+#
+# Review this list and delete any line that is actually a public page you WANT found.
+Disallow: /client-portal.html
+Disallow: /partner-dashboard.html
+Disallow: /share-access.html
+Disallow: /login-select.html
+Disallow: /payment.html
+Disallow: /response.html
+Disallow: /ticket-request.html
+Disallow: /hours-form.html
+Disallow: /hours-thankyou.html
+
+# Sitemap: add this line once a sitemap.xml exists.
+# Tell me which pages are public and I will generate the sitemap for you.
+# Sitemap: https://autoscalehq.io/sitemap.xml
