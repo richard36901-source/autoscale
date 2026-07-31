@@ -1,67 +1,330 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>תנאי שימוש — autoscale</title>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060d1a">
+<meta name="description" content="תנאי שימוש באתר AutoScale">
+<meta name="robots" content="index, follow">
+<title>תנאי שימוש · AutoScale</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="portfolio-images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="portfolio-images/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="portfolio-images/favicon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
-:root{--bg:#080809;--bg2:#0e0e11;--bg3:#141418;--gold:#c9a84c;--text:#f0eff5;--muted:#6e6d7a;--muted2:#9998a8;--border:rgba(201,168,76,.12);--sans:'Heebo',sans-serif}
-*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.7;direction:rtl}
-.container{max-width:760px;margin:0 auto;padding:40px 24px 80px}
-.back{display:inline-flex;align-items:center;gap:6px;color:var(--gold);font-size:13px;margin-bottom:32px;text-decoration:none;transition:opacity .15s}
-.back:hover{opacity:.7}
-h1{font-size:32px;font-weight:700;margin-bottom:8px}
-.meta{font-size:12px;color:var(--muted);font-family:monospace;margin-bottom:40px}
-h2{font-size:18px;font-weight:600;margin-top:36px;margin-bottom:10px;color:var(--gold)}
-p{color:var(--muted2);margin-bottom:14px}
-ul{color:var(--muted2);margin-bottom:14px;padding-right:20px}
-li{margin-bottom:6px}
-hr{border:none;border-top:.5px solid var(--border);margin:28px 0}
+:root{
+  --bg:#060d1a;--bg2:#091222;--bg3:#0c1a30;
+  --glass:rgba(12,26,56,.55);--glass2:rgba(12,26,56,.35);
+  --border:rgba(80,140,255,.13);--border2:rgba(80,140,255,.28);--borders:rgba(80,140,255,.07);
+  --text:#e8f0ff;--muted:#6a85b6;--muted2:#4a6090;
+  --accent:#3a8ef6;--accent2:#1dffd4;--green:#25D366;--warn:#ffb347;--danger:#ef4444;
+  --r:18px;--rs:12px;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --sans:'Sora',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;direction:rtl;font-size:15px;line-height:1.75;font-weight:300}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80vw 55vh at 10% -5%,rgba(30,90,220,.22) 0%,transparent 65%),radial-gradient(ellipse 60vw 40vh at 90% 10%,rgba(0,200,180,.10) 0%,transparent 60%),radial-gradient(ellipse 100vw 30vh at 50% 100%,rgba(10,30,80,.5) 0%,transparent 70%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(58,142,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(58,142,246,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 24px;background:rgba(6,13,26,.93);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.ni{max-width:1180px;margin:0 auto;height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.nl{display:flex;align-items:center;gap:11px;text-decoration:none}
+.nb{font-size:18px;font-weight:700;letter-spacing:-.3px;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nbtn-portal{padding:9px 18px;font-size:12.5px;border-radius:999px;background:rgba(58,142,246,.08);border:1px solid var(--border2);color:var(--text);text-decoration:none;font-weight:600;letter-spacing:.2px;transition:all .15s;white-space:nowrap}
+.nbtn-portal:hover{background:rgba(58,142,246,.16);border-color:var(--accent)}
+
+/* HERO */
+.hero{padding:130px 0 50px}
+.kicker{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);opacity:.9;margin-bottom:12px;display:block}
+.h1{font-size:clamp(34px,5vw,52px);font-weight:700;line-height:1.1;letter-spacing:-.025em;margin-bottom:14px}
+.h1 .grad{background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hsub{font-size:16px;color:var(--muted);max-width:680px;line-height:1.7;font-weight:300;margin-bottom:18px}
+.eff{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--muted2);padding:6px 14px;border:1px solid var(--border);border-radius:999px;background:rgba(58,142,246,.04);letter-spacing:.04em}
+.eff::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 10px rgba(29,255,212,.6)}
+
+/* MAIN GRID */
+.grid{display:grid;grid-template-columns:240px 1fr;gap:36px;padding-bottom:80px}
+@media(max-width:880px){.grid{grid-template-columns:1fr;gap:18px}}
+
+/* TOC */
+.toc{position:sticky;top:96px;align-self:start;max-height:calc(100dvh - 120px);overflow-y:auto;padding:22px 18px;background:var(--glass2);border:1px solid var(--borders);border-radius:18px;backdrop-filter:blur(8px)}
+.toc-title{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent2);margin-bottom:14px;opacity:.9}
+.toc ol{list-style:none;counter-reset:tocnum;display:flex;flex-direction:column;gap:2px}
+.toc li{counter-increment:tocnum}
+.toc a{display:block;padding:8px 10px;border-radius:8px;font-size:12.5px;color:var(--muted);text-decoration:none;transition:all .15s;line-height:1.45;font-weight:400;position:relative;padding-right:30px}
+.toc a::before{content:counter(tocnum,decimal-leading-zero);position:absolute;right:10px;top:9px;font-family:var(--mono);font-size:10px;color:var(--muted2);font-weight:500}
+.toc a:hover{background:rgba(58,142,246,.08);color:var(--text)}
+.toc a.active{background:rgba(29,255,212,.07);color:var(--accent2)}
+.toc a.active::before{color:var(--accent2)}
+@media(max-width:880px){.toc{position:relative;top:0;max-height:none;display:none}.toc.mobile-open{display:block}}
+.toc-mobile-toggle{display:none;width:100%;padding:14px 18px;background:var(--glass2);border:1px solid var(--border);border-radius:14px;color:var(--text);font-family:var(--sans);font-size:13.5px;font-weight:600;text-align:right;direction:rtl;cursor:pointer;backdrop-filter:blur(8px)}
+@media(max-width:880px){.toc-mobile-toggle{display:flex;align-items:center;justify-content:space-between}}
+
+/* CONTENT */
+.content{min-width:0}
+.sec{margin-bottom:42px;scroll-margin-top:90px}
+.sec h2{font-size:24px;font-weight:700;letter-spacing:-.015em;margin-bottom:14px;display:flex;align-items:center;gap:12px;color:var(--text);line-height:1.25}
+.sec h2 .num{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--accent);opacity:.7;letter-spacing:.02em}
+.sec h3{font-size:16.5px;font-weight:600;margin:22px 0 8px;color:var(--text)}
+.sec p{font-size:14.5px;color:var(--muted);line-height:1.75;margin-bottom:11px;font-weight:300}
+.sec p strong{color:var(--text);font-weight:600}
+.sec ul,.sec ol{padding-right:20px;margin:8px 0 14px}
+.sec li{font-size:14.5px;color:var(--muted);line-height:1.75;margin-bottom:7px;font-weight:300;padding-right:6px}
+.sec li strong{color:var(--text);font-weight:600}
+.sec a{color:var(--accent2);text-decoration:none;border-bottom:1px dotted rgba(29,255,212,.4);transition:border-color .15s}
+.sec a:hover{border-bottom-color:var(--accent2)}
+
+/* CALLOUT BOX */
+.callout{margin:16px 0;padding:16px 18px;background:rgba(58,142,246,.06);border:1px solid rgba(58,142,246,.2);border-radius:14px}
+.callout p{margin-bottom:0;font-size:13.5px}
+.callout-warn{background:rgba(246,168,58,.06);border-color:rgba(246,168,58,.22)}
+.callout-warn p{color:rgba(246,168,58,.9)}
+.callout strong{color:var(--text)}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:36px 24px}
+.fi2{max-width:1100px;margin:0 auto;text-align:center}
+.fb{font-size:18px;font-weight:700;background:linear-gradient(90deg,#c8deff,#1dffd4 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.3px}
+.ftag{font-size:12px;color:var(--muted2);font-family:var(--mono);font-weight:400;margin-top:4px;letter-spacing:.04em}
+.fcopy{font-size:11px;color:var(--muted2);font-family:var(--mono);font-weight:400;margin-top:14px;letter-spacing:.04em}
+.flinks{display:flex;gap:18px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.flinks a{font-size:12px;color:var(--muted);text-decoration:none;transition:color .15s}
+.flinks a:hover{color:var(--accent2)}
+
+/* PRINT */
+@media print{
+  body{background:#fff;color:#000;font-size:12pt}
+  body::before,body::after{display:none}
+  nav,.toc,.toc-mobile-toggle,footer{display:none}
+  .grid{grid-template-columns:1fr}
+  .hero{padding:20px 0}
+  .h1{color:#000}
+  .h1 .grad{-webkit-text-fill-color:#000;color:#000;background:none}
+  .sec h2{color:#000;page-break-after:avoid}
+  .sec p,.sec li{color:#222}
+  .sec a{color:#0066cc}
+  .callout{background:#f5f5f5;border:1px solid #ccc}
+  .callout-warn{background:#fffbe6;border-color:#e0c060}
+}
 </style>
 </head>
 <body>
-<div class="container">
-<a href="index.html" class="back">← חזרה לאתר</a>
-<h1>תנאי שימוש</h1>
-<div class="meta">עדכון אחרון: ינואר 2025 · autoscale</div>
-<p>ברוכים הבאים לאתר autoscale. השימוש באתר ובשירותים שלנו מהווה הסכמה לתנאים הבאים.</p>
 
-<h2>1. השירותים שלנו</h2>
-<p>autoscale מספקת שירותי אוטומציה, פיתוח מערכות, ואינטגרציות לעסקים. השירותים כוללים פרויקטים חד-פעמיים, בנק שעות, ותחזוקה שוטפת.</p>
+<!-- NAV -->
+<nav>
+  <div class="ni">
+    <a href="index.html" class="nl">
+      <span class="nb">AutoScale</span>
+    </a>
+    <a href="index.html" class="nbtn-portal">← חזרה לאתר</a>
+  </div>
+</nav>
 
-<h2>2. בנק שעות — תנאים ספציפיים</h2>
-<ul>
-<li>שעות נרכשות תקפות ל-12 חודש מיום הרכישה</li>
-<li>שעות שלא נוצלו אינן ניתנות להחזר כספי</li>
-<li>ניצול השעות מותנה בהגשת בקשה מסודרת דרך בוט דונה או בכתב</li>
-<li>כל שעה מתועדת עם תיאור העבודה שבוצעה</li>
-<li>זמן תגובה מוערך: עד 48 שעות בימי עסקים</li>
-<li>autoscale שומרת את הזכות לתעדף בקשות לפי דחיפות</li>
-</ul>
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <span class="kicker">מסמך משפטי</span>
+    <h1 class="h1">תנאי <span class="grad">שימוש</span></h1>
+    <p class="hsub">המסמך מגדיר את תנאי השימוש באתר autoscalehq.io בלבד.</p>
+    <span class="eff">תאריך עדכון: יולי 2026</span>
+  </div>
+</section>
 
-<h2>3. פרויקטים חד-פעמיים</h2>
-<ul>
-<li>50% מקדמה נדרשת לפני תחילת עבודה</li>
-<li>יתרת 50% בתשלום במסירת הפרויקט</li>
-<li>שינויים מחוץ לסקופ המוסכם יחויבו בנפרד</li>
-<li>אחריות של 14 ימים לבאגים הנובעים מהקוד שלנו</li>
-</ul>
+<!-- MAIN CONTENT -->
+<div class="wrap">
+  <button class="toc-mobile-toggle" onclick="document.querySelector('.toc').classList.toggle('mobile-open');this.querySelector('span').textContent=document.querySelector('.toc').classList.contains('mobile-open')?'הסתר תוכן עניינים ▲':'תוכן עניינים ▼'">
+    <span>תוכן עניינים ▼</span>
+  </button>
 
-<h2>4. תחזוקה שוטפת</h2>
-<ul>
-<li>הריטיינר מחויב בתחילת כל חודש</li>
-<li>ביטול עם הודעה של 30 יום מראש</li>
-<li>אי תשלום יגרום להשעיה מיידית של השירות</li>
-</ul>
+  <div class="grid">
+    <!-- TOC -->
+    <aside class="toc">
+      <div class="toc-title">תוכן עניינים</div>
+      <ol>
+        <li><a href="#s1">הקדמה ותחולה</a></li>
+        <li><a href="#s2">הגדרות</a></li>
+        <li><a href="#s3">השימוש המותר באתר</a></li>
+        <li><a href="#s4">קניין רוחני</a></li>
+        <li><a href="#s5">שימוש אסור</a></li>
+        <li><a href="#s6">קישורים לאתרים חיצוניים</a></li>
+        <li><a href="#s7">הגבלת אחריות וזמינות האתר</a></li>
+        <li><a href="#s8">פרטיות ועוגיות</a></li>
+        <li><a href="#s9">שינויים בתנאים</a></li>
+        <li><a href="#s10">הוראות כלליות</a></li>
+        <li><a href="#s11">דין חל וסמכות שיפוט</a></li>
+        <li><a href="#s12">יצירת קשר</a></li>
+      </ol>
+    </aside>
 
-<h2>5. קניין רוחני</h2>
-<p>הקוד שנכתב עבור הלקוח עובר לבעלות מלאה של הלקוח עם השלמת התשלום. autoscale שומרת את הזכות לשמור עותק לצורכי backup ולהשתמש בפרויקט כהפניה ב-portfolio (ללא חשיפת מידע רגיש).</p>
+    <!-- CONTENT -->
+    <main class="content">
 
-<h2>6. אחריות</h2>
-<p>autoscale אינה אחראית לנזקים עקיפים הנובעים מתקלות בשירותי צד שלישי (Make.com, WhatsApp, Meta וכד׳). האחריות שלנו מוגבלת לסכום ששולם בפועל עבור השירות הרלוונטי.</p>
+      <!-- 1 -->
+      <section class="sec" id="s1">
+        <h2><span class="num">01</span>הקדמה ותחולה</h2>
+        <p>ברוכים הבאים ל-AutoScale (להלן: "AutoScale", "אנחנו", "אנו", "שלנו"). מסמך זה (להלן: "תנאי השימוש" או "המסמך") מגדיר את התנאים המשפטיים לשימוש באתר האינטרנט <a href="https://autoscalehq.io" target="_blank" rel="noopener">autoscalehq.io</a> (להלן: "האתר") בלבד.</p>
+        <p>המסמך חל על כל גולש, מבקר, או פונה דרך טפסי האתר (להלן: "המשתמש" או "אתה"). המסמך נכתב בלשון זכר מטעמי נוחות בלבד, ומיועד לכל המגדרים באופן שווה.</p>
+        <p><strong>גלישה באתר או שימוש בטפסיו מהווים הסכמתך המפורשת להוראות מסמך זה.</strong> אם אינך מסכים לתנאים אלה, אנא הימנע משימוש באתר.</p>
+        <p>תנאים מסחריים הנוגעים לשירותי AutoScale עצמם, לרבות בנק שעות, פרויקטים, ריטיינר, וקניין רוחני בתוצרים שמסופקים ללקוח, אינם חלק ממסמך זה. תנאים אלה מוסדרים בנפרד בטופס הרכישה הרלוונטי (לדוגמה, טופס רכישת בנק השעות) ובהסכם ההתקשרות הספציפי הנחתם מול כל לקוח.</p>
 
-<h2>7. יצירת קשר</h2>
-<p>לשאלות בנושא תנאי השימוש: support@digitalonline.co.il</p>
+        <div class="callout">
+          <p>📌 <strong>מסמכים משלימים:</strong> מסמך זה יש לקרוא יחד עם <a href="privacy.html">מדיניות הפרטיות</a> ו<a href="cookies.html">מדיניות ה-Cookies</a> של האתר.</p>
+        </div>
+      </section>
+
+      <!-- 2 -->
+      <section class="sec" id="s2">
+        <h2><span class="num">02</span>הגדרות</h2>
+        <p>למונחים הבאים במסמך זה תהיה המשמעות המפורטת לצידם:</p>
+        <ul>
+          <li><strong>"AutoScale"</strong>: הפעילות העסקית של ריצ׳ארד טומסקי, המפעילה את האתר.</li>
+          <li><strong>"האתר"</strong>: אתר האינטרנט autoscalehq.io וכל דף, טופס או תוכן המשויכים אליו.</li>
+          <li><strong>"תוכן"</strong>: כל טקסט, עיצוב, גרפיקה, לוגו, תמונה, סרטון או חומר אחר המוצג באתר.</li>
+          <li><strong>"המשתמש"</strong>: כל גולש, מבקר, או אדם הפונה דרך טפסי האתר.</li>
+        </ul>
+        <p>מידע המוצג באתר בנוגע לשירותי AutoScale, לרבות תיאורי שירות, טווחי מחיר או תהליכי עבודה, מוצג למטרות מידע כלליות בלבד ואינו מהווה הצעה מחייבת. התקשרות מחייבת לקבלת שירות נעשית אך ורק במסגרת הסכם או הצעת מחיר חתומים בנפרד.</p>
+      </section>
+
+      <!-- 3 -->
+      <section class="sec" id="s3">
+        <h2><span class="num">03</span>השימוש המותר באתר</h2>
+        <p>האתר מיועד להצגת מידע על שירותי AutoScale וליצירת קשר. אתה רשאי לגלוש באתר, לעיין בתוכן, ולהשתמש בטפסי יצירת הקשר, למטרות אישיות או עסקיות לגיטימיות.</p>
+        <p>אין באמור כדי להקנות לך זכות בעלות או רישיון כלשהו בתוכן האתר, מעבר לזכות הצפייה הרגילה הנדרשת לצורך גלישה תקינה.</p>
+      </section>
+
+      <!-- 4 -->
+      <section class="sec" id="s4">
+        <h2><span class="num">04</span>קניין רוחני</h2>
+        <p>כל הזכויות בתוכן האתר, לרבות טקסט, עיצוב, גרפיקה, לוגו, סימני מסחר, קוד המקור של האתר עצמו ומבנהו, שייכות במלואן ל-AutoScale, ומוגנות על פי דיני זכויות יוצרים וקניין רוחני.</p>
+        <p>אין להעתיק, לשכפל, להפיץ, לפרסם מחדש, לשנות, או לעשות שימוש מסחרי בתוכן האתר, כולו או חלקו, ללא אישור מראש ובכתב מ-AutoScale.</p>
+        <p>שימוש בשם AutoScale, בלוגו, או בכל סימן מסחר אחר המופיע באתר, ללא הרשאה מפורשת בכתב, אסור.</p>
+      </section>
+
+      <!-- 5 -->
+      <section class="sec" id="s5">
+        <h2><span class="num">05</span>שימוש אסור</h2>
+        <p>בעת השימוש באתר, אסור:</p>
+        <ul>
+          <li>לעשות באתר שימוש למטרה בלתי חוקית או אסורה</li>
+          <li>לנסות לפרוץ, לחדור למערכות האתר, להעמיס עליו (לרבות מתקפות מניעת שירות), או לשבש את פעילותו התקינה</li>
+          <li>לאסוף מידע מהאתר באמצעים אוטומטיים (scraping, crawling) ללא אישור מראש ובכתב</li>
+          <li>להעביר דרך טפסי האתר קוד זדוני, וירוסים, או תוכן פוגעני</li>
+          <li>להתחזות לאדם או לגוף אחר, או למסור מידע כוזב בטפסי יצירת הקשר</li>
+          <li>לעשות שימוש באתר באופן הפוגע בזכויות צד שלישי, לרבות זכויות קניין רוחני או פרטיות</li>
+        </ul>
+        <p>AutoScale רשאית לחסום גישה לאתר למשתמש המפר הוראות אלה, לפי שיקול דעתה הבלעדי.</p>
+      </section>
+
+      <!-- 6 -->
+      <section class="sec" id="s6">
+        <h2><span class="num">06</span>קישורים לאתרים חיצוניים</h2>
+        <p>האתר עשוי לכלול קישורים לאתרים או שירותים של צדדים שלישיים (לדוגמה, פלטפורמות Make.com, monday.com, או רשתות חברתיות). הכללת קישור אינה מהווה המלצה או אישור מטעם AutoScale לתוכן המקושר.</p>
+        <p>AutoScale אינה אחראית לתוכן, למדיניות הפרטיות, לזמינות, או לכל היבט אחר של אתרים חיצוניים אלה. הגלישה בהם כפופה לתנאי השימוש ומדיניות הפרטיות של אותם אתרים.</p>
+      </section>
+
+      <!-- 7 -->
+      <section class="sec" id="s7">
+        <h2><span class="num">07</span>הגבלת אחריות וזמינות האתר</h2>
+        <p>האתר מוצג כפי שהוא, ללא כל התחייבות לדיוק, לשלמות, או לזמינות רציפה של התוכן המוצג בו.</p>
+        <p>האתר עשוי להיות בלתי זמין מעת לעת עקב תחזוקה, תקלות שרת, כוח עליון, או גורמים אחרים שאינם בשליטת AutoScale. AutoScale אינה מתחייבת לזמינות רציפה או ללא הפרעה של האתר.</p>
+        <p>ככל שתקום ל-AutoScale אחריות משפטית כלשהי בקשר עם השימוש באתר עצמו, להבדיל משירותים שנרכשו במסגרת התקשרות נפרדת, היא תוגבל למידה המרבית המותרת על פי דין. AutoScale לא תישא באחריות לנזקים עקיפים, תוצאתיים, או נלווים הנובעים מהשימוש באתר.</p>
+      </section>
+
+      <!-- 8 -->
+      <section class="sec" id="s8">
+        <h2><span class="num">08</span>פרטיות ועוגיות</h2>
+        <p>איסוף המידע באתר, מטרות העיבוד, שיתוף עם צדדים שלישיים, וזכויות המשתמש, מפורטים במסמך <a href="privacy.html">מדיניות הפרטיות</a>, המהווה חלק בלתי נפרד ממסמך זה.</p>
+        <p>שימוש בעוגיות (Cookies) וטכנולוגיות מעקב באתר מפורט במסמך <a href="cookies.html">מדיניות ה-Cookies</a>.</p>
+      </section>
+
+      <!-- 9 -->
+      <section class="sec" id="s9">
+        <h2><span class="num">09</span>שינויים בתנאים</h2>
+        <p>AutoScale רשאית לעדכן את תנאי השימוש מעת לעת, על מנת לשקף שינויים באתר, בחוק החל, או במדיניות העסקית.</p>
+        <ul>
+          <li>הגרסה העדכנית ביותר של המסמך תפורסם באתר, בציון תאריך העדכון האחרון</li>
+          <li>המשך שימוש באתר לאחר פרסום שינויים מהווה הסכמה לתנאים המעודכנים</li>
+        </ul>
+        <p>מומלץ לעיין מעת לעת בתנאי השימוש הנוכחיים.</p>
+      </section>
+
+      <!-- 10 -->
+      <section class="sec" id="s10">
+        <h2><span class="num">10</span>הוראות כלליות</h2>
+        <p>אם הוראה כלשהי במסמך זה תוכרז כבטלה או בלתי ניתנת לאכיפה על ידי ערכאה מוסמכת, יתר ההוראות יישארו בתוקף מלא.</p>
+        <p>אי אכיפה של הוראה כלשהי במסמך זה על ידי AutoScale במקרה ספציפי, לא תהווה ויתור על הזכות לאכוף אותה במקרים אחרים.</p>
+        <p>מסמך זה, יחד עם מדיניות הפרטיות ומדיניות ה-Cookies, מהווים את מלוא ההסכמה בין AutoScale למשתמש באשר לשימוש באתר, ומחליפים כל הבנה או מצג קודמים בעניין זה.</p>
+      </section>
+
+      <!-- 11 -->
+      <section class="sec" id="s11">
+        <h2><span class="num">11</span>דין חל וסמכות שיפוט</h2>
+        <p>מסמך זה כפוף לדין מדינת ישראל בלבד.</p>
+        <p>סמכות השיפוט הבלעדית והייחודית בכל עניין הנוגע למסמך זה, לפרשנותו, לתקפותו או לאכיפתו, נתונה לבתי המשפט המוסמכים במחוז תל אביב יפו בלבד.</p>
+      </section>
+
+      <!-- 12 -->
+      <section class="sec" id="s12">
+        <h2><span class="num">12</span>יצירת קשר</h2>
+        <p>לכל שאלה או פנייה בקשר לתנאי השימוש באתר, ניתן ליצור קשר בערוצים הבאים:</p>
+        <div class="callout">
+          <p><strong>אימייל לתמיכה כללית:</strong> <a href="mailto:support@autoscalehq.io">support@autoscalehq.io</a></p>
+          <p><strong>אימייל לפניות פרטיות:</strong> <a href="mailto:Donna@autoscalehq.io">Donna@autoscalehq.io</a></p>
+          <p><strong>אתר:</strong> <a href="https://autoscalehq.io" target="_blank" rel="noopener">autoscalehq.io</a></p>
+        </div>
+      </section>
+
+      <!-- BOTTOM NOTE -->
+      <div class="callout" style="margin-top:30px">
+        <p style="text-align:center;font-family:var(--mono);font-size:12px;color:var(--muted2);letter-spacing:.05em">תאריך עדכון: יולי 2026 | גרסה 1.0</p>
+      </div>
+
+    </main>
+  </div>
 </div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fi2">
+    <div class="fb">AutoScale</div>
+    <div class="ftag">אוטומציות חכמות לעסקים</div>
+    <div class="flinks">
+      <a href="index.html">דף הבית</a>
+      <a href="privacy.html">פרטיות</a>
+      <a href="cookies.html">Cookies</a>
+      <a href="terms.html">תנאי שימוש</a>
+    </div>
+    <div class="fcopy">© 2025 כל הזכויות שמורות ל-AutoScale</div>
+  </div>
+</footer>
+
+<script>
+// Highlight active TOC link based on scroll position
+(function(){
+  const links = document.querySelectorAll('.toc a');
+  const sections = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  function update(){
+    let active = 0;
+    const offset = 110;
+    for (let i = 0; i < sections.length; i++){
+      if (sections[i] && sections[i].getBoundingClientRect().top - offset <= 0){
+        active = i;
+      }
+    }
+    links.forEach((l, i) => l.classList.toggle('active', i === active));
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
 </body>
 </html>
