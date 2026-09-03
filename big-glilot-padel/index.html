@@ -737,10 +737,6 @@ function addToCalendar(opts){
     "END:VCALENDAR"
   ].join("\r\n");
 
-  const ua = navigator.userAgent;
-  const iOS = /iPhone|iPod|iPad/.test(ua) ||
-              (/Macintosh/.test(ua) && "ontouchend" in document);
-
   // בדיוק כמו בגרסה הראשונה שעבדה: קובץ יומן והורדה.
   // כל ניסיון "לשפר" את זה עם window.open או זיהוי מכשיר שבר את
   // ההתנהגות באייפון, אז זה נשאר פשוט וזהה בכל מכשיר.
