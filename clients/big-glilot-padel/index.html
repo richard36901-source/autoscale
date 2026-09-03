@@ -723,16 +723,49 @@ function icsUrl(gameIndex, date){
   return "ics/g" + gameIndex + "-" + ymd + ".ics";
 }
 
-/* המשחק שנתפס: פותח את האירוע של אותו יום ושעה */
+/* ספארי פותח text/calendar ומציג את חלון היומן. כרום תמיד מוריד
+   קבצים כאלה, ואי אפשר לשנות את זה מהדף. לכן לכרום פותחים את
+   יומן גוגל עם האירוע ממולא, וזה נפתח ולא יורד. */
+function isChrome(){
+  const ua = navigator.userAgent;
+  return /CriOS|Chrome|Chromium|Edg|EdgA|Android/.test(ua);
+}
+
+function gcalUrl(title, start, minutes, place, details){
+  const z = n => String(n).padStart(2, "0");
+  const utc = d => d.getUTCFullYear() + z(d.getUTCMonth()+1) + z(d.getUTCDate()) +
+                   "T" + z(d.getUTCHours()) + z(d.getUTCMinutes()) + "00Z";
+  const end = new Date(start.getTime() + minutes * 60000);
+  const p = new URLSearchParams({
+    action: "TEMPLATE", text: title,
+    dates: utc(start) + "/" + utc(end),
+    location: place, details: details
+  });
+  return "https://calendar.google.com/calendar/render?" + p.toString();
+}
+
+/* המשחק שנתפס */
 function calendarForGame(game){
   const gi = game.game || (GAMES.findIndex(g =>
     g.day === game.day && g.start === game.start) + 1) || 1;
-  location.href = icsUrl(gi, dateOf(GAMES[gi - 1] || GAMES[0]));
+  const when = dateOf(GAMES[gi - 1] || GAMES[0]);
+  location.href = isChrome()
+    ? gcalUrl("משחק פאדל - ביג גלילות", when, 60,
+              COURT + ", " + PLACE, "מועדון העובדים, ביג גלילות")
+    : icsUrl(gi, when);
 }
 
-/* למי שלא הספיק: תזכורת פתיחת ההרשמה */
+/* תזכורת פתיחת ההרשמה */
 function calendarForNextOpening(){
-  location.href = "ics/open.ics";
+  if(!isChrome()) { location.href = "ics/open.ics"; return; }
+  const now = new Date();
+  const p = OPENS.time.split(":");
+  const at = new Date(now);
+  at.setHours(Number(p[0]) || 0, Number(p[1]) || 0, 0, 0);
+  at.setDate(at.getDate() + (((DAYS[OPENS.day] || 0) - at.getDay() + 7) % 7));
+  if(now > at) at.setDate(at.getDate() + 7);
+  location.href = gcalUrl("להירשם לפאדל של שבוע הבא", at, 15,
+                          PLACE, "ההרשמה נפתחת עכשיו: " + location.origin + location.pathname);
 }
 
 function paintHero(){
