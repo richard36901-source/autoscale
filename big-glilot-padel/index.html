@@ -797,7 +797,7 @@ function renderSpots(alertText){
             (sp.status === "soon" || g.closed ? ""
               : sp.mine ? '<button class="take free" data-drop="1">ביטול</button>'
               : sp.status === "open" ? '<button class="take" data-take="' + esc(sp.id) + '">אני משחק</button>'
-              : '<button class="tag as-btn" data-free="' + esc(sp.id) + '">זה אני</button>') +
+              : '<button class="tag as-btn" data-free="' + esc(sp.id) + '">ביטול</button>') +
           "</div>";
         }).join("") + "</div>" +
       "</div>";
