@@ -2,7 +2,6 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//AutoScale//Padel Glilot//HE
 CALSCALE:GREGORIAN
-METHOD:PUBLISH
 BEGIN:VEVENT
 UID:g1-20261117-padel@autoscalehq.io
 DTSTAMP:20261117T200000
@@ -10,7 +9,7 @@ DTSTART:20261117T200000
 DTEND:20261117T210000
 SUMMARY:משחק פאדל - ביג גלילות
 LOCATION:מגרש הפאדל, ביג פאשן גלילות
-DESCRIPTION:המקום שלכם במגרש. לביטול: https://autoscalehq.io/clients/big-glilot-padel/
+DESCRIPTION:מועדון העובדים, ביג גלילות
 BEGIN:VALARM
 ACTION:DISPLAY
 DESCRIPTION:היום משחק פאדל בגלילות
