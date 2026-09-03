@@ -751,13 +751,11 @@ function addToCalendar(opts){
   });
   const url = API + "?" + params.toString();
 
-  fetch(url).then(r => r.text()).then(txt => {
-    if(txt.indexOf("BEGIN:VCALENDAR") === 0){
-      location.href = url;              // השרת מגיש אירוע: היומן ייפתח
-    }else{
-      downloadIcs(ics, opts.file);      // שרת ישן: קובץ להורדה
-    }
-  }).catch(() => downloadIcs(ics, opts.file));
+  // ניווט ישיר. השרת מחזיר text/calendar, ואייפון פותח על זה
+  // את חלון היומן הנייטיב עם האירוע ממולא.
+  // בלי fetch מקדים: ל-Apps Script אין כותרות CORS, אז כל בדיקה
+  // כזאת נכשלת תמיד ומפילה אותנו להורדה.
+  location.href = url;
 }
 
 /* פורמט תאריך לשאילתה: 2026-09-08 20:00 */
