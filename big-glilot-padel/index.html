@@ -896,7 +896,7 @@ function renderSpots(alertText, tone){
     }).join("");
 
   const remind = document.getElementById("remindMe");
-  if(remind) remind.hidden = !!mine;
+  if(remind) remind.hidden = false;      // רלוונטי גם למי שכבר רשום השבוע
   const openLog = document.getElementById("openLog");
   if(openLog) openLog.hidden = false;
 }
@@ -967,7 +967,7 @@ function renderGate(msg){
   const log = document.getElementById("openLog");
   const remind = document.getElementById("remindMe");
   if(log) log.hidden = true;
-  if(remind) remind.hidden = true;
+  if(remind) remind.hidden = true;       // מוסתר רק במסך הקוד
 
   app.innerHTML =
     '<div class="gate">' +
