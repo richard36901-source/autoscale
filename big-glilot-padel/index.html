@@ -32,6 +32,7 @@
   --text-2:#6F6F6C;
   --text-3:#A5A5A1;
   --line:#E2E2DF;
+  --court:#DFDFDB;          /* קווי המגרש ברקע, גוון אחד מתחת לרקע */
   --fill-hover:rgba(0,0,0,.035);
 
   --r-block:12px;
@@ -45,12 +46,14 @@
     --ink:#FF3355; --ink-press:#E01238; --on-ink:#FFFFFF;
     --bg:#0B0B0B; --card:#161615; --text:#F5F5F3; --text-2:#9C9C98; --text-3:#6B6B67;
     --line:#262625; --fill-hover:rgba(255,255,255,.05);
+    --court:#1A1A19;
   }
 }
 :root[data-theme="dark"]{
   --ink:#FF3355; --ink-press:#E01238; --on-ink:#FFFFFF;
   --bg:#0B0B0B; --card:#161615; --text:#F5F5F3; --text-2:#9C9C98; --text-3:#6B6B67;
   --line:#262625; --fill-hover:rgba(255,255,255,.05);
+  --court:#1A1A19;
 }
 
 *{box-sizing:border-box}
@@ -80,6 +83,10 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
     outline:1px solid var(--line)}
 }
 
+/* ── קווי המגרש על כל הרקע, באותו גוון של הרקע ────────────── */
+.page-court{position:fixed;inset:-14px;z-index:-2;color:var(--court);pointer-events:none}
+.page-court svg{width:100%;height:100%}
+
 /* ── סרגל מותג ────────────────────────────────────────────── */
 .bar{display:flex;align-items:center;gap:10px;padding:16px 6px 14px}
 .bar-txt{font-size:12.5px;font-weight:600;color:var(--text-2);flex:1;min-width:0}
@@ -101,10 +108,10 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 .hero{background:var(--ink);color:var(--on-ink);border-radius:var(--r-block);
   padding:20px 22px 22px;position:relative;overflow:hidden;isolation:isolate}
 .hero > *{position:relative}
-.court{position:absolute;z-index:-1;inset:auto -12% -18% auto;width:118%;height:auto;
+.court-art{position:absolute;z-index:-1;inset:auto -12% -18% auto;width:118%;height:auto;
   opacity:.17;color:currentColor;transform:rotate(-7deg);pointer-events:none}
 @media (prefers-reduced-motion: no-preference){
-  .court{animation:court 1.1s var(--ease) both}
+  .court-art{animation:court 1.1s var(--ease) both}
 }
 @keyframes court{from{opacity:0;transform:rotate(-7deg) scale(1.08)}
   to{opacity:.17;transform:rotate(-7deg) scale(1)}}
@@ -333,6 +340,20 @@ document.addEventListener("keydown", e => {
 </style>
 </head>
 <body>
+<div class="page-court" aria-hidden="true">
+  <svg viewBox="0 0 200 108" preserveAspectRatio="xMidYMid slice">
+    <g fill="none" stroke="currentColor" stroke-width="1.6" vector-effect="non-scaling-stroke">
+      <rect x="8" y="8" width="184" height="92" rx="2"></rect>
+      <line x1="100" y1="8" x2="100" y2="100"></line>
+      <line x1="8" y1="54" x2="192" y2="54" stroke-dasharray="3 4"></line>
+      <line x1="46" y1="8" x2="46" y2="100"></line>
+      <line x1="154" y1="8" x2="154" y2="100"></line>
+      <line x1="46" y1="54" x2="8" y2="54"></line>
+      <line x1="154" y1="54" x2="192" y2="54"></line>
+    </g>
+  </svg>
+</div>
+
 <div class="wrap">
   <div class="bar">
     <svg class="logo" viewBox="0 0 126 100" role="img" aria-label="BIG FASHION גלילות">
@@ -363,7 +384,7 @@ document.addEventListener("keydown", e => {
   </div>
 
   <div class="hero">
-    <svg class="court" viewBox="0 0 200 108" aria-hidden="true" focusable="false">
+    <svg class="court-art" viewBox="0 0 200 108" aria-hidden="true" focusable="false">
       <g fill="none" stroke="currentColor" stroke-width="1.6" vector-effect="non-scaling-stroke">
         <rect x="8" y="8" width="184" height="92" rx="2"></rect>
         <line x1="100" y1="8" x2="100" y2="100"></line>
