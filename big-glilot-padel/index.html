@@ -173,7 +173,6 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 }
 
 @media (prefers-reduced-motion: no-preference){
-  .list .row{animation:in .42s var(--ease) both;animation-delay:calc(var(--i) * 50ms)}
   .mk{animation:pop .45s var(--ease) both}
 }
 @keyframes in{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
@@ -204,7 +203,13 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 .gm.past{opacity:.5}
 .gm.past .gm-tag{color:var(--text-3)}
 @media (prefers-reduced-motion: no-preference){
-  .gm{animation:in .42s var(--ease) both;animation-delay:calc(var(--i) * 60ms)}
+  /* הכרטיס נכנס, ומיד אחריו השורות שלו בזו אחר זו.
+     הכל נכנס יחד ובסדר קבוע, אף פעם לא חלק מהשמות. */
+  .gm{animation:in .4s var(--ease) both;animation-delay:calc(var(--i) * 70ms)}
+  .gm .gm-head{animation:in .34s var(--ease) both;
+    animation-delay:calc(var(--i) * 70ms + 40ms)}
+  .gm .row{animation:in .34s var(--ease) both;
+    animation-delay:calc(var(--i) * 70ms + 90ms + var(--r, 0) * 45ms)}
 }
 
 /* ── מסך קוד הכניסה ───────────────────────────────────────── */
@@ -534,8 +539,9 @@ function saveSnap(list, mineId){
 function loadSnap(){
   try{
     const raw = JSON.parse(localStorage.getItem(SNAP));
-    // תמונה ישנה מדי לא שווה כלום, עדיף להמתין לנתונים האמיתיים
-    if(raw && Array.isArray(raw.list) && Date.now() - raw.t < 6e5) return raw;
+    // רק תמונה טרייה מאוד. אחרת עדיף שלד מלא מאשר נתונים חלקיים
+    // שמתחלפים מול העיניים.
+    if(raw && Array.isArray(raw.list) && Date.now() - raw.t < 3e4) return raw;
   }catch(e){}
   return null;
 }
@@ -803,7 +809,7 @@ function renderSpots(alertText){
         "</div>" +
         '<div class="list">' + g.spots.map((sp, i) => {
           const state = sp.mine ? "mine" : sp.status;
-          return '<div class="row" data-state="' + state + '" style="--i:' + i + '">' +
+          return '<div class="row" data-state="' + state + '" style="--r:' + i + '">' +
             '<span class="who">' +
               (sp.status === "soon" ? "טרם נפתח"
                : sp.status === "open" ? (g.closed ? "לא נתפס" : "פנוי")
