@@ -737,40 +737,14 @@ function addToCalendar(opts){
     "END:VCALENDAR"
   ].join("\r\n");
 
-  // אייפון פותח יומן רק מכתובת שמצהירה text/calendar. קובץ מקומי
-  // תמיד יירד, לא משנה איך בונים אותו. לכן מבקשים מהשרת להגיש
-  // את האירוע, ורק אם הוא לא תומך בזה נופלים חזרה להורדה.
-  const params = new URLSearchParams({
-    action: "ics",
-    code: accessCode || "",
-    title: opts.title,
-    start: icsTime(opts.start),
-    minutes: String(opts.minutes || 60),
-    place: opts.place || PLACE,
-    note: opts.note || ""
-  });
-  const url = API + "?" + params.toString();
-
-  // ניווט ישיר. השרת מחזיר text/calendar, ואייפון פותח על זה
-  // את חלון היומן הנייטיב עם האירוע ממולא.
-  // בלי fetch מקדים: ל-Apps Script אין כותרות CORS, אז כל בדיקה
-  // כזאת נכשלת תמיד ומפילה אותנו להורדה.
-  location.href = url;
-}
-
-/* פורמט תאריך לשאילתה: 2026-09-08 20:00 */
-function icsTime(d){
-  const z = n => String(n).padStart(2, "0");
-  return d.getFullYear() + "-" + z(d.getMonth()+1) + "-" + z(d.getDate()) +
-         " " + z(d.getHours()) + ":" + z(d.getMinutes());
-}
-
-/* גיבוי: אותה שיטה שעבדה מההתחלה */
-function downloadIcs(ics, file){
+  // הגרסה שעבדה מהרגע הראשון. לא לגעת.
+  // ניסיתי data: URI, לשונית חדשה, window.open, ונקודת קצה בשרת —
+  // כל אחד מהם שבר את ההתנהגות באייפון. Apps Script מגישה
+  // application/binary ולא text/calendar, אז גם היא לא פותרת.
   const blob = new Blob([ics], {type: "text/calendar;charset=utf-8"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = (file || "padel") + ".ics";
+  a.download = (opts.file || "padel") + ".ics";
   document.body.appendChild(a);
   a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
