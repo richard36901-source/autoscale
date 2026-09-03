@@ -46,14 +46,14 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --ink:#FF3355; --ink-press:#E01238; --on-ink:#FFFFFF;
+    --ink:#FF6B80; --ink-press:#FF3355; --on-ink:#1A0206;
     --bg:#0B0B0B; --card:#161615; --text:#F5F5F3; --text-2:#9C9C98; --text-3:#6B6B67;
     --line:#262625; --fill-hover:rgba(255,255,255,.05);
     --court:#1A1A19;
   }
 }
 :root[data-theme="dark"]{
-  --ink:#FF3355; --ink-press:#E01238; --on-ink:#FFFFFF;
+  --ink:#FF6B80; --ink-press:#FF3355; --on-ink:#1A0206;
   --bg:#0B0B0B; --card:#161615; --text:#F5F5F3; --text-2:#9C9C98; --text-3:#6B6B67;
   --line:#262625; --fill-hover:rgba(255,255,255,.05);
   --court:#1A1A19;
@@ -243,7 +243,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 .f input{flex:1;min-width:0;font:inherit;font-size:18px;font-weight:600;border:0;
   background:transparent;color:var(--text);padding:16px 0;min-height:52px;letter-spacing:-.01em}
 .f input::placeholder{color:var(--text-3);font-weight:500}
-.f input:focus{outline:none}
+.f input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--ink);border-radius:8px}
 .f input.field-bad{box-shadow:inset 0 0 0 2px var(--ink);border-radius:8px}
 .hint{margin:9px 6px 0;font-size:13px;color:var(--text-2);line-height:1.4;
   transition:color .18s ease}
@@ -341,11 +341,31 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 }
 @keyframes breathe{0%,100%{opacity:1}50%{opacity:.4}}
 
+/* ── טבלת המובילים ────────────────────────────────────────── */
+.lb{display:flex;align-items:center;gap:13px;padding:13px 4px;position:relative}
+.lb + .lb::before{content:"";position:absolute;top:0;inset-inline-start:44px;
+  inset-inline-end:0;height:1px;background:var(--line)}
+.medal{width:30px;height:30px;border-radius:var(--r-round);flex:none;display:grid;
+  place-items:center;font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 1px 3px rgba(0,0,0,.18)}
+.medal.g{background:linear-gradient(158deg,#F7DC7B,#C9992A);color:#4A3900}
+.medal.s{background:linear-gradient(158deg,#EDF1F4,#A7B1B8);color:#333C42}
+.medal.b{background:linear-gradient(158deg,#E5A972,#AC6A33);color:#3D2005}
+.medal.n{background:transparent;color:var(--text-2);font-weight:700;
+  box-shadow:inset 0 0 0 1.5px var(--line)}
+.lb-name{flex:1;min-width:0;font-size:17px;font-weight:600;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.lb.podium .lb-name{font-weight:800}
+.lb-n{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.lb-n small{font-size:12px;font-weight:600;color:var(--text-2);margin-inline-start:4px}
+.empty{padding:22px 4px;font-size:14px;color:var(--text-2)}
+
 /* ── חלון: אותו כרטיס לכל המסכים ──────────────────────────── */
 .mscrim{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.45);
   backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 .modal{position:fixed;z-index:61;inset-inline:0;bottom:0;padding:0 12px 12px;
   display:flex;justify-content:center;pointer-events:none}
+.modal[hidden],.mscrim[hidden]{display:none!important}
 .modal .card{pointer-events:auto}
 @media (min-height:620px){
   .modal{top:0;align-items:center;padding:16px 12px}
@@ -705,7 +725,7 @@ function addToCalendar(opts){
     "DTSTART:" + stamp(opts.start),
     "DTEND:" + stamp(end),
     "SUMMARY:" + opts.title,
-    "LOCATION:" + (opts.place || GAME.place),
+    "LOCATION:" + (opts.place || PLACE),
     "DESCRIPTION:" + (opts.note || ""),
     ...alarms,
     "END:VEVENT",
@@ -930,7 +950,7 @@ function renderGate(msg){
   async function enter(){
     const v = input.value.trim();
     if(v.length !== 4 || busyFlag) return;
-    busy = true;
+    busyFlag = true;
     busy(btn, true);
     hint.className = "hint"; hint.textContent = "";
 
@@ -1156,8 +1176,19 @@ function confirmRelease(btn){
 async function releaseSpot(btn){
   busy(btn, true);
   if(!demoMode){
-    try{ await api("cancel", {token: myToken}); }
-    catch(e){ busy(btn, false); return; }
+    let res = null;
+    try{ res = await api("cancel", {token: myToken}); }
+    catch(e){ busy(btn, false); closeModal(); renderSpots("שגיאה. המקום לא בוטל, נסו שוב."); return; }
+    // השרת יכול לסרב בלי לזרוק שגיאה. לא מכריזים על ביטול לפני שהוא אישר.
+    if(!res || !res.ok){
+      busy(btn, false); closeModal();
+      renderSpots(
+        res && res.reason === "not_active" ? "המקום הזה כבר לא תפוס." :
+        res && res.reason === "old_week"   ? "המשחק הזה כבר עבר." :
+        res && res.reason === "busy"       ? "רגע עמוס, נסו שוב." :
+                                             "לא הצלחנו לבטל. נסו שוב.");
+      return;
+    }
   }
   forget(); myToken = null;
   games.forEach(g => g.spots.forEach(sp => {
@@ -1329,7 +1360,7 @@ function boardHTML(){
   const log = (weekLog || []).length
     ? '<div class="list">' + weekLog.map((w, i) =>
         '<div class="wk" style="--i:' + i + '">' +
-          '<div class="wk-date">' + esc(w.date) + " · " + esc(w.time || GAME.time) + "</div>" +
+          '<div class="wk-date">' + esc(w.date) + " · " + esc(w.time || (GAMES[0] && GAMES[0].start) || "") + "</div>" +
           '<div class="wk-names">' + w.players.map(esc).join(", ") + "</div>" +
         "</div>").join("") + "</div>"
     : '<div class="list"><div class="empty">המשחק הראשון עוד לפניכם.</div></div>';
