@@ -953,7 +953,7 @@ function renderForm(spot, game){
       " · " + esc(game.date) + "</div>" +
     '<div class="fields">' +
       '<div class="f"><label for="nm">שם</label>' +
-        '<input id="nm" type="text" autocomplete="name" enterkeyhint="next" placeholder="דנה לוי" value="' + esc(me.name || "") + '"></div>' +
+        '<input id="nm" type="text" autocomplete="name" enterkeyhint="next" placeholder="שם פרטי ומשפחה" value="' + esc(me.name || "") + '"></div>' +
       '<div class="f"><label for="ph">טלפון</label>' +
         '<input id="ph" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="done" placeholder="050-000-0000" value="' + esc(me.phone || "") + '"></div>' +
     "</div>" +
@@ -981,8 +981,12 @@ function renderForm(spot, game){
   }
 
   async function submit(){
-    const name = nm.value.trim(), phone = ph.value.trim();
-    if(name.length < 2) return bad("צריך שם מלא.", nm);
+    const name = nm.value.trim().replace(/\s+/g, " "), phone = ph.value.trim();
+    // דורשים שם פרטי ומשפחה, אחרת אי אפשר לדעת מי זה
+    const parts = name.split(" ").filter(w => w.length >= 2);
+    if(parts.length < 2){
+      return bad("צריך שם פרטי ושם משפחה, כדי שנדע מי נרשם.", nm);
+    }
     if(phone.replace(/\D/g, "").length < 9) return bad("מספר הטלפון לא תקין.", ph);
 
     busy(document.getElementById("go"), true);
@@ -1026,6 +1030,7 @@ function renderForm(spot, game){
         !res ? "לא הצלחנו לשמור. נסו שוב." :
         res.reason === "taken"          ? "מישהו הקדים אתכם בשנייה. נסו מקום אחר." :
         res.reason === "game_closed"    ? "המשחק הזה כבר התחיל." :
+        res.reason === "need_full_name" ? "צריך שם פרטי ושם משפחה." :
         res.reason === "already_booked"
           ? (res.held
               ? "המקום לא נתפס. כבר יש לכם מקום ב" + res.held.day + " " +
