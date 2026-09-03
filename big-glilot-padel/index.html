@@ -134,8 +134,8 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .row[data-state="open"] .who{color:var(--text-3);font-weight:500}
 .row[data-state="claimed"] .who{color:var(--text);font-weight:700}
-.row[data-state="mine"]{background:color-mix(in srgb, var(--ink) 7%, transparent)}
-.row[data-state="mine"] .who{color:var(--ink);font-weight:800}
+.row[data-state="mine"]{background:var(--fill-hover)}
+.row[data-state="mine"] .who{color:var(--text);font-weight:800}
 .row[data-state="soon"] .who{color:var(--text-3);font-weight:500}
 .gm .row[data-state="soon"]{opacity:.75}
 .tag{font-size:13px;color:var(--text-3);font-weight:600}
@@ -243,8 +243,10 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 .f input{flex:1;min-width:0;font:inherit;font-size:18px;font-weight:600;border:0;
   background:transparent;color:var(--text);padding:16px 0;min-height:52px;letter-spacing:-.01em}
 .f input::placeholder{color:var(--text-3);font-weight:500}
-.f input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--ink);border-radius:8px}
-.f input.field-bad{box-shadow:inset 0 0 0 2px var(--ink);border-radius:8px}
+.f input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--line-strong,var(--text-3));
+  border-radius:8px}
+.f input.field-bad,.f input.field-bad:focus{box-shadow:inset 0 0 0 2px var(--ink);
+  border-radius:8px}
 .hint{margin:9px 6px 0;font-size:13px;color:var(--text-2);line-height:1.4;
   transition:color .18s ease}
 .hint.bad{color:var(--ink);font-weight:800;font-size:14px;
@@ -732,13 +734,26 @@ function addToCalendar(opts){
     "END:VCALENDAR"
   ].join("\r\n");
 
-  const blob = new Blob([ics], {type: "text/calendar;charset=utf-8"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = (opts.file || "padel") + ".ics";
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+  const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+              (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  if(iOS){
+    // באייפון קובץ יומן בכתובת data נפתח ישירות באפליקציית היומן
+    location.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+    return;
+  }
+
+  // באנדרואיד ובמחשב פותחים את היומן עצמו עם האירוע מוכן
+  const z = n => String(n).padStart(2, "0");
+  const utc = d => d.getUTCFullYear() + z(d.getUTCMonth()+1) + z(d.getUTCDate()) +
+                   "T" + z(d.getUTCHours()) + z(d.getUTCMinutes()) + "00Z";
+  const g = new URL("https://calendar.google.com/calendar/render");
+  g.searchParams.set("action", "TEMPLATE");
+  g.searchParams.set("text", opts.title);
+  g.searchParams.set("dates", utc(opts.start) + "/" + utc(end));
+  g.searchParams.set("details", opts.note || "");
+  g.searchParams.set("location", opts.place || PLACE);
+  window.open(g.toString(), "_blank", "noopener");
 }
 
 /* המשחק עצמו: תזכורת ביום המשחק ב־09:00, ועוד אחת ערב קודם ב־18:00 */
@@ -1093,7 +1108,6 @@ function renderForm(spot, game){
       stopSlow();
       if(res && res.ok){
         myToken = res.token; remember(res.token);
-        api("sync").catch(() => {});     // מעדכן את הלשוניות בגיליון ברקע
         return confirmSaved(res.token, game);
       }
       // לא הצליח: מחזירים את המצב הקודם ומסבירים
@@ -1113,9 +1127,26 @@ function renderForm(spot, game){
                                           "לא הצלחנו לשמור. נסו שוב.");
     }catch(err){
       stopSlow();
+      // הבקשה נקטעה, אבל ייתכן שהיא כן נרשמה בצד השני.
+      // בודקים מה המצב באמת לפני שמודיעים על כישלון.
+      try{
+        const check = await api("list");
+        if(check && check.ok){
+          games = normalise(check.games);
+          const hit = findSpot(spot.id);
+          if(hit && hit.spot.status === "claimed" &&
+             nameKey(hit.spot.name) === nameKey(name)){
+            hit.spot.mine = true;                 // בעצם הצליח
+            saveSnap(check.games, spot.id);
+            return renderDone(name, myToken, game);
+          }
+          closeModal();
+          return renderSpots("המקום לא נתפס. נסו שוב.");
+        }
+      }catch(e2){ /* גם הבדיקה נפלה */ }
       Object.assign(spot, before);
       closeModal();
-      renderSpots("שגיאה. המקום לא נשמר, נסו שוב.");
+      renderSpots("לא הצלחנו לשמור. בדקו חיבור ונסו שוב.");
     }
   }
 }
