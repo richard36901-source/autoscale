@@ -249,6 +249,9 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
   border-radius:8px}
 .hint{margin:9px 6px 0;font-size:13px;color:var(--text-2);line-height:1.4;
   transition:color .18s ease}
+.hint.good{color:var(--text);font-weight:700;font-size:14px;
+  background:var(--fill-hover);box-shadow:inset 0 0 0 1.5px var(--line);
+  border-radius:10px;padding:11px 13px;margin:12px 0 0;line-height:1.45}
 .hint.bad{color:var(--ink);font-weight:800;font-size:14px;
   background:color-mix(in srgb, var(--ink) 10%, transparent);
   box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--ink) 45%, transparent);
@@ -734,16 +737,27 @@ function addToCalendar(opts){
     "END:VCALENDAR"
   ].join("\r\n");
 
-  const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-              (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  // אייפון ואייפד אמיתיים בלבד. מק עם מסך מגע אינו אייפון,
+  // וניווט לכתובת data נחסם שם ולא קורה כלום.
+  const ua = navigator.userAgent;
+  const iOS = /iPhone|iPod/.test(ua) ||
+              (/iPad/.test(ua)) ||
+              (/Macintosh/.test(ua) && "ontouchend" in document && !window.chrome);
 
   if(iOS){
-    // באייפון קובץ יומן בכתובת data נפתח ישירות באפליקציית היומן
-    location.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+    // קישור עם קובץ היומן, נפתח בלשונית חדשה כדי שאפליקציית
+    // היומן תתפוס אותו במקום לנווט את הדף
+    const a = document.createElement("a");
+    a.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+    a.target = "_blank";
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => a.remove(), 3000);
     return;
   }
 
-  // באנדרואיד ובמחשב פותחים את היומן עצמו עם האירוע מוכן
+  // אנדרואיד ומחשב: פותחים את היומן עצמו עם האירוע מוכן
   const z = n => String(n).padStart(2, "0");
   const utc = d => d.getUTCFullYear() + z(d.getUTCMonth()+1) + z(d.getUTCDate()) +
                    "T" + z(d.getUTCHours()) + z(d.getUTCMinutes()) + "00Z";
@@ -753,7 +767,15 @@ function addToCalendar(opts){
   g.searchParams.set("dates", utc(opts.start) + "/" + utc(end));
   g.searchParams.set("details", opts.note || "");
   g.searchParams.set("location", opts.place || PLACE);
-  window.open(g.toString(), "_blank", "noopener");
+  const w = window.open(g.toString(), "_blank", "noopener");
+  if(!w){
+    // חלון נחסם: נופלים חזרה לקובץ יומן רגיל
+    const a = document.createElement("a");
+    a.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+    a.download = (opts.file || "padel") + ".ics";
+    document.body.appendChild(a); a.click();
+    setTimeout(() => a.remove(), 3000);
+  }
 }
 
 /* המשחק עצמו: תזכורת ביום המשחק ב־09:00, ועוד אחת ערב קודם ב־18:00 */
@@ -812,7 +834,7 @@ function paintHero(){
 }
 
 /* ── ארבעת המקומות ────────────────────────────────────────── */
-function renderSpots(alertText){
+function renderSpots(alertText, tone){
   onList = true;
   let open = 0, mine = null, mineGame = null;
   games.forEach(g => g.spots.forEach(sp => {
@@ -836,7 +858,8 @@ function renderSpots(alertText){
     : "";
 
   app.innerHTML =
-    (alertText ? '<div class="hint bad" style="margin:16px 6px 0">' + esc(alertText) + "</div>" : "") +
+    (alertText ? '<div class="hint ' + (tone === "ok" ? "good" : "bad") +
+      '" style="margin:16px 6px 0">' + esc(alertText) + "</div>" : "") +
     '<div class="group">' + esc(headline) + "</div>" +
     (reopenLine ? '<div class="reopen">' + esc(reopenLine) + "</div>" : "") +
     games.map((g, gi) => {
@@ -1225,7 +1248,7 @@ async function releaseSpot(btn){
     if(sp.mine){ sp.mine = false; sp.status = "open"; sp.name = ""; }
   }));
   saveDemo(); closeModal();
-  renderSpots("המקום בוטל ונפתח מחדש.");
+  renderSpots("המקום בוטל ונפתח מחדש.", "ok");
 }
 
 function fail(){
@@ -1270,7 +1293,7 @@ function renderRelease(spot){
     if(demoMode){
       spot.status = "open"; spot.name = ""; spot.mine = false;
       saveDemo(); closeModal();
-      return renderSpots("המקום בוטל.");
+      return renderSpots("המקום בוטל.", "ok");
     }
     try{
       const res = await api("release", {slot: spot.id, phone: phone});
@@ -1279,7 +1302,7 @@ function renderRelease(spot){
         const list = await api("list");
         games = normalise(list.games);
         closeModal();
-        return renderSpots("המקום בוטל ונפתח מחדש.");
+        return renderSpots("המקום בוטל ונפתח מחדש.", "ok");
       }
       busy(btn, false);
       hint.className = "hint";
