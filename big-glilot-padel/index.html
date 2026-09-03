@@ -134,15 +134,24 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .row[data-state="open"] .who{color:var(--text-3);font-weight:500}
 .row[data-state="claimed"] .who{color:var(--text);font-weight:700}
+.row[data-state="mine"]{background:color-mix(in srgb, var(--ink) 7%, transparent)}
+.row[data-state="mine"] .who{color:var(--ink);font-weight:800}
+.row[data-state="mine"] .who::after{content:" · אתם";font-weight:700;font-size:13px;
+  opacity:.75}
 .row[data-state="soon"] .who{color:var(--text-3);font-weight:500}
 .gm .row[data-state="soon"]{opacity:.75}
 .tag{font-size:13px;color:var(--text-3);font-weight:600}
 .tag.mine{color:var(--ink);font-weight:700;
   box-shadow:inset 0 0 0 1.5px var(--ink);border-radius:var(--r-pill);padding:5px 11px}
 
-.take.free{background:transparent;color:var(--ink);font-size:13.5px;font-weight:800;
-  padding:10px 16px;min-height:40px;box-shadow:inset 0 0 0 2px var(--ink)}
-.take.free:active{transform:scale(.95);background:color-mix(in srgb,var(--ink) 10%,transparent)}
+.take.free{background:transparent;color:var(--text-2);font-size:13.5px;font-weight:700;
+  padding:9px 15px;min-height:38px;border-radius:var(--r-pill);
+  box-shadow:inset 0 0 0 1.5px var(--line-strong,var(--line))}
+.take.free:active{transform:scale(.95);color:var(--ink);
+  box-shadow:inset 0 0 0 1.5px var(--ink);background:transparent}
+@media (hover:hover){
+  .take.free:hover{color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+}
 .sure{display:flex;align-items:center;gap:7px;animation:in .28s var(--ease) both}
 .sure span{font-size:13.5px;font-weight:700;color:var(--text-2)}
 .sure-yes,.sure-no{font-size:13.5px;font-weight:800;padding:9px 14px;
