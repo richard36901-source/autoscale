@@ -654,7 +654,7 @@ function once(action, data){
     const cb = "cb" + Math.random().toString(36).slice(2);
     const s = document.createElement("script");
     const cleanup = () => { delete window[cb]; s.remove(); clearTimeout(timer); };
-    const timer = setTimeout(() => { cleanup(); reject(new Error("timeout")); }, 12000);
+    const timer = setTimeout(() => { cleanup(); reject(new Error("timeout")); }, 25000);
     window[cb] = res => { cleanup(); resolve(res); };
     s.onerror = () => { cleanup(); reject(new Error("network")); };
     const q = Object.assign({action:action, callback:cb}, data);
@@ -1480,6 +1480,19 @@ const DEMO_GAMES = GAMES.map((g, i) => ({
     try{ localStorage.setItem(KEY, mode); }catch(e){}
     apply(mode);
   });
+})();
+
+/* Apps Script מכבה מכולות שלא בשימוש, וההתעוררות הראשונה איטית.
+   שולחים בקשה ריקה מיד עם טעינת הדף, כך שעד שהמשתמש מקליד
+   את הקוד השרת כבר ער. התשובה עצמה לא מעניינת. */
+(function warmUp(){
+  if(API.indexOf("PASTE_") === 0) return;
+  const s = document.createElement("script");
+  s.src = API + "?action=ping&callback=__warm";
+  window.__warm = () => {};
+  s.onerror = () => {};
+  document.body.appendChild(s);
+  setTimeout(() => s.remove(), 30000);
 })();
 
 (async function start(){
