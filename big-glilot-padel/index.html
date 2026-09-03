@@ -840,7 +840,8 @@ function renderRelease(spot){
 
   async function go(){
     const phone = rp.value.trim();
-    if(phone.replace(/\D/g, "").length < 9){
+    // 4 ספרות = קוד מנהל, אחרת צריך טלפון מלא. הבדיקה האמיתית בשרת.
+    if(phone.length !== 4 && phone.replace(/\D/g, "").length < 9){
       hint.className = "hint bad"; hint.textContent = "מספר הטלפון לא תקין."; rp.focus(); return;
     }
     const btn = document.getElementById("rgo");
