@@ -1,0 +1,1021 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>פאדל גלילות</title>
+<meta name="description" content="4 מקומות במגרש הפאדל, כל שבוע, לעובדי BIG גלילות.">
+<meta name="theme-color" content="#EDEDEB">
+<meta property="og:title" content="פאדל גלילות">
+<meta property="og:description" content="4 מקומות במגרש. כל הקודם זוכה.">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   צבע מותג אחד: האדום של BIG. משנים כאן והכל משתנה איתו.
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  --ink:#E4002B;            /* אדום BIG */
+  --ink-press:#B4001F;
+  --on-ink:#FFFFFF;
+
+  --bg:#EDEDEB;
+  --card:#FFFFFF;
+  --text:#0B0B0B;
+  --text-2:#6F6F6C;
+  --text-3:#A5A5A1;
+  --line:#E2E2DF;
+  --fill-hover:rgba(0,0,0,.035);
+
+  --r-block:12px;
+  --r-pill:9px;
+  --r-round:999px;   /* למדליות ולמתג בלבד */
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","Segoe UI",Arial,sans-serif;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#FF3355; --ink-press:#E01238; --on-ink:#FFFFFF;
+    --bg:#0B0B0B; --card:#161615; --text:#F5F5F3; --text-2:#9C9C98; --text-3:#6B6B67;
+    --line:#262625; --fill-hover:rgba(255,255,255,.05);
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#FF3355; --ink-press:#E01238; --on-ink:#FFFFFF;
+  --bg:#0B0B0B; --card:#161615; --text:#F5F5F3; --text-2:#9C9C98; --text-3:#6B6B67;
+  --line:#262625; --fill-hover:rgba(255,255,255,.05);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--bg); color:var(--text);
+  font:400 17px/1.35 var(--font);
+  -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+}
+h1,h2{margin:0}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
+  -webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
+
+.wrap{max-width:430px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;
+  padding:0 14px;position:relative}
+
+/* על מסך גדול נשארים ברוחב טלפון, אבל בתוך מסגרת נקייה */
+@media (min-width:560px){
+  body{padding:32px 0}
+  .credit{margin-top:18px}
+  .wrap{min-height:auto;background:var(--bg);border-radius:16px;padding:0 16px 8px;
+    backdrop-filter:blur(1px);
+    box-shadow:0 1px 2px rgba(0,0,0,.05),0 24px 60px -28px rgba(0,0,0,.35);
+    outline:1px solid var(--line)}
+  .sheet{max-width:462px;margin:0 auto;border-radius:16px 16px 0 0}
+}
+
+/* ── רקע: קווי מגרש וכדורים, שקטים מאחורי הכל ─────────────── */
+.court-bg{position:fixed;inset:-2%;z-index:-2;color:var(--text);opacity:.075;
+  pointer-events:none}
+.court-bg svg{width:100%;height:100%}
+.court-bg .balls{opacity:.85}
+:root[data-theme="dark"] .court-bg{opacity:.1}
+
+/* ── סרגל מותג ────────────────────────────────────────────── */
+.bar{display:flex;align-items:center;gap:10px;padding:16px 6px 14px}
+.bar-txt{font-size:12.5px;font-weight:600;color:var(--text-2);flex:1;min-width:0}
+
+/* הלוגו של BIG FASHION גלילות */
+.logo{height:46px;width:auto;flex:none;display:block;
+  box-shadow:0 1px 3px rgba(0,0,0,.25)}
+
+/* מתג מצב כהה */
+.theme{width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:var(--r-pill);
+  color:var(--text-2);background:var(--card);box-shadow:inset 0 0 0 1px var(--line);
+  transition:transform .12s ease,color .15s ease}
+.theme:active{transform:scale(.92)}
+.theme .moon{display:none}
+:root[data-theme="dark"] .theme .sun{display:none}
+:root[data-theme="dark"] .theme .moon{display:block}
+
+/* ── בלוק המשחק, עם קווי המגרש ברקע ──────────────────────── */
+.hero{background:var(--ink);color:var(--on-ink);border-radius:var(--r-block);
+  padding:20px 22px 22px;position:relative;overflow:hidden;isolation:isolate}
+.hero > *{position:relative}
+.court{position:absolute;z-index:-1;inset:auto -12% -18% auto;width:118%;height:auto;
+  opacity:.17;color:currentColor;transform:rotate(-7deg);pointer-events:none}
+@media (prefers-reduced-motion: no-preference){
+  .court{animation:court 1.1s var(--ease) both}
+}
+@keyframes court{from{opacity:0;transform:rotate(-7deg) scale(1.08)}
+  to{opacity:.17;transform:rotate(-7deg) scale(1)}}
+.hero .day{font-size:13px;font-weight:600;opacity:.6;letter-spacing:.01em}
+.hero .time{font-size:62px;font-weight:700;letter-spacing:-.05em;line-height:.95;
+  margin-top:8px;font-variant-numeric:tabular-nums}
+.hero .court{margin-top:9px;font-size:14px;opacity:.6}
+.hero .left{margin-top:11px;font-size:14px;font-weight:600;opacity:.85}
+
+/* ── רשימת השחקנים ────────────────────────────────────────── */
+.group{margin:22px 6px 8px;font-size:12.5px;color:var(--text-2);font-weight:600}
+.list{background:var(--card);border-radius:var(--r-block);overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;min-height:62px;padding:11px 18px;position:relative}
+.row + .row::before{content:"";position:absolute;top:0;inset-inline-start:18px;inset-inline-end:0;
+  height:1px;background:var(--line)}
+.who{flex:1;min-width:0;font-size:19px;font-weight:600;letter-spacing:-.015em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row[data-state="open"] .who{color:var(--text-3);font-weight:500}
+.tag{font-size:13px;color:var(--text-3);font-weight:600}
+.tag.mine{color:var(--ink);font-weight:700;
+  box-shadow:inset 0 0 0 1.5px var(--ink);border-radius:var(--r-pill);padding:5px 11px}
+
+.take.free{background:transparent;color:var(--ink);font-size:13.5px;
+  box-shadow:inset 0 0 0 1.5px var(--ink)}
+.take.free:active{background:transparent;color:var(--ink-press)}
+.sure{display:flex;align-items:center;gap:7px;animation:in .28s var(--ease) both}
+.sure span{font-size:13.5px;font-weight:700;color:var(--text-2)}
+.sure-yes,.sure-no{font-size:13.5px;font-weight:800;padding:9px 14px;
+  border-radius:var(--r-pill);min-height:38px;transition:transform .1s ease}
+.sure-yes{background:var(--ink);color:var(--on-ink)}
+.sure-no{color:var(--text-2);box-shadow:inset 0 0 0 1.5px var(--line)}
+.sure-yes:active,.sure-no:active{transform:scale(.94)}
+.tag.as-btn{cursor:pointer;transition:opacity .15s ease}
+.tag.as-btn:active{opacity:.45}
+.take{background:var(--ink);color:var(--on-ink);font-size:14px;font-weight:700;
+  padding:10px 16px;border-radius:var(--r-pill);min-height:40px;
+  transition:transform .1s ease,opacity .15s ease}
+.take:active{transform:scale(.95);background:var(--ink-press)}
+@media (hover:hover){
+  .row[data-state="open"],.row[data-state="claimed"],.row[data-state="mine"]{cursor:pointer}
+  .row:hover{background:var(--fill-hover)}
+  .row[data-state="open"]:hover .take{background:var(--ink-press)}
+  .row[data-state="open"]:hover .who{color:var(--text)}
+  .filled:hover,.hollow:hover,.seg:hover,.theme:hover{filter:brightness(.97)}
+  .theme:hover{color:var(--text)}
+}
+
+@media (prefers-reduced-motion: no-preference){
+  .list .row{animation:in .42s var(--ease) both;animation-delay:calc(var(--i) * 50ms)}
+  .mk{animation:pop .45s var(--ease) both}
+}
+@keyframes in{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:none;opacity:1}}
+
+/* ── כפתורים ──────────────────────────────────────────────── */
+.filled{width:100%;background:var(--ink);color:var(--on-ink);font-size:17px;font-weight:700;
+  min-height:56px;border-radius:var(--r-pill);margin-top:18px;
+  transition:transform .1s ease,opacity .15s ease}
+.filled:active{transform:scale(.985);background:var(--ink-press)}
+.filled:disabled{opacity:.35;transform:none;cursor:default}
+.hollow{width:100%;background:transparent;color:var(--text);font-size:16px;font-weight:600;
+  min-height:52px;border-radius:var(--r-pill);margin-top:10px;
+  box-shadow:inset 0 0 0 1.5px var(--line)}
+.hollow:active{background:var(--card)}
+.plain{width:100%;color:var(--text-2);font-size:15px;font-weight:600;min-height:44px;margin-top:6px}
+.plain:active{opacity:.5}
+
+/* ── שער הכניסה. הקוד נבדק בשרת, לא בדף. ──────────────────── */
+function renderGate(msg){
+  document.getElementById("openLog").hidden = true;
+  app.innerHTML =
+    '<div class="gate">' +
+      "<h2>קוד כניסה</h2>" +
+      '<p>הקוד מחולק לעובדי הקניון.</p>' +
+      '<input id="code" class="code-in" type="text" inputmode="numeric" ' +
+        'maxlength="4" autocomplete="one-time-code" placeholder="0000">' +
+      (msg ? '<div class="hint bad" style="margin:10px 2px 0">' + esc(msg) + "</div>" : "") +
+      '<button class="filled" id="enter">כניסה</button>' +
+    "</div>";
+  const input = document.getElementById("code");
+  setTimeout(() => input.focus(), 80);
+  input.addEventListener("input", () => {
+    input.value = input.value.replace(/\D/g, "").slice(0, 4);
+    if(input.value.length === 4) enter();
+  });
+  document.getElementById("enter").onclick = enter;
+
+  async function enter(){
+    const v = input.value.trim();
+    if(v.length !== 4) return;
+    const btn = document.getElementById("enter");
+    btn.disabled = true; btn.textContent = "בודקים";
+    accessCode = v;
+    try{
+      const res = await api("list");
+      if(res && res.ok){
+        try{ localStorage.setItem(CODE, v); }catch(e){}
+        document.getElementById("openLog").hidden = false;
+        return boot(res);
+      }
+      accessCode = "";
+      renderGate("הקוד לא נכון.");
+    }catch(e){
+      accessCode = "";
+      renderGate("אין חיבור לשרת.");
+    }
+  }
+}
+
+/* ── חלון קטן במקום החלפת מסך ─────────────────────────────── */
+const modal  = document.getElementById("modal");
+const mscrim = document.getElementById("mscrim");
+
+function openModal(html){
+  modal.innerHTML = '<div class="card">' + html + "</div>";
+  modal.hidden = false; mscrim.hidden = false;
+  const first = modal.querySelector("input");
+  if(first) setTimeout(() => first.focus(), 60);
+}
+function closeModal(){
+  modal.hidden = true; mscrim.hidden = true; modal.innerHTML = "";
+}
+mscrim.addEventListener("click", () => { closeModal(); renderSpots(); });
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape" && !modal.hidden){ closeModal(); renderSpots(); }
+});
+
+/* ── טופס ─────────────────────────────────────────────────── */
+.fields{background:var(--card);border-radius:var(--r-block);overflow:hidden}
+.f{display:flex;align-items:center;gap:12px;padding:6px 18px;position:relative}
+.f + .f::before{content:"";position:absolute;top:0;inset-inline-start:18px;inset-inline-end:0;
+  height:1px;background:var(--line)}
+.f label{width:64px;flex:none;font-size:14px;color:var(--text-2);font-weight:600}
+.f input{flex:1;min-width:0;font:inherit;font-size:18px;font-weight:600;border:0;
+  background:transparent;color:var(--text);padding:16px 0;min-height:52px;letter-spacing:-.01em}
+.f input::placeholder{color:var(--text-3);font-weight:500}
+.f input:focus{outline:none}
+.hint{margin:9px 6px 0;font-size:13px;color:var(--text-2);line-height:1.4}
+.hint.bad{color:var(--text);font-weight:600}
+
+/* ── מסך אישור ────────────────────────────────────────────── */
+.done{padding:8px 6px 0}
+.mk{width:54px;height:54px;border-radius:var(--r-round);background:var(--ink);color:var(--on-ink);
+  display:grid;place-items:center;font-size:26px;font-weight:600}
+.done h2{margin-top:18px;font-size:38px;font-weight:700;letter-spacing:-.035em;line-height:1.02}
+@media (prefers-reduced-motion: no-preference){
+  .done h2{animation:in .5s var(--ease) both;animation-delay:.08s}
+  .done p{animation:in .5s var(--ease) both;animation-delay:.16s}
+  .done .filled{animation:in .5s var(--ease) both;animation-delay:.24s}
+}
+.done p{margin-top:12px;font-size:16px;color:var(--text-2);line-height:1.45;max-width:31ch}
+
+/* ── שלד טעינה ────────────────────────────────────────────── */
+.sk{min-height:62px;padding:22px 18px;position:relative}
+.sk + .sk::before{content:"";position:absolute;top:0;inset-inline-start:18px;inset-inline-end:0;
+  height:1px;background:var(--line)}
+.sk i{display:block;width:132px;height:18px;border-radius:5px;background:var(--line)}
+@media (prefers-reduced-motion: no-preference){
+  .sk i{animation:breathe 1.4s ease-in-out infinite}
+}
+@keyframes breathe{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── לוג השבועות והמובילים ────────────────────────────────── */
+
+.wk{padding:14px 18px;position:relative}
+.wk + .wk::before{content:"";position:absolute;top:0;inset-inline-start:18px;inset-inline-end:0;
+  height:1px;background:var(--line)}
+.wk-date{font-size:12.5px;color:var(--text-3);font-weight:600;
+  font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate;text-align:start}
+.wk-names{margin-top:5px;font-size:16px;font-weight:600;letter-spacing:-.01em;line-height:1.4}
+
+.lb{display:flex;align-items:center;gap:12px;padding:13px 18px;position:relative}
+.lb + .lb::before{content:"";position:absolute;top:0;inset-inline-start:18px;inset-inline-end:0;
+  height:1px;background:var(--line)}
+.lb-rank{font-size:13px;color:var(--text-3);font-weight:700;min-width:16px;
+  font-variant-numeric:tabular-nums}
+.lb-name{flex:1;min-width:0;font-size:17px;font-weight:600;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.lb-n{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.lb.top .lb-name,.lb.top .lb-n{font-weight:700}
+.empty{padding:20px 18px;font-size:14px;color:var(--text-3)}
+
+.credit{padding:26px 6px 22px;margin-top:auto;text-align:center;font-size:11.5px;
+  color:var(--text-3)}
+.credit a{color:var(--text-3);text-decoration:none;font-variant-numeric:tabular-nums;
+  direction:ltr;unicode-bidi:isolate}
+</style>
+</head>
+<body>
+<div class="court-bg" aria-hidden="true">
+  <svg viewBox="0 0 420 900" preserveAspectRatio="xMidYMid slice">
+    <g fill="none" stroke="currentColor" stroke-width="2.2"
+       stroke-linecap="round" stroke-linejoin="round">
+      <!-- קווי המגרש, מצוירים ביד: לא ישרים לגמרי והפינות חורגות -->
+      <path d="M-14 96 C 120 92, 268 100, 436 94"></path>
+      <path d="M-10 806 C 130 812, 280 800, 434 808"></path>
+      <path d="M24 70 C 20 300, 30 560, 22 834"></path>
+      <path d="M398 64 C 404 310, 394 570, 400 836"></path>
+
+      <!-- הרשת -->
+      <path d="M-16 452 C 110 444, 300 460, 438 448" stroke-dasharray="9 11"></path>
+
+      <!-- קווי השירות -->
+      <path d="M20 268 C 150 262, 280 274, 402 266"></path>
+      <path d="M22 640 C 150 648, 282 634, 400 642"></path>
+      <path d="M212 96 C 208 250, 216 640, 210 806" stroke-dasharray="7 12"></path>
+    </g>
+
+    <g class="balls" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round">
+      <g transform="translate(74 178) rotate(-12)">
+        <path d="M17 0 C 17 10, 9 17, -1 17 C -11 17, -18 9, -17 -1 C -17 -11, -9 -17, 1 -17 C 11 -18, 17 -10, 17 0 Z"></path>
+        <path d="M-16 -4 C -7 -13, 8 -14, 16 -6"></path>
+        <path d="M-16 5 C -6 13, 9 13, 16 4"></path>
+      </g>
+      <g transform="translate(348 386) rotate(24)">
+        <path d="M12 0 C 12 7, 6 12, -1 12 C -8 12, -13 6, -12 -1 C -12 -8, -6 -12, 1 -12 C 8 -13, 12 -7, 12 0 Z"></path>
+        <path d="M-11 -3 C -5 -9, 6 -10, 11 -4"></path>
+        <path d="M-11 4 C -4 9, 6 9, 11 3"></path>
+      </g>
+      <g transform="translate(108 712) rotate(8)">
+        <path d="M21 0 C 21 12, 11 21, -1 21 C -13 21, -22 11, -21 -1 C -21 -13, -11 -21, 1 -21 C 13 -22, 21 -12, 21 0 Z"></path>
+        <path d="M-20 -5 C -9 -16, 10 -17, 20 -7"></path>
+        <path d="M-20 6 C -8 16, 11 16, 20 5"></path>
+      </g>
+      <g transform="translate(330 122) rotate(-30)">
+        <path d="M10 0 C 10 6, 5 10, -1 10 C -7 10, -11 5, -10 -1 C -10 -7, -5 -10, 1 -10 C 7 -11, 10 -6, 10 0 Z"></path>
+        <path d="M-9 -2 C -4 -8, 5 -8, 9 -3"></path>
+      </g>
+      <g transform="translate(238 560) rotate(16)">
+        <path d="M14 0 C 14 8, 7 14, -1 14 C -9 14, -15 7, -14 -1 C -14 -9, -7 -14, 1 -14 C 9 -15, 14 -8, 14 0 Z"></path>
+        <path d="M-13 -4 C -6 -11, 7 -11, 13 -5"></path>
+        <path d="M-13 5 C -5 11, 7 11, 13 4"></path>
+      </g>
+    </g>
+  </svg>
+</div>
+
+<div class="wrap">
+  <div class="bar">
+    <svg class="logo" viewBox="0 0 126 100" role="img" aria-label="BIG FASHION גלילות">
+      <rect x="0" y="0" width="103" height="100" fill="#111110"></rect>
+      <rect x="103" y="0" width="23" height="100" fill="#E4002B"></rect>
+      <circle cx="51.5" cy="24" r="6.4" fill="#FFFFFF"></circle>
+      <text x="51.5" y="63" fill="#FFFFFF" text-anchor="middle"
+            font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+            font-size="37" font-weight="700" letter-spacing="-0.5">BIG</text>
+      <text x="51.5" y="85" fill="#FFFFFF" text-anchor="middle" direction="rtl"
+            font-family="-apple-system, Arial, sans-serif"
+            font-size="15" font-weight="600">גלילות</text>
+      <text x="114.5" y="50" fill="#FFFFFF" text-anchor="middle"
+            font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+            font-size="13.5" font-weight="700" letter-spacing="0.6"
+            transform="rotate(-90 114.5 50)">FASHION</text>
+    </svg>
+    <span class="bar-txt">מועדון העובדים</span>
+    <button class="theme" id="theme" aria-label="מצב כהה">
+      <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true">
+        <path class="sun" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+          d="M12 4.6V2.4M12 21.6v-2.2M19.4 12h2.2M2.4 12h2.2M17.2 6.8l1.6-1.6M5.2 18.8l1.6-1.6M17.2 17.2l1.6 1.6M5.2 5.2l1.6 1.6"></path>
+        <circle class="sun" cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.9"></circle>
+        <path class="moon" fill="currentColor"
+          d="M20 14.4A8.5 8.5 0 0 1 9.6 4a8.5 8.5 0 1 0 10.4 10.4z"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class="hero">
+    <svg class="court" viewBox="0 0 200 108" aria-hidden="true" focusable="false">
+      <g fill="none" stroke="currentColor" stroke-width="1.6" vector-effect="non-scaling-stroke">
+        <rect x="8" y="8" width="184" height="92" rx="2"></rect>
+        <line x1="100" y1="8" x2="100" y2="100"></line>
+        <line x1="8" y1="54" x2="192" y2="54" stroke-dasharray="3 4"></line>
+        <line x1="46" y1="8" x2="46" y2="100"></line>
+        <line x1="154" y1="8" x2="154" y2="100"></line>
+        <line x1="46" y1="54" x2="8" y2="54"></line>
+        <line x1="154" y1="54" x2="192" y2="54"></line>
+      </g>
+    </svg>
+    <div class="day" id="gDay">יום ראשון</div>
+    <div class="time" id="gTime">18:00</div>
+    <div class="court" id="gCourt">מגרש הפאדל</div>
+  </div>
+
+  <main id="app">
+    <div class="group">השחקנים</div>
+    <div class="list">
+      <div class="sk"><i></i></div><div class="sk"><i></i></div>
+      <div class="sk"><i></i></div><div class="sk"><i></i></div>
+    </div>
+  </main>
+
+  <button class="hollow" id="openLog" style="margin-top:14px">לוח משחקים</button>
+
+  <footer class="credit">
+    נבנה על ידי AutoScale · <a href="https://wa.me/972545764327" target="_blank" rel="noopener">054-576-4327</a>
+  </footer>
+</div>
+
+<div class="mscrim" id="mscrim" hidden></div>
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true"></div>
+
+<div class="scrim" id="scrim" hidden></div>
+<section class="sheet" id="sheet" hidden aria-label="לוח משחקים">
+  <div class="grab" id="grab"><i></i></div>
+  <div class="segs">
+    <button class="seg" data-tab="log" aria-selected="true">לוח משחקים</button>
+    <button class="seg" data-tab="board" aria-selected="false">טבלת המובילים</button>
+  </div>
+  <div class="sheet-body" id="sheetBody"></div>
+</section>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   1. כתובת השרת. מדביקים כאן את ה־Web app URL של Apps Script.
+   ══════════════════════════════════════════════════════════════ */
+const API = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+/* ══════════════════════════════════════════════════════════════
+   2. המשחק הקבוע. אותם ערכים גם ב־SESSION שבקובץ Code.gs.
+   ══════════════════════════════════════════════════════════════ */
+const GAME = {
+  day:   "ראשון",
+  time:  "18:00",
+  court: "מגרש הפאדל"
+};
+
+const app    = document.getElementById("app");
+const leftEl = {set textContent(v){}};   /* המונה מוצג מעל הרשימה בלבד */
+const params = new URLSearchParams(location.search);
+const linkToken = params.get("c");
+const STORE = "padel-glilot-token";
+const CODE  = "padel-glilot-code";
+const ME    = "padel-glilot-me";
+
+let spots = [], demoMode = false, myToken = null;
+let accessCode = "";
+try{ accessCode = localStorage.getItem(CODE) || ""; }catch(e){}
+
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const remember = t => { try{ localStorage.setItem(STORE, t); }catch(e){} };
+const recall   = ()  => { try{ return localStorage.getItem(STORE); }catch(e){ return null; } };
+const forget   = ()  => { try{ localStorage.removeItem(STORE); }catch(e){} };
+
+/* פרטי העובד נשמרים במכשיר שלו בלבד, כדי שבפעם הבאה הטופס כבר מלא. */
+const saveMe = (name, phone) => {
+  try{ localStorage.setItem(ME, JSON.stringify({name:name, phone:phone})); }catch(e){}
+};
+const loadMe = () => {
+  try{ return JSON.parse(localStorage.getItem(ME)) || {}; }catch(e){ return {}; }
+};
+
+/* JSONP, כדי שלא תידרש הגדרת CORS בצד של Apps Script. */
+function api(action, data){
+  data = data || {};
+  return new Promise((resolve, reject) => {
+    const cb = "cb" + Math.random().toString(36).slice(2);
+    const s = document.createElement("script");
+    const cleanup = () => { delete window[cb]; s.remove(); clearTimeout(timer); };
+    const timer = setTimeout(() => { cleanup(); reject(new Error("timeout")); }, 15000);
+    window[cb] = res => { cleanup(); resolve(res); };
+    s.onerror = () => { cleanup(); reject(new Error("network")); };
+    const q = Object.assign({action:action, callback:cb}, data);
+    if(accessCode) q.code = accessCode;
+    s.src = API + "?" + new URLSearchParams(q).toString();
+    document.body.appendChild(s);
+  });
+}
+
+function paintHero(){
+  document.getElementById("gDay").textContent   = "יום " + GAME.day;
+  document.getElementById("gTime").textContent  = GAME.time;
+  document.getElementById("gCourt").textContent = GAME.court;
+}
+
+/* ── ארבעת המקומות ────────────────────────────────────────── */
+function renderSpots(alertText){
+  onList = true;
+  const open = spots.filter(s => s.status === "open").length;
+  const mine = spots.find(s => s.mine);
+
+  const headline = mine ? "אתם רשומים למשחק"
+    : open === 0 ? "המגרש מלא השבוע"
+    : open === 1 ? "נשאר מקום אחד"
+    : "נשארו " + open + " מקומות";
+
+  app.innerHTML =
+    (alertText ? '<div class="hint bad" style="margin:16px 6px 0">' + esc(alertText) + "</div>" : "") +
+    '<div class="group">' + esc(headline) + "</div>" +
+    '<div class="list">' + spots.map((s, i) => {
+      const state = s.mine ? "mine" : s.status;
+      return '<div class="row" data-state="' + state + '" style="--i:' + i + '">' +
+        '<span class="who">' + (s.status === "open" ? "פנוי" : esc(s.name)) + "</span>" +
+        (s.mine ? '<button class="take free" data-drop="1">שחרור המקום שלי</button>'
+          : s.status === "open" ? '<button class="take" data-take="' + esc(s.id) + '">אני משחק</button>'
+          : '<button class="tag as-btn" data-free="' + esc(s.id) + '">זה אני</button>') +
+      "</div>";
+    }).join("") + "</div>" +
+    "";
+}
+
+/* ── שער הכניסה. הקוד נבדק בשרת, לא בדף. ──────────────────── */
+function renderGate(msg){
+  document.getElementById("openLog").hidden = true;
+  app.innerHTML =
+    '<div class="gate">' +
+      "<h2>קוד כניסה</h2>" +
+      '<p>הקוד מחולק לעובדי הקניון.</p>' +
+      '<input id="code" class="code-in" type="text" inputmode="numeric" ' +
+        'maxlength="4" autocomplete="one-time-code" placeholder="0000">' +
+      (msg ? '<div class="hint bad" style="margin:10px 2px 0">' + esc(msg) + "</div>" : "") +
+      '<button class="filled" id="enter">כניסה</button>' +
+    "</div>";
+  const input = document.getElementById("code");
+  setTimeout(() => input.focus(), 80);
+  input.addEventListener("input", () => {
+    input.value = input.value.replace(/\D/g, "").slice(0, 4);
+    if(input.value.length === 4) enter();
+  });
+  document.getElementById("enter").onclick = enter;
+
+  async function enter(){
+    const v = input.value.trim();
+    if(v.length !== 4) return;
+    const btn = document.getElementById("enter");
+    btn.disabled = true; btn.textContent = "בודקים";
+    accessCode = v;
+    try{
+      const res = await api("list");
+      if(res && res.ok){
+        try{ localStorage.setItem(CODE, v); }catch(e){}
+        document.getElementById("openLog").hidden = false;
+        return boot(res);
+      }
+      accessCode = "";
+      renderGate("הקוד לא נכון.");
+    }catch(e){
+      accessCode = "";
+      renderGate("אין חיבור לשרת.");
+    }
+  }
+}
+
+/* ── חלון קטן במקום החלפת מסך ─────────────────────────────── */
+const modal  = document.getElementById("modal");
+const mscrim = document.getElementById("mscrim");
+
+function openModal(html){
+  modal.innerHTML = '<div class="card">' + html + "</div>";
+  modal.hidden = false; mscrim.hidden = false;
+  const first = modal.querySelector("input");
+  if(first) setTimeout(() => first.focus(), 60);
+}
+function closeModal(){
+  modal.hidden = true; mscrim.hidden = true; modal.innerHTML = "";
+}
+mscrim.addEventListener("click", () => { closeModal(); renderSpots(); });
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape" && !modal.hidden){ closeModal(); renderSpots(); }
+});
+
+/* ── טופס ─────────────────────────────────────────────────── */
+function renderForm(spot){
+  onList = false;
+  const me = loadMe();
+  openModal(
+    "<h2>הפרטים שלכם</h2>" +
+    '<div class="sub">יום ' + esc(GAME.day) + " " + esc(GAME.time) + " · " + esc(GAME.court) + "</div>" +
+    '<div class="fields">' +
+      '<div class="f"><label for="nm">שם</label>' +
+        '<input id="nm" type="text" autocomplete="name" enterkeyhint="next" placeholder="דנה לוי" value="' + esc(me.name || "") + '"></div>' +
+      '<div class="f"><label for="ph">טלפון</label>' +
+        '<input id="ph" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="done" placeholder="050-000-0000" value="' + esc(me.phone || "") + '"></div>' +
+    "</div>" +
+    '<div class="hint" id="hint">' + (me.phone ? "הפרטים מהפעם הקודמת. אפשר לאשר." : "רק מהמספר הזה אפשר יהיה לשחרר את המקום.") + "</div>" +
+    '<button class="filled" id="go">תפיסת המקום</button>' +
+    '<button class="plain" id="back">ביטול</button>');
+
+  const hint = document.getElementById("hint");
+  const nm = document.getElementById("nm"), ph = document.getElementById("ph");
+  document.getElementById("back").onclick = () => { closeModal(); renderSpots(); };
+  ph.addEventListener("keydown", e => { if(e.key === "Enter") submit(); });
+  document.getElementById("go").onclick = submit;
+
+  function bad(msg, el){ hint.className = "hint bad"; hint.textContent = msg; el.focus(); }
+
+  async function submit(){
+    const name = nm.value.trim(), phone = ph.value.trim();
+    if(name.length < 2) return bad("צריך שם מלא.", nm);
+    if(phone.replace(/\D/g, "").length < 9) return bad("מספר הטלפון לא תקין.", ph);
+
+    const btn = document.getElementById("go");
+    btn.disabled = true; btn.textContent = "שומרים";
+
+    saveMe(name, phone);
+    if(demoMode){
+      spot.status = "claimed"; spot.name = name; spot.mine = true;
+      myToken = "demo";
+      return renderDone(name, null);
+    }
+    try{
+      const res = await api("claim", {slot: spot.id, name: name, phone: phone});
+      if(res.ok){
+        myToken = res.token; remember(res.token);
+        return renderDone(name, res.token);
+      }
+      if(res.slots) spots = res.slots.map(s => Object.assign({}, s, {mine:false}));
+      renderSpots(
+        res.reason === "taken"          ? "מישהו הקדים אתכם. נסו מקום אחר." :
+        res.reason === "already_booked" ? "המספר הזה כבר רשום השבוע." :
+                                          "לא הצלחנו לשמור. נסו שוב.");
+    }catch(err){
+      btn.disabled = false; btn.textContent = "תפיסת המקום";
+      bad("אין חיבור לשרת. נסו שוב.", nm);
+    }
+  }
+}
+
+/* ── אישור ────────────────────────────────────────────────── */
+function renderDone(name, token){
+  onList = false;
+  try{ navigator.vibrate && navigator.vibrate(14); }catch(e){}
+  openModal(
+    '<div class="done" style="padding:0">' +
+      '<div class="mk" aria-hidden="true">✓</div>' +
+      "<h2>המקום שלכם</h2>" +
+      "<p>" + esc(name) + ", יום " + esc(GAME.day) + " ב־" + esc(GAME.time) + ".</p>" +
+      "<p>אפשר לשחרר את המקום מכאן בכל רגע.</p>" +
+      '<button class="filled" id="backToSpots">סגירה</button>' +
+    "</div>");
+  document.getElementById("backToSpots").onclick = () => { closeModal(); renderSpots(); };
+}
+
+
+/* ── ביטול ────────────────────────────────────────────────── */
+function confirmRelease(btn){
+  openModal(
+    "<h2>לשחרר את המקום?</h2>" +
+    '<div class="sub">המקום ייפתח מיד לשאר העובדים.</div>' +
+    '<button class="filled" id="yes">כן, שחררו</button>' +
+    '<button class="plain" id="no">לא</button>');
+  document.getElementById("no").onclick  = () => { closeModal(); renderSpots(); };
+  document.getElementById("yes").onclick = e => releaseSpot(e.target);
+}
+
+async function releaseSpot(btn){
+  btn.disabled = true; btn.textContent = "משחררים";
+  if(!demoMode){
+    try{ await api("cancel", {token: myToken}); }
+    catch(e){ btn.disabled = false; btn.textContent = "ביטול ההרשמה שלי"; return; }
+  }
+  forget(); myToken = null;
+  const me = spots.find(x => x.mine);
+  if(me){ me.mine = false; me.status = "open"; me.name = ""; }
+  closeModal();
+  renderSpots("המקום שוחרר ונפתח מחדש.");
+}
+
+function fail(){
+  leftEl.textContent = "אין חיבור";
+  app.innerHTML =
+    '<div class="done"><h2>לא נטען</h2>' +
+    "<p>תקלת רשת רגעית. נסו לרענן.</p>" +
+    '<button class="filled" id="retry">רענון</button></div>';
+  document.getElementById("retry").onclick = () => location.reload();
+}
+
+/* ── שחרור מקום של מי שנרשם, לפי הטלפון שאיתו נרשם ────────── */
+function renderRelease(spot){
+  onList = false;
+  const me = loadMe();
+  openModal(
+    "<h2>שחרור המקום</h2>" +
+    '<div class="sub">' + esc(spot.name) + "</div>" +
+    '<div class="fields">' +
+      '<div class="f"><label for="rp">טלפון</label>' +
+        '<input id="rp" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="done" ' +
+        'placeholder="050-000-0000" value="' + esc(me.phone || "") + '"></div>' +
+    "</div>" +
+    '<div class="hint" id="rhint">רק המספר שאיתו נתפס המקום יכול לשחרר אותו.</div>' +
+    '<button class="filled" id="rgo">שחרור המקום</button>' +
+    '<button class="plain" id="rback">ביטול</button>');
+
+  const hint = document.getElementById("rhint"), rp = document.getElementById("rp");
+  document.getElementById("rback").onclick = () => { closeModal(); renderSpots(); };
+  rp.addEventListener("keydown", e => { if(e.key === "Enter") go(); });
+  document.getElementById("rgo").onclick = go;
+
+  async function go(){
+    const phone = rp.value.trim();
+    if(phone.replace(/\D/g, "").length < 9){
+      hint.className = "hint bad"; hint.textContent = "מספר הטלפון לא תקין."; rp.focus(); return;
+    }
+    const btn = document.getElementById("rgo");
+    btn.disabled = true; btn.textContent = "בודקים";
+
+    if(demoMode){
+      spot.status = "open"; spot.name = ""; spot.mine = false;
+      closeModal();
+      return renderSpots("המקום שוחרר.");
+    }
+    try{
+      const res = await api("release", {slot: spot.id, phone: phone});
+      if(res.ok){
+        if(spot.mine){ forget(); myToken = null; }
+        const list = await api("list");
+        spots = (list.slots || []).map(x => Object.assign({}, x, {mine:false}));
+        closeModal();
+        return renderSpots("המקום שוחרר ונפתח מחדש.");
+      }
+      btn.disabled = false; btn.textContent = "שחרור המקום";
+      hint.className = "hint bad";
+      hint.textContent = res.reason === "phone_mismatch"
+        ? "המספר הזה לא תופס את המקום הזה."
+        : "לא הצלחנו לשחרר. נסו שוב.";
+    }catch(e){
+      btn.disabled = false; btn.textContent = "שחרור המקום";
+      hint.className = "hint bad"; hint.textContent = "אין חיבור לשרת.";
+    }
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   מגירת ההיסטוריה. נגררת באצבע: עוקבת 1:1, מתנגדת בקצה העליון,
+   וכשמשחררים היא ממשיכה במהירות של האצבע ומחליטה לאן להגיע.
+   ══════════════════════════════════════════════════════════════ */
+const sheet = document.getElementById("sheet");
+const scrim = document.getElementById("scrim");
+const sheetBody = document.getElementById("sheetBody");
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+let weekLog = null, board = null, tab = "log";
+let sheetY = 0, sheetH = 0, raf = null, dragging = false;
+
+const setY = y => {
+  sheetY = y;
+  sheet.style.transform = "translateY(" + y + "px)";
+  scrim.style.opacity = String(Math.max(0, 1 - y / (sheetH || 1)));
+};
+
+/* קפיץ. מתחיל תמיד מהערך שעל המסך, כך שאפשר לתפוס אותו באמצע. */
+function springTo(target, velocity, done){
+  if(raf) cancelAnimationFrame(raf);
+  if(reduced){ setY(target); done && done(); return; }
+  let v = velocity || 0, last = performance.now();
+  const k = 420, c = 41;
+  const step = now => {
+    const dt = Math.min((now - last) / 1000, 1 / 30); last = now;
+    v += ((-k * (sheetY - target)) - c * v) * dt;
+    setY(sheetY + v * dt);
+    if(Math.abs(sheetY - target) < 0.5 && Math.abs(v) < 15){
+      setY(target); raf = null; done && done(); return;
+    }
+    raf = requestAnimationFrame(step);
+  };
+  raf = requestAnimationFrame(step);
+}
+
+/* הטלת תנופה, בדיוק כמו האטת גלילה. */
+const project = v => (v / 1000) * 0.998 / (1 - 0.998);
+
+/* התנגדות בקצה: ככל שמושכים מעבר לגבול, פחות זז. */
+const rubber = (over, dim) => (over * dim * 0.55) / (dim + 0.55 * Math.abs(over));
+
+function openSheet(){
+  sheet.hidden = false; scrim.hidden = false;
+  sheetH = sheet.offsetHeight;
+  setY(sheetH);
+  requestAnimationFrame(() => springTo(0, 0));
+  if(weekLog === null) loadArchive(); else renderSheet();
+}
+
+function closeSheet(velocity){
+  springTo(sheetH, velocity, () => { sheet.hidden = true; scrim.hidden = true; });
+}
+
+document.getElementById("openLog").onclick = openSheet;
+scrim.onclick = () => closeSheet(0);
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape" && !sheet.hidden) closeSheet(0);
+});
+
+/* ── הגרירה ───────────────────────────────────────────────── */
+(function drag(){
+  const grab = document.getElementById("grab");
+  let startY = 0, startOffset = 0, points = [];
+
+  grab.addEventListener("pointerdown", e => {
+    try{ grab.setPointerCapture(e.pointerId); }catch(err){}
+    if(raf) cancelAnimationFrame(raf);          // תופסים את התנועה באמצע
+    dragging = true;
+    startY = e.clientY;
+    startOffset = sheetY;                        // מכבדים את נקודת האחיזה
+    points = [{y: e.clientY, t: performance.now()}];
+  });
+
+  grab.addEventListener("pointermove", e => {
+    if(!dragging) return;
+    let next = startOffset + (e.clientY - startY);
+    if(next < 0) next = -rubber(-next, sheetH);  // התנגדות כלפי מעלה
+    setY(next);
+    points.push({y: e.clientY, t: performance.now()});
+    if(points.length > 6) points.shift();
+  });
+
+  const end = e => {
+    if(!dragging) return;
+    dragging = false;
+
+    // מודדים מהירות רק על חלון זמן אמיתי. שתי נקודות באותה מילישנייה
+    // נותנות מהירות אינסופית, ואז גרירה של 10 פיקסלים הייתה סוגרת.
+    const last = points[points.length - 1];
+    let first = points[0], velocity = 0;
+    for(let i = points.length - 1; i >= 0; i--){
+      if(last.t - points[i].t >= 25){ first = points[i]; break; }
+    }
+    const dt = last.t - first.t;
+    if(dt >= 25) velocity = (last.y - first.y) / dt * 1000;
+    velocity = Math.max(-4000, Math.min(4000, velocity));   // גבול שפיות
+
+    // ההטלה מוגבלת לגובה המגירה, אחרת בגרירה קצרה על מגירה נמוכה
+    // התנופה לבדה הייתה סוגרת אותה.
+    const landing = sheetY + Math.min(project(velocity), sheetH);
+    const flungDown = velocity > 550;
+    const draggedFar = landing > sheetH * 0.55;
+    if(flungDown || draggedFar) closeSheet(velocity);
+    else springTo(0, velocity);
+  };
+  grab.addEventListener("pointerup", end);
+  grab.addEventListener("pointercancel", end);
+})();
+
+/* ── תוכן המגירה ──────────────────────────────────────────── */
+const MEDAL = ["g", "s", "b"];
+
+function renderSheet(){
+  if(weekLog === null && board === null){
+    sheetBody.innerHTML = '<div class="list"><div class="empty">טוענים</div></div>';
+    return;
+  }
+  document.querySelectorAll(".seg").forEach(b =>
+    b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
+
+  if(tab === "log"){
+    sheetBody.innerHTML = (weekLog || []).length
+      ? '<div class="list">' + weekLog.map((w, i) =>
+          '<div class="wk" style="--i:' + i + '">' +
+            '<div class="wk-date">' + esc(w.date) + "</div>" +
+            '<div class="wk-names">' + w.players.map(esc).join(", ") + "</div>" +
+          "</div>").join("") + "</div>"
+      : '<div class="list"><div class="empty">המשחק הראשון עוד לפניכם.</div></div>';
+    return;
+  }
+
+  sheetBody.innerHTML = (board || []).length
+    ? '<div class="list">' + board.map((p, i) =>
+        '<div class="lb' + (i < 3 ? " podium" : "") + '" style="--i:' + i + '">' +
+          '<span class="medal ' + (MEDAL[i] || "n") + '">' + (i + 1) + "</span>" +
+          '<span class="lb-name">' + esc(p.name) + "</span>" +
+          '<span class="lb-n">' + p.games + "<small>משחקים</small></span>" +
+        "</div>").join("") + "</div>"
+    : '<div class="list"><div class="empty">אין עדיין משחקים לספור.</div></div>';
+}
+
+document.querySelector(".segs").addEventListener("click", e => {
+  const b = e.target.closest("[data-tab]");
+  if(!b) return;
+  tab = b.dataset.tab;
+  renderSheet();
+});
+
+async function loadArchive(){
+  if(demoMode){ weekLog = DEMO_HISTORY; board = DEMO_BOARD; return renderSheet(); }
+  try{
+    const res = await Promise.all([
+      api("history").catch(() => null),
+      api("board").catch(() => null)
+    ]);
+    weekLog = res[0] && res[0].ok ? res[0].weeks : [];
+    board   = res[1] && res[1].ok ? res[1].board : [];
+    renderSheet();
+  }catch(e){ weekLog = []; board = []; renderSheet(); }
+}
+
+/* ── רענון שקט ─────────────────────────────────────────────
+   הדף פתוח אצל הרבה עובדים בו זמנית. כל 20 שניות, וגם כשחוזרים
+   ללשונית, מושכים את המצב העדכני כדי שלא יראו מקום שכבר נתפס.
+   הרענון מדלג כשהמשתמש באמצע טופס.                          */
+let onList = false;
+
+async function refresh(){
+  if(!onList || demoMode || document.hidden) return;
+  try{
+    const res = await api("list");
+    const fresh = res.slots || [];
+    const changed = fresh.length !== spots.length ||
+      fresh.some((f, i) => f.status !== spots[i].status || f.name !== spots[i].name);
+    if(!changed) return;
+    const mineId = (spots.find(x => x.mine) || {}).id;
+    spots = fresh.map(x => Object.assign({}, x, {mine: String(x.id) === String(mineId)}));
+    renderSpots();
+  }catch(e){ /* רענון שקט, לא מפריעים למשתמש */ }
+}
+
+setInterval(refresh, 20000);
+document.addEventListener("visibilitychange", () => { if(!document.hidden) refresh(); });
+
+/* ── עלייה ────────────────────────────────────────────────── */
+const DEMO_HISTORY = [
+  {date:"31.8.26", players:["יעל ברקוביץ'","אורי שגב","נועם קפלן","רותם אליאס"]},
+  {date:"24.8.26", players:["אורי שגב","תמר בן דוד","נועם קפלן","עידו פרץ"]},
+  {date:"17.8.26", players:["יעל ברקוביץ'","עידו פרץ","רותם אליאס","מיכל סבן"]}
+];
+const DEMO_BOARD = [
+  {name:"אורי שגב", games:9},
+  {name:"יעל ברקוביץ'", games:7},
+  {name:"נועם קפלן", games:6},
+  {name:"רותם אליאס", games:4},
+  {name:"עידו פרץ", games:3}
+];
+
+const DEMO_SPOTS = [
+  {id:"d1", spot:1, status:"claimed", name:"יעל ברקוביץ'"},
+  {id:"d2", spot:2, status:"claimed", name:"אורי שגב"},
+  {id:"d3", spot:3, status:"open",    name:""},
+  {id:"d4", spot:4, status:"open",    name:""}
+];
+
+/* ── לחיצות ברשימה. כל השורה היא היעד, לא רק הכפתור. ──────── */
+app.addEventListener("click", e => {
+  if(e.target.closest("[data-sure]")) return;      // האישור מטפל בעצמו
+
+  const drop = e.target.closest("[data-drop]") ||
+               (e.target.closest('.row[data-state="mine"]') &&
+                e.target.closest(".row").querySelector("[data-drop]"));
+  if(drop){ confirmRelease(drop); return; }
+
+  const takeRow = e.target.closest('.row[data-state="open"]');
+  if(takeRow){
+    const btn = takeRow.querySelector("[data-take]");
+    const spot = btn && spots.find(x => String(x.id) === btn.dataset.take);
+    if(spot) renderForm(spot);
+    return;
+  }
+
+  const freeRow = e.target.closest('.row[data-state="claimed"]');
+  if(freeRow){
+    const btn = freeRow.querySelector("[data-free]");
+    const spot = btn && spots.find(x => String(x.id) === btn.dataset.free);
+    if(spot) renderRelease(spot);
+  }
+});
+
+/* ── מצב תצוגה: לבן כברירת מחדל, והמתג שומר את הבחירה ────── */
+(function theming(){
+  const KEY = "padel-glilot-theme";
+  let mode = "light";
+  try{ mode = localStorage.getItem(KEY) || "light"; }catch(e){}
+  const apply = m => {
+    document.documentElement.dataset.theme = m;
+    const btn = document.getElementById("theme");
+    btn.setAttribute("aria-label", m === "dark" ? "מצב בהיר" : "מצב כהה");
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if(meta) meta.setAttribute("content", m === "dark" ? "#0B0B0B" : "#EDEDEB");
+  };
+  apply(mode);
+  document.getElementById("theme").onclick = () => {
+    mode = mode === "dark" ? "light" : "dark";
+    try{ localStorage.setItem(KEY, mode); }catch(e){}
+    apply(mode);
+  };
+})();
+
+async function boot(listRes){
+  spots = (listRes.slots || []).map(x => Object.assign({}, x, {mine:false}));
+  if(!spots.length){
+    app.innerHTML = '<div class="done"><h2>עוד לא נפתח משחק</h2>' +
+      "<p>המקומות נפתחים כל שבוע אחרי המשחק הקודם.</p></div>";
+    return;
+  }
+  const token = linkToken || recall();
+  if(token){
+    try{
+      const mineRes = await api("lookup", {token: token});
+      if(mineRes && mineRes.ok && mineRes.slot.status === "claimed"){
+        myToken = token; remember(token);
+        const row = spots.find(x => String(x.id) === String(mineRes.slot.id));
+        if(row) row.mine = true;
+      }else{ forget(); }
+    }catch(e){ /* לא חוסמים את הרשימה בגלל בדיקת הקוד האישי */ }
+  }
+  renderSpots();
+}
+
+(async function start(){
+  if(API.indexOf("PASTE_") === 0){
+    demoMode = true;
+    spots = DEMO_SPOTS.map(x => Object.assign({}, x));
+    renderSpots();
+    return;
+  }
+  try{
+    const res = await api("list");
+    if(res && res.ok) return boot(res);
+    if(res && res.reason === "bad_code") return renderGate(accessCode ? "הקוד לא נכון." : "");
+    fail();
+  }catch(err){
+    fail();
+  }
+})();
+</script>
+</body>
+</html>
