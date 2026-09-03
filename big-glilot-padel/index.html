@@ -526,14 +526,21 @@ try{ accessCode = localStorage.getItem(CODE) || ""; }catch(e){}
 
 /* תמונת המצב האחרונה נשמרת במכשיר, כדי שהדף ייפתח מיד
    ולא ימתין לשרת. מיד אחריה נמשך המצב האמיתי ומתעדכן. */
-function saveSnap(list){
-  try{ localStorage.setItem(SNAP, JSON.stringify({t: Date.now(), list: list})); }catch(e){}
+function saveSnap(list, mineId){
+  try{
+    localStorage.setItem(SNAP, JSON.stringify({t: Date.now(), list: list, mineId: mineId || null}));
+  }catch(e){}
 }
 function loadSnap(){
   try{
     const raw = JSON.parse(localStorage.getItem(SNAP));
-    if(raw && Array.isArray(raw.list) && Date.now() - raw.t < 36e5) return raw.list;
+    // תמונה ישנה מדי לא שווה כלום, עדיף להמתין לנתונים האמיתיים
+    if(raw && Array.isArray(raw.list) && Date.now() - raw.t < 6e5) return raw;
   }catch(e){}
+  return null;
+}
+function currentMineId(){
+  for(const g of games){ const sp = g.spots.find(x => x.mine); if(sp) return sp.id; }
   return null;
 }
 
@@ -947,7 +954,6 @@ function renderGate(msg){
 /* ── טעינת המשחקים אחרי כניסה מוצלחת ──────────────────────── */
 async function boot(listRes){
   games = normalise(listRes.games);
-  if(games.length) saveSnap(listRes.games);
   if(!games.length){
     // עדיין אותו דף, רק שהמקומות מסומנים כלא פתוחים
     opensInfo = listRes.opens || OPENS;
@@ -969,6 +975,7 @@ async function boot(listRes){
   }else if(token && listRes.mine === null){
     forget();
   }
+  if(games.length) saveSnap(listRes.games, currentMineId());
   renderSpots();
   primeArchive();
   setTimeout(() => loadArchive(false), 400);   // טעינה מוקדמת בשקט
@@ -1203,9 +1210,12 @@ function renderRelease(spot){
       hint.className = "hint";
       void hint.offsetWidth;
       hint.className = "hint bad";
-      hint.textContent = res.reason === "phone_mismatch"
-        ? "המספר הזה לא תופס את המקום הזה."
-        : "לא הצלחנו לבטל. נסו שוב.";
+      hint.textContent =
+        res.reason === "phone_mismatch"
+          ? "המספר לא תואם. את המקום הזה תפסו עם מספר אחר, ורק ממנו אפשר לבטל." :
+        res.reason === "not_active" ? "המקום הזה כבר לא תפוס." :
+        res.reason === "bad_phone"  ? "מספר הטלפון לא תקין." :
+                                      "לא הצלחנו לבטל. נסו שוב.";
       try{ navigator.vibrate && navigator.vibrate([12, 60, 12]); }catch(e){}
     }catch(e){
       busy(btn, false);
@@ -1393,6 +1403,7 @@ async function refresh(){
        Object.assign({}, g, {spots: g.spots.map(x => Object.assign({}, x, {mine:false}))})))) return;
     games = fresh;
     if(mineId){ const hit = findSpot(mineId); if(hit) hit.spot.mine = true; }
+    saveSnap(res.games, currentMineId());
     renderSpots();
   }catch(e){ /* רענון שקט */ }
 }
@@ -1463,7 +1474,11 @@ const DEMO_GAMES = GAMES.map((g, i) => ({
   // מציגים מיד את מה שהיה בפעם הקודמת, כדי שלא יראו מסך ריק
   const snap = loadSnap();
   if(snap && accessCode && API.indexOf("PASTE_") !== 0){
-    games = normalise(snap);
+    games = normalise(snap.list);
+    if(snap.mineId){
+      const hit = findSpot(snap.mineId);
+      if(hit) hit.spot.mine = true;      // כדי שלא ייעלם ואז יחזור
+    }
     renderSpots();
   }
   if(API.indexOf("PASTE_") === 0){
