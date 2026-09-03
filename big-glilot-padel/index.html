@@ -591,16 +591,14 @@ function renderSpots(alertText){
     : mine ? "אתם רשומים ל" + mineGame.day + " " + mineGame.start
     : open === 1 ? "נשאר מקום אחד"
     : open > 1  ? "נשארו " + open + " מקומות"
-    : "הכל תפוס";
+    : "לשבוע הבא אפשר יהיה להירשם ביום " + OPENS.day + " בשעה " + OPENS.time;
 
   // כשאין אף מקום, אומרים בדיוק מתי נפתחת ההרשמה הבאה:
   // שתי דקות אחרי שהמשחק הראשון של השבוע מתחיל.
   const reopenLine = notOpen
     ? "המקומות לשלישי ולרביעי הקרובים ייפתחו יחד" +
       (opensInfo && opensInfo.date ? " · " + opensInfo.date : "")
-    : (open === 0 && !mine
-        ? "לשבוע הבא אפשר יהיה להירשם ביום " + OPENS.day + " בשעה " + OPENS.time
-        : "");
+    : "";
 
   app.innerHTML =
     (alertText ? '<div class="hint bad" style="margin:16px 6px 0">' + esc(alertText) + "</div>" : "") +
