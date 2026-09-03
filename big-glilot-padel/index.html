@@ -737,27 +737,28 @@ function addToCalendar(opts){
     "END:VCALENDAR"
   ].join("\r\n");
 
-  // אייפון ואייפד אמיתיים בלבד. מק עם מסך מגע אינו אייפון,
-  // וניווט לכתובת data נחסם שם ולא קורה כלום.
   const ua = navigator.userAgent;
-  const iOS = /iPhone|iPod/.test(ua) ||
-              (/iPad/.test(ua)) ||
-              (/Macintosh/.test(ua) && "ontouchend" in document && !window.chrome);
+  const iOS = /iPhone|iPod|iPad/.test(ua) ||
+              (/Macintosh/.test(ua) && "ontouchend" in document);
 
-  if(iOS){
-    // קישור עם קובץ היומן, נפתח בלשונית חדשה כדי שאפליקציית
-    // היומן תתפוס אותו במקום לנווט את הדף
+  // Blob עם הורדה. זו הדרך שספארי פותח בה את אפליקציית היומן,
+  // וניווט לכתובת data נחסם שם. באנדרואיד ובמחשב זה יורד כקובץ
+  // יומן תקני שנפתח באפליקציית ברירת המחדל.
+  function saveIcs(){
+    const blob = new Blob([ics], {type: "text/calendar;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
-    a.target = "_blank";
+    a.href = url;
+    a.download = (opts.file || "padel") + ".ics";
     a.rel = "noopener";
     document.body.appendChild(a);
     a.click();
-    setTimeout(() => a.remove(), 3000);
-    return;
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 5000);
   }
 
-  // אנדרואיד ומחשב: פותחים את היומן עצמו עם האירוע מוכן
+  if(iOS) return saveIcs();
+
+  // אנדרואיד ומחשב: פותחים את יומן גוגל עם האירוע מוכן
   const z = n => String(n).padStart(2, "0");
   const utc = d => d.getUTCFullYear() + z(d.getUTCMonth()+1) + z(d.getUTCDate()) +
                    "T" + z(d.getUTCHours()) + z(d.getUTCMinutes()) + "00Z";
@@ -768,14 +769,7 @@ function addToCalendar(opts){
   g.searchParams.set("details", opts.note || "");
   g.searchParams.set("location", opts.place || PLACE);
   const w = window.open(g.toString(), "_blank", "noopener");
-  if(!w){
-    // חלון נחסם: נופלים חזרה לקובץ יומן רגיל
-    const a = document.createElement("a");
-    a.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
-    a.download = (opts.file || "padel") + ".ics";
-    document.body.appendChild(a); a.click();
-    setTimeout(() => a.remove(), 3000);
-  }
+  if(!w) saveIcs();                    // חלון נחסם, נופלים לקובץ
 }
 
 /* המשחק עצמו: תזכורת ביום המשחק ב־09:00, ועוד אחת ערב קודם ב־18:00 */
