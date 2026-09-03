@@ -737,13 +737,42 @@ function addToCalendar(opts){
     "END:VCALENDAR"
   ].join("\r\n");
 
-  // בדיוק כמו בגרסה הראשונה שעבדה: קובץ יומן והורדה.
-  // כל ניסיון "לשפר" את זה עם window.open או זיהוי מכשיר שבר את
-  // ההתנהגות באייפון, אז זה נשאר פשוט וזהה בכל מכשיר.
+  // אייפון פותח יומן רק מכתובת שמצהירה text/calendar. קובץ מקומי
+  // תמיד יירד, לא משנה איך בונים אותו. לכן מבקשים מהשרת להגיש
+  // את האירוע, ורק אם הוא לא תומך בזה נופלים חזרה להורדה.
+  const params = new URLSearchParams({
+    action: "ics",
+    code: accessCode || "",
+    title: opts.title,
+    start: icsTime(opts.start),
+    minutes: String(opts.minutes || 60),
+    place: opts.place || PLACE,
+    note: opts.note || ""
+  });
+  const url = API + "?" + params.toString();
+
+  fetch(url).then(r => r.text()).then(txt => {
+    if(txt.indexOf("BEGIN:VCALENDAR") === 0){
+      location.href = url;              // השרת מגיש אירוע: היומן ייפתח
+    }else{
+      downloadIcs(ics, opts.file);      // שרת ישן: קובץ להורדה
+    }
+  }).catch(() => downloadIcs(ics, opts.file));
+}
+
+/* פורמט תאריך לשאילתה: 2026-09-08 20:00 */
+function icsTime(d){
+  const z = n => String(n).padStart(2, "0");
+  return d.getFullYear() + "-" + z(d.getMonth()+1) + "-" + z(d.getDate()) +
+         " " + z(d.getHours()) + ":" + z(d.getMinutes());
+}
+
+/* גיבוי: אותה שיטה שעבדה מההתחלה */
+function downloadIcs(ics, file){
   const blob = new Blob([ics], {type: "text/calendar;charset=utf-8"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = (opts.file || "padel") + ".ics";
+  a.download = (file || "padel") + ".ics";
   document.body.appendChild(a);
   a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
@@ -816,7 +845,6 @@ function renderSpots(alertText, tone){
   const allPast = games.length && games.every(g => g.closed);
   const notOpen = games.length && (games[0].notOpen || allPast);
   const headline = notOpen ? "ההרשמה נפתחת ביום " + OPENS.day + " בשעה " + OPENS.time
-    : mine ? "אתם רשומים ל" + mineGame.day + " " + mineGame.start
     : open === 1 ? "נשאר מקום אחד"
     : open > 1  ? "נשארו " + open + " מקומות"
     : "לשבוע הבא אפשר יהיה להירשם ביום " + OPENS.day + " בשעה " + OPENS.time;
