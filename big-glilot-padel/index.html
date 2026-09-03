@@ -419,7 +419,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 /* ══════════════════════════════════════════════════════════════
    1. כתובת השרת. מדביקים כאן את ה־Web app URL של Apps Script.
    ══════════════════════════════════════════════════════════════ */
-const API = "https://script.google.com/macros/s/AKfycbx0mo0nwrmjkmSKZWSoL-hrUrtXg26f-Gjza1DSc4M2ewMTsMoZSUZKEtSMUwC47wbYfA/exec";
+const API = "https://script.google.com/macros/s/AKfycbxWfc-vhxaV72MKJ7M6aN2aVcKJzZ-BonTuGhyb_NzIaAxtCNvkpTDUgx0TRwKqQAv-Uw/exec";
 
 /* ══════════════════════════════════════════════════════════════
    2. המשחק הקבוע. אותם ערכים גם ב־SESSION שבקובץ Code.gs.
@@ -447,6 +447,7 @@ const STORE = "padel-glilot-token";
 const CODE  = "padel-glilot-code";
 const DSTATE = "padel-glilot-demo";
 const SNAP   = "padel-glilot-snapshot";
+const XSNAP  = "padel-glilot-board";
 const ME    = "padel-glilot-me";
 
 let games = [], demoMode = false, myToken = null, opensInfo = null;
@@ -841,6 +842,8 @@ async function boot(listRes){
     forget();
   }
   renderSpots();
+  primeArchive();
+  setTimeout(() => loadArchive(false), 400);   // טעינה מוקדמת בשקט
 }
 
 /* ── טופס ─────────────────────────────────────────────────── */
@@ -1154,7 +1157,7 @@ function boardHTML(){
 
 function renderBoard(){
   if(weekLog === null && board === null){
-    return openModal(loader("טוענים את הלוח"), {tall:true});
+    return openModal(loader(), {tall:true});
   }
   openModal(boardHTML(), {tall:true});
 }
@@ -1166,24 +1169,34 @@ modal.addEventListener("click", e => {
   openModal(boardHTML(), {tall:true});
 });
 
-async function loadArchive(){
-  if(demoMode){ weekLog = DEMO_HISTORY; board = DEMO_BOARD; return renderBoard(); }
+/* הלוח נמשך פעם אחת ברקע ונשמר במכשיר, כך שלחיצה עליו
+   פותחת אותו מיד ולא מתחילה המתנה חדשה. */
+async function loadArchive(render){
+  if(demoMode){ weekLog = DEMO_HISTORY; board = DEMO_BOARD; return render && renderBoard(); }
   try{
-    const res = await Promise.all([
-      api("history").catch(() => null),
-      api("board").catch(() => null)
-    ]);
-    weekLog = res[0] && res[0].ok ? res[0].weeks : [];
-    board   = res[1] && res[1].ok ? res[1].board : [];
-  }catch(e){ weekLog = []; board = []; }
-  renderBoard();
+    const res = await api("extras");
+    if(res && res.ok){
+      weekLog = res.weeks || [];
+      board   = res.board || [];
+      try{ localStorage.setItem(XSNAP, JSON.stringify({t: Date.now(), w: weekLog, b: board})); }catch(e){}
+    }else{ weekLog = weekLog || []; board = board || []; }
+  }catch(e){ weekLog = weekLog || []; board = board || []; }
+  if(render) renderBoard();
+}
+
+/* מה שנשמר בפעם הקודמת, כדי שהלוח ייפתח מיד */
+function primeArchive(){
+  try{
+    const raw = JSON.parse(localStorage.getItem(XSNAP));
+    if(raw && Date.now() - raw.t < 864e5){ weekLog = raw.w; board = raw.b; }
+  }catch(e){}
 }
 
 document.getElementById("remindMe").onclick = calendarForNextOpening;
 
 document.getElementById("openLog").onclick = () => {
-  renderBoard();
-  if(weekLog === null) loadArchive();
+  renderBoard();                    // נפתח מיד עם מה שיש
+  loadArchive(true);                // ומתעדכן ברקע
 };
 
 /* ── רענון שקט ─────────────────────────────────────────────
