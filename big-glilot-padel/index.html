@@ -741,22 +741,35 @@ function addToCalendar(opts){
   const iOS = /iPhone|iPod|iPad/.test(ua) ||
               (/Macintosh/.test(ua) && "ontouchend" in document);
 
-  // Blob עם הורדה. זו הדרך שספארי פותח בה את אפליקציית היומן,
-  // וניווט לכתובת data נחסם שם. באנדרואיד ובמחשב זה יורד כקובץ
-  // יומן תקני שנפתח באפליקציית ברירת המחדל.
+  const blob = new Blob([ics], {type: "text/calendar;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const cleanup = () => setTimeout(() => URL.revokeObjectURL(url), 15000);
+
+  // באייפון: פותחים את הקובץ בלשונית, בלי מאפיין download.
+  // עם download ספארי שומר לקבצים, ובלעדיו הוא מציג את האירוע
+  // ומציע להוסיף אותו ליומן, וזו ההתנהגות שרוצים.
+  function openIcs(){
+    const w = window.open(url, "_blank");
+    if(!w){
+      const a = document.createElement("a");
+      a.href = url; a.target = "_blank"; a.rel = "noopener";
+      document.body.appendChild(a); a.click();
+      setTimeout(() => a.remove(), 3000);
+    }
+    cleanup();
+  }
+
+  // גיבוי אחרון: הורדה רגילה של הקובץ
   function saveIcs(){
-    const blob = new Blob([ics], {type: "text/calendar;charset=utf-8"});
-    const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
     a.download = (opts.file || "padel") + ".ics";
-    a.rel = "noopener";
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 5000);
+    document.body.appendChild(a); a.click();
+    setTimeout(() => a.remove(), 3000);
+    cleanup();
   }
 
-  if(iOS) return saveIcs();
+  if(iOS) return openIcs();
 
   // אנדרואיד ומחשב: פותחים את יומן גוגל עם האירוע מוכן
   const z = n => String(n).padStart(2, "0");
