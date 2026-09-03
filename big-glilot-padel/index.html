@@ -1054,7 +1054,7 @@ function renderForm(spot, game){
       stopSlow();
       if(res && res.ok){
         myToken = res.token; remember(res.token);
-        return confirmSaved(res.token);
+        return confirmSaved(res.token, game);
       }
       // לא הצליח: מחזירים את המצב הקודם ומסבירים
       Object.assign(spot, before);
@@ -1092,22 +1092,32 @@ function renderDone(name, token, game, pending){
       "<p>" + esc(name) + " · " + esc(game.day) + " " + esc(game.start) +
         " עד " + esc(game.end) + " · " + esc(game.date) + "</p>" +
       '<p id="doneNote">' + (pending ? "" : "אפשר לבטל את המקום מכאן בכל רגע.") + "</p>" +
-      '<button class="filled" id="addCal">הוספה ליומן</button>' +
+      (pending ? "" : '<button class="filled" id="addCal">הוספה ליומן</button>') +
       '<button class="plain" id="backToSpots">סגירה</button>' +
     "</div>");
-  document.getElementById("addCal").onclick = () => calendarForGame(game);
+  const cal = document.getElementById("addCal");
+  if(cal) cal.onclick = () => calendarForGame(game);
   document.getElementById("backToSpots").onclick = () => { closeModal(); renderSpots(); };
 }
 
 
 /* השרת אישר: מחליפים את שורת הסטטוס, בלי לקפוץ למסך אחר */
-function confirmSaved(token){
+function confirmSaved(token, game){
   const mk = document.querySelector("#modal .mk");
   const title = document.getElementById("doneTitle");
   const note = document.getElementById("doneNote");
+  const close = document.getElementById("backToSpots");
   if(mk){ mk.classList.remove("waiting"); mk.textContent = "✓"; }
   if(title) title.textContent = "המקום שלכם";
   if(note) note.textContent = "אפשר לבטל את המקום מכאן בכל רגע.";
+
+  // רק עכשיו, כשזה באמת נשמר, אפשר להוסיף ליומן
+  if(close && !document.getElementById("addCal")){
+    const b = document.createElement("button");
+    b.className = "filled"; b.id = "addCal"; b.textContent = "הוספה ליומן";
+    b.onclick = () => calendarForGame(game);
+    close.parentNode.insertBefore(b, close);
+  }
   try{ navigator.vibrate && navigator.vibrate(14); }catch(e){}
 }
 
