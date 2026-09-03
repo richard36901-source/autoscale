@@ -6,6 +6,9 @@
 <title>פאדל גלילות</title>
 <meta name="description" content="4 מקומות במגרש הפאדל, כל שבוע, לעובדי BIG גלילות.">
 <meta name="theme-color" content="#EDEDEB">
+<link rel="preconnect" href="https://script.google.com" crossorigin>
+<link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
+<link rel="dns-prefetch" href="https://script.google.com">
 <link rel="icon" type="image/png" sizes="32x32" href="/portfolio-images/favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/portfolio-images/favicon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/portfolio-images/favicon-192.png">
@@ -545,6 +548,16 @@ const BALL =
 /* שלד בצורת הדף האמיתי. ככה העין כבר יודעת לאן להסתכל
    לפני שהנתונים הגיעו, והמעבר לתוכן לא קופץ. */
 /* מכניס כדור מקפץ לתוך כפתור, במקום להחליף את הטקסט למילה */
+/* אחרי כמה שניות של המתנה אומרים משהו אמיתי: שזה לוקח יותר
+   מהרגיל, ושאפשר לנסות שוב. בלי אחוזים מומצאים. */
+function slowWatch(el, texts){
+  const marks = [[3500, texts[0]], [8000, texts[1]]];
+  const timers = marks.map(([ms, txt]) => setTimeout(() => {
+    if(el && el.isConnected) el.textContent = txt;
+  }, ms));
+  return () => timers.forEach(clearTimeout);
+}
+
 function busy(btn, on){
   if(!btn) return;
   if(on){
@@ -597,13 +610,24 @@ const loadMe = () => {
 };
 
 /* JSONP, כדי שלא תידרש הגדרת CORS בצד של Apps Script. */
-function api(action, data){
+/* בקשה עם ניסיון שני. רשת סלולרית נופלת לרגע יותר ממה שנדמה,
+   וניסיון חוזר שקוף עדיף על הודעת שגיאה. */
+async function api(action, data){
+  try{
+    return await once(action, data);
+  }catch(e){
+    if(action === "claim" || action === "cancel" || action === "release") throw e;
+    return await once(action, data);       // רק לקריאות, לא לכתיבות
+  }
+}
+
+function once(action, data){
   data = data || {};
   return new Promise((resolve, reject) => {
     const cb = "cb" + Math.random().toString(36).slice(2);
     const s = document.createElement("script");
     const cleanup = () => { delete window[cb]; s.remove(); clearTimeout(timer); };
-    const timer = setTimeout(() => { cleanup(); reject(new Error("timeout")); }, 15000);
+    const timer = setTimeout(() => { cleanup(); reject(new Error("timeout")); }, 12000);
     window[cb] = res => { cleanup(); resolve(res); };
     s.onerror = () => { cleanup(); reject(new Error("network")); };
     const q = Object.assign({action:action, callback:cb}, data);
@@ -990,6 +1014,7 @@ function renderForm(spot, game){
     if(phone.replace(/\D/g, "").length < 9) return bad("מספר הטלפון לא תקין.", ph);
 
     busy(document.getElementById("go"), true);
+    const stopSlow = slowWatch(hint, ["עוד רגע", "לוקח יותר מהרגיל. עוד לא ויתרנו."]);
 
     // בדיקה מקומית לפני שמתחילים: אם כבר יש לו מקום במשחק הזה,
     // לא מציגים "תופסים" ואז מתהפכים. אומרים לו מיד ולמה.
@@ -1018,6 +1043,7 @@ function renderForm(spot, game){
 
     try{
       const res = await api("claim", {slot: spot.id, name: name, phone: phone});
+      stopSlow();
       if(res && res.ok){
         myToken = res.token; remember(res.token);
         return confirmSaved(res.token);
@@ -1038,6 +1064,7 @@ function renderForm(spot, game){
               : "המקום לא נתפס. כבר תפסתם מקום במשחק הזה.") :
                                           "לא הצלחנו לשמור. נסו שוב.");
     }catch(err){
+      stopSlow();
       Object.assign(spot, before);
       closeModal();
       renderSpots("שגיאה. המקום לא נשמר, נסו שוב.");
