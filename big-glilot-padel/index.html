@@ -229,6 +229,11 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 .done{padding:8px 6px 0}
 .mk{width:54px;height:54px;border-radius:var(--r-round);background:var(--ink);color:var(--on-ink);
   display:grid;place-items:center;font-size:26px;font-weight:600}
+.mk.waiting{background:transparent;box-shadow:inset 0 0 0 3px var(--line);position:relative}
+.mk.waiting::after{content:"";position:absolute;inset:-3px;border-radius:50%;
+  border:3px solid transparent;border-top-color:var(--ink);animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.mk.waiting::after{animation:none}}
 .done h2{margin-top:18px;font-size:38px;font-weight:700;letter-spacing:-.035em;line-height:1.02}
 @media (prefers-reduced-motion: no-preference){
   .done h2{animation:in .5s var(--ease) both;animation-delay:.08s}
@@ -419,11 +424,25 @@ const linkToken = params.get("c");
 const STORE = "padel-glilot-token";
 const CODE  = "padel-glilot-code";
 const DSTATE = "padel-glilot-demo";
+const SNAP   = "padel-glilot-snapshot";
 const ME    = "padel-glilot-me";
 
 let games = [], demoMode = false, myToken = null, opensInfo = null;
 let accessCode = "";
 try{ accessCode = localStorage.getItem(CODE) || ""; }catch(e){}
+
+/* תמונת המצב האחרונה נשמרת במכשיר, כדי שהדף ייפתח מיד
+   ולא ימתין לשרת. מיד אחריה נמשך המצב האמיתי ומתעדכן. */
+function saveSnap(list){
+  try{ localStorage.setItem(SNAP, JSON.stringify({t: Date.now(), list: list})); }catch(e){}
+}
+function loadSnap(){
+  try{
+    const raw = JSON.parse(localStorage.getItem(SNAP));
+    if(raw && Array.isArray(raw.list) && Date.now() - raw.t < 36e5) return raw.list;
+  }catch(e){}
+  return null;
+}
 
 /* מסמן את המקום שנתפס מהמכשיר הזה */
 function normalise(list){
@@ -757,13 +776,14 @@ function renderGate(msg){
     btn.disabled = false; btn.textContent = "כניסה";
     input.value = ""; input.focus();
     hint.className = "hint bad";
-    hint.textContent = offline ? "אין חיבור לשרת. בדקו אינטרנט ונסו שוב." : "קוד שגוי.";
+    hint.textContent = offline ? "שגיאה, נסו שוב." : "קוד שגוי.";
   }
 }
 
 /* ── טעינת המשחקים אחרי כניסה מוצלחת ──────────────────────── */
 async function boot(listRes){
   games = normalise(listRes.games);
+  if(games.length) saveSnap(listRes.games);
   if(!games.length){
     // עדיין אותו דף, רק שהמקומות מסומנים כלא פתוחים
     opensInfo = listRes.opens || OPENS;
@@ -776,16 +796,14 @@ async function boot(listRes){
     renderSpots();
     return;
   }
+  // המקום שלי מגיע כבר בתשובה של list, בלי נסיעה שנייה לשרת
   const token = linkToken || recall();
-  if(token){
-    try{
-      const mineRes = await api("lookup", {token: token});
-      if(mineRes && mineRes.ok && mineRes.slot.status === "claimed"){
-        myToken = token; remember(token);
-        const hit = findSpot(mineRes.slot.id);
-        if(hit) hit.spot.mine = true;
-      }else{ forget(); }
-    }catch(e){ /* לא חוסמים את הרשימה בגלל בדיקת הקוד האישי */ }
+  if(token && listRes.mine && listRes.mine.status === "claimed"){
+    myToken = token; remember(token);
+    const hit = findSpot(listRes.mine.id);
+    if(hit) hit.spot.mine = true;
+  }else if(token && listRes.mine === null){
+    forget();
   }
   renderSpots();
 }
@@ -825,41 +843,59 @@ function renderForm(spot, game){
     btn.disabled = true; btn.textContent = "שומרים";
 
     saveMe(name, phone);
+
     if(demoMode){
       spot.status = "claimed"; spot.name = name; spot.mine = true;
       myToken = "demo"; saveDemo();
       return renderDone(name, null, game);
     }
+
+    // תופסים מיד על המסך, ומאשרים מול השרת ברקע.
+    // אם מישהו הקדים, חוזרים אחורה ואומרים את זה ברור.
+    const before = {status: spot.status, name: spot.name, mine: spot.mine};
+    spot.status = "claimed"; spot.name = name; spot.mine = true;
+    renderDone(name, null, game, true);
+
     try{
       const res = await api("claim", {slot: spot.id, name: name, phone: phone});
-      if(res.ok){
+      if(res && res.ok){
         myToken = res.token; remember(res.token);
-        return renderDone(name, res.token, game);
+        return confirmSaved(res.token);
       }
-      if(res.games) games = normalise(res.games);
+      // לא הצליח: מחזירים את המצב הקודם ומסבירים
+      Object.assign(spot, before);
+      if(res && res.games) games = normalise(res.games);
+      closeModal();
       renderSpots(
-        res.reason === "taken"          ? "מישהו הקדים אתכם. נסו מקום אחר." :
+        !res ? "לא הצלחנו לשמור. נסו שוב." :
+        res.reason === "taken"          ? "מישהו הקדים אתכם בשנייה. נסו מקום אחר." :
         res.reason === "game_closed"    ? "המשחק הזה כבר התחיל." :
-        res.reason === "already_booked" ? "המספר הזה כבר רשום השבוע." :
+        res.reason === "already_booked"
+          ? (res.held
+              ? "כבר תפסתם מקום ב" + res.held.day + " " + res.held.start +
+                ". אפשר להירשם למשחק אחר."
+              : "כבר תפסתם מקום במשחק הזה.") :
                                           "לא הצלחנו לשמור. נסו שוב.");
     }catch(err){
-      btn.disabled = false; btn.textContent = "תפיסת המקום";
-      bad("אין חיבור לשרת. נסו שוב.", nm);
+      Object.assign(spot, before);
+      closeModal();
+      renderSpots("שגיאה. המקום לא נשמר, נסו שוב.");
     }
   }
 }
 
 /* ── אישור ────────────────────────────────────────────────── */
-function renderDone(name, token, game){
+function renderDone(name, token, game, pending){
   onList = false;
-  try{ navigator.vibrate && navigator.vibrate(14); }catch(e){}
+  if(!pending){ try{ navigator.vibrate && navigator.vibrate(14); }catch(e){} }
   openModal(
     '<div class="done" style="padding:0">' +
-      '<div class="mk" aria-hidden="true">✓</div>' +
-      "<h2>המקום שלכם</h2>" +
+      '<div class="mk' + (pending ? " waiting" : "") + '" aria-hidden="true">' +
+        (pending ? "" : "✓") + "</div>" +
+      '<h2 id="doneTitle">' + (pending ? "תופסים את המקום" : "המקום שלכם") + "</h2>" +
       "<p>" + esc(name) + " · " + esc(game.day) + " " + esc(game.start) +
         " עד " + esc(game.end) + " · " + esc(game.date) + "</p>" +
-      "<p>אפשר לשחרר את המקום מכאן בכל רגע.</p>" +
+      '<p id="doneNote">' + (pending ? "רגע" : "אפשר לשחרר את המקום מכאן בכל רגע.") + "</p>" +
       '<button class="filled" id="addCal">הוספה ליומן</button>' +
       '<button class="plain" id="backToSpots">סגירה</button>' +
     "</div>");
@@ -867,6 +903,17 @@ function renderDone(name, token, game){
   document.getElementById("backToSpots").onclick = () => { closeModal(); renderSpots(); };
 }
 
+
+/* השרת אישר: מחליפים את שורת הסטטוס, בלי לקפוץ למסך אחר */
+function confirmSaved(token){
+  const mk = document.querySelector("#modal .mk");
+  const title = document.getElementById("doneTitle");
+  const note = document.getElementById("doneNote");
+  if(mk){ mk.classList.remove("waiting"); mk.textContent = "✓"; }
+  if(title) title.textContent = "המקום שלכם";
+  if(note) note.textContent = "אפשר לשחרר את המקום מכאן בכל רגע.";
+  try{ navigator.vibrate && navigator.vibrate(14); }catch(e){}
+}
 
 /* ── ביטול ────────────────────────────────────────────────── */
 function confirmRelease(btn){
@@ -894,10 +941,10 @@ async function releaseSpot(btn){
 }
 
 function fail(){
-  leftEl.textContent = "אין חיבור";
+  leftEl.textContent = "שגיאה";
   app.innerHTML =
     '<div class="done"><h2>לא נטען</h2>' +
-    "<p>תקלת רשת רגעית. נסו לרענן.</p>" +
+    "<p>נסו לרענן את העמוד.</p>" +
     '<button class="filled" id="retry">רענון</button></div>';
   document.getElementById("retry").onclick = () => location.reload();
 }
@@ -953,7 +1000,7 @@ function renderRelease(spot){
         : "לא הצלחנו לשחרר. נסו שוב.";
     }catch(e){
       btn.disabled = false; btn.textContent = "שחרור המקום";
-      hint.className = "hint bad"; hint.textContent = "אין חיבור לשרת.";
+      hint.className = "hint bad"; hint.textContent = "שגיאה, נסו שוב.";
     }
   }
 }
@@ -1190,6 +1237,13 @@ const DEMO_GAMES = GAMES.map((g, i) => ({
 
 (async function start(){
   paintHero();
+
+  // מציגים מיד את מה שהיה בפעם הקודמת, כדי שלא יראו מסך ריק
+  const snap = loadSnap();
+  if(snap && accessCode && API.indexOf("PASTE_") !== 0){
+    games = normalise(snap);
+    renderSpots();
+  }
   if(API.indexOf("PASTE_") === 0){
     demoMode = true;
     games = loadDemo();
@@ -1197,7 +1251,8 @@ const DEMO_GAMES = GAMES.map((g, i) => ({
     return;
   }
   try{
-    const res = await api("list");
+    const token = linkToken || recall();
+    const res = await api("list", token ? {token: token} : {});
     if(res && res.ok) return boot(res);
     if(res && res.reason === "bad_code") return renderGate(accessCode ? "הקוד לא נכון." : "");
     fail();
