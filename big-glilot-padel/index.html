@@ -1166,6 +1166,28 @@ const DEMO_GAMES = GAMES.map((g, i) => ({
   spots: [1,2,3,4].map(n => ({id: "d" + i + "-" + n, spot: n, status: "open", name: ""}))
 }));
 
+/* ── בהיר ככברירת מחדל, והמתג שומר את הבחירה במכשיר ───────── */
+(function theming(){
+  const KEY = "padel-glilot-theme";
+  const btn = document.getElementById("theme");
+  let mode = "light";
+  try{ mode = localStorage.getItem(KEY) || "light"; }catch(e){}
+
+  function apply(m){
+    document.documentElement.setAttribute("data-theme", m);
+    if(btn) btn.setAttribute("aria-label", m === "dark" ? "מצב בהיר" : "מצב כהה");
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if(meta) meta.setAttribute("content", m === "dark" ? "#0B0B0B" : "#EDEDEB");
+  }
+  apply(mode);
+
+  if(btn) btn.addEventListener("click", () => {
+    mode = mode === "dark" ? "light" : "dark";
+    try{ localStorage.setItem(KEY, mode); }catch(e){}
+    apply(mode);
+  });
+})();
+
 (async function start(){
   paintHero();
   if(API.indexOf("PASTE_") === 0){
