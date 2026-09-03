@@ -11,6 +11,12 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/portfolio-images/favicon-192.png">
 <meta property="og:title" content="פאדל גלילות">
 <meta property="og:description" content="4 מקומות במגרש. כל הקודם זוכה.">
+<meta property="og:image" content="https://autoscalehq.io/big-glilot-padel/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://autoscalehq.io/big-glilot-padel/">
+<meta name="twitter:card" content="summary_large_image">
 <style>
 /* ══════════════════════════════════════════════════════════════
    צבע מותג אחד: האדום של BIG. משנים כאן והכל משתנה איתו.
@@ -73,13 +79,6 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
     box-shadow:0 1px 2px rgba(0,0,0,.05),0 24px 60px -28px rgba(0,0,0,.35);
     outline:1px solid var(--line)}
 }
-
-/* ── רקע: קווי מגרש וכדורים, שקטים מאחורי הכל ─────────────── */
-.court-bg{position:fixed;inset:-2%;z-index:-2;color:var(--text);opacity:.075;
-  pointer-events:none}
-.court-bg svg{width:100%;height:100%}
-.court-bg .balls{opacity:.85}
-:root[data-theme="dark"] .court-bg{opacity:.1}
 
 /* ── סרגל מותג ────────────────────────────────────────────── */
 .bar{display:flex;align-items:center;gap:10px;padding:16px 6px 14px}
@@ -334,55 +333,6 @@ document.addEventListener("keydown", e => {
 </style>
 </head>
 <body>
-<div class="court-bg" aria-hidden="true">
-  <svg viewBox="0 0 420 900" preserveAspectRatio="xMidYMid slice">
-    <g fill="none" stroke="currentColor" stroke-width="2.2"
-       stroke-linecap="round" stroke-linejoin="round">
-      <!-- קווי המגרש, מצוירים ביד: לא ישרים לגמרי והפינות חורגות -->
-      <path d="M-14 96 C 120 92, 268 100, 436 94"></path>
-      <path d="M-10 806 C 130 812, 280 800, 434 808"></path>
-      <path d="M24 70 C 20 300, 30 560, 22 834"></path>
-      <path d="M398 64 C 404 310, 394 570, 400 836"></path>
-
-      <!-- הרשת -->
-      <path d="M-16 452 C 110 444, 300 460, 438 448" stroke-dasharray="9 11"></path>
-
-      <!-- קווי השירות -->
-      <path d="M20 268 C 150 262, 280 274, 402 266"></path>
-      <path d="M22 640 C 150 648, 282 634, 400 642"></path>
-      <path d="M212 96 C 208 250, 216 640, 210 806" stroke-dasharray="7 12"></path>
-    </g>
-
-    <g class="balls" fill="none" stroke="currentColor" stroke-width="2"
-       stroke-linecap="round">
-      <g transform="translate(74 178) rotate(-12)">
-        <path d="M17 0 C 17 10, 9 17, -1 17 C -11 17, -18 9, -17 -1 C -17 -11, -9 -17, 1 -17 C 11 -18, 17 -10, 17 0 Z"></path>
-        <path d="M-16 -4 C -7 -13, 8 -14, 16 -6"></path>
-        <path d="M-16 5 C -6 13, 9 13, 16 4"></path>
-      </g>
-      <g transform="translate(348 386) rotate(24)">
-        <path d="M12 0 C 12 7, 6 12, -1 12 C -8 12, -13 6, -12 -1 C -12 -8, -6 -12, 1 -12 C 8 -13, 12 -7, 12 0 Z"></path>
-        <path d="M-11 -3 C -5 -9, 6 -10, 11 -4"></path>
-        <path d="M-11 4 C -4 9, 6 9, 11 3"></path>
-      </g>
-      <g transform="translate(108 712) rotate(8)">
-        <path d="M21 0 C 21 12, 11 21, -1 21 C -13 21, -22 11, -21 -1 C -21 -13, -11 -21, 1 -21 C 13 -22, 21 -12, 21 0 Z"></path>
-        <path d="M-20 -5 C -9 -16, 10 -17, 20 -7"></path>
-        <path d="M-20 6 C -8 16, 11 16, 20 5"></path>
-      </g>
-      <g transform="translate(330 122) rotate(-30)">
-        <path d="M10 0 C 10 6, 5 10, -1 10 C -7 10, -11 5, -10 -1 C -10 -7, -5 -10, 1 -10 C 7 -11, 10 -6, 10 0 Z"></path>
-        <path d="M-9 -2 C -4 -8, 5 -8, 9 -3"></path>
-      </g>
-      <g transform="translate(238 560) rotate(16)">
-        <path d="M14 0 C 14 8, 7 14, -1 14 C -9 14, -15 7, -14 -1 C -14 -9, -7 -14, 1 -14 C 9 -15, 14 -8, 14 0 Z"></path>
-        <path d="M-13 -4 C -6 -11, 7 -11, 13 -5"></path>
-        <path d="M-13 5 C -5 11, 7 11, 13 4"></path>
-      </g>
-    </g>
-  </svg>
-</div>
-
 <div class="wrap">
   <div class="bar">
     <svg class="logo" viewBox="0 0 126 100" role="img" aria-label="BIG FASHION גלילות">
@@ -1130,6 +1080,7 @@ async function boot(listRes){
 }
 
 (async function start(){
+  paintHero();
   if(API.indexOf("PASTE_") === 0){
     demoMode = true;
     spots = DEMO_SPOTS.map(x => Object.assign({}, x));
