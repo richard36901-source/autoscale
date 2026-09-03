@@ -435,6 +435,7 @@ document.addEventListener("keydown", e => {
   </main>
 
   <button class="hollow" id="openLog" style="margin-top:14px">לוח משחקים</button>
+  <button class="hollow" id="remindMe" hidden>תזכורת ביומן להרשמה לשבוע הבא</button>
 
   <footer class="credit">
     נבנה על ידי AutoScale · <a href="https://wa.me/972545764327" target="_blank" rel="noopener">054-576-4327</a>
@@ -455,9 +456,11 @@ const API = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
    2. המשחק הקבוע. אותם ערכים גם ב־SESSION שבקובץ Code.gs.
    ══════════════════════════════════════════════════════════════ */
 const GAME = {
-  day:   "ראשון",
-  time:  "18:00",
-  court: "מגרש הפאדל"
+  day:        "ראשון",       // חייב להיות זהה ל־SESSION שב־Code.gs
+  time:       "18:00",
+  court:      "מגרש הפאדל",
+  place:      "ביג פאשן גלילות",
+  resetAfter: 2              // דקות אחרי המשחק שבהן נפתח השבוע הבא
 };
 
 const app    = document.getElementById("app");
@@ -504,8 +507,101 @@ function api(action, data){
   });
 }
 
+const DAYS = {"ראשון":0,"שני":1,"שלישי":2,"רביעי":3,"חמישי":4,"שישי":5,"שבת":6};
+
+/* מתי המשחק הקרוב בפועל. אותו כלל כמו בשרת: אחרי שעת המשחק
+   ועוד resetAfter דקות, עוברים לשבוע הבא. */
+function nextGame(){
+  const now = new Date();
+  const parts = GAME.time.split(":");
+  const d = new Date(now);
+  d.setHours(Number(parts[0]) || 0, Number(parts[1]) || 0, 0, 0);
+  d.setDate(d.getDate() + (((DAYS[GAME.day] || 0) - d.getDay() + 7) % 7));
+  if(now > new Date(d.getTime() + GAME.resetAfter * 60000)) d.setDate(d.getDate() + 7);
+  return d;
+}
+const dm = d => d.getDate() + "." + (d.getMonth() + 1);
+
+/* ── קובץ יומן אחד שמתאים לאייפון, לאנדרואיד ולגוגל ────────── */
+function pad2(n){ return String(n).padStart(2, "0"); }
+function stamp(d){
+  return d.getFullYear() + pad2(d.getMonth()+1) + pad2(d.getDate()) +
+         "T" + pad2(d.getHours()) + pad2(d.getMinutes()) + "00";
+}
+function addToCalendar(opts){
+  const end = new Date(opts.start.getTime() + (opts.minutes || 60) * 60000);
+  const alarms = (opts.alarms || []).map(a =>
+    ["BEGIN:VALARM",
+     "ACTION:DISPLAY",
+     "DESCRIPTION:" + a.text,
+     "TRIGGER;VALUE=DATE-TIME:" + stamp(a.at),
+     "END:VALARM"].join("\r\n"));
+
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//AutoScale//Padel Glilot//HE",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
+    "UID:" + Date.now() + "-padel@autoscalehq.io",
+    "DTSTAMP:" + stamp(new Date()),
+    "DTSTART:" + stamp(opts.start),
+    "DTEND:" + stamp(end),
+    "SUMMARY:" + opts.title,
+    "LOCATION:" + (opts.place || GAME.place),
+    "DESCRIPTION:" + (opts.note || ""),
+    ...alarms,
+    "END:VEVENT",
+    "END:VCALENDAR"
+  ].join("\r\n");
+
+  const blob = new Blob([ics], {type: "text/calendar;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = (opts.file || "padel") + ".ics";
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+}
+
+/* המשחק עצמו: תזכורת ביום המשחק ב־09:00, ועוד אחת ערב קודם ב־18:00 */
+function calendarForGame(){
+  const start = nextGame();
+  const sameDay9 = new Date(start); sameDay9.setHours(9, 0, 0, 0);
+  const dayBefore18 = new Date(start);
+  dayBefore18.setDate(dayBefore18.getDate() - 1);
+  dayBefore18.setHours(18, 0, 0, 0);
+
+  const alarms = [{at: dayBefore18, text: "מחר משחק פאדל בגלילות"}];
+  if(sameDay9 < start) alarms.unshift({at: sameDay9, text: "היום משחק פאדל בגלילות"});
+
+  addToCalendar({
+    title: "משחק פאדל - ביג גלילות",
+    start: start, minutes: 60,
+    place: GAME.court + ", " + GAME.place,
+    note: "המקום שלכם במגרש. אם לא תוכלו להגיע, שחררו אותו כאן: " + location.href,
+    alarms: alarms,
+    file: "padel-glilot"
+  });
+}
+
+/* למי שלא הספיק: תזכורת להירשם רגע לפני שנפתח השבוע הבא */
+function calendarForNextOpening(){
+  const opens = new Date(nextGame().getTime() + GAME.resetAfter * 60000);
+  const remind = new Date(opens.getTime() - 2 * 60000);
+  addToCalendar({
+    title: "להירשם לפאדל של שבוע הבא",
+    start: opens, minutes: 15,
+    place: GAME.place,
+    note: "המקומות נפתחים עכשיו. מי שראשון תופס: " + location.href,
+    alarms: [{at: remind, text: "עוד שתי דקות נפתחת ההרשמה לפאדל"}],
+    file: "padel-reminder"
+  });
+}
+
 function paintHero(){
-  document.getElementById("gDay").textContent   = "יום " + GAME.day;
+  document.getElementById("gDay").textContent   = "יום " + GAME.day + " · " + dm(nextGame());
   document.getElementById("gTime").textContent  = GAME.time;
   document.getElementById("gCourt").textContent = GAME.court;
 }
@@ -534,6 +630,15 @@ function renderSpots(alertText){
       "</div>";
     }).join("") + "</div>" +
     "";
+
+  // מי שכבר בפנים מקבל כפתור יומן למשחק, מי שלא מקבל תזכורת להרשמה
+  const remind = document.getElementById("remindMe");
+  if(remind){
+    remind.hidden = !!mine;
+    remind.textContent = open === 0
+      ? "תזכורת ביומן להרשמה לשבוע הבא"
+      : "תזכורת ביומן להרשמה לשבוע הבא";
+  }
 }
 
 /* ── שער הכניסה. הקוד נבדק בשרת, לא בדף. ──────────────────── */
@@ -668,8 +773,10 @@ function renderDone(name, token){
       "<h2>המקום שלכם</h2>" +
       "<p>" + esc(name) + ", יום " + esc(GAME.day) + " ב־" + esc(GAME.time) + ".</p>" +
       "<p>אפשר לשחרר את המקום מכאן בכל רגע.</p>" +
-      '<button class="filled" id="backToSpots">סגירה</button>' +
+      '<button class="filled" id="addCal">הוספה ליומן</button>' +
+      '<button class="plain" id="backToSpots">סגירה</button>' +
     "</div>");
+  document.getElementById("addCal").onclick = calendarForGame;
   document.getElementById("backToSpots").onclick = () => { closeModal(); renderSpots(); };
 }
 
@@ -900,6 +1007,8 @@ async function loadArchive(){
   }catch(e){ weekLog = []; board = []; }
   renderBoard();
 }
+
+document.getElementById("remindMe").onclick = calendarForNextOpening;
 
 document.getElementById("openLog").onclick = () => {
   renderBoard();
