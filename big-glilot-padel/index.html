@@ -140,9 +140,9 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 .tag.mine{color:var(--ink);font-weight:700;
   box-shadow:inset 0 0 0 1.5px var(--ink);border-radius:var(--r-pill);padding:5px 11px}
 
-.take.free{background:transparent;color:var(--ink);font-size:13.5px;
-  box-shadow:inset 0 0 0 1.5px var(--ink)}
-.take.free:active{background:transparent;color:var(--ink-press)}
+.take.free{background:transparent;color:var(--ink);font-size:13.5px;font-weight:800;
+  padding:10px 16px;min-height:40px;box-shadow:inset 0 0 0 2px var(--ink)}
+.take.free:active{transform:scale(.95);background:color-mix(in srgb,var(--ink) 10%,transparent)}
 .sure{display:flex;align-items:center;gap:7px;animation:in .28s var(--ease) both}
 .sure span{font-size:13.5px;font-weight:700;color:var(--text-2)}
 .sure-yes,.sure-no{font-size:13.5px;font-weight:800;padding:9px 14px;
@@ -150,8 +150,15 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 .sure-yes{background:var(--ink);color:var(--on-ink)}
 .sure-no{color:var(--text-2);box-shadow:inset 0 0 0 1.5px var(--line)}
 .sure-yes:active,.sure-no:active{transform:scale(.94)}
-.tag.as-btn{cursor:pointer;transition:opacity .15s ease}
-.tag.as-btn:active{opacity:.45}
+.tag.as-btn{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--text-2);
+  padding:9px 15px;min-height:38px;border-radius:var(--r-pill);
+  box-shadow:inset 0 0 0 1.5px var(--line-strong,var(--line));background:transparent;
+  transition:box-shadow .15s ease,color .15s ease,transform .1s ease}
+.tag.as-btn:active{transform:scale(.95);color:var(--ink);
+  box-shadow:inset 0 0 0 1.5px var(--ink)}
+@media (hover:hover){
+  .tag.as-btn:hover{color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+}
 .take{background:var(--ink);color:var(--on-ink);font-size:14px;font-weight:700;
   padding:10px 16px;border-radius:var(--r-pill);min-height:40px;
   transition:transform .1s ease,opacity .15s ease}
@@ -992,6 +999,7 @@ function renderForm(spot, game){
   document.getElementById("go").onclick = submit;
 
   function bad(msg, el){
+    busy(document.getElementById("go"), false);   // אף פעם לא משאירים טעינה דולקת
     hint.className = "hint";            // מאפסים כדי שהאנימציה תרוץ שוב
     void hint.offsetWidth;
     hint.className = "hint bad";
@@ -1013,19 +1021,19 @@ function renderForm(spot, game){
     }
     if(phone.replace(/\D/g, "").length < 9) return bad("מספר הטלפון לא תקין.", ph);
 
-    busy(document.getElementById("go"), true);
-    const stopSlow = slowWatch(hint, ["עוד רגע", "לוקח יותר מהרגיל. עוד לא ויתרנו."]);
-
-    // בדיקה מקומית לפני שמתחילים: אם כבר יש לו מקום במשחק הזה,
-    // לא מציגים "תופסים" ואז מתהפכים. אומרים לו מיד ולמה.
+    // כל הבדיקות המקומיות קורות לפני שמתחילים לטעון.
+    // אם כבר תפוס, אין שום סיבה להראות טעינה.
     const already = game.spots.find(x =>
       x.status === "claimed" &&
       (x.mine || nameKey(x.name) === nameKey(name)));
     if(already){
       return bad(already.mine
         ? "כבר תפסתם מקום במשחק הזה. אפשר להירשם למשחק אחר."
-        : "השם הזה כבר רשום למשחק הזה. אפשר להירשם למשחק אחר.", nm);
+        : "השם הזה כבר רשום למשחק הזה. אפשר להירשם למשחק אחר.");
     }
+
+    busy(document.getElementById("go"), true);
+    const stopSlow = slowWatch(hint, ["עוד רגע", "לוקח יותר מהרגיל. עוד לא ויתרנו."]);
 
     saveMe(name, phone);
 
