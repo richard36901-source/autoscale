@@ -392,7 +392,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 /* ══════════════════════════════════════════════════════════════
    1. כתובת השרת. מדביקים כאן את ה־Web app URL של Apps Script.
    ══════════════════════════════════════════════════════════════ */
-const API = "https://script.google.com/macros/s/AKfycbyARylX24WlZxCBoHQvUYmIX94dNxHedjP-QeQDmd6l7No_2yBqwwlCCn3aVi1MEwIXpA/exec";
+const API = "https://script.google.com/macros/s/AKfycbx0mo0nwrmjkmSKZWSoL-hrUrtXg26f-Gjza1DSc4M2ewMTsMoZSUZKEtSMUwC47wbYfA/exec";
 
 /* ══════════════════════════════════════════════════════════════
    2. המשחק הקבוע. אותם ערכים גם ב־SESSION שבקובץ Code.gs.
@@ -585,7 +585,8 @@ function renderSpots(alertText){
     if(sp.mine){ mine = sp; mineGame = g; }
   }));
 
-  const notOpen = games.length && games[0].notOpen;
+  const allPast = games.length && games.every(g => g.closed);
+  const notOpen = games.length && (games[0].notOpen || allPast);
   const headline = notOpen ? "ההרשמה נפתחת ביום " + OPENS.day + " בשעה " + OPENS.time
     : mine ? "אתם רשומים ל" + mineGame.day + " " + mineGame.start
     : open === 1 ? "נשאר מקום אחד"
@@ -608,7 +609,7 @@ function renderSpots(alertText){
     games.map((g, gi) => {
       const free = g.spots.filter(sp => sp.status === "open").length;
       const tag = g.notOpen ? "נפתח ביום " + OPENS.day
-        : g.closed ? "המשחק עבר"
+        : g.closed ? "המשחק כבר היה"
         : free === 0 ? "מלא" : free + " פנויים";
       return '<div class="gm' + (g.closed ? " past" : "") + '" style="--i:' + gi + '">' +
         '<div class="gm-head">' +
@@ -620,7 +621,8 @@ function renderSpots(alertText){
           return '<div class="row" data-state="' + state + '" style="--i:' + i + '">' +
             '<span class="who">' +
               (sp.status === "soon" ? "טרם נפתח"
-               : sp.status === "open" ? "פנוי" : esc(sp.name)) + "</span>" +
+               : sp.status === "open" ? (g.closed ? "לא נתפס" : "פנוי")
+               : esc(sp.name)) + "</span>" +
             (sp.status === "soon" || g.closed ? ""
               : sp.mine ? '<button class="take free" data-drop="1">שחרור</button>'
               : sp.status === "open" ? '<button class="take" data-take="' + esc(sp.id) + '">אני משחק</button>'
