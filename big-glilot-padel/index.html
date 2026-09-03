@@ -741,48 +741,16 @@ function addToCalendar(opts){
   const iOS = /iPhone|iPod|iPad/.test(ua) ||
               (/Macintosh/.test(ua) && "ontouchend" in document);
 
+  // בדיוק כמו בגרסה הראשונה שעבדה: קובץ יומן והורדה.
+  // כל ניסיון "לשפר" את זה עם window.open או זיהוי מכשיר שבר את
+  // ההתנהגות באייפון, אז זה נשאר פשוט וזהה בכל מכשיר.
   const blob = new Blob([ics], {type: "text/calendar;charset=utf-8"});
-  const url = URL.createObjectURL(blob);
-  const cleanup = () => setTimeout(() => URL.revokeObjectURL(url), 15000);
-
-  // באייפון: פותחים את הקובץ בלשונית, בלי מאפיין download.
-  // עם download ספארי שומר לקבצים, ובלעדיו הוא מציג את האירוע
-  // ומציע להוסיף אותו ליומן, וזו ההתנהגות שרוצים.
-  function openIcs(){
-    const w = window.open(url, "_blank");
-    if(!w){
-      const a = document.createElement("a");
-      a.href = url; a.target = "_blank"; a.rel = "noopener";
-      document.body.appendChild(a); a.click();
-      setTimeout(() => a.remove(), 3000);
-    }
-    cleanup();
-  }
-
-  // גיבוי אחרון: הורדה רגילה של הקובץ
-  function saveIcs(){
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = (opts.file || "padel") + ".ics";
-    document.body.appendChild(a); a.click();
-    setTimeout(() => a.remove(), 3000);
-    cleanup();
-  }
-
-  if(iOS) return openIcs();
-
-  // אנדרואיד ומחשב: פותחים את יומן גוגל עם האירוע מוכן
-  const z = n => String(n).padStart(2, "0");
-  const utc = d => d.getUTCFullYear() + z(d.getUTCMonth()+1) + z(d.getUTCDate()) +
-                   "T" + z(d.getUTCHours()) + z(d.getUTCMinutes()) + "00Z";
-  const g = new URL("https://calendar.google.com/calendar/render");
-  g.searchParams.set("action", "TEMPLATE");
-  g.searchParams.set("text", opts.title);
-  g.searchParams.set("dates", utc(opts.start) + "/" + utc(end));
-  g.searchParams.set("details", opts.note || "");
-  g.searchParams.set("location", opts.place || PLACE);
-  const w = window.open(g.toString(), "_blank", "noopener");
-  if(!w) saveIcs();                    // חלון נחסם, נופלים לקובץ
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = (opts.file || "padel") + ".ics";
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
 }
 
 /* המשחק עצמו: תזכורת ביום המשחק ב־09:00, ועוד אחת ערב קודם ב־18:00 */
