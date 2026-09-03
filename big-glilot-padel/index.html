@@ -136,8 +136,6 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 .row[data-state="claimed"] .who{color:var(--text);font-weight:700}
 .row[data-state="mine"]{background:color-mix(in srgb, var(--ink) 7%, transparent)}
 .row[data-state="mine"] .who{color:var(--ink);font-weight:800}
-.row[data-state="mine"] .who::after{content:" · אתם";font-weight:700;font-size:13px;
-  opacity:.75}
 .row[data-state="soon"] .who{color:var(--text-3);font-weight:500}
 .gm .row[data-state="soon"]{opacity:.75}
 .tag{font-size:13px;color:var(--text-3);font-weight:600}
@@ -503,7 +501,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 /* ══════════════════════════════════════════════════════════════
    1. כתובת השרת. מדביקים כאן את ה־Web app URL של Apps Script.
    ══════════════════════════════════════════════════════════════ */
-const API = "https://script.google.com/macros/s/AKfycbzx5rRWUrA3tEXtGsj_AMkSvMWHd6iXTDhpFOHIJ8OLGa6Tk74541WjllNCeeZRXdw9Fw/exec";
+const API = "https://script.google.com/macros/s/AKfycbxmnBoUM_F9cZGZ0zCFyJ4C6d54Iit6RSCfJ_i5ZidFJb2RZk9JDyXyrMls11f7idFGBg/exec";
 
 /* ══════════════════════════════════════════════════════════════
    2. המשחק הקבוע. אותם ערכים גם ב־SESSION שבקובץ Code.gs.
@@ -1076,6 +1074,7 @@ function renderForm(spot, game){
       stopSlow();
       if(res && res.ok){
         myToken = res.token; remember(res.token);
+        api("sync").catch(() => {});     // מעדכן את הלשוניות בגיליון ברקע
         return confirmSaved(res.token, game);
       }
       // לא הצליח: מחזירים את המצב הקודם ומסבירים
