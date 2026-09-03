@@ -422,6 +422,7 @@ const params = new URLSearchParams(location.search);
 const linkToken = params.get("c");
 const STORE = "padel-glilot-token";
 const CODE  = "padel-glilot-code";
+const DSTATE = "padel-glilot-demo";
 const ME    = "padel-glilot-me";
 
 let spots = [], demoMode = false, myToken = null;
@@ -695,7 +696,7 @@ function renderForm(spot){
     saveMe(name, phone);
     if(demoMode){
       spot.status = "claimed"; spot.name = name; spot.mine = true;
-      myToken = "demo";
+      myToken = "demo"; saveDemo();
       return renderDone(name, null);
     }
     try{
@@ -754,7 +755,7 @@ async function releaseSpot(btn){
   forget(); myToken = null;
   const me = spots.find(x => x.mine);
   if(me){ me.mine = false; me.status = "open"; me.name = ""; }
-  closeModal();
+  saveDemo(); closeModal();
   renderSpots("המקום שוחרר ונפתח מחדש.");
 }
 
@@ -799,7 +800,7 @@ function renderRelease(spot){
 
     if(demoMode){
       spot.status = "open"; spot.name = ""; spot.mine = false;
-      closeModal();
+      saveDemo(); closeModal();
       return renderSpots("המקום שוחרר.");
     }
     try{
@@ -992,6 +993,21 @@ async function refresh(){
 setInterval(refresh, 20000);
 document.addEventListener("visibilitychange", () => { if(!document.hidden) refresh(); });
 
+/* במצב דמו אין שרת, אז המצב נשמר במכשיר עצמו. ככה הזמנה שורדת
+   רענון ואפשר להדגים בלי שזה ייראה שבור. בין מכשירים אין קשר,
+   וזה בדיוק מה שהחיבור לגיליון פותר. */
+function loadDemo(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(DSTATE));
+    if(Array.isArray(saved) && saved.length === DEMO_SPOTS.length) return saved;
+  }catch(e){}
+  return DEMO_SPOTS.map(x => Object.assign({}, x));
+}
+function saveDemo(){
+  if(!demoMode) return;
+  try{ localStorage.setItem(DSTATE, JSON.stringify(spots)); }catch(e){}
+}
+
 /* ── עלייה ────────────────────────────────────────────────── */
 const DEMO_HISTORY = [
   {date:"31.8.26", players:["יעל ברקוביץ'","אורי שגב","נועם קפלן","רותם אליאס"]},
@@ -1083,7 +1099,7 @@ async function boot(listRes){
   paintHero();
   if(API.indexOf("PASTE_") === 0){
     demoMode = true;
-    spots = DEMO_SPOTS.map(x => Object.assign({}, x));
+    spots = loadDemo();
     renderSpots();
     return;
   }
