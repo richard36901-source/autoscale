@@ -130,6 +130,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 .who{flex:1;min-width:0;font-size:19px;font-weight:600;letter-spacing:-.015em;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .row[data-state="open"] .who{color:var(--text-3);font-weight:500}
+.row[data-state="claimed"] .who{color:var(--text);font-weight:700}
 .row[data-state="soon"] .who{color:var(--text-3);font-weight:500}
 .gm .row[data-state="soon"]{opacity:.75}
 .tag{font-size:13px;color:var(--text-3);font-weight:600}
@@ -391,7 +392,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 /* ══════════════════════════════════════════════════════════════
    1. כתובת השרת. מדביקים כאן את ה־Web app URL של Apps Script.
    ══════════════════════════════════════════════════════════════ */
-const API = "https://script.google.com/macros/s/AKfycbyyL8FOYL5U6T3X70j40WoE-lrOZDcSzzn7iwCfniuoERit6lRHHxOpO2cjUQjZepkqeA/exec";
+const API = "https://script.google.com/macros/s/AKfycbwvV8eOZfc_vJ-qX0BDA4FNcMxb0YIHmrN_LWjmIoA5E7ZN9HslnosU81NL2YgRHY-qTQ/exec";
 
 /* ══════════════════════════════════════════════════════════════
    2. המשחק הקבוע. אותם ערכים גם ב־SESSION שבקובץ Code.gs.
@@ -620,11 +621,10 @@ function renderSpots(alertText){
             '<span class="who">' +
               (sp.status === "soon" ? "טרם נפתח"
                : sp.status === "open" ? "פנוי" : esc(sp.name)) + "</span>" +
-            (sp.status === "soon" ? ""
+            (sp.status === "soon" || g.closed ? ""
               : sp.mine ? '<button class="take free" data-drop="1">שחרור</button>'
-              : g.closed ? '<span class="tag">' + (sp.status === "open" ? "" : "שיחק") + "</span>"
               : sp.status === "open" ? '<button class="take" data-take="' + esc(sp.id) + '">אני משחק</button>'
-              : '<button class="tag as-btn" data-free="' + esc(sp.id) + '">זה אני</button>') +
+              : '<button class="tag as-btn" data-free="' + esc(sp.id) + '">ביטול</button>') +
           "</div>";
         }).join("") + "</div>" +
       "</div>";
