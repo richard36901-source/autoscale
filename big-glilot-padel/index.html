@@ -69,7 +69,6 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
     backdrop-filter:blur(1px);
     box-shadow:0 1px 2px rgba(0,0,0,.05),0 24px 60px -28px rgba(0,0,0,.35);
     outline:1px solid var(--line)}
-  .sheet{max-width:462px;margin:0 auto;border-radius:16px 16px 0 0}
 }
 
 /* ── רקע: קווי מגרש וכדורים, שקטים מאחורי הכל ─────────────── */
@@ -217,9 +216,14 @@ function renderGate(msg){
 const modal  = document.getElementById("modal");
 const mscrim = document.getElementById("mscrim");
 
-function openModal(html){
-  modal.innerHTML = '<div class="card">' + html + "</div>";
+function openModal(html, opts){
+  opts = opts || {};
+  modal.innerHTML = '<div class="card' + (opts.tall ? " tall" : "") + '">' +
+    '<div class="grab" aria-hidden="true"><i></i></div>' + html + "</div>";
   modal.hidden = false; mscrim.hidden = false;
+  cardY = 0; mscrim.style.opacity = "1";
+  const c = modal.querySelector(".card");
+  if(c){ c.style.transform = "translateY(0px)"; cardH = c.offsetHeight; }
   const first = modal.querySelector("input");
   if(first) setTimeout(() => first.focus(), 60);
 }
@@ -265,6 +269,40 @@ document.addEventListener("keydown", e => {
   .sk i{animation:breathe 1.4s ease-in-out infinite}
 }
 @keyframes breathe{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── חלון: אותו כרטיס לכל המסכים ──────────────────────────── */
+.mscrim{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.45);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.modal{position:fixed;z-index:61;inset-inline:0;bottom:0;padding:0 12px 12px;
+  display:flex;justify-content:center;pointer-events:none}
+.modal .card{pointer-events:auto}
+@media (min-height:620px){
+  .modal{top:0;align-items:center;padding:16px 12px}
+}
+.card{width:100%;max-width:398px;background:var(--bg);border-radius:14px;
+  padding:14px 18px 20px;box-shadow:0 24px 60px -18px rgba(0,0,0,.55);
+  outline:1px solid var(--line);will-change:transform}
+.card h2{font-size:19px;font-weight:800;letter-spacing:-.015em}
+.card.tall{padding:14px 14px 16px}
+.grab{padding:2px 0 12px;display:grid;place-items:center;touch-action:none;cursor:grab;
+  margin:0 -18px 2px}
+.grab i{width:36px;height:4px;border-radius:2px;background:var(--text-3);opacity:.5;display:block}
+.grab:active{cursor:grabbing}
+.card .sub{margin-top:4px;font-size:13.5px;color:var(--text-2);font-weight:600}
+.scroller{max-height:min(52dvh,400px);overflow-y:auto;-webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain}
+.segs{display:flex;gap:5px;margin:0 0 10px}
+.seg{flex:1;font-size:14px;font-weight:700;color:var(--text-2);padding:9px 10px;
+  border-radius:var(--r-pill);background:var(--card);
+  transition:background .18s ease,color .18s ease,transform .1s ease}
+.seg[aria-selected="true"]{background:var(--ink);color:var(--on-ink)}
+.seg:active{transform:scale(.97)}
+@media (prefers-reduced-motion: no-preference){
+  .mscrim{animation:fade .2s ease both}
+  .card{animation:rise .32s var(--ease) both}
+}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
 
 /* ── לוג השבועות והמובילים ────────────────────────────────── */
 
@@ -406,15 +444,6 @@ document.addEventListener("keydown", e => {
 <div class="mscrim" id="mscrim" hidden></div>
 <div class="modal" id="modal" hidden role="dialog" aria-modal="true"></div>
 
-<div class="scrim" id="scrim" hidden></div>
-<section class="sheet" id="sheet" hidden aria-label="לוח משחקים">
-  <div class="grab" id="grab"><i></i></div>
-  <div class="segs">
-    <button class="seg" data-tab="log" aria-selected="true">לוח משחקים</button>
-    <button class="seg" data-tab="board" aria-selected="false">טבלת המובילים</button>
-  </div>
-  <div class="sheet-body" id="sheetBody"></div>
-</section>
 
 <script>
 /* ══════════════════════════════════════════════════════════════
@@ -553,9 +582,14 @@ function renderGate(msg){
 const modal  = document.getElementById("modal");
 const mscrim = document.getElementById("mscrim");
 
-function openModal(html){
-  modal.innerHTML = '<div class="card">' + html + "</div>";
+function openModal(html, opts){
+  opts = opts || {};
+  modal.innerHTML = '<div class="card' + (opts.tall ? " tall" : "") + '">' +
+    '<div class="grab" aria-hidden="true"><i></i></div>' + html + "</div>";
   modal.hidden = false; mscrim.hidden = false;
+  cardY = 0; mscrim.style.opacity = "1";
+  const c = modal.querySelector(".card");
+  if(c){ c.style.transform = "translateY(0px)"; cardH = c.offsetHeight; }
   const first = modal.querySelector("input");
   if(first) setTimeout(() => first.focus(), 60);
 }
@@ -729,24 +763,25 @@ function renderRelease(spot){
 }
 
 /* ══════════════════════════════════════════════════════════════
-   מגירת ההיסטוריה. נגררת באצבע: עוקבת 1:1, מתנגדת בקצה העליון,
-   וכשמשחררים היא ממשיכה במהירות של האצבע ומחליטה לאן להגיע.
+   כל החלונות הם אותו רכיב: אותו כרטיס, אותה ידית, אותה גרירה
+   כלפי מטה לסגירה. פרטים, ביטול ולוח המשחקים נראים זהה.
    ══════════════════════════════════════════════════════════════ */
-const sheet = document.getElementById("sheet");
-const scrim = document.getElementById("scrim");
-const sheetBody = document.getElementById("sheetBody");
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-
 let weekLog = null, board = null, tab = "log";
-let sheetY = 0, sheetH = 0, raf = null, dragging = false;
+let cardY = 0, cardH = 0, raf = null, dragging = false;
+let dragStartY = 0, dragStartOffset = 0, dragPts = [];
 
-const setY = y => {
-  sheetY = y;
-  sheet.style.transform = "translateY(" + y + "px)";
-  scrim.style.opacity = String(Math.max(0, 1 - y / (sheetH || 1)));
-};
+function cardEl(){ return modal.querySelector(".card"); }
 
-/* קפיץ. מתחיל תמיד מהערך שעל המסך, כך שאפשר לתפוס אותו באמצע. */
+function setY(y){
+  const c = cardEl();
+  if(!c) return;
+  cardY = y;
+  c.style.transform = "translateY(" + y + "px)";
+  mscrim.style.opacity = String(Math.max(0, 1 - y / (cardH || 1)));
+}
+
+/* קפיץ שמתחיל מהמצב שעל המסך, כדי שאפשר לתפוס אותו באמצע תנועה */
 function springTo(target, velocity, done){
   if(raf) cancelAnimationFrame(raf);
   if(reduced){ setY(target); done && done(); return; }
@@ -754,9 +789,9 @@ function springTo(target, velocity, done){
   const k = 420, c = 41;
   const step = now => {
     const dt = Math.min((now - last) / 1000, 1 / 30); last = now;
-    v += ((-k * (sheetY - target)) - c * v) * dt;
-    setY(sheetY + v * dt);
-    if(Math.abs(sheetY - target) < 0.5 && Math.abs(v) < 15){
+    v += ((-k * (cardY - target)) - c * v) * dt;
+    setY(cardY + v * dt);
+    if(Math.abs(cardY - target) < 0.5 && Math.abs(v) < 15){
       setY(target); raf = null; done && done(); return;
     }
     raf = requestAnimationFrame(step);
@@ -764,103 +799,66 @@ function springTo(target, velocity, done){
   raf = requestAnimationFrame(step);
 }
 
-/* הטלת תנופה, בדיוק כמו האטת גלילה. */
 const project = v => (v / 1000) * 0.998 / (1 - 0.998);
+const rubber  = (over, dim) => (over * dim * 0.55) / (dim + 0.55 * Math.abs(over));
 
-/* התנגדות בקצה: ככל שמושכים מעבר לגבול, פחות זז. */
-const rubber = (over, dim) => (over * dim * 0.55) / (dim + 0.55 * Math.abs(over));
-
-function openSheet(){
-  sheet.hidden = false; scrim.hidden = false;
-  sheetH = sheet.offsetHeight;
-  setY(sheetH);
-  requestAnimationFrame(() => springTo(0, 0));
-  if(weekLog === null) loadArchive(); else renderSheet();
-}
-
-function closeSheet(velocity){
-  springTo(sheetH, velocity, () => { sheet.hidden = true; scrim.hidden = true; });
-}
-
-document.getElementById("openLog").onclick = openSheet;
-scrim.onclick = () => closeSheet(0);
-document.addEventListener("keydown", e => {
-  if(e.key === "Escape" && !sheet.hidden) closeSheet(0);
+modal.addEventListener("pointerdown", e => {
+  const handle = e.target.closest(".grab");
+  if(!handle) return;
+  try{ handle.setPointerCapture(e.pointerId); }catch(err){}
+  if(raf) cancelAnimationFrame(raf);
+  dragging = true;
+  cardH = cardEl().offsetHeight;
+  dragStartY = e.clientY;
+  dragStartOffset = cardY;
+  dragPts = [{y: e.clientY, t: performance.now()}];
 });
 
-/* ── הגרירה ───────────────────────────────────────────────── */
-(function drag(){
-  const grab = document.getElementById("grab");
-  let startY = 0, startOffset = 0, points = [];
+modal.addEventListener("pointermove", e => {
+  if(!dragging) return;
+  let next = dragStartOffset + (e.clientY - dragStartY);
+  if(next < 0) next = -rubber(-next, cardH);
+  setY(next);
+  dragPts.push({y: e.clientY, t: performance.now()});
+  if(dragPts.length > 6) dragPts.shift();
+});
 
-  grab.addEventListener("pointerdown", e => {
-    try{ grab.setPointerCapture(e.pointerId); }catch(err){}
-    if(raf) cancelAnimationFrame(raf);          // תופסים את התנועה באמצע
-    dragging = true;
-    startY = e.clientY;
-    startOffset = sheetY;                        // מכבדים את נקודת האחיזה
-    points = [{y: e.clientY, t: performance.now()}];
-  });
+function endDrag(){
+  if(!dragging) return;
+  dragging = false;
+  const last = dragPts[dragPts.length - 1];
+  let first = dragPts[0], velocity = 0;
+  for(let i = dragPts.length - 1; i >= 0; i--){
+    if(last.t - dragPts[i].t >= 25){ first = dragPts[i]; break; }
+  }
+  const dt = last.t - first.t;
+  if(dt >= 25) velocity = (last.y - first.y) / dt * 1000;
+  velocity = Math.max(-4000, Math.min(4000, velocity));
 
-  grab.addEventListener("pointermove", e => {
-    if(!dragging) return;
-    let next = startOffset + (e.clientY - startY);
-    if(next < 0) next = -rubber(-next, sheetH);  // התנגדות כלפי מעלה
-    setY(next);
-    points.push({y: e.clientY, t: performance.now()});
-    if(points.length > 6) points.shift();
-  });
+  // ההטלה מוגבלת לגובה הכרטיס, אחרת גרירה קצרה הייתה סוגרת לבד
+  const landing = cardY + Math.min(project(velocity), cardH);
+  if(velocity > 550 || landing > cardH * 0.55){
+    springTo(cardH || 420, velocity, () => { closeModal(); renderSpots(); });
+  }else{
+    springTo(0, velocity);
+  }
+}
+modal.addEventListener("pointerup", endDrag);
+modal.addEventListener("pointercancel", endDrag);
 
-  const end = e => {
-    if(!dragging) return;
-    dragging = false;
-
-    // מודדים מהירות רק על חלון זמן אמיתי. שתי נקודות באותה מילישנייה
-    // נותנות מהירות אינסופית, ואז גרירה של 10 פיקסלים הייתה סוגרת.
-    const last = points[points.length - 1];
-    let first = points[0], velocity = 0;
-    for(let i = points.length - 1; i >= 0; i--){
-      if(last.t - points[i].t >= 25){ first = points[i]; break; }
-    }
-    const dt = last.t - first.t;
-    if(dt >= 25) velocity = (last.y - first.y) / dt * 1000;
-    velocity = Math.max(-4000, Math.min(4000, velocity));   // גבול שפיות
-
-    // ההטלה מוגבלת לגובה המגירה, אחרת בגרירה קצרה על מגירה נמוכה
-    // התנופה לבדה הייתה סוגרת אותה.
-    const landing = sheetY + Math.min(project(velocity), sheetH);
-    const flungDown = velocity > 550;
-    const draggedFar = landing > sheetH * 0.55;
-    if(flungDown || draggedFar) closeSheet(velocity);
-    else springTo(0, velocity);
-  };
-  grab.addEventListener("pointerup", end);
-  grab.addEventListener("pointercancel", end);
-})();
-
-/* ── תוכן המגירה ──────────────────────────────────────────── */
+/* ── לוח המשחקים, באותו חלון ──────────────────────────────── */
 const MEDAL = ["g", "s", "b"];
 
-function renderSheet(){
-  if(weekLog === null && board === null){
-    sheetBody.innerHTML = '<div class="list"><div class="empty">טוענים</div></div>';
-    return;
-  }
-  document.querySelectorAll(".seg").forEach(b =>
-    b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
+function boardHTML(){
+  const log = (weekLog || []).length
+    ? '<div class="list">' + weekLog.map((w, i) =>
+        '<div class="wk" style="--i:' + i + '">' +
+          '<div class="wk-date">' + esc(w.date) + " · " + esc(w.time || GAME.time) + "</div>" +
+          '<div class="wk-names">' + w.players.map(esc).join(", ") + "</div>" +
+        "</div>").join("") + "</div>"
+    : '<div class="list"><div class="empty">המשחק הראשון עוד לפניכם.</div></div>';
 
-  if(tab === "log"){
-    sheetBody.innerHTML = (weekLog || []).length
-      ? '<div class="list">' + weekLog.map((w, i) =>
-          '<div class="wk" style="--i:' + i + '">' +
-            '<div class="wk-date">' + esc(w.date) + "</div>" +
-            '<div class="wk-names">' + w.players.map(esc).join(", ") + "</div>" +
-          "</div>").join("") + "</div>"
-      : '<div class="list"><div class="empty">המשחק הראשון עוד לפניכם.</div></div>';
-    return;
-  }
-
-  sheetBody.innerHTML = (board || []).length
+  const lead = (board || []).length
     ? '<div class="list">' + board.map((p, i) =>
         '<div class="lb' + (i < 3 ? " podium" : "") + '" style="--i:' + i + '">' +
           '<span class="medal ' + (MEDAL[i] || "n") + '">' + (i + 1) + "</span>" +
@@ -868,17 +866,30 @@ function renderSheet(){
           '<span class="lb-n">' + p.games + "<small>משחקים</small></span>" +
         "</div>").join("") + "</div>"
     : '<div class="list"><div class="empty">אין עדיין משחקים לספור.</div></div>';
+
+  return '<div class="segs">' +
+      '<button class="seg" data-tab="log" aria-selected="' + (tab === "log") + '">לוח משחקים</button>' +
+      '<button class="seg" data-tab="board" aria-selected="' + (tab === "board") + '">מובילים</button>' +
+    "</div>" +
+    '<div class="scroller">' + (tab === "log" ? log : lead) + "</div>";
 }
 
-document.querySelector(".segs").addEventListener("click", e => {
-  const b = e.target.closest("[data-tab]");
-  if(!b) return;
-  tab = b.dataset.tab;
-  renderSheet();
+function renderBoard(){
+  if(weekLog === null && board === null){
+    return openModal('<div class="list"><div class="empty">טוענים</div></div>', {tall:true});
+  }
+  openModal(boardHTML(), {tall:true});
+}
+
+modal.addEventListener("click", e => {
+  const t = e.target.closest("[data-tab]");
+  if(!t) return;
+  tab = t.dataset.tab;
+  openModal(boardHTML(), {tall:true});
 });
 
 async function loadArchive(){
-  if(demoMode){ weekLog = DEMO_HISTORY; board = DEMO_BOARD; return renderSheet(); }
+  if(demoMode){ weekLog = DEMO_HISTORY; board = DEMO_BOARD; return renderBoard(); }
   try{
     const res = await Promise.all([
       api("history").catch(() => null),
@@ -886,9 +897,14 @@ async function loadArchive(){
     ]);
     weekLog = res[0] && res[0].ok ? res[0].weeks : [];
     board   = res[1] && res[1].ok ? res[1].board : [];
-    renderSheet();
-  }catch(e){ weekLog = []; board = []; renderSheet(); }
+  }catch(e){ weekLog = []; board = []; }
+  renderBoard();
 }
+
+document.getElementById("openLog").onclick = () => {
+  renderBoard();
+  if(weekLog === null) loadArchive();
+};
 
 /* ── רענון שקט ─────────────────────────────────────────────
    הדף פתוח אצל הרבה עובדים בו זמנית. כל 20 שניות, וגם כשחוזרים
