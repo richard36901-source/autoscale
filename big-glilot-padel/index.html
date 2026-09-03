@@ -795,9 +795,9 @@ function renderSpots(alertText){
                : sp.status === "open" ? (g.closed ? "לא נתפס" : "פנוי")
                : esc(sp.name)) + "</span>" +
             (sp.status === "soon" || g.closed ? ""
-              : sp.mine ? '<button class="take free" data-drop="1">שחרור</button>'
+              : sp.mine ? '<button class="take free" data-drop="1">ביטול</button>'
               : sp.status === "open" ? '<button class="take" data-take="' + esc(sp.id) + '">אני משחק</button>'
-              : '<button class="tag as-btn" data-free="' + esc(sp.id) + '">ביטול</button>') +
+              : '<button class="tag as-btn" data-free="' + esc(sp.id) + '">זה אני</button>') +
           "</div>";
         }).join("") + "</div>" +
       "</div>";
@@ -981,7 +981,7 @@ function renderForm(spot, game){
       '<div class="f"><label for="ph">טלפון</label>' +
         '<input id="ph" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="done" placeholder="050-000-0000" value="' + esc(me.phone || "") + '"></div>' +
     "</div>" +
-    '<div class="hint" id="hint">' + (me.phone ? "הפרטים מהפעם הקודמת. אפשר לאשר." : "רק מהמספר הזה אפשר יהיה לשחרר את המקום.") + "</div>" +
+    '<div class="hint" id="hint">' + (me.phone ? "הפרטים מהפעם הקודמת. אפשר לאשר." : "רק מהמספר הזה אפשר יהיה לבטל את המקום.") + "</div>" +
     '<button class="filled" id="go">תפיסת המקום</button>' +
     '<button class="plain" id="back">ביטול</button>');
 
@@ -1083,7 +1083,7 @@ function renderDone(name, token, game, pending){
       '<h2 id="doneTitle">' + (pending ? "תופסים את המקום" : "המקום שלכם") + "</h2>" +
       "<p>" + esc(name) + " · " + esc(game.day) + " " + esc(game.start) +
         " עד " + esc(game.end) + " · " + esc(game.date) + "</p>" +
-      '<p id="doneNote">' + (pending ? "" : "אפשר לשחרר את המקום מכאן בכל רגע.") + "</p>" +
+      '<p id="doneNote">' + (pending ? "" : "אפשר לבטל את המקום מכאן בכל רגע.") + "</p>" +
       '<button class="filled" id="addCal">הוספה ליומן</button>' +
       '<button class="plain" id="backToSpots">סגירה</button>' +
     "</div>");
@@ -1099,16 +1099,16 @@ function confirmSaved(token){
   const note = document.getElementById("doneNote");
   if(mk){ mk.classList.remove("waiting"); mk.textContent = "✓"; }
   if(title) title.textContent = "המקום שלכם";
-  if(note) note.textContent = "אפשר לשחרר את המקום מכאן בכל רגע.";
+  if(note) note.textContent = "אפשר לבטל את המקום מכאן בכל רגע.";
   try{ navigator.vibrate && navigator.vibrate(14); }catch(e){}
 }
 
 /* ── ביטול ────────────────────────────────────────────────── */
 function confirmRelease(btn){
   openModal(
-    "<h2>לשחרר את המקום?</h2>" +
+    "<h2>לבטל את המקום?</h2>" +
     '<div class="sub">המקום ייפתח מיד לשאר העובדים.</div>' +
-    '<button class="filled" id="yes">כן, שחררו</button>' +
+    '<button class="filled" id="yes">כן, בטלו</button>' +
     '<button class="plain" id="no">לא</button>');
   document.getElementById("no").onclick  = () => { closeModal(); renderSpots(); };
   document.getElementById("yes").onclick = e => releaseSpot(e.target);
@@ -1125,7 +1125,7 @@ async function releaseSpot(btn){
     if(sp.mine){ sp.mine = false; sp.status = "open"; sp.name = ""; }
   }));
   saveDemo(); closeModal();
-  renderSpots("המקום שוחרר ונפתח מחדש.");
+  renderSpots("המקום בוטל ונפתח מחדש.");
 }
 
 function fail(){
@@ -1142,15 +1142,15 @@ function renderRelease(spot){
   onList = false;
   const me = loadMe();
   openModal(
-    "<h2>שחרור המקום</h2>" +
+    "<h2>ביטול המקום</h2>" +
     '<div class="sub">' + esc(spot.name) + "</div>" +
     '<div class="fields">' +
       '<div class="f"><label for="rp">טלפון</label>' +
         '<input id="rp" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="done" ' +
         'placeholder="050-000-0000" value="' + esc(me.phone || "") + '"></div>' +
     "</div>" +
-    '<div class="hint" id="rhint">רק המספר שאיתו נתפס המקום יכול לשחרר אותו.</div>' +
-    '<button class="filled" id="rgo">שחרור המקום</button>' +
+    '<div class="hint" id="rhint">רק המספר שאיתו נתפס המקום יכול לבטל אותו.</div>' +
+    '<button class="filled" id="rgo">ביטול המקום</button>' +
     '<button class="plain" id="rback">ביטול</button>');
 
   const hint = document.getElementById("rhint"), rp = document.getElementById("rp");
@@ -1170,7 +1170,7 @@ function renderRelease(spot){
     if(demoMode){
       spot.status = "open"; spot.name = ""; spot.mine = false;
       saveDemo(); closeModal();
-      return renderSpots("המקום שוחרר.");
+      return renderSpots("המקום בוטל.");
     }
     try{
       const res = await api("release", {slot: spot.id, phone: phone});
@@ -1179,7 +1179,7 @@ function renderRelease(spot){
         const list = await api("list");
         games = normalise(list.games);
         closeModal();
-        return renderSpots("המקום שוחרר ונפתח מחדש.");
+        return renderSpots("המקום בוטל ונפתח מחדש.");
       }
       busy(btn, false);
       hint.className = "hint";
@@ -1187,7 +1187,7 @@ function renderRelease(spot){
       hint.className = "hint bad";
       hint.textContent = res.reason === "phone_mismatch"
         ? "המספר הזה לא תופס את המקום הזה."
-        : "לא הצלחנו לשחרר. נסו שוב.";
+        : "לא הצלחנו לבטל. נסו שוב.";
       try{ navigator.vibrate && navigator.vibrate([12, 60, 12]); }catch(e){}
     }catch(e){
       busy(btn, false);
