@@ -671,6 +671,47 @@ function stamp(d){
   return d.getFullYear() + pad2(d.getMonth()+1) + pad2(d.getDate()) +
          "T" + pad2(d.getHours()) + pad2(d.getMinutes()) + "00";
 }
+/* שלד בצורת הדף האמיתי, כדי שהעין תדע לאן להסתכל לפני
+   שהנתונים הגיעו והמעבר לתוכן לא יקפוץ. */
+function skeleton(){
+  const row = '<div class="sk-row"><span class="sk-name"></span><span class="sk-btn"></span></div>';
+  const card = '<div class="sk-gm">' +
+      '<div class="sk-head"><span class="sk-line w1"></span><span class="sk-line w2"></span></div>' +
+      '<div class="sk-list">' + row + row + row + row + "</div>" +
+    "</div>";
+  return '<div class="sk-wrap">' + card + card + "</div>";
+}
+
+/* אחרי כמה שניות של המתנה אומרים משהו אמיתי, בלי אחוזים מומצאים. */
+function slowWatch(el, texts){
+  const marks = [[3500, texts[0]], [8000, texts[1]]];
+  const timers = marks.map(([ms, txt]) => setTimeout(() => {
+    if(el && el.isConnected) el.textContent = txt;
+  }, ms));
+  return () => timers.forEach(clearTimeout);
+}
+
+/* כפתור בהמתנה: הטקסט מוחלף בכדור מקפץ, הרוחב נשמר. */
+function busy(btn, on){
+  if(!btn) return;
+  if(on){
+    btn.dataset.label = btn.dataset.label || btn.textContent;
+    btn.classList.add("btn-busy");
+    btn.disabled = true;
+    if(!btn.querySelector(".bball")){
+      const w = document.createElement("span");
+      w.className = "bball"; w.innerHTML = BALL;
+      btn.appendChild(w);
+    }
+  }else{
+    btn.classList.remove("btn-busy");
+    btn.disabled = false;
+    const w = btn.querySelector(".bball");
+    if(w) w.remove();
+    if(btn.dataset.label) btn.textContent = btn.dataset.label;
+  }
+}
+
 /* ══════════════════════════════════════════════════════════════
    קובץ היומן מוגש מ-GitHub Pages עם text/calendar אמיתי, ולכן
    אייפון פותח עליו את חלון היומן הנייטיב עם האירוע ממולא.
