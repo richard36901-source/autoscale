@@ -290,8 +290,8 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 
 /* ── כדור פאדל מקפץ, לכל רגע של המתנה ────────────────────── */
 .loader{display:grid;place-items:center;gap:9px;padding:44px 0 40px}
-.loader .ball{width:36px;height:36px;display:block;color:var(--ink)}
-.loader .sh{width:30px;height:5px;border-radius:50%;background:var(--text-3);opacity:.22}
+.loader .ball{width:38px;height:38px;display:block;color:var(--ink)}
+.loader .sh{width:26px;height:5px;border-radius:50%;background:var(--text-3);opacity:.25}
 .loader .cap{font-size:13px;color:var(--text-2);margin-top:4px}
 @media (prefers-reduced-motion: no-preference){
   .loader .ball{animation:bounce .62s cubic-bezier(.32,0,.68,1) infinite alternate}
@@ -592,52 +592,14 @@ function normalise(list){
 /* כדור פאדל מצויר, משמש בכל מצבי ההמתנה */
 const BALL =
   '<svg class="ball" viewBox="0 0 40 40" aria-hidden="true">' +
-    '<circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="2.6"></circle>' +
-    '<path d="M6 12a20 20 0 0 0 0 16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"></path>' +
-    '<path d="M34 12a20 20 0 0 1 0 16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"></path>' +
+    '<circle cx="20" cy="20" r="18" fill="currentColor"></circle>' +
+    '<path d="M7.2 8.4a20 20 0 0 1 0 23.2" fill="none" stroke="var(--on-ink)" ' +
+      'stroke-width="2.4" stroke-linecap="round" opacity=".85"></path>' +
+    '<path d="M32.8 8.4a20 20 0 0 0 0 23.2" fill="none" stroke="var(--on-ink)" ' +
+      'stroke-width="2.4" stroke-linecap="round" opacity=".85"></path>' +
+    '<ellipse cx="14" cy="13" rx="5" ry="3.4" fill="var(--on-ink)" ' +
+      'opacity=".22" transform="rotate(-30 14 13)"></ellipse>' +
   "</svg>";
-
-/* שלד בצורת הדף האמיתי. ככה העין כבר יודעת לאן להסתכל
-   לפני שהנתונים הגיעו, והמעבר לתוכן לא קופץ. */
-/* מכניס כדור מקפץ לתוך כפתור, במקום להחליף את הטקסט למילה */
-/* אחרי כמה שניות של המתנה אומרים משהו אמיתי: שזה לוקח יותר
-   מהרגיל, ושאפשר לנסות שוב. בלי אחוזים מומצאים. */
-function slowWatch(el, texts){
-  const marks = [[3500, texts[0]], [8000, texts[1]]];
-  const timers = marks.map(([ms, txt]) => setTimeout(() => {
-    if(el && el.isConnected) el.textContent = txt;
-  }, ms));
-  return () => timers.forEach(clearTimeout);
-}
-
-function busy(btn, on){
-  if(!btn) return;
-  if(on){
-    btn.dataset.label = btn.dataset.label || btn.textContent;
-    btn.classList.add("btn-busy");
-    btn.disabled = true;
-    if(!btn.querySelector(".bball")){
-      const w = document.createElement("span");
-      w.className = "bball"; w.innerHTML = BALL;
-      btn.appendChild(w);
-    }
-  }else{
-    btn.classList.remove("btn-busy");
-    btn.disabled = false;
-    const w = btn.querySelector(".bball");
-    if(w) w.remove();
-    if(btn.dataset.label) btn.textContent = btn.dataset.label;
-  }
-}
-
-function skeleton(){
-  const row = '<div class="sk-row"><span class="sk-name"></span><span class="sk-btn"></span></div>';
-  const card = '<div class="sk-gm">' +
-      '<div class="sk-head"><span class="sk-line w1"></span><span class="sk-line w2"></span></div>' +
-      '<div class="sk-list">' + row + row + row + row + "</div>" +
-    "</div>";
-  return '<div class="sk-wrap">' + card + card + "</div>";
-}
 
 function loader(caption){
   return '<div class="loader">' + BALL + '<span class="sh"></span>' +
@@ -709,45 +671,27 @@ function stamp(d){
   return d.getFullYear() + pad2(d.getMonth()+1) + pad2(d.getDate()) +
          "T" + pad2(d.getHours()) + pad2(d.getMinutes()) + "00";
 }
-function addToCalendar(opts){
-  const end = new Date(opts.start.getTime() + (opts.minutes || 60) * 60000);
-  const alarms = (opts.alarms || []).map(a =>
-    ["BEGIN:VALARM",
-     "ACTION:DISPLAY",
-     "DESCRIPTION:" + a.text,
-     "TRIGGER;VALUE=DATE-TIME:" + stamp(a.at),
-     "END:VALARM"].join("\r\n"));
+/* ══════════════════════════════════════════════════════════════
+   קובץ היומן מוגש מ-GitHub Pages עם text/calendar אמיתי, ולכן
+   אייפון פותח עליו את חלון היומן הנייטיב עם האירוע ממולא.
+   קובץ שנוצר בדפדפן תמיד יירד, לא משנה איך בונים אותו.
+   ══════════════════════════════════════════════════════════════ */
+function icsUrl(gameIndex, date){
+  const z = n => String(n).padStart(2, "0");
+  const ymd = date.getFullYear() + "-" + z(date.getMonth()+1) + "-" + z(date.getDate());
+  return "ics/g" + gameIndex + "-" + ymd + ".ics";
+}
 
-  const ics = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//AutoScale//Padel Glilot//HE",
-    "CALSCALE:GREGORIAN",
-    "METHOD:PUBLISH",
-    "BEGIN:VEVENT",
-    "UID:" + Date.now() + "-padel@autoscalehq.io",
-    "DTSTAMP:" + stamp(new Date()),
-    "DTSTART:" + stamp(opts.start),
-    "DTEND:" + stamp(end),
-    "SUMMARY:" + opts.title,
-    "LOCATION:" + (opts.place || PLACE),
-    "DESCRIPTION:" + (opts.note || ""),
-    ...alarms,
-    "END:VEVENT",
-    "END:VCALENDAR"
-  ].join("\r\n");
+/* המשחק שנתפס: פותח את האירוע של אותו יום ושעה */
+function calendarForGame(game){
+  const gi = game.game || (GAMES.findIndex(g =>
+    g.day === game.day && g.start === game.start) + 1) || 1;
+  location.href = icsUrl(gi, dateOf(GAMES[gi - 1] || GAMES[0]));
+}
 
-  // הגרסה שעבדה מהרגע הראשון. לא לגעת.
-  // ניסיתי data: URI, לשונית חדשה, window.open, ונקודת קצה בשרת —
-  // כל אחד מהם שבר את ההתנהגות באייפון. Apps Script מגישה
-  // application/binary ולא text/calendar, אז גם היא לא פותרת.
-  const blob = new Blob([ics], {type: "text/calendar;charset=utf-8"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = (opts.file || "padel") + ".ics";
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+/* למי שלא הספיק: תזכורת פתיחת ההרשמה */
+function calendarForNextOpening(){
+  location.href = "ics/open.ics";
 }
 
 /* המשחק עצמו: תזכורת ביום המשחק ב־09:00, ועוד אחת ערב קודם ב־18:00 */
