@@ -130,6 +130,8 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 .who{flex:1;min-width:0;font-size:19px;font-weight:600;letter-spacing:-.015em;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .row[data-state="open"] .who{color:var(--text-3);font-weight:500}
+.row[data-state="soon"] .who{color:var(--text-3);font-weight:500}
+.gm .row[data-state="soon"]{opacity:.75}
 .tag{font-size:13px;color:var(--text-3);font-weight:600}
 .tag.mine{color:var(--ink);font-weight:700;
   box-shadow:inset 0 0 0 1.5px var(--ink);border-radius:var(--r-pill);padding:5px 11px}
@@ -179,70 +181,35 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 .plain{width:100%;color:var(--text-2);font-size:15px;font-weight:600;min-height:44px;margin-top:6px}
 .plain:active{opacity:.5}
 
-/* ── שער הכניסה. הקוד נבדק בשרת, לא בדף. ──────────────────── */
-function renderGate(msg){
-  document.getElementById("openLog").hidden = true;
-  app.innerHTML =
-    '<div class="gate">' +
-      "<h2>קוד כניסה</h2>" +
-      '<p>הקוד מחולק לעובדי הקניון.</p>' +
-      '<input id="code" class="code-in" type="text" inputmode="numeric" ' +
-        'maxlength="4" autocomplete="one-time-code" placeholder="0000">' +
-      (msg ? '<div class="hint bad" style="margin:10px 2px 0">' + esc(msg) + "</div>" : "") +
-      '<button class="filled" id="enter">כניסה</button>' +
-    "</div>";
-  const input = document.getElementById("code");
-  setTimeout(() => input.focus(), 80);
-  input.addEventListener("input", () => {
-    input.value = input.value.replace(/\D/g, "").slice(0, 4);
-    if(input.value.length === 4) enter();
-  });
-  document.getElementById("enter").onclick = enter;
+/* ── ההודעה כשאין מקומות בכלל ─────────────────────────────── */
+.reopen{margin:-2px 6px 10px;font-size:13.5px;color:var(--text-2);line-height:1.45}
 
-  async function enter(){
-    const v = input.value.trim();
-    if(v.length !== 4) return;
-    const btn = document.getElementById("enter");
-    btn.disabled = true; btn.textContent = "בודקים";
-    accessCode = v;
-    try{
-      const res = await api("list");
-      if(res && res.ok){
-        try{ localStorage.setItem(CODE, v); }catch(e){}
-        document.getElementById("openLog").hidden = false;
-        return boot(res);
-      }
-      accessCode = "";
-      renderGate("הקוד לא נכון.");
-    }catch(e){
-      accessCode = "";
-      renderGate("אין חיבור לשרת.");
-    }
-  }
+/* ── כרטיס משחק: כותרת עם יום ושעה, ומתחתיה ארבעת המקומות ── */
+.gm{margin-top:18px}
+.gm-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  margin:0 6px 7px}
+.gm-when{font-size:15px;font-weight:800;letter-spacing:-.01em}
+.gm-tag{font-size:12.5px;font-weight:700;color:var(--text-2)}
+.gm.past{opacity:.5}
+.gm.past .gm-tag{color:var(--text-3)}
+@media (prefers-reduced-motion: no-preference){
+  .gm{animation:in .42s var(--ease) both;animation-delay:calc(var(--i) * 60ms)}
 }
 
-/* ── חלון קטן במקום החלפת מסך ─────────────────────────────── */
-const modal  = document.getElementById("modal");
-const mscrim = document.getElementById("mscrim");
-
-function openModal(html, opts){
-  opts = opts || {};
-  modal.innerHTML = '<div class="card' + (opts.tall ? " tall" : "") + '">' +
-    '<div class="grab" aria-hidden="true"><i></i></div>' + html + "</div>";
-  modal.hidden = false; mscrim.hidden = false;
-  cardY = 0; mscrim.style.opacity = "1";
-  const c = modal.querySelector(".card");
-  if(c){ c.style.transform = "translateY(0px)"; cardH = c.offsetHeight; }
-  const first = modal.querySelector("input");
-  if(first) setTimeout(() => first.focus(), 60);
-}
-function closeModal(){
-  modal.hidden = true; mscrim.hidden = true; modal.innerHTML = "";
-}
-mscrim.addEventListener("click", () => { closeModal(); renderSpots(); });
-document.addEventListener("keydown", e => {
-  if(e.key === "Escape" && !modal.hidden){ closeModal(); renderSpots(); }
-});
+/* ── מסך קוד הכניסה ───────────────────────────────────────── */
+.gate{background:var(--card);border-radius:var(--r-block);padding:26px 20px 22px;
+  margin-top:22px;text-align:center}
+.gate h2{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.gate > p{margin-top:7px;font-size:14px;color:var(--text-2);line-height:1.4}
+.code-in{display:block;width:100%;box-sizing:border-box;margin:20px 0 0;
+  font:700 32px/1 var(--font);text-align:center;letter-spacing:.4em;text-indent:.4em;
+  font-variant-numeric:tabular-nums;padding:18px 0;border:0;border-radius:var(--r-pill);
+  background:var(--bg);color:var(--text);box-shadow:inset 0 0 0 1.5px var(--line);
+  transition:box-shadow .15s ease}
+.code-in:focus{outline:none;box-shadow:inset 0 0 0 2px var(--ink)}
+.code-in::placeholder{color:var(--text-3)}
+.gate .hint{margin:12px 0 0;text-align:center}
+.gate .hint.bad{color:var(--ink);font-weight:700}
 
 /* ── טופס ─────────────────────────────────────────────────── */
 .fields{background:var(--card);border-radius:var(--r-block);overflow:hidden}
@@ -429,13 +396,20 @@ const API = "https://script.google.com/macros/s/AKfycbyyL8FOYL5U6T3X70j40WoE-lrO
 /* ══════════════════════════════════════════════════════════════
    2. המשחק הקבוע. אותם ערכים גם ב־SESSION שבקובץ Code.gs.
    ══════════════════════════════════════════════════════════════ */
-const GAME = {
-  day:        "ראשון",       // חייב להיות זהה ל־SESSION שב־Code.gs
-  time:       "18:00",
-  court:      "מגרש הפאדל",
-  place:      "ביג פאשן גלילות",
-  resetAfter: 2              // דקות אחרי המשחק שבהן נפתח השבוע הבא
-};
+/* ══════════════════════════════════════════════════════════════
+   2. לוח המשחקים. חייב להיות זהה ל־GAMES שבקובץ Code.gs.
+   ══════════════════════════════════════════════════════════════ */
+const GAMES = [
+  {day: "שלישי", start: "20:00", end: "21:00"},
+  {day: "שלישי", start: "21:00", end: "22:00"},
+  {day: "רביעי", start: "20:00", end: "21:00"},
+  {day: "רביעי", start: "21:00", end: "22:00"}
+];
+const COURT = "מגרש הפאדל";
+const PLACE = "ביג פאשן גלילות";
+const RESET_AFTER = 2;         // דקות אחרי תחילת משחק שבהן הוא נסגר
+/* מתי נפתחת ההרשמה. חייב להיות זהה ל־OPENS שבקובץ Code.gs. */
+const OPENS = {day: "ראשון", time: "12:00"};
 
 const app    = document.getElementById("app");
 const leftEl = {set textContent(v){}};   /* המונה מוצג מעל הרשימה בלבד */
@@ -446,9 +420,16 @@ const CODE  = "padel-glilot-code";
 const DSTATE = "padel-glilot-demo";
 const ME    = "padel-glilot-me";
 
-let spots = [], demoMode = false, myToken = null;
+let games = [], demoMode = false, myToken = null, opensInfo = null;
 let accessCode = "";
 try{ accessCode = localStorage.getItem(CODE) || ""; }catch(e){}
+
+/* מסמן את המקום שנתפס מהמכשיר הזה */
+function normalise(list){
+  return (list || []).map(g => Object.assign({}, g, {
+    spots: (g.spots || []).map(sp => Object.assign({}, sp, {mine: false}))
+  }));
+}
 
 const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c =>
   ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -484,15 +465,14 @@ function api(action, data){
 
 const DAYS = {"ראשון":0,"שני":1,"שלישי":2,"רביעי":3,"חמישי":4,"שישי":5,"שבת":6};
 
-/* מתי המשחק הקרוב בפועל. אותו כלל כמו בשרת: אחרי שעת המשחק
-   ועוד resetAfter דקות, עוברים לשבוע הבא. */
-function nextGame(){
+/* מתי מתקיים משחק מסוים, בפעם הקרובה. אותו כלל כמו בשרת. */
+function dateOf(game){
   const now = new Date();
-  const parts = GAME.time.split(":");
+  const p = game.start.split(":");
   const d = new Date(now);
-  d.setHours(Number(parts[0]) || 0, Number(parts[1]) || 0, 0, 0);
-  d.setDate(d.getDate() + (((DAYS[GAME.day] || 0) - d.getDay() + 7) % 7));
-  if(now > new Date(d.getTime() + GAME.resetAfter * 60000)) d.setDate(d.getDate() + 7);
+  d.setHours(Number(p[0]) || 0, Number(p[1]) || 0, 0, 0);
+  d.setDate(d.getDate() + (((DAYS[game.day] || 0) - d.getDay() + 7) % 7));
+  if(now > new Date(d.getTime() + RESET_AFTER * 60000)) d.setDate(d.getDate() + 7);
   return d;
 }
 const dm = d => d.getDate() + "." + (d.getMonth() + 1);
@@ -541,8 +521,8 @@ function addToCalendar(opts){
 }
 
 /* המשחק עצמו: תזכורת ביום המשחק ב־09:00, ועוד אחת ערב קודם ב־18:00 */
-function calendarForGame(){
-  const start = nextGame();
+function calendarForGame(game){
+  const start = dateOf(game);
   const sameDay9 = new Date(start); sameDay9.setHours(9, 0, 0, 0);
   const dayBefore18 = new Date(start);
   dayBefore18.setDate(dayBefore18.getDate() - 1);
@@ -554,7 +534,7 @@ function calendarForGame(){
   addToCalendar({
     title: "משחק פאדל - ביג גלילות",
     start: start, minutes: 60,
-    place: GAME.court + ", " + GAME.place,
+    place: COURT + ", " + PLACE,
     note: "המקום שלכם במגרש. אם לא תוכלו להגיע, שחררו אותו כאן: " + location.href,
     alarms: alarms,
     file: "padel-glilot"
@@ -563,12 +543,18 @@ function calendarForGame(){
 
 /* למי שלא הספיק: תזכורת להירשם רגע לפני שנפתח השבוע הבא */
 function calendarForNextOpening(){
-  const opens = new Date(nextGame().getTime() + GAME.resetAfter * 60000);
+  // הרגע שבו נפתחת ההרשמה הבאה: היום והשעה הקבועים שב־OPENS
+  const now = new Date();
+  const p = OPENS.time.split(":");
+  const opens = new Date(now);
+  opens.setHours(Number(p[0]) || 0, Number(p[1]) || 0, 0, 0);
+  opens.setDate(opens.getDate() + (((DAYS[OPENS.day] || 0) - opens.getDay() + 7) % 7));
+  if(now > opens) opens.setDate(opens.getDate() + 7);
   const remind = new Date(opens.getTime() - 2 * 60000);
   addToCalendar({
     title: "להירשם לפאדל של שבוע הבא",
     start: opens, minutes: 15,
-    place: GAME.place,
+    place: PLACE,
     note: "המקומות נפתחים עכשיו. מי שראשון תופס: " + location.href,
     alarms: [{at: remind, text: "עוד שתי דקות נפתחת ההרשמה לפאדל"}],
     file: "padel-reminder"
@@ -576,89 +562,117 @@ function calendarForNextOpening(){
 }
 
 function paintHero(){
-  document.getElementById("gDay").textContent   = "יום " + GAME.day + " · " + dm(nextGame());
-  document.getElementById("gTime").textContent  = GAME.time;
-  document.getElementById("gCourt").textContent = GAME.court;
+  const days = [];
+  GAMES.forEach(g => { if(days.indexOf(g.day) < 0) days.push(g.day); });
+  const dates = GAMES.map(dateOf);
+  const first = dates.reduce((a, b) => a < b ? a : b);
+  const last  = dates.reduce((a, b) => a > b ? a : b);
+  document.getElementById("gDay").textContent =
+    days.join(" ו") + " · " + dm(first) + (dm(first) === dm(last) ? "" : " עד " + dm(last));
+  document.getElementById("gTime").textContent =
+    GAMES[0].start + " עד " + GAMES[GAMES.length - 1].end;
+  document.getElementById("gCourt").textContent =
+    COURT + " · " + GAMES.length + " משחקים, " + (GAMES.length * 4) + " מקומות";
 }
 
 /* ── ארבעת המקומות ────────────────────────────────────────── */
 function renderSpots(alertText){
   onList = true;
-  const open = spots.filter(s => s.status === "open").length;
-  const mine = spots.find(s => s.mine);
+  let open = 0, mine = null, mineGame = null;
+  games.forEach(g => g.spots.forEach(sp => {
+    if(sp.status === "open" && !g.closed) open++;
+    if(sp.mine){ mine = sp; mineGame = g; }
+  }));
 
-  const headline = mine ? "אתם רשומים למשחק"
-    : open === 0 ? "המגרש מלא השבוע"
+  const notOpen = games.length && games[0].notOpen;
+  const headline = notOpen ? "ההרשמה נפתחת ביום " + OPENS.day + " בשעה " + OPENS.time
+    : mine ? "אתם רשומים ל" + mineGame.day + " " + mineGame.start
     : open === 1 ? "נשאר מקום אחד"
-    : "נשארו " + open + " מקומות";
+    : open > 1  ? "נשארו " + open + " מקומות"
+    : "הכל תפוס";
+
+  // כשאין אף מקום, אומרים בדיוק מתי נפתחת ההרשמה הבאה:
+  // שתי דקות אחרי שהמשחק הראשון של השבוע מתחיל.
+  const reopenLine = notOpen
+    ? "המקומות לשלישי ולרביעי הקרובים ייפתחו יחד" +
+      (opensInfo && opensInfo.date ? " · " + opensInfo.date : "")
+    : (open === 0 && !mine
+        ? "לשבוע הבא אפשר יהיה להירשם ביום " + OPENS.day + " בשעה " + OPENS.time
+        : "");
 
   app.innerHTML =
     (alertText ? '<div class="hint bad" style="margin:16px 6px 0">' + esc(alertText) + "</div>" : "") +
     '<div class="group">' + esc(headline) + "</div>" +
-    '<div class="list">' + spots.map((s, i) => {
-      const state = s.mine ? "mine" : s.status;
-      return '<div class="row" data-state="' + state + '" style="--i:' + i + '">' +
-        '<span class="who">' + (s.status === "open" ? "פנוי" : esc(s.name)) + "</span>" +
-        (s.mine ? '<button class="take free" data-drop="1">שחרור המקום שלי</button>'
-          : s.status === "open" ? '<button class="take" data-take="' + esc(s.id) + '">אני משחק</button>'
-          : '<button class="tag as-btn" data-free="' + esc(s.id) + '">זה אני</button>') +
+    (reopenLine ? '<div class="reopen">' + esc(reopenLine) + "</div>" : "") +
+    games.map((g, gi) => {
+      const free = g.spots.filter(sp => sp.status === "open").length;
+      const tag = g.notOpen ? "נפתח ביום " + OPENS.day
+        : g.closed ? "המשחק עבר"
+        : free === 0 ? "מלא" : free + " פנויים";
+      return '<div class="gm' + (g.closed ? " past" : "") + '" style="--i:' + gi + '">' +
+        '<div class="gm-head">' +
+          '<span class="gm-when">' + esc(g.day) + " " + esc(g.start) + " עד " + esc(g.end) + "</span>" +
+          '<span class="gm-tag">' + esc(tag) + "</span>" +
+        "</div>" +
+        '<div class="list">' + g.spots.map((sp, i) => {
+          const state = sp.mine ? "mine" : sp.status;
+          return '<div class="row" data-state="' + state + '" style="--i:' + i + '">' +
+            '<span class="who">' +
+              (sp.status === "soon" ? "טרם נפתח"
+               : sp.status === "open" ? "פנוי" : esc(sp.name)) + "</span>" +
+            (sp.status === "soon" ? ""
+              : sp.mine ? '<button class="take free" data-drop="1">שחרור</button>'
+              : g.closed ? '<span class="tag">' + (sp.status === "open" ? "" : "שיחק") + "</span>"
+              : sp.status === "open" ? '<button class="take" data-take="' + esc(sp.id) + '">אני משחק</button>'
+              : '<button class="tag as-btn" data-free="' + esc(sp.id) + '">זה אני</button>') +
+          "</div>";
+        }).join("") + "</div>" +
       "</div>";
-    }).join("") + "</div>" +
-    "";
+    }).join("");
 
-  // מי שכבר בפנים מקבל כפתור יומן למשחק, מי שלא מקבל תזכורת להרשמה
   const remind = document.getElementById("remindMe");
-  if(remind){
-    remind.hidden = !!mine;
-    remind.textContent = open === 0
-      ? "תזכורת ביומן להרשמה לשבוע הבא"
-      : "תזכורת ביומן להרשמה לשבוע הבא";
-  }
+  if(remind) remind.hidden = !!mine;
+  const openLog = document.getElementById("openLog");
+  if(openLog) openLog.hidden = false;
 }
 
-/* ── שער הכניסה. הקוד נבדק בשרת, לא בדף. ──────────────────── */
-function renderGate(msg){
-  document.getElementById("openLog").hidden = true;
-  app.innerHTML =
-    '<div class="gate">' +
-      "<h2>קוד כניסה</h2>" +
-      '<p>הקוד מחולק לעובדי הקניון.</p>' +
-      '<input id="code" class="code-in" type="text" inputmode="numeric" ' +
-        'maxlength="4" autocomplete="one-time-code" placeholder="0000">' +
-      (msg ? '<div class="hint bad" style="margin:10px 2px 0">' + esc(msg) + "</div>" : "") +
-      '<button class="filled" id="enter">כניסה</button>' +
-    "</div>";
-  const input = document.getElementById("code");
-  setTimeout(() => input.focus(), 80);
-  input.addEventListener("input", () => {
-    input.value = input.value.replace(/\D/g, "").slice(0, 4);
-    if(input.value.length === 4) enter();
-  });
-  document.getElementById("enter").onclick = enter;
-
-  async function enter(){
-    const v = input.value.trim();
-    if(v.length !== 4) return;
-    const btn = document.getElementById("enter");
-    btn.disabled = true; btn.textContent = "בודקים";
-    accessCode = v;
-    try{
-      const res = await api("list");
-      if(res && res.ok){
-        try{ localStorage.setItem(CODE, v); }catch(e){}
-        document.getElementById("openLog").hidden = false;
-        return boot(res);
-      }
-      accessCode = "";
-      renderGate("הקוד לא נכון.");
-    }catch(e){
-      accessCode = "";
-      renderGate("אין חיבור לשרת.");
-    }
+/* מוצא מקום ואת המשחק שלו לפי מזהה */
+function findSpot(id){
+  for(const g of games){
+    const sp = g.spots.find(x => String(x.id) === String(id));
+    if(sp) return {spot: sp, game: g};
   }
+  return null;
 }
 
-/* ── חלון קטן במקום החלפת מסך ─────────────────────────────── */
+/* ── לחיצות ברשימה. כל השורה היא היעד, לא רק הכפתור. ──────── */
+app.addEventListener("click", e => {
+  if(e.target.closest("[data-sure]")) return;         // האישור מטפל בעצמו
+
+  const drop = e.target.closest("[data-drop]") ||
+               (e.target.closest('.row[data-state="mine"]') &&
+                e.target.closest(".row").querySelector("[data-drop]"));
+  if(drop){ confirmRelease(drop); return; }
+
+  const takeRow = e.target.closest('.row[data-state="open"]');
+  if(takeRow){
+    const btn = takeRow.querySelector("[data-take]");
+    const hit = btn && findSpot(btn.dataset.take);
+    if(hit) renderForm(hit.spot, hit.game);
+    return;
+  }
+
+  const freeRow = e.target.closest('.row[data-state="claimed"]');
+  if(freeRow){
+    const btn = freeRow.querySelector("[data-free]");
+    const hit = btn && findSpot(btn.dataset.free);
+    if(hit) renderRelease(hit.spot);
+  }
+});
+
+/* ══════════════════════════════════════════════════════════════
+   החלון. רכיב אחד לכל המסכים: פרטים, אישור, ביטול ולוח משחקים.
+   ══════════════════════════════════════════════════════════════ */
 const modal  = document.getElementById("modal");
 const mscrim = document.getElementById("mscrim");
 
@@ -673,21 +687,117 @@ function openModal(html, opts){
   const first = modal.querySelector("input");
   if(first) setTimeout(() => first.focus(), 60);
 }
+
 function closeModal(){
   modal.hidden = true; mscrim.hidden = true; modal.innerHTML = "";
 }
+
 mscrim.addEventListener("click", () => { closeModal(); renderSpots(); });
 document.addEventListener("keydown", e => {
   if(e.key === "Escape" && !modal.hidden){ closeModal(); renderSpots(); }
 });
 
+/* ── שער הכניסה. הקוד נבדק בשרת, לא בדף. ──────────────────── */
+function renderGate(msg){
+  const log = document.getElementById("openLog");
+  const remind = document.getElementById("remindMe");
+  if(log) log.hidden = true;
+  if(remind) remind.hidden = true;
+
+  app.innerHTML =
+    '<div class="gate">' +
+      "<h2>קוד כניסה</h2>" +
+      "<p>הקוד מחולק לעובדי הקניון.</p>" +
+      '<input id="code" class="code-in" type="text" inputmode="numeric" ' +
+        'maxlength="4" autocomplete="one-time-code" placeholder="0000">' +
+      '<div class="hint' + (msg ? " bad" : "") + '" id="ghint">' +
+        esc(msg || "ארבע ספרות, וזהו.") + "</div>" +
+      '<button class="filled" id="enter">כניסה</button>' +
+    "</div>";
+
+  const input = document.getElementById("code");
+  const hint  = document.getElementById("ghint");
+  const btn   = document.getElementById("enter");
+  let busy = false;
+  setTimeout(() => input.focus(), 80);
+
+  input.addEventListener("input", () => {
+    input.value = input.value.replace(/\D/g, "").slice(0, 4);
+    if(input.value.length === 4) enter();
+  });
+  btn.onclick = enter;
+
+  async function enter(){
+    const v = input.value.trim();
+    if(v.length !== 4 || busy) return;
+    busy = true;
+    btn.disabled = true; btn.textContent = "בודקים";
+    hint.className = "hint"; hint.textContent = "רגע";
+
+    accessCode = v;
+    let res = null, offline = false;
+    try{
+      res = await api("ping");
+      if(res && !res.ok && res.reason === "unknown_action") res = await api("list");
+    }catch(e){ offline = true; }
+
+    if(res && res.ok){
+      try{ localStorage.setItem(CODE, v); }catch(e){}
+      if(log) log.hidden = false;
+      if(res.games) return boot(res);
+      try{
+        const list = await api("list");
+        if(list && list.ok) return boot(list);
+      }catch(e){}
+      return fail();
+    }
+
+    accessCode = "";
+    busy = false;
+    btn.disabled = false; btn.textContent = "כניסה";
+    input.value = ""; input.focus();
+    hint.className = "hint bad";
+    hint.textContent = offline ? "אין חיבור לשרת. בדקו אינטרנט ונסו שוב." : "קוד שגוי.";
+  }
+}
+
+/* ── טעינת המשחקים אחרי כניסה מוצלחת ──────────────────────── */
+async function boot(listRes){
+  games = normalise(listRes.games);
+  if(!games.length){
+    // עדיין אותו דף, רק שהמקומות מסומנים כלא פתוחים
+    opensInfo = listRes.opens || OPENS;
+    games = GAMES.map((g, i) => ({
+      game: i + 1, day: g.day, start: g.start, end: g.end,
+      date: dm(dateOf(g)), closed: false, notOpen: true,
+      spots: [1,2,3,4].map(n => ({id: "soon-" + i + "-" + n, spot: n,
+        status: "soon", name: ""}))
+    }));
+    renderSpots();
+    return;
+  }
+  const token = linkToken || recall();
+  if(token){
+    try{
+      const mineRes = await api("lookup", {token: token});
+      if(mineRes && mineRes.ok && mineRes.slot.status === "claimed"){
+        myToken = token; remember(token);
+        const hit = findSpot(mineRes.slot.id);
+        if(hit) hit.spot.mine = true;
+      }else{ forget(); }
+    }catch(e){ /* לא חוסמים את הרשימה בגלל בדיקת הקוד האישי */ }
+  }
+  renderSpots();
+}
+
 /* ── טופס ─────────────────────────────────────────────────── */
-function renderForm(spot){
+function renderForm(spot, game){
   onList = false;
   const me = loadMe();
   openModal(
     "<h2>הפרטים שלכם</h2>" +
-    '<div class="sub">יום ' + esc(GAME.day) + " " + esc(GAME.time) + " · " + esc(GAME.court) + "</div>" +
+    '<div class="sub">' + esc(game.day) + " " + esc(game.start) + " עד " + esc(game.end) +
+      " · " + esc(game.date) + "</div>" +
     '<div class="fields">' +
       '<div class="f"><label for="nm">שם</label>' +
         '<input id="nm" type="text" autocomplete="name" enterkeyhint="next" placeholder="דנה לוי" value="' + esc(me.name || "") + '"></div>' +
@@ -718,17 +828,18 @@ function renderForm(spot){
     if(demoMode){
       spot.status = "claimed"; spot.name = name; spot.mine = true;
       myToken = "demo"; saveDemo();
-      return renderDone(name, null);
+      return renderDone(name, null, game);
     }
     try{
       const res = await api("claim", {slot: spot.id, name: name, phone: phone});
       if(res.ok){
         myToken = res.token; remember(res.token);
-        return renderDone(name, res.token);
+        return renderDone(name, res.token, game);
       }
-      if(res.slots) spots = res.slots.map(s => Object.assign({}, s, {mine:false}));
+      if(res.games) games = normalise(res.games);
       renderSpots(
         res.reason === "taken"          ? "מישהו הקדים אתכם. נסו מקום אחר." :
+        res.reason === "game_closed"    ? "המשחק הזה כבר התחיל." :
         res.reason === "already_booked" ? "המספר הזה כבר רשום השבוע." :
                                           "לא הצלחנו לשמור. נסו שוב.");
     }catch(err){
@@ -739,19 +850,20 @@ function renderForm(spot){
 }
 
 /* ── אישור ────────────────────────────────────────────────── */
-function renderDone(name, token){
+function renderDone(name, token, game){
   onList = false;
   try{ navigator.vibrate && navigator.vibrate(14); }catch(e){}
   openModal(
     '<div class="done" style="padding:0">' +
       '<div class="mk" aria-hidden="true">✓</div>' +
       "<h2>המקום שלכם</h2>" +
-      "<p>" + esc(name) + ", יום " + esc(GAME.day) + " ב־" + esc(GAME.time) + ".</p>" +
+      "<p>" + esc(name) + " · " + esc(game.day) + " " + esc(game.start) +
+        " עד " + esc(game.end) + " · " + esc(game.date) + "</p>" +
       "<p>אפשר לשחרר את המקום מכאן בכל רגע.</p>" +
       '<button class="filled" id="addCal">הוספה ליומן</button>' +
       '<button class="plain" id="backToSpots">סגירה</button>' +
     "</div>");
-  document.getElementById("addCal").onclick = calendarForGame;
+  document.getElementById("addCal").onclick = () => calendarForGame(game);
   document.getElementById("backToSpots").onclick = () => { closeModal(); renderSpots(); };
 }
 
@@ -774,8 +886,9 @@ async function releaseSpot(btn){
     catch(e){ btn.disabled = false; btn.textContent = "ביטול ההרשמה שלי"; return; }
   }
   forget(); myToken = null;
-  const me = spots.find(x => x.mine);
-  if(me){ me.mine = false; me.status = "open"; me.name = ""; }
+  games.forEach(g => g.spots.forEach(sp => {
+    if(sp.mine){ sp.mine = false; sp.status = "open"; sp.name = ""; }
+  }));
   saveDemo(); closeModal();
   renderSpots("המקום שוחרר ונפתח מחדש.");
 }
@@ -829,7 +942,7 @@ function renderRelease(spot){
       if(res.ok){
         if(spot.mine){ forget(); myToken = null; }
         const list = await api("list");
-        spots = (list.slots || []).map(x => Object.assign({}, x, {mine:false}));
+        games = normalise(list.games);
         closeModal();
         return renderSpots("המקום שוחרר ונפתח מחדש.");
       }
@@ -1001,14 +1114,18 @@ async function refresh(){
   if(!onList || demoMode || document.hidden) return;
   try{
     const res = await api("list");
-    const fresh = res.slots || [];
-    const changed = fresh.length !== spots.length ||
-      fresh.some((f, i) => f.status !== spots[i].status || f.name !== spots[i].name);
-    if(!changed) return;
-    const mineId = (spots.find(x => x.mine) || {}).id;
-    spots = fresh.map(x => Object.assign({}, x, {mine: String(x.id) === String(mineId)}));
+    if(!res || !res.ok) return;
+    const mineId = (() => {
+      for(const g of games){ const sp = g.spots.find(x => x.mine); if(sp) return sp.id; }
+      return null;
+    })();
+    const fresh = normalise(res.games);
+    if(JSON.stringify(fresh) === JSON.stringify(games.map(g =>
+       Object.assign({}, g, {spots: g.spots.map(x => Object.assign({}, x, {mine:false}))})))) return;
+    games = fresh;
+    if(mineId){ const hit = findSpot(mineId); if(hit) hit.spot.mine = true; }
     renderSpots();
-  }catch(e){ /* רענון שקט, לא מפריעים למשתמש */ }
+  }catch(e){ /* רענון שקט */ }
 }
 
 setInterval(refresh, 20000);
@@ -1020,13 +1137,13 @@ document.addEventListener("visibilitychange", () => { if(!document.hidden) refre
 function loadDemo(){
   try{
     const saved = JSON.parse(localStorage.getItem(DSTATE));
-    if(Array.isArray(saved) && saved.length === DEMO_SPOTS.length) return saved;
+    if(Array.isArray(saved) && saved.length === DEMO_GAMES.length) return saved;
   }catch(e){}
-  return DEMO_SPOTS.map(x => Object.assign({}, x));
+  return JSON.parse(JSON.stringify(DEMO_GAMES));
 }
 function saveDemo(){
   if(!demoMode) return;
-  try{ localStorage.setItem(DSTATE, JSON.stringify(spots)); }catch(e){}
+  try{ localStorage.setItem(DSTATE, JSON.stringify(games)); }catch(e){}
 }
 
 /* ── עלייה ────────────────────────────────────────────────── */
@@ -1043,84 +1160,17 @@ const DEMO_BOARD = [
   {name:"עידו פרץ", games:3}
 ];
 
-const DEMO_SPOTS = [
-  {id:"d1", spot:1, status:"claimed", name:"יעל ברקוביץ'"},
-  {id:"d2", spot:2, status:"claimed", name:"אורי שגב"},
-  {id:"d3", spot:3, status:"open",    name:""},
-  {id:"d4", spot:4, status:"open",    name:""}
-];
-
-/* ── לחיצות ברשימה. כל השורה היא היעד, לא רק הכפתור. ──────── */
-app.addEventListener("click", e => {
-  if(e.target.closest("[data-sure]")) return;      // האישור מטפל בעצמו
-
-  const drop = e.target.closest("[data-drop]") ||
-               (e.target.closest('.row[data-state="mine"]') &&
-                e.target.closest(".row").querySelector("[data-drop]"));
-  if(drop){ confirmRelease(drop); return; }
-
-  const takeRow = e.target.closest('.row[data-state="open"]');
-  if(takeRow){
-    const btn = takeRow.querySelector("[data-take]");
-    const spot = btn && spots.find(x => String(x.id) === btn.dataset.take);
-    if(spot) renderForm(spot);
-    return;
-  }
-
-  const freeRow = e.target.closest('.row[data-state="claimed"]');
-  if(freeRow){
-    const btn = freeRow.querySelector("[data-free]");
-    const spot = btn && spots.find(x => String(x.id) === btn.dataset.free);
-    if(spot) renderRelease(spot);
-  }
-});
-
-/* ── מצב תצוגה: לבן כברירת מחדל, והמתג שומר את הבחירה ────── */
-(function theming(){
-  const KEY = "padel-glilot-theme";
-  let mode = "light";
-  try{ mode = localStorage.getItem(KEY) || "light"; }catch(e){}
-  const apply = m => {
-    document.documentElement.dataset.theme = m;
-    const btn = document.getElementById("theme");
-    btn.setAttribute("aria-label", m === "dark" ? "מצב בהיר" : "מצב כהה");
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if(meta) meta.setAttribute("content", m === "dark" ? "#0B0B0B" : "#EDEDEB");
-  };
-  apply(mode);
-  document.getElementById("theme").onclick = () => {
-    mode = mode === "dark" ? "light" : "dark";
-    try{ localStorage.setItem(KEY, mode); }catch(e){}
-    apply(mode);
-  };
-})();
-
-async function boot(listRes){
-  spots = (listRes.slots || []).map(x => Object.assign({}, x, {mine:false}));
-  if(!spots.length){
-    app.innerHTML = '<div class="done"><h2>עוד לא נפתח משחק</h2>' +
-      "<p>המקומות נפתחים כל שבוע אחרי המשחק הקודם.</p></div>";
-    return;
-  }
-  const token = linkToken || recall();
-  if(token){
-    try{
-      const mineRes = await api("lookup", {token: token});
-      if(mineRes && mineRes.ok && mineRes.slot.status === "claimed"){
-        myToken = token; remember(token);
-        const row = spots.find(x => String(x.id) === String(mineRes.slot.id));
-        if(row) row.mine = true;
-      }else{ forget(); }
-    }catch(e){ /* לא חוסמים את הרשימה בגלל בדיקת הקוד האישי */ }
-  }
-  renderSpots();
-}
+const DEMO_GAMES = GAMES.map((g, i) => ({
+  game: i + 1, day: g.day, start: g.start, end: g.end,
+  date: dm(dateOf(g)), closed: false,
+  spots: [1,2,3,4].map(n => ({id: "d" + i + "-" + n, spot: n, status: "open", name: ""}))
+}));
 
 (async function start(){
   paintHero();
   if(API.indexOf("PASTE_") === 0){
     demoMode = true;
-    spots = loadDemo();
+    games = loadDemo();
     renderSpots();
     return;
   }
