@@ -222,8 +222,21 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
   background:transparent;color:var(--text);padding:16px 0;min-height:52px;letter-spacing:-.01em}
 .f input::placeholder{color:var(--text-3);font-weight:500}
 .f input:focus{outline:none}
-.hint{margin:9px 6px 0;font-size:13px;color:var(--text-2);line-height:1.4}
-.hint.bad{color:var(--text);font-weight:600}
+.f input.field-bad{box-shadow:inset 0 0 0 2px var(--ink);border-radius:8px}
+.hint{margin:9px 6px 0;font-size:13px;color:var(--text-2);line-height:1.4;
+  transition:color .18s ease}
+.hint.bad{color:var(--ink);font-weight:800;font-size:14px;
+  background:color-mix(in srgb, var(--ink) 10%, transparent);
+  box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--ink) 45%, transparent);
+  border-radius:10px;padding:11px 13px;margin:12px 0 0;line-height:1.45}
+@media (prefers-reduced-motion: no-preference){
+  .hint.bad{animation:nudge .42s cubic-bezier(.36,.07,.19,.97) both}
+}
+@keyframes nudge{
+  0%,100%{transform:translateX(0)}
+  15%{transform:translateX(-6px)} 30%{transform:translateX(5px)}
+  45%{transform:translateX(-3px)} 60%{transform:translateX(2px)}
+}
 
 /* ── מסך אישור ────────────────────────────────────────────── */
 .done{padding:8px 6px 0}
@@ -237,6 +250,16 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
   .done .filled{animation:in .5s var(--ease) both;animation-delay:.24s}
 }
 .done p{margin-top:12px;font-size:16px;color:var(--text-2);line-height:1.45;max-width:31ch}
+
+/* כפתור בהמתנה: הטקסט מוחלף בכדור קטן שמקפץ.
+   הרוחב נשמר כדי שהכפתור לא יקפוץ. */
+.btn-busy{position:relative;color:transparent!important;pointer-events:none}
+.btn-busy .bball{position:absolute;inset:0;display:grid;place-items:center}
+.btn-busy .bball svg{width:22px;height:22px;color:var(--on-ink)}
+.hollow.btn-busy .bball svg,.take.free.btn-busy .bball svg{color:var(--ink)}
+@media (prefers-reduced-motion: no-preference){
+  .btn-busy .bball svg{animation:bounce .58s cubic-bezier(.32,0,.68,1) infinite alternate}
+}
 
 /* ── כדור פאדל מקפץ, לכל רגע של המתנה ────────────────────── */
 .loader{display:grid;place-items:center;gap:9px;padding:44px 0 40px}
@@ -521,6 +544,27 @@ const BALL =
 
 /* שלד בצורת הדף האמיתי. ככה העין כבר יודעת לאן להסתכל
    לפני שהנתונים הגיעו, והמעבר לתוכן לא קופץ. */
+/* מכניס כדור מקפץ לתוך כפתור, במקום להחליף את הטקסט למילה */
+function busy(btn, on){
+  if(!btn) return;
+  if(on){
+    btn.dataset.label = btn.dataset.label || btn.textContent;
+    btn.classList.add("btn-busy");
+    btn.disabled = true;
+    if(!btn.querySelector(".bball")){
+      const w = document.createElement("span");
+      w.className = "bball"; w.innerHTML = BALL;
+      btn.appendChild(w);
+    }
+  }else{
+    btn.classList.remove("btn-busy");
+    btn.disabled = false;
+    const w = btn.querySelector(".bball");
+    if(w) w.remove();
+    if(btn.dataset.label) btn.textContent = btn.dataset.label;
+  }
+}
+
 function skeleton(){
   const row = '<div class="sk-row"><span class="sk-name"></span><span class="sk-btn"></span></div>';
   const card = '<div class="sk-gm">' +
@@ -823,7 +867,7 @@ function renderGate(msg){
   const input = document.getElementById("code");
   const hint  = document.getElementById("ghint");
   const btn   = document.getElementById("enter");
-  let busy = false;
+  let busyFlag = false;
   setTimeout(() => input.focus(), 80);
 
   input.addEventListener("input", () => {
@@ -834,10 +878,10 @@ function renderGate(msg){
 
   async function enter(){
     const v = input.value.trim();
-    if(v.length !== 4 || busy) return;
+    if(v.length !== 4 || busyFlag) return;
     busy = true;
-    btn.disabled = true; btn.textContent = "בודקים";
-    hint.className = "hint"; hint.textContent = "רגע";
+    busy(btn, true);
+    hint.className = "hint"; hint.textContent = "";
 
     accessCode = v;
     let res = null, offline = false;
@@ -858,11 +902,14 @@ function renderGate(msg){
     }
 
     accessCode = "";
-    busy = false;
-    btn.disabled = false; btn.textContent = "כניסה";
+    busyFlag = false;
+    busy(btn, false);
     input.value = ""; input.focus();
+    hint.className = "hint";
+    void hint.offsetWidth;
     hint.className = "hint bad";
     hint.textContent = offline ? "שגיאה, נסו שוב." : "קוד שגוי.";
+    try{ navigator.vibrate && navigator.vibrate([12, 60, 12]); }catch(e){}
   }
 }
 
@@ -920,15 +967,25 @@ function renderForm(spot, game){
   ph.addEventListener("keydown", e => { if(e.key === "Enter") submit(); });
   document.getElementById("go").onclick = submit;
 
-  function bad(msg, el){ hint.className = "hint bad"; hint.textContent = msg; el.focus(); }
+  function bad(msg, el){
+    hint.className = "hint";            // מאפסים כדי שהאנימציה תרוץ שוב
+    void hint.offsetWidth;
+    hint.className = "hint bad";
+    hint.textContent = msg;
+    if(el){
+      el.classList.add("field-bad");
+      el.addEventListener("input", () => el.classList.remove("field-bad"), {once:true});
+      el.focus();
+    }
+    try{ navigator.vibrate && navigator.vibrate([12, 60, 12]); }catch(e){}
+  }
 
   async function submit(){
     const name = nm.value.trim(), phone = ph.value.trim();
     if(name.length < 2) return bad("צריך שם מלא.", nm);
     if(phone.replace(/\D/g, "").length < 9) return bad("מספר הטלפון לא תקין.", ph);
 
-    const btn = document.getElementById("go");
-    btn.disabled = true; btn.textContent = "שומרים";
+    busy(document.getElementById("go"), true);
 
     // בדיקה מקומית לפני שמתחילים: אם כבר יש לו מקום במשחק הזה,
     // לא מציגים "תופסים" ואז מתהפכים. אומרים לו מיד ולמה.
@@ -994,7 +1051,7 @@ function renderDone(name, token, game, pending){
       '<h2 id="doneTitle">' + (pending ? "תופסים את המקום" : "המקום שלכם") + "</h2>" +
       "<p>" + esc(name) + " · " + esc(game.day) + " " + esc(game.start) +
         " עד " + esc(game.end) + " · " + esc(game.date) + "</p>" +
-      '<p id="doneNote">' + (pending ? "רגע" : "אפשר לשחרר את המקום מכאן בכל רגע.") + "</p>" +
+      '<p id="doneNote">' + (pending ? "" : "אפשר לשחרר את המקום מכאן בכל רגע.") + "</p>" +
       '<button class="filled" id="addCal">הוספה ליומן</button>' +
       '<button class="plain" id="backToSpots">סגירה</button>' +
     "</div>");
@@ -1026,10 +1083,10 @@ function confirmRelease(btn){
 }
 
 async function releaseSpot(btn){
-  btn.disabled = true; btn.textContent = "משחררים";
+  busy(btn, true);
   if(!demoMode){
     try{ await api("cancel", {token: myToken}); }
-    catch(e){ btn.disabled = false; btn.textContent = "ביטול ההרשמה שלי"; return; }
+    catch(e){ busy(btn, false); return; }
   }
   forget(); myToken = null;
   games.forEach(g => g.spots.forEach(sp => {
@@ -1076,7 +1133,7 @@ function renderRelease(spot){
       hint.className = "hint bad"; hint.textContent = "מספר הטלפון לא תקין."; rp.focus(); return;
     }
     const btn = document.getElementById("rgo");
-    btn.disabled = true; btn.textContent = "בודקים";
+    busy(btn, true);
 
     if(demoMode){
       spot.status = "open"; spot.name = ""; spot.mine = false;
@@ -1092,13 +1149,16 @@ function renderRelease(spot){
         closeModal();
         return renderSpots("המקום שוחרר ונפתח מחדש.");
       }
-      btn.disabled = false; btn.textContent = "שחרור המקום";
+      busy(btn, false);
+      hint.className = "hint";
+      void hint.offsetWidth;
       hint.className = "hint bad";
       hint.textContent = res.reason === "phone_mismatch"
         ? "המספר הזה לא תופס את המקום הזה."
         : "לא הצלחנו לשחרר. נסו שוב.";
+      try{ navigator.vibrate && navigator.vibrate([12, 60, 12]); }catch(e){}
     }catch(e){
-      btn.disabled = false; btn.textContent = "שחרור המקום";
+      busy(btn, false);
       hint.className = "hint bad"; hint.textContent = "שגיאה, נסו שוב.";
     }
   }
