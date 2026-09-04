@@ -550,7 +550,8 @@ const app    = document.getElementById("app");
 const leftEl = {set textContent(v){}};   /* המונה מוצג מעל הרשימה בלבד */
 const params = new URLSearchParams(location.search);
 const linkToken = params.get("c");
-const STORE = "padel-glilot-token";
+const STORE  = "padel-glilot-token";
+const TOKENS = "padel-glilot-tokens";
 const CODE  = "padel-glilot-code";
 const DSTATE = "padel-glilot-demo";
 const SNAP   = "padel-glilot-snapshot";
@@ -612,6 +613,36 @@ const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c =>
   ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 const remember = t => { try{ localStorage.setItem(STORE, t); }catch(e){} };
+
+/* מפת מקום → קוד ביטול. מותר להירשם לכמה משחקים, ולכל אחד
+   קוד משלו. טוקן אחד גלובלי גרם לביטול של המקום הלא נכון. */
+function tokenMap(){
+  try{ return JSON.parse(localStorage.getItem(TOKENS)) || {}; }catch(e){ return {}; }
+}
+function saveToken(spotId, token){
+  try{
+    const m = tokenMap(); m[spotId] = token;
+    localStorage.setItem(TOKENS, JSON.stringify(m));
+  }catch(e){}
+}
+function dropToken(spotId){
+  try{
+    const m = tokenMap(); delete m[spotId];
+    localStorage.setItem(TOKENS, JSON.stringify(m));
+  }catch(e){}
+}
+/* מסמן כשלי כל מקום שיש לי קוד עבורו והוא עדיין תפוס,
+   ומנקה קודים של מקומות שכבר לא שלי. */
+function markMine(){
+  const m = tokenMap();
+  let changed = false;
+  Object.keys(m).forEach(id => {
+    const hit = findSpot(id);
+    if(hit && hit.spot.status === "claimed"){ hit.spot.mine = true; }
+    else { delete m[id]; changed = true; }
+  });
+  if(changed){ try{ localStorage.setItem(TOKENS, JSON.stringify(m)); }catch(e){} }
+}
 const recall   = ()  => { try{ return localStorage.getItem(STORE); }catch(e){ return null; } };
 const forget   = ()  => { try{ localStorage.removeItem(STORE); }catch(e){} };
 
@@ -822,7 +853,8 @@ function renderSpots(alertText, tone){
         "</div>" +
         '<div class="list">' + g.spots.map((sp, i) => {
           const state = sp.mine ? "mine" : sp.status;
-          return '<div class="row" data-state="' + state + '" style="--r:' + i + '">' +
+          return '<div class="row" data-state="' + state + '" data-spot="' + esc(sp.id) +
+        '" style="--r:' + i + '">' +
             '<span class="who">' +
               (sp.status === "soon" ? "טרם נפתח"
                : sp.status === "open" ? (g.closed ? "לא נתפס" : "פנוי")
@@ -1079,6 +1111,7 @@ function renderForm(spot, game){
       stopSlow();
       if(res && res.ok){
         myToken = res.token; remember(res.token);
+        saveToken(spot.id, res.token);
         return confirmSaved(res.token, game);
       }
       // לא הצליח: מחזירים את המצב הקודם ומסבירים
@@ -1165,20 +1198,23 @@ function confirmSaved(token, game){
 
 /* ── ביטול ────────────────────────────────────────────────── */
 function confirmRelease(btn){
+  const row = btn.closest(".row");
+  const spotId = row && row.dataset.spot;
   openModal(
     "<h2>לבטל את המקום?</h2>" +
     '<div class="sub">המקום ייפתח מיד לשאר העובדים.</div>' +
     '<button class="filled" id="yes">כן, בטלו</button>' +
     '<button class="plain" id="no">לא</button>');
   document.getElementById("no").onclick  = () => { closeModal(); renderSpots(); };
-  document.getElementById("yes").onclick = e => releaseSpot(e.target);
+  document.getElementById("yes").onclick = e => releaseSpot(e.target, spotId);
 }
 
-async function releaseSpot(btn){
+async function releaseSpot(btn, spotId){
   busy(btn, true);
+  const token = (spotId && tokenMap()[spotId]) || myToken;
   if(!demoMode){
     let res = null;
-    try{ res = await api("cancel", {token: myToken}); }
+    try{ res = await api("cancel", {token: token}); }
     catch(e){ busy(btn, false); closeModal(); renderSpots("שגיאה. המקום לא בוטל, נסו שוב."); return; }
     // השרת יכול לסרב בלי לזרוק שגיאה. לא מכריזים על ביטול לפני שהוא אישר.
     if(!res || !res.ok){
@@ -1191,10 +1227,18 @@ async function releaseSpot(btn){
       return;
     }
   }
-  forget(); myToken = null;
-  games.forEach(g => g.spots.forEach(sp => {
-    if(sp.mine){ sp.mine = false; sp.status = "open"; sp.name = ""; }
-  }));
+  // משחררים רק את המקום שבוטל בפועל
+  if(spotId){
+    dropToken(spotId);
+    const hit = findSpot(spotId);
+    if(hit){ hit.spot.mine = false; hit.spot.status = "open"; hit.spot.name = ""; }
+  }else{
+    forget(); myToken = null;
+    games.forEach(g => g.spots.forEach(sp => {
+      if(sp.mine){ sp.mine = false; sp.status = "open"; sp.name = ""; }
+    }));
+  }
+  if(Object.keys(tokenMap()).length === 0){ forget(); myToken = null; }
   saveDemo(); closeModal();
   renderSpots("המקום בוטל ונפתח מחדש.", "ok");
 }
@@ -1440,15 +1484,11 @@ async function refresh(){
   try{
     const res = await api("list");
     if(!res || !res.ok) return;
-    const mineId = (() => {
-      for(const g of games){ const sp = g.spots.find(x => x.mine); if(sp) return sp.id; }
-      return null;
-    })();
     const fresh = normalise(res.games);
     if(JSON.stringify(fresh) === JSON.stringify(games.map(g =>
        Object.assign({}, g, {spots: g.spots.map(x => Object.assign({}, x, {mine:false}))})))) return;
     games = fresh;
-    if(mineId){ const hit = findSpot(mineId); if(hit) hit.spot.mine = true; }
+    markMine();
     saveSnap(res.games, currentMineId());
     renderSpots();
   }catch(e){ /* רענון שקט */ }
@@ -1534,10 +1574,7 @@ const DEMO_GAMES = GAMES.map((g, i) => ({
   const snap = loadSnap();
   if(snap && accessCode && API.indexOf("PASTE_") !== 0){
     games = normalise(snap.list);
-    if(snap.mineId){
-      const hit = findSpot(snap.mineId);
-      if(hit) hit.spot.mine = true;      // כדי שלא ייעלם ואז יחזור
-    }
+    markMine();                          // כדי שהמקומות שלי לא ייעלמו ויחזרו
     renderSpots();
   }
   if(API.indexOf("PASTE_") === 0){
