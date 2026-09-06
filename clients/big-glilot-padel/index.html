@@ -235,7 +235,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
 .gate .hint.bad{color:var(--ink);font-weight:700}
 
 /* ── טופס ─────────────────────────────────────────────────── */
-.fields{background:var(--card);border-radius:var(--r-block);overflow:hidden}
+.fields{background:var(--card);border-radius:var(--r-block);overflow:visible}
 .f{display:flex;align-items:center;gap:12px;padding:6px 18px;position:relative}
 .f + .f::before{content:"";position:absolute;top:0;inset-inline-start:18px;inset-inline-end:0;
   height:1px;background:var(--line)}
@@ -247,6 +247,18 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;
   border-radius:8px}
 .f input.field-bad,.f input.field-bad:focus{box-shadow:inset 0 0 0 2px var(--ink);
   border-radius:8px}
+
+/* ── בחירת שם מתוך רשימה סגורה ────────────────────────────── */
+.nm-wrap{position:relative}
+.nm-list{position:absolute;top:calc(100% + 6px);inset-inline-start:0;inset-inline-end:0;
+  max-height:220px;overflow-y:auto;background:var(--card);border-radius:14px;
+  box-shadow:0 8px 28px rgba(0,0,0,.18),inset 0 0 0 1px var(--line);z-index:20}
+.nm-item{padding:12px 16px;font-size:16px;font-weight:600;color:var(--text);
+  cursor:pointer}
+.nm-item + .nm-item{box-shadow:inset 0 1px 0 var(--line)}
+.nm-item:active{background:var(--fill-hover)}
+@media (hover:hover){ .nm-item:hover{background:var(--fill-hover)} }
+
 .hint{margin:9px 6px 0;font-size:13px;color:var(--text-2);line-height:1.4;
   transition:color .18s ease}
 .hint.good{color:var(--text);font-weight:700;font-size:14px;
@@ -559,6 +571,7 @@ const XSNAP  = "padel-glilot-board";
 const ME    = "padel-glilot-me";
 
 let games = [], demoMode = false, myToken = null, opensInfo = null;
+let allowedNames = null, allowedNamesPromise = null;
 let accessCode = "";
 try{ accessCode = localStorage.getItem(CODE) || ""; }catch(e){}
 
@@ -1001,6 +1014,21 @@ function renderGate(msg){
   }
 }
 
+/* רשימת השמות המורשים. נטענת פעם אחת ברקע, ומוכנה כבר כשנפתח
+   הטופס בפעם הראשונה. שם שלא ברשימה הזאת פשוט לא ניתן לבחירה. */
+function loadAllowedNames(){
+  if(allowedNamesPromise) return allowedNamesPromise;
+  allowedNamesPromise = (async () => {
+    if(demoMode){ return allowedNames = DEMO_ALLOWED_NAMES; }
+    try{
+      const r = await api("names");
+      allowedNames = (r && r.ok && Array.isArray(r.names)) ? r.names : [];
+    }catch(e){ allowedNames = []; }
+    return allowedNames;
+  })();
+  return allowedNamesPromise;
+}
+
 /* ── טעינת המשחקים אחרי כניסה מוצלחת ──────────────────────── */
 async function boot(listRes){
   games = normalise(listRes.games);
@@ -1027,6 +1055,7 @@ async function boot(listRes){
   }
   if(games.length) saveSnap(listRes.games, currentMineId());
   renderSpots();
+  loadAllowedNames();
   primeArchive();
   setTimeout(() => loadArchive(false), 400);   // טעינה מוקדמת בשקט
 }
@@ -1040,8 +1069,10 @@ function renderForm(spot, game){
     '<div class="sub">' + esc(game.day) + " " + esc(game.start) + " עד " + esc(game.end) +
       " · " + esc(game.date) + "</div>" +
     '<div class="fields">' +
-      '<div class="f"><label for="nm">שם</label>' +
-        '<input id="nm" type="text" autocomplete="name" enterkeyhint="next" placeholder="שם פרטי ומשפחה" value="' + esc(me.name || "") + '"></div>' +
+      '<div class="f nm-wrap"><label for="nm">שם</label>' +
+        '<input id="nm" type="text" autocomplete="off" autocapitalize="off" enterkeyhint="next" placeholder="הקלידו אות מהשם, למשל ב" value="' + esc(me.name || "") + '">' +
+        '<div class="nm-list" id="nmList" hidden></div>' +
+      "</div>" +
       '<div class="f"><label for="ph">טלפון</label>' +
         '<input id="ph" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="done" placeholder="050-000-0000" value="' + esc(me.phone || "") + '"></div>' +
     "</div>" +
@@ -1051,9 +1082,39 @@ function renderForm(spot, game){
 
   const hint = document.getElementById("hint");
   const nm = document.getElementById("nm"), ph = document.getElementById("ph");
+  const nmList = document.getElementById("nmList");
+  let nmChosen = !!(me.name && me.name.trim());   // שם שמור מהפעם הקודמת נחשב נבחר
   document.getElementById("back").onclick = () => { closeModal(); renderSpots(); };
   ph.addEventListener("keydown", e => { if(e.key === "Enter") submit(); });
   document.getElementById("go").onclick = submit;
+
+  /* בחירת שם: מקלידים אות אחת או יותר, מסננים מתוך הרשימה המורשית
+     כל שם שמתחיל באותן אותיות, ובוחרים מהרשימה בלחיצה. אי אפשר
+     להקליד שם חופשי — רק שם שקיים ברשימה יעבור בבדיקה של submit(). */
+  function closeNmList(){ nmList.hidden = true; nmList.innerHTML = ""; }
+  function renderNmList(){
+    const q = nm.value.trim();
+    if(!q){ closeNmList(); return; }
+    const list = allowedNames || [];
+    const hits = list.filter(n => n.startsWith(q)).slice(0, 30);
+    if(!hits.length){ closeNmList(); return; }
+    nmList.innerHTML = hits.map(n =>
+      '<div class="nm-item" data-n="' + esc(n) + '">' + esc(n) + "</div>").join("");
+    nmList.hidden = false;
+  }
+  nm.addEventListener("input", () => { nmChosen = false; renderNmList(); });
+  nm.addEventListener("focus", () => { if(!nmChosen) renderNmList(); });
+  nmList.addEventListener("mousedown", e => {
+    // mousedown, לא click: קודם לבחור מהרשימה, רק אז לתת לשדה לאבד פוקוס
+    const item = e.target.closest(".nm-item");
+    if(!item) return;
+    e.preventDefault();
+    nm.value = item.dataset.n;
+    nmChosen = true;
+    closeNmList();
+    ph.focus();
+  });
+  nm.addEventListener("blur", () => setTimeout(closeNmList, 150));
 
   function bad(msg, el){
     busy(document.getElementById("go"), false);   // אף פעם לא משאירים טעינה דולקת
@@ -1071,10 +1132,9 @@ function renderForm(spot, game){
 
   async function submit(){
     const name = nm.value.trim().replace(/\s+/g, " "), phone = ph.value.trim();
-    // דורשים שם פרטי ומשפחה, אחרת אי אפשר לדעת מי זה
-    const parts = name.split(" ").filter(w => w.length >= 2);
-    if(parts.length < 2){
-      return bad("צריך שם פרטי ושם משפחה, כדי שנדע מי נרשם.", nm);
+    // חייבים לבחור שם מתוך רשימת העובדים המורשים, לא להקליד שם חופשי
+    if(!name || !(allowedNames || []).includes(name)){
+      return bad("בחרו שם מהרשימה — הקלידו אות אחת כדי לראות אותה.", nm);
     }
     if(phone.replace(/\D/g, "").length < 9) return bad("מספר הטלפון לא תקין.", ph);
 
@@ -1123,6 +1183,9 @@ function renderForm(spot, game){
         res.reason === "taken"          ? "מישהו הקדים אתכם בשנייה. נסו מקום אחר." :
         res.reason === "game_closed"    ? "המשחק הזה כבר התחיל." :
         res.reason === "need_full_name" ? "צריך שם פרטי ושם משפחה." :
+        res.reason === "name_not_allowed" ? "השם הזה לא ברשימת העובדים המורשים." :
+        res.reason === "phone_locked"
+          ? "השם הזה כבר רשום עם מספר טלפון אחר. פנו למנהל המועדון." :
         res.reason === "already_booked"
           ? (res.held
               ? "המקום לא נתפס. כבר יש לכם מקום ב" + res.held.day + " " +
@@ -1526,6 +1589,10 @@ const DEMO_BOARD = [
   {name:"עידו פרץ", games:3}
 ];
 
+const DEMO_ALLOWED_NAMES = [...new Set(
+  DEMO_HISTORY.flatMap(w => w.players).concat(DEMO_BOARD.map(p => p.name))
+)];
+
 const DEMO_GAMES = GAMES.map((g, i) => ({
   game: i + 1, day: g.day, start: g.start, end: g.end,
   date: dm(dateOf(g)), closed: false,
@@ -1581,6 +1648,7 @@ const DEMO_GAMES = GAMES.map((g, i) => ({
     demoMode = true;
     games = loadDemo();
     renderSpots();
+    loadAllowedNames();
     return;
   }
   try{
