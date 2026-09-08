@@ -709,6 +709,17 @@ function dateOf(game){
 }
 const dm = d => d.getDate() + "." + (d.getMonth() + 1);
 
+/* הופך "8.9.26" + "17:00" (בדיוק מה שהשרת שולח לכל משחק) לתאריך
+   אמיתי. לא סומכים על GAMES/dateOf כדי לחשב מתי משחק ספציפי
+   מתקיים — GAMES מייצג רק את הלוח האחרון, ובזמן מעבר בין לוחות
+   (שינוי יום/שעה) משחק שכבר נפתח יכול להיות עדיין לפי הלוח הקודם. */
+function dateFromLabel(label, time){
+  const parts = String(label || "").split(".").map(Number);
+  const p = String(time || "00:00").split(":");
+  return new Date(2000 + (parts[2] || 0), (parts[1] || 1) - 1, parts[0] || 1,
+                  Number(p[0]) || 0, Number(p[1]) || 0, 0, 0);
+}
+
 /* ── קובץ יומן אחד שמתאים לאייפון, לאנדרואיד ולגוגל ────────── */
 function pad2(n){ return String(n).padStart(2, "0"); }
 function stamp(d){
@@ -790,11 +801,15 @@ function gcalUrl(title, start, minutes, place, details){
 
 /* המשחק שנתפס */
 function calendarForGame(game){
-  const gi = game.game || (GAMES.findIndex(g =>
-    g.day === game.day && g.start === game.start) + 1) || 1;
-  const when = dateOf(GAMES[gi - 1] || GAMES[0]);
+  // נגזר מהנתונים האמיתיים של המשחק הזה (day/start/end/date שהשרת
+  // כבר החזיר), לא מחישוב מחדש לפי GAMES — כדי שזה יהיה נכון גם
+  // למשחק שנפתח עדיין לפי לוח קודם, בזמן מעבר בין לוחות.
+  const gi = game.game || 1;
+  const when = dateFromLabel(game.date, game.start);
+  const sp = game.start.split(":").map(Number), ep = game.end.split(":").map(Number);
+  const minutes = ((ep[0] * 60 + ep[1]) - (sp[0] * 60 + sp[1])) || 60;
   location.href = isChrome()
-    ? gcalUrl("משחק פאדל - ביג גלילות", when, 60,
+    ? gcalUrl("משחק פאדל - ביג גלילות", when, minutes,
               COURT + ", " + PLACE, "מועדון העובדים, ביג גלילות")
     : icsUrl(gi, when);
 }
@@ -812,18 +827,24 @@ function calendarForNextOpening(){
                           PLACE, "ההרשמה נפתחת עכשיו: " + location.origin + location.pathname);
 }
 
-function paintHero(){
+/* בלי ארגומנט: הערכה גסה מ-GAMES (הלוח האחרון), לפני שהגיעו נתונים
+   אמיתיים מהשרת — רק כדי שהבאנר לא יהיה ריק. עם ארגומנט (רשימת
+   המשחקים האמיתית שחזרה מ-list): הכותרת נגזרת מהתאריך/יום/שעה
+   האמיתיים של השבוע הפתוח כרגע, גם אם הוא עדיין לפי לוח קודם. */
+function paintHero(list){
+  const real = list && list.length;
+  const src = real ? list : GAMES;
   const days = [];
-  GAMES.forEach(g => { if(days.indexOf(g.day) < 0) days.push(g.day); });
-  const dates = GAMES.map(dateOf);
+  src.forEach(g => { if(days.indexOf(g.day) < 0) days.push(g.day); });
+  const dates = real ? list.map(g => dateFromLabel(g.date, g.start)) : GAMES.map(dateOf);
   const first = dates.reduce((a, b) => a < b ? a : b);
   const last  = dates.reduce((a, b) => a > b ? a : b);
   document.getElementById("gDay").textContent =
     days.join(" ו") + " · " + dm(first) + (dm(first) === dm(last) ? "" : " עד " + dm(last));
   document.getElementById("gTime").textContent =
-    GAMES[0].start + " עד " + GAMES[GAMES.length - 1].end;
+    src[0].start + " עד " + src[src.length - 1].end;
   document.getElementById("gCourt").textContent =
-    COURT + " · " + GAMES.length + " משחקים, " + (GAMES.length * 4) + " מקומות";
+    COURT + " · " + src.length + " משחקים, " + (src.length * 4) + " מקומות";
 }
 
 /* ── ארבעת המקומות ────────────────────────────────────────── */
@@ -1054,6 +1075,7 @@ async function boot(listRes){
     forget();
   }
   if(games.length) saveSnap(listRes.games, currentMineId());
+  paintHero(games);           // הכותרת משקפת את הלוח האמיתי של השבוע הפתוח
   renderSpots();
   loadAllowedNames();
   primeArchive();
