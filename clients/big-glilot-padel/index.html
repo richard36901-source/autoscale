@@ -547,10 +547,10 @@ const API = "https://script.google.com/macros/s/AKfycbwpiKZEWVfoXod6WmgHe5vnW_AV
    2. לוח המשחקים. חייב להיות זהה ל־GAMES שבקובץ Code.gs.
    ══════════════════════════════════════════════════════════════ */
 const GAMES = [
-  {day: "שלישי", start: "20:00", end: "21:00"},
-  {day: "שלישי", start: "21:00", end: "22:00"},
-  {day: "רביעי", start: "20:00", end: "21:00"},
-  {day: "רביעי", start: "21:00", end: "22:00"}
+  {day: "שלישי", start: "17:00", end: "18:00"},
+  {day: "שלישי", start: "18:00", end: "19:00"},
+  {day: "חמישי", start: "17:00", end: "18:00"},
+  {day: "חמישי", start: "18:00", end: "19:00"}
 ];
 const COURT = "מגרש הפאדל";
 const PLACE = "ביג פאשן גלילות";
@@ -845,7 +845,7 @@ function renderSpots(alertText, tone){
   // כשאין אף מקום, אומרים בדיוק מתי נפתחת ההרשמה הבאה:
   // שתי דקות אחרי שהמשחק הראשון של השבוע מתחיל.
   const reopenLine = notOpen
-    ? "המקומות לשלישי ולרביעי הקרובים ייפתחו יחד" +
+    ? "המקומות לשלישי ולחמישי הקרובים ייפתחו יחד" +
       (opensInfo && opensInfo.date ? " · " + opensInfo.date : "")
     : "";
 
